@@ -6,9 +6,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig(() => {
   return {
     plugins: [qwikCity(), qwikVite(), tsconfigPaths()],
-    // define: {
-    //   'process.env': JSON.stringify(process.env) // vercel and env are complicated
-    // },
+    define: {
+      'process.env': JSON.stringify(process.env) // vercel and env are complicated
+    },
     preview: {
       headers: {
         "Cache-Control": "public, max-age=600",
