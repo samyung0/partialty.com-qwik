@@ -1,7 +1,6 @@
 import { $, type QRL } from "@builder.io/qwik";
 import { type GlobalContextType } from "../types/GlobalContext";
 import {
-  type User,
   type AuthResponse,
   type AuthTokenResponse,
   type OAuthResponse,
