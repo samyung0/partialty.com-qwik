@@ -10,9 +10,7 @@ export default component$(() => {
         <div class="text-gray-900">
           <div class="text-2xl">Welcome to the Dashboard Page</div>
           <Link href="/">
-            <button class="text-sm text-sky-500 hover:text-sky-400">
-              Home page
-            </button>
+            <button class="text-sm text-sky-500 hover:text-sky-400">Home page</button>
           </Link>
         </div>
       )}

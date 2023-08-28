@@ -12,9 +12,7 @@ export const Logo = component$(() => {
       </div>
       <div>
         <div class="text-lg logo-title text-gray-800">Lorem, ipsum.</div>
-        <div class="-mt-2 text-[10pt] logo-subtitle text-gray-500 italic">
-          Lorem, ipsum dolor.
-        </div>
+        <div class="-mt-2 text-[10pt] logo-subtitle text-gray-500 italic">Lorem, ipsum dolor.</div>
       </div>
     </div>
   );

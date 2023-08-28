@@ -3,19 +3,13 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
-import {
-  initialFormValue,
-  emailLoginSchema,
-  type EmailLoginForm,
-} from "~/types/AuthForm";
+import { initialFormValue, emailLoginSchema, type EmailLoginForm } from "~/types/AuthForm";
 import { signUpWithPassword } from "~/routes/plugin@Auth";
 
 export default component$(() => {
   const message = useStore<any>({ message: undefined, status: "error" });
   const isLoading = useSignal(false);
-  const emailForm = useStore(
-    Object.assign({}, initialFormValue) as EmailLoginForm
-  );
+  const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const nav = useNavigate();
   const termsChecked = useSignal(false);
 
@@ -23,8 +17,7 @@ export default component$(() => {
     isLoading.value = true;
 
     if (!termsChecked.value) {
-      message.message =
-        "You must agree to our terms, privacy and disclaimer before signing up";
+      message.message = "You must agree to our terms, privacy and disclaimer before signing up";
       isLoading.value = false;
       return;
     }
@@ -55,15 +48,10 @@ export default component$(() => {
         <Link href="/">
           <Image class="w-24 h-24 mx-auto" />
         </Link>
-        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Sign up
-        </h2>
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or{" "}
-          <Link
-            href="/login"
-            class="font-medium text-green-600 hover:text-green-500"
-          >
+          <Link href="/login" class="font-medium text-green-600 hover:text-green-500">
             log in to my account
           </Link>
         </p>
@@ -71,15 +59,9 @@ export default component$(() => {
 
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white py-8 px-4 shadow sm:rounded-sm sm:px-10">
-          <form
-            onSubmit$={handleEmailSignup}
-            preventdefault:submit
-            class="space-y-6"
-          >
+          <form onSubmit$={handleEmailSignup} preventdefault:submit class="space-y-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
+              <label class="block text-sm font-medium text-gray-700">Email address</label>
               <div class="mt-1">
                 <input
                   id="email"
@@ -95,9 +77,7 @@ export default component$(() => {
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label class="block text-sm font-medium text-gray-700">Password</label>
               <div class="mt-1">
                 <input
                   id="password"
@@ -129,15 +109,11 @@ export default component$(() => {
                     </Link>
                     ,{" "}
                     <Link href="/privacy">
-                      <span class="text-sky-500 hover:text-sky-400">
-                        privacy
-                      </span>
+                      <span class="text-sky-500 hover:text-sky-400">privacy</span>
                     </Link>{" "}
                     and{" "}
                     <button onClick$={() => nav("/disclaimer")}>
-                      <span class="text-sky-500 hover:text-sky-400">
-                        disclaimer
-                      </span>
+                      <span class="text-sky-500 hover:text-sky-400">disclaimer</span>
                     </button>
                   </span>
                 </label>

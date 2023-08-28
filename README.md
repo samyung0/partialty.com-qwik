@@ -5,8 +5,7 @@
 Run
 
 ```html
-npm run i
-npm run dev
+npm run i npm run dev
 ```
 
 ~~In node_modules\@builder.io\qwik\optimizer.cjs after line 2472, before new URL, add~~

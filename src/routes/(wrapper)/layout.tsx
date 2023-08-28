@@ -29,9 +29,7 @@ export default component$(() => {
   useVisibleTask$(async ({ cleanup }) => {
     let subscription: Subscription | null = null;
 
-    authStateChange(globalStore).then(
-      (res) => (subscription = res.data.subscription)
-    );
+    authStateChange(globalStore).then((res) => (subscription = res.data.subscription));
 
     globalStore.publicData.initiated = true;
     loadPublicData().then((res) => {

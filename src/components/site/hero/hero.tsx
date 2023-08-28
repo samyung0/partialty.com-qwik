@@ -12,12 +12,9 @@ export const Hero = component$(() => {
         <div class="relative flex justify-center text-white text-5xl md:text-6xl lg:text-8xl tracking-tight font-extrabold font-sans">
           <div class="text-green-500 ">Lorem, ipsum dolor.</div>
         </div>
-        <div class="text-slate-300 mt-24 italic text-xl font-light">
-          Lorem, ipsum.
-        </div>
+        <div class="text-slate-300 mt-24 italic text-xl font-light">Lorem, ipsum.</div>
         <div class="text-white mt-24 itali text-xl italic">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi,
-          maiores?
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, maiores?
         </div>
         <Link href="/signup">
           <ButtonStd
