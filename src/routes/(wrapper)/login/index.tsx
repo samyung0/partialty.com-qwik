@@ -5,10 +5,10 @@ import Image from "~/assets/img/icon.png?jsx";
 import { signInWithGitHub, signInWithPassword } from "~/routes/plugin@Auth";
 import { Message } from "~/components/ui/message";
 import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
-import { envContext } from "~/root";
+import { globalContext } from "~/routes/(wrapper)/layout";
 
 export default component$(() => {
-  const env = useContext(envContext);
+  const context = useContext(globalContext);
 
   const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const message: any = useStore({ message: undefined, status: "error" });
@@ -27,14 +27,14 @@ export default component$(() => {
         email: result.data.email,
         password: result.data.password,
       },
-      $(() => nav(env.REDIRECT_URL)),
+      $(() => nav(context.req.url?.href || "about:blank")),
       $((e) => (message.message = e))
     );
   });
 
   const handleGitHubLogin = $(async () => {
     signInWithGitHub(
-      env.REDIRECT_URL,
+      context.req.url?.href || "about:blank",
       $(() => {}),
       $((e) => (message.message = e))
     );

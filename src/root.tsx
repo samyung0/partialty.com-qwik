@@ -3,13 +3,13 @@ import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.
 import { RouterHead } from "./components/router-head/router-head";
 import "./global.css";
 
-import { defaultValue, type envType } from "~/types/Env";
+// import { defaultValue, type envType } from "~/types/Env";
 
-export const envContext = createContextId<envType>("env");
+// export const envContext = createContextId<envType>("env");
 
 export default component$(() => {
-  const envStore = useStore(Object.assign({}, defaultValue) as envType);
-  useContextProvider(envContext, envStore);
+  // const envStore = useStore(Object.assign({}, defaultValue) as envType);
+  // useContextProvider(envContext, envStore);
 
   return (
     <QwikCityProvider>

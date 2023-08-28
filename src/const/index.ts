@@ -7,9 +7,9 @@
 export const SUPABASE_URL = process.env["SUPABASE_URL"];
 export const SUPABASE_SECRET_KEY = process.env["SUPABASE_SECRET_KEY"];
 
-export const REDIRECT_URL =
-  process.env["NODE_ENV"] === "production"
-    ? process.env["VERCEL_PROD"]
-      ? "https://qwik-project.vercel.app/"
-      : "https://qwik-project-ezvnucovp-samyung0.vercel.app/"
-    : "http://localhost:5173/";
+// export const REDIRECT_URL =
+//   process.env["NODE_ENV"] === "production"
+//     ? process.env["VERCEL_PROD"]
+//       ? "https://qwik-project.vercel.app/"
+//       : "https://qwik-project-ezvnucovp-samyung0.vercel.app/"
+//     : "http://localhost:5173/";
