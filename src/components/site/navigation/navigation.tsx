@@ -1,16 +1,10 @@
-import {
-  component$,
-  useSignal,
-  $,
-  useContext,
-  useTask$,
-} from "@builder.io/qwik";
+import { component$, $, useContext } from "@builder.io/qwik";
 import { Logo } from "../logo/logo";
 import { ButtonStd } from "~/components/ui/button-std";
-import { Link, useNavigate } from "@builder.io/qwik-city";
+import { Link } from "@builder.io/qwik-city";
 
-import { globalContext } from "../../../root";
-import { DBLogout } from "../../../routes/plugin@Auth";
+import { globalContext } from "~/routes/(wrapper)/layout";
+import { DBLogout } from "~/routes/plugin@Auth";
 
 export const Navigation = component$(() => {
   // const nav = useNavigate();

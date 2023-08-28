@@ -1,24 +1,15 @@
-import {
-  component$,
-  createContextId,
-  useContextProvider,
-  useStore,
-} from "@builder.io/qwik";
-import {
-  QwikCityProvider,
-  RouterOutlet,
-  ServiceWorkerRegister,
-} from "@builder.io/qwik-city";
+import { component$, useStore, createContextId, useContextProvider } from "@builder.io/qwik";
+import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 import "./global.css";
 
-import { defaultValue, type GlobalContextType } from "./types/GlobalContext";
+import { defaultValue, type envType } from "~/types/Env";
 
-export const globalContext = createContextId<GlobalContextType>("global");
+export const envContext = createContextId<envType>("env");
 
 export default component$(() => {
-  const globalStore = useStore(defaultValue);
-  useContextProvider(globalContext, globalStore);
+  const envStore = useStore(Object.assign({}, defaultValue) as envType);
+  useContextProvider(envContext, envStore);
 
   return (
     <QwikCityProvider>

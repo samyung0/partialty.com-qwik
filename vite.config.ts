@@ -1,18 +1,19 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(() => {
-  return {
-    plugins: [qwikCity(), qwikVite(), tsconfigPaths()],
-    define: {
-      'process.env': JSON.stringify(process.env) // vercel and env are complicated
+const config = {
+  plugins: [qwikCity(), qwikVite(), tsconfigPaths()],
+  define: {},
+  preview: {
+    headers: {
+      "Cache-Control": "public, max-age=600",
     },
-    preview: {
-      headers: {
-        "Cache-Control": "public, max-age=600",
-      },
-    },
-  };
+  },
+};
+
+export default defineConfig((userConfig) => {
+  process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
+  return config;
 });

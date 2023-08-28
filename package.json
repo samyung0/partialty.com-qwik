@@ -11,7 +11,7 @@
     "build.preview": "vite build --ssr src/entry.preview.tsx",
     "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
-    "deploy": "vercel deploy",
+    "deploy": "vercel",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
@@ -33,6 +33,7 @@
     "@typescript-eslint/parser": "6.2.0",
     "autoprefixer": "^10.4.14",
     "compression": "^1.7.4",
+    "dotenv": "^16.3.1",
     "eslint": "8.45.0",
     "eslint-plugin-qwik": "^1.2.7",
     "express": "4.18.2",
@@ -50,7 +51,6 @@
     "@modular-forms/qwik": "^0.20.1",
     "@supabase/supabase-js": "^2.32.0",
     "axios": "^1.4.0",
-    "dotenv": "^16.3.1",
     "zod": "^3.22.2"
   }
 }

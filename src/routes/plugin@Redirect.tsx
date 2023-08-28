@@ -1,15 +1,14 @@
-import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
+import { $ } from "@builder.io/qwik";
+import { type RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { preload } from "~/routes/plugin@Auth";
 import { allRoutes } from "~/utils/allRoutes";
 import { protectedRoutes } from "~/utils/protectedRoutes";
 
-const checkValidPath = (reqPath: string): boolean => {
+export const checkValidPath = (reqPath: string): boolean => {
   let path = reqPath.slice(1);
   if (path !== "" && path[path.length - 1] === "/") path = path.slice(0, -1);
 
-  const possibleSegments = path
-    .split("/")
-    .map((segment: string) => "/" + segment);
+  const possibleSegments = path.split("/").map((segment: string) => "/" + segment);
   const segments: string[][] = [];
   const comb = (cur: string[], rem: string[]) => {
     if (rem.length === 0) {
@@ -29,21 +28,21 @@ const checkValidPath = (reqPath: string): boolean => {
       ? rec(obj[remaining[0]], remaining.slice(1))
       : false;
   };
-  return (
-    segments.filter((possibleSegments) => rec(allRoutes, possibleSegments))
-      .length > 0
-  );
+  return segments.filter((possibleSegments) => rec(allRoutes, possibleSegments)).length > 0;
 };
 
-const checkProtectedPath = (path: string, user: any): [boolean, string] => {
+export const checkProtectedPath = (path: string | undefined, user: any): [boolean, string] => {
   let shouldRedirect = false,
     redirectTo = "/"; // default to base
+
+  // in case somehow the path is empty, redirect to homepage and refresh
+  if (!path) return [true, redirectTo];
+
   for (const i of protectedRoutes) {
     const re = new RegExp(i.path);
     if (re.test(path)) {
       redirectTo = i.redirectTo;
-      if (user?.role)
-        shouldRedirect = !i.authRolesPermitted.includes(user.role);
+      if (user?.role) shouldRedirect = !i.authRolesPermitted.includes(user.role);
       else shouldRedirect = true;
       break;
     }
@@ -52,17 +51,14 @@ const checkProtectedPath = (path: string, user: any): [boolean, string] => {
 };
 
 export const onGet: RequestHandler = (request) => {
-  if (!checkValidPath(request.url.pathname))
-    throw request.redirect(308, "/notfound");
+  console.error(process.env);
+  if (!checkValidPath(request.url.pathname)) throw request.redirect(308, "/notfound");
 };
 
 export const useRedirectLoader = routeLoader$(async (request) => {
   const { session, url } = await preload.bind(request)();
 
-  const [shouldRedirect, redirectTo] = checkProtectedPath(
-    url.pathname,
-    session?.user
-  );
+  const [shouldRedirect, redirectTo] = checkProtectedPath(url.pathname, session?.user);
   if (shouldRedirect) throw request.redirect(308, redirectTo);
   return { session, url };
 });

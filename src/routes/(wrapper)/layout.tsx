@@ -1,29 +1,44 @@
 import {
   component$,
+  createContextId,
   Slot,
-  useContext,
+  useContextProvider,
+  useStore,
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
-import { globalContext } from "~/root";
 import { authStateChange } from "~/routes/plugin@Auth";
 import { loadPublicData } from "~/routes/plugin@PublicActions";
+import { useRedirectLoader } from "~/routes/plugin@Redirect";
+import { defaultValue } from "~/types/GlobalContext";
+import { type GlobalContextType } from "~/types/GlobalContext";
+
+export const globalContext = createContextId<GlobalContextType>("global");
 
 export default component$(() => {
-  const context = useContext(globalContext);
+  const { session, url } = useRedirectLoader().value;
+  const globalStore = useStore(
+    Object.assign({}, defaultValue, {
+      session,
+      req: { url },
+      isLoggedIn: session ? true : false,
+    }) as GlobalContextType
+  );
+  useContextProvider(globalContext, globalStore);
+
   useVisibleTask$(async ({ cleanup }) => {
     let subscription: Subscription | null = null;
 
-    authStateChange(context).then(
+    authStateChange(globalStore).then(
       (res) => (subscription = res.data.subscription)
     );
 
-    context.publicData.initiated = true;
+    globalStore.publicData.initiated = true;
     loadPublicData().then((res) => {
       console.log("loaded public data ", res);
-      context.publicData.data = res;
-      context.publicData.initiated = false;
-      context.publicData.resolved = true;
+      globalStore.publicData.data = res;
+      globalStore.publicData.initiated = false;
+      globalStore.publicData.resolved = true;
     });
 
     cleanup(() => {

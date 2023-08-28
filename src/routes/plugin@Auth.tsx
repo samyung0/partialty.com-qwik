@@ -12,10 +12,8 @@ import { type z } from "zod";
 import { supabase } from "../utils/supabaseClient";
 import { supabaseServer } from "../utils/supabaseServer";
 import { type emailLoginSchema } from "../types/AuthForm";
-import {
-  loadPrivateData,
-  validatePrivateData,
-} from "~/routes/plugin@PrivateActions";
+import { loadPrivateData, validatePrivateData } from "~/routes/plugin@PrivateActions";
+import { checkProtectedPath } from "~/routes/plugin@Redirect";
 
 export const preload = server$(async function () {
   const ret: {
@@ -85,25 +83,23 @@ export const login = $(function (
   loginHelper(cookie, sessionExpiresIn);
 });
 
-export const logoutHelper = server$(function () {
+export const logoutHelper = server$(function (globalContext: GlobalContextType) {
   this.cookie.delete("access_token");
   this.cookie.delete("refresh_token");
 
-  // redirect if user is at protected route
-  // console.log("logout", this);
-  // const [shouldRedirect, redirectTo] = checkProtectedPath(
-  //   request.url.pathname,
-  //   request.sharedMap.get("user")
-  // );
-  // if (shouldRedirect) throw request.redirect(308, redirectTo);
+  return checkProtectedPath(globalContext.req.url?.pathname, globalContext.session?.user);
 });
 
-export const logout = $(function (globalContext: GlobalContextType) {
+export const logout = $(async function (globalContext: GlobalContextType) {
   console.log("logging out");
-  logoutHelper();
+  const [shouldRedirect, redirectTo] = await logoutHelper(globalContext);
 
   globalContext.session = null;
   globalContext.isLoggedIn = false;
+
+  // force page redirect if on protected route
+  // could change this behavior
+  if (shouldRedirect) return window.location.replace(redirectTo);
 });
 
 export const DBLogout = $(() => supabase.auth.signOut());

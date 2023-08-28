@@ -3,13 +3,19 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
-import { initialFormValue, emailLoginSchema } from "~/types/AuthForm";
+import {
+  initialFormValue,
+  emailLoginSchema,
+  type EmailLoginForm,
+} from "~/types/AuthForm";
 import { signUpWithPassword } from "~/routes/plugin@Auth";
 
 export default component$(() => {
   const message = useStore<any>({ message: undefined, status: "error" });
   const isLoading = useSignal(false);
-  const emailForm = useStore(initialFormValue);
+  const emailForm = useStore(
+    Object.assign({}, initialFormValue) as EmailLoginForm
+  );
   const nav = useNavigate();
   const termsChecked = useSignal(false);
 
