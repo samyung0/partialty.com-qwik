@@ -51,7 +51,6 @@ export const checkProtectedPath = (path: string | undefined, user: any): [boolea
 };
 
 export const onGet: RequestHandler = (request) => {
-  console.error(process.env);
   if (!checkValidPath(request.url.pathname)) throw request.redirect(308, "/notfound");
 };
 
