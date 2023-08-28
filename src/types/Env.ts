@@ -1,4 +1,4 @@
-import { REDIRECT_URL } from "~/const";
+// import { REDIRECT_URL } from "~/const";
 
 export type envType = {
   // REDIRECT_URL: string;
