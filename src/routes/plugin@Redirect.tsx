@@ -22,6 +22,7 @@ export const checkProtectedPath = (path: string | undefined, user: any): [boolea
 };
 
 export const useRedirectLoader = routeLoader$(async (request) => {
+  // bind to the root request since request inside server$ has different request object
   const { session, url } = await preload.bind(request)();
 
   const [shouldRedirect, redirectTo] = checkProtectedPath(url.pathname, session?.user);
