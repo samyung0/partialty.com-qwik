@@ -51,7 +51,6 @@ export const preload = server$(async function () {
     console.error(res.error);
     return ret;
   }
-
   redis.json.set(
     `cached_session${res.data.session!.access_token}`,
     "$",
@@ -200,6 +199,9 @@ export const authStateChange = $((globalStore: GlobalContextType) => {
     };
     login(globalStore, session, cookies, session.expires_in);
     loadPrivateDataHelper(globalStore);
+
+    if (event === "SIGNED_IN")
+      redis.json.set(`cached_session${session.access_token}`, "$", JSON.stringify(session));
   });
 });
 
