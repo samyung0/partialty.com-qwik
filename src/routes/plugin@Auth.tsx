@@ -7,13 +7,14 @@ import {
   type Session,
 } from "@supabase/supabase-js";
 import { server$ } from "@builder.io/qwik-city";
-import { type z } from "zod";
+import { type z } from "@builder.io/qwik-city";
 
 import { supabase } from "../utils/supabaseClient";
 import { supabaseServer } from "../utils/supabaseServer";
 import { type emailLoginSchema } from "../types/AuthForm";
 import { loadPrivateData, validatePrivateData } from "~/routes/plugin@PrivateActions";
 import { checkProtectedPath } from "~/routes/plugin@Redirect";
+import { redis } from "~/utils/redis";
 
 export const preload = server$(async function () {
   const ret: {
@@ -29,15 +30,30 @@ export const preload = server$(async function () {
 
   if (!access_token || !refresh_token) return ret;
 
+  let time1 = performance.now();
+  const redisCache = await redis.json.get(`cached_session${access_token}`);
+  if (redisCache) {
+    console.log("cache hit with time ", performance.now() - time1);
+    ret.session = redisCache as Session;
+    return ret;
+  }
+
+  time1 = performance.now();
+
   const res = await supabaseServer.auth.setSession({
     access_token: access_token.value,
     refresh_token: refresh_token.value,
   });
 
+  console.log("cache miss with supabase time ", performance.now() - time1);
+
   if (res.error) {
     console.error(res.error);
     return ret;
   }
+
+  redis.json.set(`cached_session${access_token}`, "$", JSON.stringify(res.data.session));
+
   loginHelper.bind(this)(
     {
       access_token: res.data.session?.access_token,
