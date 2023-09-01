@@ -69,6 +69,10 @@ export const preload = server$(async function () {
   return ret;
 });
 
+export const saveSessionCacheOnLogIn = server$((session) => {
+  redis.json.set(`cached_session${session.access_token}`, "$", JSON.stringify(session));
+});
+
 export const loginHelper = server$(function (cookie, sessionExpiresIn) {
   this.cookie.set("access_token", cookie.access_token, {
     httpOnly: true,
@@ -200,8 +204,7 @@ export const authStateChange = $((globalStore: GlobalContextType) => {
     login(globalStore, session, cookies, session.expires_in);
     loadPrivateDataHelper(globalStore);
 
-    if (event === "SIGNED_IN")
-      redis.json.set(`cached_session${session.access_token}`, "$", JSON.stringify(session));
+    if (event === "SIGNED_IN") saveSessionCacheOnLogIn(session);
   });
 });
 
