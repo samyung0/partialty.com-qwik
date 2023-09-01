@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "build": "npm run lint.fix && npm run fmt && qwik build",
+    "build": "npm run clean && qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
     "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
@@ -21,7 +21,8 @@
     "preview": "qwik build preview && vite preview --open",
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "clean": "npm run lint.fix && npm run fmt"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.7",

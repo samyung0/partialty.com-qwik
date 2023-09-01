@@ -31,7 +31,7 @@ export const preload = server$(async function () {
   if (!access_token || !refresh_token) return ret;
 
   let time1 = performance.now();
-  const redisCache = await redis.json.get(`cached_session${access_token}`);
+  const redisCache = await redis.json.get(`cached_session${access_token.value}`);
   if (redisCache) {
     console.log("cache hit with time ", performance.now() - time1);
     ret.session = redisCache as Session;
@@ -52,12 +52,16 @@ export const preload = server$(async function () {
     return ret;
   }
 
-  redis.json.set(`cached_session${access_token}`, "$", JSON.stringify(res.data.session));
+  redis.json.set(
+    `cached_session${res.data.session!.access_token}`,
+    "$",
+    JSON.stringify(res.data.session)
+  );
 
   loginHelper.bind(this)(
     {
-      access_token: res.data.session?.access_token,
-      refresh_token: res.data.session?.refresh_token,
+      access_token: res.data.session!.access_token,
+      refresh_token: res.data.session!.refresh_token,
     },
     res.data.session?.expires_in
   );
@@ -99,6 +103,8 @@ export const login = $(function (
   loginHelper(cookie, sessionExpiresIn);
 });
 
+// we can clear the upstash redis cache but its not necessary
+// eviction is enabled so old data will be removed when storage is full
 export const logoutHelper = server$(function (globalContext: GlobalContextType) {
   this.cookie.delete("access_token");
   this.cookie.delete("refresh_token");
