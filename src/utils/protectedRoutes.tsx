@@ -9,4 +9,9 @@ export const protectedRoutes = [
     // if you need to test against profile roles, test it after the page loads, meaning you need to implement a loading screen and redirect if roles doesnt match
     redirectTo: "/",
   },
+  {
+    path: "/login",
+    authRolesPermitted: [], // anything but authenticated
+    redirectTo: "/members/dashboard", // if logged in, redirect to dashboard
+  },
 ];

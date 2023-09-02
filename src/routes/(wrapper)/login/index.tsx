@@ -1,4 +1,4 @@
-import { component$, useStore, $, useContext } from "@builder.io/qwik";
+import { component$, useStore, $, useContext, useSignal } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
@@ -9,10 +9,11 @@ import { globalContext } from "~/routes/(wrapper)/layout";
 
 export default component$(() => {
   const context = useContext(globalContext);
-
   const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const message: any = useStore({ message: undefined, status: "error" });
   const nav = useNavigate();
+
+  const test = useSignal<HTMLElement>();
 
   const handleEmailLogin = $(async () => {
     const result = emailLoginSchema.safeParse(emailForm);
@@ -27,7 +28,15 @@ export default component$(() => {
         email: result.data.email,
         password: result.data.password,
       },
-      $(() => nav(context.req.url?.href || "about:blank")),
+      $(async () => {
+        // MODULARALIZE THIS
+        test.value!.style.opacity = "0";
+        await new Promise((res) => setTimeout(res, 150));
+        console.log("URL", context.req.url?.href);
+
+        // TODO: for same page nav, we can do view transition
+        nav(context.req.url?.href || "about:blank");
+      }),
       $((e) => (message.message = e))
     );
   });
@@ -36,12 +45,21 @@ export default component$(() => {
     signInWithGitHub(
       context.req.url?.href || "about:blank",
       $(() => {}),
-      $((e) => (message.message = e))
+      $((e) => (message.message = e)),
+      $(async (url: string) => {
+        // MODULARALIZE THIS
+        test.value!.style.opacity = "0";
+        await new Promise((res) => setTimeout(res, 150));
+        nav(url);
+      })
     );
   });
 
   return (
-    <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div
+      ref={test}
+      class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 transition-opacity"
+    >
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/">
           <Image class="w-24 h-24 mx-auto" />

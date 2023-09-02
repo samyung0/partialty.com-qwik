@@ -14,7 +14,7 @@ export const checkProtectedPath = (path: string | undefined, user: any): [boolea
     if (re.test(path)) {
       redirectTo = i.redirectTo;
       if (user?.role) shouldRedirect = !i.authRolesPermitted.includes(user.role);
-      else shouldRedirect = true;
+      else shouldRedirect = i.authRolesPermitted.length !== 0; // if no roles permitted, then its free to access to UNAUTHED persons
       break;
     }
   }

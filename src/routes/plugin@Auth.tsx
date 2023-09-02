@@ -148,28 +148,35 @@ export const signInWithPassword = $(
 export const signInWithGitHub = $(
   (
     redirectURL: string = "/",
-    callbackFn?: QRL<(V: OAuthResponse) => any>,
-    errorFn: QRL<(V: any) => any> | Console["error"] = console.error
+    callbackFn: QRL<(V: OAuthResponse) => any>,
+    errorFn: QRL<(V: any) => any> | Console["error"] = console.error,
+    navMethod: Function
   ) => {
     return supabase.auth
       .signInWithOAuth({
         provider: "github",
         options: {
-          redirectTo: redirectURL,
+          // redirectTo: redirectURL,
+          skipBrowserRedirect: true,
         },
       })
       .then((res) => {
         if (res.error) errorFn(res.error.toString());
-        else if (callbackFn) callbackFn(res);
-      })
-      .catch(errorFn);
+        else navMethod(res.data.url);
+      });
+    // .then((res) => {
+    //   console.log(res);
+    //   if (res.error) errorFn(res.error.toString());
+    //   else if (callbackFn) callbackFn(res);
+    // })
+    // .catch(errorFn);
   }
 );
 
 export const signUpWithPassword = $(
   (
     data: z.infer<typeof emailLoginSchema>,
-    callbackFn?: QRL<(V: AuthResponse) => any>,
+    callbackFn: QRL<(V: AuthResponse) => any>,
     errorFn: QRL<(V: any) => any> | Console["error"] = console.error,
     redirectURL: string = "/"
   ) => {
@@ -191,7 +198,7 @@ export const signUpWithPassword = $(
 
 export const authStateChange = $((globalStore: GlobalContextType) => {
   return supabase.auth.onAuthStateChange(async (event, session) => {
-    console.log(event, session);
+    console.log(event);
 
     if (!session || !session.access_token || !session.refresh_token) {
       logout(globalStore);
@@ -204,7 +211,10 @@ export const authStateChange = $((globalStore: GlobalContextType) => {
     login(globalStore, session, cookies, session.expires_in);
     loadPrivateDataHelper(globalStore);
 
-    if (event === "SIGNED_IN") saveSessionCacheOnLogIn(session);
+    if (event === "SIGNED_IN") {
+      saveSessionCacheOnLogIn(session);
+      console.log("set session cache");
+    }
   });
 });
 
@@ -214,7 +224,7 @@ export const loadPrivateDataHelper = $((globalStore: GlobalContextType) => {
     globalStore.privateData.initiated = true;
     loadPrivateData().then((res) => {
       if (validatePrivateData(res)) {
-        console.log("loaded private data.", res.data![0]);
+        console.log("loaded private data.");
 
         globalStore.privateData.data = res.data![0];
         globalStore.privateData.resolved = true;
