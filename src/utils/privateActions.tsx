@@ -1,5 +1,5 @@
 import { $ } from "@builder.io/qwik";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "./supabaseClient";
 
 // IMPORTANT
 // currently, any code that fetches from the db (private actions)

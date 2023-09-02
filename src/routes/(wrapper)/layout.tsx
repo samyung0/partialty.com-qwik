@@ -8,7 +8,7 @@ import {
 } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
 import { authStateChange } from "~/routes/plugin@Auth";
-import { loadPublicData } from "~/routes/plugin@PublicActions";
+import { loadPublicData } from "~/utils/publicActions";
 import { useRedirectLoader } from "~/routes/plugin@Redirect";
 import { defaultValue } from "~/types/GlobalContext";
 import { type GlobalContextType } from "~/types/GlobalContext";
@@ -16,12 +16,10 @@ import { type GlobalContextType } from "~/types/GlobalContext";
 export const globalContext = createContextId<GlobalContextType>("global");
 
 export default component$(() => {
-  const { session, url } = useRedirectLoader().value;
+  const preloadedContext = useRedirectLoader().value;
   const globalStore = useStore(
-    Object.assign({}, defaultValue, {
-      session,
-      req: { url },
-      isLoggedIn: session ? true : false,
+    Object.assign({}, defaultValue, preloadedContext, {
+      isLoggedIn: preloadedContext.session ? true : false,
     }) as GlobalContextType
   );
   useContextProvider(globalContext, globalStore);

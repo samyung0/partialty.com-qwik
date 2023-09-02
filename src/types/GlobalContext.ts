@@ -16,7 +16,7 @@ export interface GlobalContextType {
   req: {
     url: RequestEvent["url"] | null;
   };
-  session: Session | null;
+  session: (Session & { userRole?: string }) | null;
 }
 
 export const defaultValue: GlobalContextType = {

@@ -1,5 +1,5 @@
 import { $, type QRL } from "@builder.io/qwik";
-import { type GlobalContextType } from "../types/GlobalContext";
+import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 import {
   type AuthResponse,
   type AuthTokenResponse,
@@ -12,65 +12,64 @@ import { type z } from "@builder.io/qwik-city";
 import { supabase } from "../utils/supabaseClient";
 import { supabaseServer } from "../utils/supabaseServer";
 import { type emailLoginSchema } from "../types/AuthForm";
-import { loadPrivateData, validatePrivateData } from "~/routes/plugin@PrivateActions";
+import { loadPrivateData, validatePrivateData } from "~/utils/privateActions";
 import { checkProtectedPath } from "~/routes/plugin@Redirect";
-import { redis } from "~/utils/redis";
+import { getCacheJson, setCacheJson } from "~/utils/cache";
 
 export const preload = server$(async function () {
-  const ret: {
-    session: Session | null;
-    url: URL;
-  } = {
-    session: null,
-    url: this.url,
-  };
+  const ret = Object.assign({}, defaultValue) as GlobalContextType;
+  ret.req.url = this.url;
 
   const access_token = this.cookie.get("access_token"),
     refresh_token = this.cookie.get("refresh_token");
 
   if (!access_token || !refresh_token) return ret;
 
+  // cache hit in upstash redis
   let time1 = performance.now();
-  const redisCache = await redis.json.get(`cached_session${access_token.value}`);
-  if (redisCache) {
+  const redisCache = await getCacheJson(`cached_session${access_token.value}`);
+  if (redisCache && redisCache.userRole) {
     console.log("cache hit with time ", performance.now() - time1);
-    ret.session = redisCache as Session;
+    ret.session = redisCache;
     return ret;
   }
 
+  // cache miss
+  // refresh session and get user role in supabase
   time1 = performance.now();
-
   const res = await supabaseServer.auth.setSession({
     access_token: access_token.value,
     refresh_token: refresh_token.value,
   });
 
-  console.log("cache miss with supabase time ", performance.now() - time1);
-
   if (res.error) {
     console.error(res.error);
     return ret;
   }
-  redis.json.set(
-    `cached_session${res.data.session!.access_token}`,
-    "$",
-    JSON.stringify(res.data.session)
-  );
+  ret.session = Object.assign({}, res.data.session);
 
-  loginHelper.bind(this)(
+  const privateRoleData = await supabaseServer
+    .from("profiles")
+    .select("role")
+    .eq("id", res.data.user!.id);
+  if (!validatePrivateData(privateRoleData)) {
+    console.log(res.error);
+    return ret;
+  }
+  loginHelper(
     {
       access_token: res.data.session!.access_token,
       refresh_token: res.data.session!.refresh_token,
     },
     res.data.session?.expires_in
   );
-  ret.session = res.data.session;
+  setCacheJson(
+    `cached_session${res.data.session!.access_token}`,
+    JSON.stringify(Object.assign({}, res.data.session, { userRole: privateRoleData.data![0].role }))
+  );
 
+  if (privateRoleData.data![0].role) ret.session.userRole = privateRoleData.data![0].role;
   return ret;
-});
-
-export const saveSessionCacheOnLogIn = server$((session) => {
-  redis.json.set(`cached_session${session.access_token}`, "$", JSON.stringify(session));
 });
 
 export const loginHelper = server$(function (cookie, sessionExpiresIn) {
@@ -156,7 +155,7 @@ export const signInWithGitHub = $(
       .signInWithOAuth({
         provider: "github",
         options: {
-          // redirectTo: redirectURL,
+          redirectTo: redirectURL,
           skipBrowserRedirect: true,
         },
       })
@@ -210,16 +209,10 @@ export const authStateChange = $((globalStore: GlobalContextType) => {
     };
     login(globalStore, session, cookies, session.expires_in);
     loadPrivateDataHelper(globalStore);
-
-    if (event === "SIGNED_IN") {
-      saveSessionCacheOnLogIn(session);
-      console.log("set session cache");
-    }
   });
 });
 
 export const loadPrivateDataHelper = $((globalStore: GlobalContextType) => {
-  console.log("private data status: ", globalStore.privateData);
   if (!globalStore.privateData.resolved && !globalStore.privateData.initiated) {
     globalStore.privateData.initiated = true;
     loadPrivateData().then((res) => {
@@ -229,6 +222,12 @@ export const loadPrivateDataHelper = $((globalStore: GlobalContextType) => {
         globalStore.privateData.data = res.data![0];
         globalStore.privateData.resolved = true;
         globalStore.privateData.initiated = false;
+
+        console.log("cached user role and session");
+        setCacheJson(
+          `cached_session${globalStore.session!.access_token}`,
+          JSON.stringify(Object.assign({}, globalStore.session, { userRole: res.data![0].role }))
+        );
       }
     });
   }

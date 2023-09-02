@@ -5,7 +5,7 @@
 export const protectedRoutes = [
   {
     path: "/members", // also matches for /members /members/a /members/a/b
-    authRolesPermitted: ["authenticated"], // the roles are matched against the roles in auth, NOT in profiles
+    authRolesPermitted: ["free"], // the roles are matched against the roles in profile, NOT auth
     // if you need to test against profile roles, test it after the page loads, meaning you need to implement a loading screen and redirect if roles doesnt match
     redirectTo: "/",
   },
