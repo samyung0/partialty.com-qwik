@@ -1,6 +1,6 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-export default interface Supabase {
+export default interface Database {
   public: {
     Tables: {
       profiles: {
@@ -8,24 +8,21 @@ export default interface Supabase {
           created_at: string;
           email: string | null;
           id: string;
-          is_terms_agreed: boolean | null;
-          role: string | null;
+          role: string;
           stripe_customer_id: string | null;
         };
         Insert: {
           created_at?: string;
           email?: string | null;
           id: string;
-          is_terms_agreed?: boolean | null;
-          role?: string | null;
+          role: string;
           stripe_customer_id?: string | null;
         };
         Update: {
           created_at?: string;
           email?: string | null;
           id?: string;
-          is_terms_agreed?: boolean | null;
-          role?: string | null;
+          role?: string;
           stripe_customer_id?: string | null;
         };
         Relationships: [

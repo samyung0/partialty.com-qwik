@@ -1,5 +1,5 @@
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { preload } from "~/routes/plugin@Auth";
+import { preload } from "~/utils/auth";
 import { protectedRoutes } from "~/utils/protectedRoutes";
 
 export const checkProtectedPath = (path: string | undefined, role: any): [boolean, string] => {

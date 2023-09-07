@@ -2,7 +2,7 @@ import { component$, useStore, $, useContext, useSignal } from "@builder.io/qwik
 import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
-import { signInWithGitHub, signInWithPassword } from "~/routes/plugin@Auth";
+import { signInWithGitHub, signInWithPassword } from "~/utils/auth";
 import { Message } from "~/components/ui/message";
 import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
 import { globalContext } from "~/routes/(wrapper)/layout";

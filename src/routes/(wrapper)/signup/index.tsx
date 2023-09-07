@@ -4,7 +4,7 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
 import { initialFormValue, emailLoginSchema, type EmailLoginForm } from "~/types/AuthForm";
-import { signUpWithPassword } from "~/routes/plugin@Auth";
+import { signUpWithPassword } from "~/utils/auth";
 
 export default component$(() => {
   const message = useStore<any>({ message: undefined, status: "error" });

@@ -4,7 +4,7 @@ import { ButtonStd } from "~/components/ui/button-std";
 import { Link } from "@builder.io/qwik-city";
 
 import { globalContext } from "~/routes/(wrapper)/layout";
-import { DBLogout } from "~/routes/plugin@Auth";
+import { DBLogout } from "~/utils/auth";
 
 export const Navigation = component$(() => {
   // const nav = useNavigate();

@@ -7,7 +7,8 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
-import { authStateChange } from "~/routes/plugin@Auth";
+
+import { authStateChange } from "~/utils/auth";
 import { loadPublicData } from "~/utils/publicActions";
 import { useRedirectLoader } from "~/routes/plugin@Redirect";
 import { defaultValue } from "~/types/GlobalContext";
