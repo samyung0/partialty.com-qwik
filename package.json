@@ -6,9 +6,8 @@
   },
   "private": true,
   "pre-commit": [
-    "fmt.check",
-    "lint",
-    "test"
+    "fmt",
+    "lint.fix"
   ],
   "scripts": {
     "test": "echo test",
