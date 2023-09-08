@@ -1,7 +1,7 @@
 import { $ } from "@builder.io/qwik";
-import { supabase } from "./supabaseClient";
 import { type GlobalContextType } from "~/types/GlobalContext";
 import { setCacheJson } from "~/utils/cache";
+import { supabase } from "./supabaseClient";
 
 // IMPORTANT
 // currently, any code that fetches from the db (private actions)

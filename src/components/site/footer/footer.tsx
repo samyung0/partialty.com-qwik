@@ -14,7 +14,7 @@ export const links = [
 export const Footer = component$(() => {
   return (
     <footer class="bg-gray-900">
-      <div class="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
           {links.map((link) => {
             return (

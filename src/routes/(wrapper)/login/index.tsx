@@ -1,11 +1,11 @@
-import { component$, useStore, $, useContext, useSignal } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
-import { signInWithGitHub, signInWithPassword } from "~/utils/auth";
 import { Message } from "~/components/ui/message";
-import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
 import { globalContext } from "~/routes/(wrapper)/layout";
+import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
+import { signInWithGitHub, signInWithPassword } from "~/utils/auth";
 
 export default component$(() => {
   const context = useContext(globalContext);
@@ -58,11 +58,11 @@ export default component$(() => {
   return (
     <div
       ref={test}
-      class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 transition-opacity"
+      class="flex min-h-full flex-col justify-center py-12 transition-opacity sm:px-6 lg:px-8"
     >
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/">
-          <Image class="w-24 h-24 mx-auto" />
+          <Image class="mx-auto h-24 w-24" />
         </Link>
         <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Log in</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
@@ -74,13 +74,13 @@ export default component$(() => {
       </div>
 
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-sm sm:px-10">
+        <div class="bg-white px-4 py-8 shadow sm:rounded-sm sm:px-10">
           <div class="">
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <a
                   href="#"
-                  class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                  class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with Google</span>
                   <svg
@@ -98,7 +98,7 @@ export default component$(() => {
               <div>
                 <button
                   onClick$={handleGitHubLogin}
-                  class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
+                  class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with GitHub</span>
                   <svg class="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -167,7 +167,7 @@ export default component$(() => {
             <div>
               <button
                 type="submit"
-                class="transition-all duration-300 flex w-full justify-center rounded-sm border border-transparent bg-sky-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:bg-gray-500 disabled:hover:bg-gray-500 focus:ring-offset-2"
+                class="flex w-full justify-center rounded-sm border border-transparent bg-sky-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:bg-gray-500 disabled:hover:bg-gray-500"
               >
                 Log in
               </button>

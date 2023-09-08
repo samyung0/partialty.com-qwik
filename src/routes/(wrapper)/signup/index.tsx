@@ -1,9 +1,9 @@
-import { component$, useStore, useSignal, $ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
-import { initialFormValue, emailLoginSchema, type EmailLoginForm } from "~/types/AuthForm";
+import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
 import { signUpWithPassword } from "~/utils/auth";
 
 export default component$(() => {
@@ -46,7 +46,7 @@ export default component$(() => {
     <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/">
-          <Image class="w-24 h-24 mx-auto" />
+          <Image class="mx-auto h-24 w-24" />
         </Link>
         <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
@@ -58,7 +58,7 @@ export default component$(() => {
       </div>
 
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-sm sm:px-10">
+        <div class="bg-white px-4 py-8 shadow sm:rounded-sm sm:px-10">
           <form onSubmit$={handleEmailSignup} preventdefault:submit class="space-y-6">
             <div>
               <label class="block text-sm font-medium text-gray-700">Email address</label>
@@ -124,7 +124,7 @@ export default component$(() => {
               <button
                 type="submit"
                 disabled={isLoading.value}
-                class="transition-all duration-300 flex w-full justify-center rounded-sm border border-transparent bg-sky-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:bg-gray-500 disabled:hover:bg-gray-500 focus:ring-offset-2"
+                class="flex w-full justify-center rounded-sm border border-transparent bg-sky-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:bg-gray-500 disabled:hover:bg-gray-500"
               >
                 Sign up
               </button>

@@ -1,6 +1,6 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { Link } from "@builder.io/qwik-city";
 
 export default component$(() => {
   const isShow = useSignal(true);

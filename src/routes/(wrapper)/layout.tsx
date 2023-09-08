@@ -8,11 +8,10 @@ import {
 } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
 
+import { useRedirectLoader } from "~/routes/plugin@Redirect";
+import { defaultValue, type GlobalContextType } from "~/types/GlobalContext";
 import { authStateChange } from "~/utils/auth";
 import { loadPublicData } from "~/utils/publicActions";
-import { useRedirectLoader } from "~/routes/plugin@Redirect";
-import { defaultValue } from "~/types/GlobalContext";
-import { type GlobalContextType } from "~/types/GlobalContext";
 
 export const globalContext = createContextId<GlobalContextType>("global");
 

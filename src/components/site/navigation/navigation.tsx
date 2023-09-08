@@ -1,7 +1,7 @@
-import { component$, $, useContext } from "@builder.io/qwik";
-import { Logo } from "../logo/logo";
-import { ButtonStd } from "~/components/ui/button-std";
+import { $, component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
+import { ButtonStd } from "~/components/ui/button-std";
+import { Logo } from "../logo/logo";
 
 import { globalContext } from "~/routes/(wrapper)/layout";
 import { DBLogout } from "~/utils/auth";
@@ -15,8 +15,8 @@ export const Navigation = component$(() => {
   });
 
   return (
-    <nav class="bg-white py-4 px-7 sticky">
-      <div class="flex justify-between items-center">
+    <nav class="sticky bg-white px-7 py-4">
+      <div class="flex items-center justify-between">
         <Link href="/">
           <Logo />
         </Link>
@@ -32,7 +32,7 @@ export const Navigation = component$(() => {
               <Link href="/services">Services</Link>
             </li>
           </ul>
-          <div class="border-r border-gray-300 h-10 ml-10"></div>
+          <div class="ml-10 h-10 border-r border-gray-300"></div>
 
           {context.isLoggedIn && (
             <>

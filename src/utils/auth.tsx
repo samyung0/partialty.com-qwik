@@ -1,21 +1,20 @@
 import { $, type QRL } from "@builder.io/qwik";
-import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
+import { server$, type z } from "@builder.io/qwik-city";
 import {
   type AuthResponse,
   type AuthTokenResponse,
   type OAuthResponse,
   type Session,
 } from "@supabase/supabase-js";
-import { server$ } from "@builder.io/qwik-city";
-import { type z } from "@builder.io/qwik-city";
 import deepEqual from "lodash.isequal";
+import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
-import { supabase } from "./supabaseClient";
-import { supabaseServer } from "./supabaseServer";
-import { type emailLoginSchema } from "../types/AuthForm";
-import { loadPrivateDataHelper, validatePrivateData } from "~/utils/privateActions";
 import { checkProtectedPath } from "~/routes/plugin@Redirect";
 import { getCacheJson, setCacheJson } from "~/utils/cache";
+import { loadPrivateDataHelper, validatePrivateData } from "~/utils/privateActions";
+import { type emailLoginSchema } from "../types/AuthForm";
+import { supabase } from "./supabaseClient";
+import { supabaseServer } from "./supabaseServer";
 
 export const preload = server$(async function () {
   const ret = Object.assign({}, defaultValue) as GlobalContextType;

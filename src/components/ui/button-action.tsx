@@ -14,7 +14,7 @@ export const ButtonAction = component$((props: ItemProps) => {
     <button
       onClick$={props.handleFunction}
       class={
-        "transition-all duration-300 shadow-lg hover:shadow-none flex text-white px-4 py-2 w-56 justify-center rounded-sm space-x-4 " +
+        "flex w-56 justify-center space-x-4 rounded-sm px-4 py-2 text-white shadow-lg transition-all duration-300 hover:shadow-none " +
         (props.isDisabled ? "bg-gray-500 " : "bg-sky-500 hover:bg-sky-400 ")
       }
     >

@@ -1,9 +1,9 @@
 import { component$ } from "@builder.io/qwik";
-import { Hero } from "~/components/site/hero/hero";
-import { ButtonAction } from "~/components/ui/button-action";
 import { Link, type DocumentHead } from "@builder.io/qwik-city";
-import { Navigation } from "~/components/site/navigation/navigation";
 import { Footer } from "~/components/site/footer/footer";
+import { Hero } from "~/components/site/hero/hero";
+import { Navigation } from "~/components/site/navigation/navigation";
+import { ButtonAction } from "~/components/ui/button-action";
 
 export default component$(() => {
   return (
@@ -11,7 +11,7 @@ export default component$(() => {
       <Navigation />
       <section>
         <Hero />
-        <div class="flex justify-center py-12 w-full">
+        <div class="flex w-full justify-center py-12">
           <Link href="/members/dashboard">
             <ButtonAction label="Dashboard" />
           </Link>

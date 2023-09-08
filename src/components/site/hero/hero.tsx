@@ -1,19 +1,19 @@
 import { component$ } from "@builder.io/qwik";
-import { ButtonStd } from "~/components/ui/button-std";
 import { Link } from "@builder.io/qwik-city";
+import { ButtonStd } from "~/components/ui/button-std";
 
 export const Hero = component$(() => {
   return (
-    <section class="py-24 w-full bg-gradient-to-br from-gray-900 to-sky-900 shadow-xl">
-      <div class="flex flex-col h-full items-center justify-center w-full">
-        <div class="text-white text-4xl md:text-5xl lg:text-7xl tracking-tighter font-extrabold font-sans">
+    <section class="w-full bg-gradient-to-br from-gray-900 to-sky-900 py-24 shadow-xl">
+      <div class="flex h-full w-full flex-col items-center justify-center">
+        <div class="font-sans text-4xl font-extrabold tracking-tighter text-white md:text-5xl lg:text-7xl">
           Lorem, ipsum dolor.
         </div>
-        <div class="relative flex justify-center text-white text-5xl md:text-6xl lg:text-8xl tracking-tight font-extrabold font-sans">
+        <div class="relative flex justify-center font-sans text-5xl font-extrabold tracking-tight text-white md:text-6xl lg:text-8xl">
           <div class="text-green-500 ">Lorem, ipsum dolor.</div>
         </div>
-        <div class="text-slate-300 mt-24 italic text-xl font-light">Lorem, ipsum.</div>
-        <div class="text-white mt-24 itali text-xl italic">
+        <div class="mt-24 text-xl font-light italic text-slate-300">Lorem, ipsum.</div>
+        <div class="itali mt-24 text-xl italic text-white">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nisi, maiores?
         </div>
         <Link href="/signup">
