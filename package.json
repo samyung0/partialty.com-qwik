@@ -5,7 +5,13 @@
     "node": ">=15.0.0"
   },
   "private": true,
+  "pre-commit": [
+    "fmt.check",
+    "lint",
+    "test"
+  ],
   "scripts": {
+    "test": "echo test",
     "build": "npm run clean && qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
@@ -21,8 +27,7 @@
     "preview": "qwik build preview && vite preview --open",
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik",
-    "clean": "npm run lint.fix && npm run fmt"
+    "qwik": "qwik"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.7",
@@ -36,12 +41,14 @@
     "@typescript-eslint/parser": "6.2.0",
     "autoprefixer": "^10.4.14",
     "compression": "^1.7.4",
+    "daisyui": "^3.7.3",
     "dotenv": "^16.3.1",
     "eslint": "8.45.0",
     "eslint-plugin-qwik": "^1.2.7",
     "eslint-plugin-unused-imports": "^3.0.0",
     "express": "4.18.2",
     "postcss": "8.4.27",
+    "pre-commit": "^1.2.2",
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
