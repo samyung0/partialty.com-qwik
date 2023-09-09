@@ -6,16 +6,27 @@ import { Logo } from "../logo/logo";
 import { globalContext } from "~/routes/(wrapper)/layout";
 import { DBLogout } from "~/utils/auth";
 
+// import { themeContext } from "~/root";
+
 export const Navigation = component$(() => {
   // const nav = useNavigate();
   const context = useContext(globalContext);
+  // const theme = useContext(themeContext);
 
   const handleLogout = $(() => {
     DBLogout();
   });
 
   return (
-    <nav class="sticky bg-white px-7 py-4">
+    <nav
+      // data-theme="dark"
+      // class="theme-test:bg-green-100 sticky bg-red-700 px-7 py-4 dark:bg-blue-100" // IMPORTANT: theme-test: will override normal styles
+      // class={
+      //   "sticky top-0 bg-red-700 px-7 py-4 dark:bg-blue-100 " +
+      //   (theme.value === "theme-test" ? "bg-green-100 px-[70px] py-[100px]" : "")
+      // }
+      class="sticky top-0 z-10 bg-white px-7 py-4"
+    >
       <div class="flex items-center justify-between">
         <Link href="/">
           <Logo />

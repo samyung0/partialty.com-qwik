@@ -1,15 +1,15 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, createContextId, useContextProvider, useStore } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 import "./global.css";
 
 // import { defaultValue, type envType } from "~/types/Env";
 
-// export const envContext = createContextId<envType>("env");
+export const themeContext = createContextId<{ value: string }>("theme");
 
 export default component$(() => {
-  // const envStore = useStore(Object.assign({}, defaultValue) as envType);
-  // useContextProvider(envContext, envStore);
+  const themeStore = useStore({ value: "" });
+  useContextProvider(themeContext, themeStore);
 
   return (
     <QwikCityProvider>
@@ -19,8 +19,8 @@ export default component$(() => {
         <RouterHead />
         <ServiceWorkerRegister />
       </head>
-      <body lang="en">
-        <RouterOutlet />
+      <body lang="en" class={themeStore.value}>
+        <RouterOutlet layout="default" />
       </body>
     </QwikCityProvider>
   );
