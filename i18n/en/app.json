@@ -1,0 +1,6 @@
+{
+  "app": {
+    "changeLocale": "Change locale",
+    "title": "{{name}} demo"
+  }
+}

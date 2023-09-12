@@ -26,7 +26,8 @@
     "preview": "qwik build preview && vite preview --open",
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en,zh-HK,ja --assetsPath=i18n"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.7",
@@ -63,6 +64,7 @@
     "@supabase/supabase-js": "^2.32.0",
     "@upstash/redis": "^1.22.0",
     "axios": "^1.4.0",
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.5.0",
+    "qwik-speak": "^0.15.3"
   }
 }

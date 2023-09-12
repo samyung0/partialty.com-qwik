@@ -5,29 +5,28 @@ import { Hero } from "~/components/site/hero/hero";
 import { Navigation } from "~/components/site/navigation/navigation";
 import { ButtonAction } from "~/components/ui/button-action";
 
+import { Speak } from "qwik-speak";
+
 export default component$(() => {
   return (
-    <main>
-      <Navigation />
-      <section>
-        <Hero />
-        <div class="flex w-full justify-center py-12">
-          <Link href="/members/dashboard">
-            <ButtonAction label="Dashboard" />
-          </Link>
-        </div>
-      </section>
-      <Footer />
-    </main>
+    <Speak assets={["main"]}>
+      <main>
+        <Navigation />
+        <section>
+          <Hero />
+          <div class="flex w-full justify-center py-12">
+            <Link href="/members/dashboard">
+              <ButtonAction label="Dashboard" />
+            </Link>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    </Speak>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Qwik Demo App",
-  meta: [
-    {
-      name: "description",
-      content: "Demo Qwik app made with qwik, supabase, tailwind, vite.",
-    },
-  ],
+  title: "runtime.home.head.title@@Partialty",
+  meta: [{ name: "description", content: "runtime.home.head.description@@Quick start" }],
 };

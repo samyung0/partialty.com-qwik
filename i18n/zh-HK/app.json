@@ -1,0 +1,6 @@
+{
+  "app": {
+    "changeLocale": "語言",
+    "title": "{{name}} 例子"
+  }
+}

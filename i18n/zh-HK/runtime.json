@@ -1,0 +1,10 @@
+{
+  "runtime": {
+    "home": {
+      "head": {
+        "description": "描述",
+        "title": "標題"
+      }
+    }
+  }
+}

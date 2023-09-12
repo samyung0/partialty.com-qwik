@@ -5,34 +5,60 @@
 Run
 
 ```html
-npm run i npm run dev
+npm run ci
 ```
-
-~~In node_modules\@builder.io\qwik\optimizer.cjs after line 2472, before new URL, add~~
 
 ```html
-req.url = "/" + req.url.split("/").filter(x => x !== "").join("/")
+npm run dev
 ```
 
-~~In node_modules\@builder.io\qwik-city\vite\index.cjs after line 25563, before new URL, add~~
+### Switching Theme
 
-```html
-req.originalUrl = "/" + req.originalUrl.split("/").filter(x => x !== "").join("/")
+```js
+// import theme context
+const layout = useContext(themeContext);
+layout.value = "Theme1";
 ```
 
-## TypeSafes
+### Switching Layout
 
-The api endpoints are typesafe, but types are lost once the data get stored in the global context.
-
-## Data Fetching
-
-The Database Data are only fetched in client side after session is live.
-For the publicly available data, it is fetched as soon as the client makes a request to the server, and made available when the client decides to resolve the api calls.
-
-## Error During Development
-
-```html
-Error [ERR_STREAM_DESTROYED]: Cannot call write after a stream was destroyed
+```js
+// import layout context
+const layout = useContext(layoutContext);
+const loc = ueLocation();
+layout.value = "Layout1";
+nav(loc.url.pathname, {
+  // check for search params
+  forceReload: true,
+});
 ```
 
-happens when you refreshes the page while fetching public data, the server tries to send a respond to the client but the connection is ended, resulting in an error. Currently, qwik does not provide a way to handle this error internally.
+### Switching Locale
+
+```js
+// import speak config
+const newLocale = config.supportedLocales[0] // e.g. using the first locale
+
+// Within the app: we can call server$ and set the cookie
+export const storeLocaleCookie = server$(function (lang: string) {
+  this.cookie.set("lang", lang, {
+    path: "/",
+    maxAge: [7, "days"],
+    httpOnly: false,
+    sameSite: "lax",
+    secure: true,
+  });
+});
+storeLocaleCookie(newLocale.lang).then(() => location.reload());
+
+// OR
+
+// Outside the app, we can add a search param to the url
+const url = new URL(location.href);
+url.searchParams.set("lang", newLocale.lang);
+location.href = url.toString();
+```
+
+Locale Resolution precedance:
+
+> URL search params > cookie > request header > default locale
