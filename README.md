@@ -26,14 +26,17 @@ layout.value = "Theme1";
 // import layout context
 const layout = useContext(layoutContext);
 const loc = ueLocation();
+const nav = useNavigate();
 layout.value = "Layout1";
 
-// if location.reload is used, all states are lost
-nav(loc.url.pathname, {
-  // check for search params
+// location.reload can also be used but all states will be lost
+nav(loc.url.href, {
   forceReload: true,
 });
 ```
+
+Now for each page under Root (excluding Root), it will try to look for the export with the layout name and render it.
+If the export is not found, it fallbacks to rendering default export.
 
 ### Switching Locale
 

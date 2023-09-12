@@ -1,11 +1,10 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, type DocumentHead } from "@builder.io/qwik-city";
+import { Speak } from "qwik-speak";
 import { Footer } from "~/components/site/footer/footer";
 import { Hero } from "~/components/site/hero/hero";
 import { Navigation } from "~/components/site/navigation/navigation";
 import { ButtonAction } from "~/components/ui/button-action";
-
-import { Speak } from "qwik-speak";
 
 export default component$(() => {
   return (
@@ -27,6 +26,6 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "runtime.home.head.title@@Partialty",
-  meta: [{ name: "description", content: "runtime.home.head.description@@Quick start" }],
+  title: "runtime.head.title@@Partialty",
+  meta: [{ name: "description", content: "runtime.head.description@@Quick start" }],
 };

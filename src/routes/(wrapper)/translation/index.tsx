@@ -54,10 +54,10 @@ export default component$(() => {
         })}
       </p>
 
-      <h3>{t("home.dates@@Dates")}</h3>
+      <h3>{t("main.dates@@Dates")}</h3>
       <p>{fd(Date.now(), { dateStyle: "full", timeStyle: "short" })}</p>
 
-      <h3>{t("home.numbers@@Numbers")}</h3>
+      <h3>{t("main.numbers@@Numbers")}</h3>
       <p>{fn(1000000, { style: "currency" })}</p>
     </>
   );
