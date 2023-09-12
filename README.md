@@ -59,6 +59,6 @@ url.searchParams.set("lang", newLocale.lang);
 location.href = url.toString();
 ```
 
-Locale Resolution precedance:
+Locale Resolution order:
 
 > URL search params > cookie > request header > default locale
