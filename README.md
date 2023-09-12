@@ -27,6 +27,8 @@ layout.value = "Theme1";
 const layout = useContext(layoutContext);
 const loc = ueLocation();
 layout.value = "Layout1";
+
+// if location.reload is used, all states are lost
 nav(loc.url.pathname, {
   // check for search params
   forceReload: true,
@@ -54,6 +56,7 @@ storeLocaleCookie(newLocale.lang).then(() => location.reload());
 // OR
 
 // Outside the app, we can add a search param to the url
+// LOSES all states
 const url = new URL(location.href);
 url.searchParams.set("lang", newLocale.lang);
 location.href = url.toString();
