@@ -1,11 +1,6 @@
 import { $, type QRL } from "@builder.io/qwik";
 import { server$, type z } from "@builder.io/qwik-city";
-import {
-  type AuthResponse,
-  type AuthTokenResponse,
-  type OAuthResponse,
-  type Session,
-} from "@supabase/supabase-js";
+import { type AuthResponse, type AuthTokenResponse, type Session } from "@supabase/supabase-js";
 import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
@@ -165,9 +160,8 @@ export const signInWithPassword = $(
 export const signInWithGitHub = $(
   (
     redirectURL: string = "/",
-    callbackFn: QRL<(V: OAuthResponse) => any>,
-    errorFn: QRL<(V: any) => any> | Console["error"] = console.error,
-    navMethod: Function
+    navMethod: Function,
+    errorFn: QRL<(V: any) => any> | Console["error"] = console.error
   ) => {
     return supabase.auth
       .signInWithOAuth({
@@ -175,6 +169,31 @@ export const signInWithGitHub = $(
         options: {
           redirectTo: redirectURL,
           skipBrowserRedirect: true,
+        },
+      })
+      .then((res) => {
+        if (res.error) errorFn(res.error.toString());
+        else navMethod(res.data.url);
+      });
+  }
+);
+
+export const signinWithGoogle = $(
+  (
+    redirectURL: string = "/",
+    navMethod: Function,
+    errorFn: QRL<(V: any) => any> | Console["error"] = console.error
+  ) => {
+    return supabase.auth
+      .signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: redirectURL,
+          skipBrowserRedirect: true,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
         },
       })
       .then((res) => {
