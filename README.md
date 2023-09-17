@@ -68,3 +68,5 @@ location.href = url.toString();
 Locale Resolution order:
 
 > URL search params > cookie > request header > default locale
+
+To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-extract` script in package.json!
