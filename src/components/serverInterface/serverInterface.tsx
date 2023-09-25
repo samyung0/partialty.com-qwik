@@ -5,10 +5,7 @@ import { type Terminal } from "xterm";
 import type { FileStore, Tree } from "~/utils/fileUtil";
 import { addFileTree, addFolderTree, removeFileTree, removeFolderTree } from "~/utils/fileUtil";
 
-// rollup will complain if you do import chokidarStandalone directly
 import chokidarStandalone from "~/assets/chokidar/index.txt?raw";
-// const chokidarStandalone = _chokidarStandalone.default;
-
 export class WebContainerInterface {
   #webcontainerInstance: WebContainer | null;
   #terminal: Terminal | null;

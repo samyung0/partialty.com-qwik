@@ -7,6 +7,9 @@ import Terminal, { type TerminalStore } from "~/components/terminal/terminal";
 import filesF from "~/files";
 import type { FileStore } from "~/utils/fileUtil";
 
+// check readme for details
+export const _ = "codeplayground_123456789";
+
 export default component$(() => {
   const refIframe = useSignal<HTMLIFrameElement>();
 

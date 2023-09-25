@@ -3,9 +3,11 @@ import { qwikVite } from "@builder.io/qwik/optimizer";
 import { defineConfig, loadEnv, type Connect } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (_, response, next) => {
-  response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
+  if (req.url === "/codeplayground/") {
+    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  }
   next();
 };
 

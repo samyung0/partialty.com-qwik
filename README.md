@@ -1,4 +1,4 @@
-# Readme
+# **Readme**
 
 ## Development
 
@@ -35,8 +35,7 @@ nav(loc.url.href, {
 });
 ```
 
-Now for each page under Root (excluding Root), it will try to look for the export with the layout name and render it.
-If the export is not found, it fallbacks to rendering default export.
+Now for each page under Root (excluding Root), it will try to look for the export with the layout name and render it. If the export is not found, it fallbacks to rendering default export.
 
 ### Switching Locale
 
@@ -70,3 +69,12 @@ Locale Resolution order:
 > URL search params > cookie > request header > default locale
 
 To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-extract` script in package.json!
+
+## TODO
+
+- **Add browser version check**
+  - web workers
+  - @webcontainer/api
+  - monaco
+
+We can then set vite compile target accordingly

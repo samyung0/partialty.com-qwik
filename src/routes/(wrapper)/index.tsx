@@ -7,6 +7,11 @@ import { Navigation } from "~/components/site/navigation/navigation";
 import { ButtonAction } from "~/components/ui/button-action";
 
 export default component$(() => {
+  // useVisibleTask$(() => {
+  //   fetch('https://api.github.com/repos/samyung0/Template_react_1/git/trees/main?recursive=1').then(x => x.json()).then(x => {
+  //     console.log(x);
+  //   })
+  // })
   return (
     <Speak assets={["main"]}>
       <main>
