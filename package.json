@@ -27,7 +27,8 @@
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
     "qwik": "qwik",
-    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en,zh-HK,ja --assetsPath=i18n"
+    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en,zh-HK,ja --assetsPath=i18n",
+    "compile.chokidar": "ncc build ./src/$$chokidarEntry.js -o ./src/chokidar -m"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.7",
@@ -39,6 +40,7 @@
     "@types/node": "^20.4.5",
     "@typescript-eslint/eslint-plugin": "6.2.0",
     "@typescript-eslint/parser": "6.2.0",
+    "@vercel/ncc": "^0.38.0",
     "autoprefixer": "^10.4.14",
     "compression": "^1.7.4",
     "daisyui": "^3.7.3",
@@ -47,6 +49,7 @@
     "eslint-plugin-qwik": "^1.2.7",
     "eslint-plugin-unused-imports": "^3.0.0",
     "express": "4.18.2",
+    "monaco-editor": "^0.43.0",
     "postcss": "8.4.27",
     "pre-commit": "^1.2.2",
     "prettier": "3.0.0",
@@ -63,8 +66,12 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.32.0",
     "@upstash/redis": "^1.22.0",
+    "@webcontainer/api": "^1.1.5",
     "axios": "^1.4.0",
     "lodash.isequal": "^4.5.0",
-    "qwik-speak": "^0.15.3"
+    "qwik-ionicons": "^1.0.5",
+    "qwik-speak": "^0.15.3",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0"
   }
 }
