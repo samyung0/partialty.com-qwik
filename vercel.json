@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/codeplayground",
+      "source": "/codeplayground/",
       "headers": [
         {
           "key": "Cross-Origin-Embedder-Policy",
