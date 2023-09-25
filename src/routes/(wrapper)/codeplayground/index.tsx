@@ -7,8 +7,6 @@ import Terminal, { type TerminalStore } from "~/components/terminal/terminal";
 import filesF from "~/files";
 import type { FileStore } from "~/utils/fileUtil";
 
-const files = await filesF();
-
 export default component$(() => {
   const refIframe = useSignal<HTMLIFrameElement>();
 
@@ -53,7 +51,7 @@ export default component$(() => {
     if (controlStore.interfaceReady) return;
     if (terminalStore.terminal && controlStore.interfaceBooted && interfaceStore.value) {
       await interfaceStore.value.relocateTerminal(terminalStore.terminal);
-      await interfaceStore.value.mountFiles(files);
+      await interfaceStore.value.mountFiles(filesF);
       await interfaceStore.value.watchFiles();
 
       interfaceStore.value.onPort(onPortOpen);

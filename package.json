@@ -28,7 +28,7 @@
     "start": "vite --open --mode ssr",
     "qwik": "qwik",
     "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en,zh-HK,ja --assetsPath=i18n",
-    "compile.chokidar": "ncc build ./src/$$chokidarEntry.js -o ./src/chokidar -m"
+    "compile.chokidar": "ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js index.txt"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.7",
@@ -55,6 +55,7 @@
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
+    "rename-cli": "^6.2.1",
     "supabase": "^1.86.2",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",

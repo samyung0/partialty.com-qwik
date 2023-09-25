@@ -1,22 +1,18 @@
 /** @satisfies {import('@webcontainer/api').FileSystemTree} */
 
-import { server$ } from "@builder.io/qwik-city";
-import type { Tree } from "~/utils/fileUtil";
-
-export default server$(async (): Promise<Tree> => {
-  return {
-    a: {
-      directory: {
-        "test.js": {
-          file: {
-            contents: `const fs = require("fs")`,
-          },
+export default {
+  a: {
+    directory: {
+      "test.js": {
+        file: {
+          contents: `const fs = require("fs")`,
         },
       },
     },
-    "index.js": {
-      file: {
-        contents: `const express = require('express');
+  },
+  "index.js": {
+    file: {
+      contents: `const express = require('express');
         const app = express();
         const port = 3111;
 
@@ -30,11 +26,11 @@ export default server$(async (): Promise<Tree> => {
         app.listen(port, () => {
           console.log(\`App is live at http://localhost:\${port}\`);
         });`,
-      },
     },
-    "package.json": {
-      file: {
-        contents: `{
+  },
+  "package.json": {
+    file: {
+      contents: `{
           "name": "example-app",
     "dependencies": {
       "express": "latest",
@@ -44,7 +40,6 @@ export default server$(async (): Promise<Tree> => {
       "start": "nodemon --watch './' index.js"
     }
   }`,
-      },
     },
-  };
-});
+  },
+};
