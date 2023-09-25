@@ -4,9 +4,9 @@ import { type AuthResponse, type AuthTokenResponse, type Session } from "@supaba
 import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
-import { checkProtectedPath } from "~/routes/plugin@Redirect";
 import { getCacheJson, setCacheJson } from "~/utils/cache";
 import { loadPrivateDataHelper, validatePrivateData } from "~/utils/privateActions";
+import { checkProtectedPath } from "~/utils/redirect";
 import { type emailLoginSchema } from "../types/AuthForm";
 import { supabase } from "./supabaseClient";
 import { supabaseServer } from "./supabaseServer";

@@ -8,12 +8,27 @@ import {
 } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
 
-import { useRedirectLoader } from "~/routes/plugin@Redirect";
+// import { useRedirectLoader } from "~/routes/(wrapper)/plugin@Redirect";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { defaultValue, type GlobalContextType } from "~/types/GlobalContext";
-import { authStateChange } from "~/utils/auth";
+import { authStateChange, preload } from "~/utils/auth";
 import { loadPublicData } from "~/utils/publicActions";
+import { checkProtectedPath } from "~/utils/redirect";
 
 export const globalContext = createContextId<GlobalContextType>("global");
+
+export const useRedirectLoader = routeLoader$(async (request) => {
+  // bind to the root request since request inside server$ has different request object
+  const context = await preload.bind(request)();
+
+  // userRole can be null if error
+  const [shouldRedirect, redirectTo] = checkProtectedPath(
+    context.req.url!.pathname,
+    context.session?.userRole
+  );
+  if (shouldRedirect) throw request.redirect(308, redirectTo);
+  return context;
+});
 
 export default component$(() => {
   const preloadedContext = useRedirectLoader().value;

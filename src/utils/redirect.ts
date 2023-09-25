@@ -1,5 +1,3 @@
-import { routeLoader$ } from "@builder.io/qwik-city";
-import { preload } from "~/utils/auth";
 import { protectedRoutes } from "~/utils/protectedRoutes";
 
 export const checkProtectedPath = (path: string | undefined, role: any): [boolean, string] => {
@@ -21,15 +19,15 @@ export const checkProtectedPath = (path: string | undefined, role: any): [boolea
   return [shouldRedirect, redirectTo];
 };
 
-export const useRedirectLoader = routeLoader$(async (request) => {
-  // bind to the root request since request inside server$ has different request object
-  const context = await preload.bind(request)();
+// export const useRedirectLoader = routeLoader$(async (request) => {
+//   // bind to the root request since request inside server$ has different request object
+//   const context = await preload.bind(request)();
 
-  // userRole can be null if error
-  const [shouldRedirect, redirectTo] = checkProtectedPath(
-    context.req.url!.pathname,
-    context.session?.userRole
-  );
-  if (shouldRedirect) throw request.redirect(308, redirectTo);
-  return context;
-});
+//   // userRole can be null if error
+//   const [shouldRedirect, redirectTo] = checkProtectedPath(
+//     context.req.url!.pathname,
+//     context.session?.userRole
+//   );
+//   if (shouldRedirect) throw request.redirect(308, redirectTo);
+//   return context;
+// });
