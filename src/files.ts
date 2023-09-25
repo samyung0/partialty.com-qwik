@@ -1,7 +1,7 @@
 /** @satisfies {import('@webcontainer/api').FileSystemTree} */
 
 import { server$ } from "@builder.io/qwik-city";
-import type { Tree } from "~/fileUtil";
+import type { Tree } from "~/utils/fileUtil";
 
 export default server$(async (): Promise<Tree> => {
   return {
