@@ -73,21 +73,24 @@ To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-e
 ## Caution
 
 - **Routing and Embedding**
-  
-  Webcontainer from stackblitz requires cross origin opener policy (COOP) header set to same-origin and cross origin embedder     policy (COEP) header set to require-corp in order to establish cross origin isolation. You can go into developer tab and type in `crossOriginIsolated`. Check the effects of the headers [here](https://blog.stackblitz.com/posts/cross-browser-with-coop-coep/).
-  
-    **TL;DR**
+
+  Webcontainer from stackblitz requires cross origin opener policy (COOP) header set to same-origin and cross origin embedder policy (COEP) header set to require-corp in order to establish cross origin isolation. You can go into developer tab and type in `crossOriginIsolated`. Check the effects of the headers [here](https://blog.stackblitz.com/posts/cross-browser-with-coop-coep/).
+
+  **TL;DR**
+
   - new windows opened in the crossOriginIsolated route must have the same origin (domains) in order to interact with the parent window
   - whenever a video/audio/image/iframe is embedded, certain procedures needed to be done to ensure embedding is allowed
     - for iframe: either it responses with COEP require-corp, or use credentialless in the iframe tag (check [support](https://caniuse.com/mdn-html_elements_iframe_credentialless))
     - for image: use crossorigin for the img tag, or responses with COEP require-corp
 
   **Implications:**
-    - Youtube embeds do not work on crossOriginIsolated routes (See [issue](https://issuetracker.google.com/issues/240387105) tracked)
+
+  - Youtube embeds do not work on crossOriginIsolated routes (See [issue](https://issuetracker.google.com/issues/240387105) tracked)
 
   **Setting a route to be crossOriginIsolated:**
+
   - In development environment with vite, use middleware and test for the req.url
-  - In production with vercel, add the headers for the relevant paths (**make sure it ends with a slash**, it's a qwik thing to redirect every route except root to one ending with slash) in vercel.json 
+  - In production with vercel, add the headers for the relevant paths (**make sure it ends with a slash**, it's a qwik thing to redirect every route except root to one ending with slash) in vercel.json
 
 ## TODO
 

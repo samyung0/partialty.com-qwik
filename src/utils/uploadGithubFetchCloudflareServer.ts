@@ -6,9 +6,9 @@ import {
 import { r2Client } from "~/utils/r2Client";
 import { type FetchedFile } from "~/utils/uploadGithubFetchCloudflareClient";
 
-import { $ } from "@builder.io/qwik";
+import { server$ } from "@builder.io/qwik-city";
 
-import mime from "mime-types";
+import { contentType } from "~/utils/mimeTypes";
 
 export const base64ToArrayBuffer = (base64: string) => {
   const binaryString = atob(base64);
@@ -19,7 +19,7 @@ export const base64ToArrayBuffer = (base64: string) => {
   return bytes;
 };
 
-export const uploadGithubFetchCloudflare = $(
+export const uploadGithubFetchCloudflare = server$(
   async (
     owner: string,
     repo: string,
@@ -33,7 +33,7 @@ export const uploadGithubFetchCloudflare = $(
     const yakusoku: Promise<PutObjectCommandOutput>[] = Array(files.length);
     for (let i = 0; i < files.length; i++) {
       try {
-        const contentType = mime.contentType(
+        const _contentType = contentType(
           files[i].path.slice(files[i].path.lastIndexOf(".") + 1).toLowerCase()
         );
         const arg: PutObjectCommandInput = {
@@ -41,7 +41,7 @@ export const uploadGithubFetchCloudflare = $(
           Key: url + files[i].path,
           Body: files[i].isBinary ? base64ToArrayBuffer(files[i].data) : files[i].data,
         };
-        if (contentType) arg.ContentType = contentType;
+        if (_contentType) arg.ContentType = _contentType;
         else arg.ContentType = "text/plain";
 
         yakusoku[i] = r2Client.send(new PutObjectCommand(arg));

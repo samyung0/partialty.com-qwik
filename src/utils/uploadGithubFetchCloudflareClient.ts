@@ -1,4 +1,3 @@
-import { server$ } from "@builder.io/qwik-city";
 import { graphql } from "@octokit/graphql";
 import { request } from "@octokit/request";
 
@@ -34,9 +33,7 @@ export const uploadRepoToCloudflare = async (
 
   console.log(data);
 
-  return await server$(() =>
-    uploadGithubFetchCloudflare(owner, repo, branch, data[1] as FetchedFile[])
-  )();
+  return await uploadGithubFetchCloudflare(owner, repo, branch, data[1] as FetchedFile[]);
 };
 
 const directFetchGithub = async (

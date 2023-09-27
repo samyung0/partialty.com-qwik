@@ -14,4 +14,9 @@ export const protectedRoutes = [
     authRolesPermitted: [], // anything but authenticated
     redirectTo: "/members/dashboard", // if logged in, redirect to dashboard
   },
+  {
+    path: "/uploadRepo",
+    authRolesPermitted: ["free"],
+    redirectTo: "/login",
+  },
 ];

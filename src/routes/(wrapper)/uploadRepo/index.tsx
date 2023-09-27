@@ -69,7 +69,7 @@ export default component$(() => {
         </button>
       </form>
       <br />
-      <div class="whitespace-pre-wrap pt-16">{message.value}</div>
+      <div class="whitespace-pre-wrap pb-16">{message.value}</div>
     </div>
   );
 });
