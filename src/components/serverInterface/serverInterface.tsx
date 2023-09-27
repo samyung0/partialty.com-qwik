@@ -58,15 +58,15 @@ export class WebContainerInterface {
     if (!this.#webcontainerInstance) throw new Error("WebContainer is not initialized!");
 
     this.#isWatchFilesActive = true;
-    const time = Date.now().toString();
-    await this.#webcontainerInstance.fs.writeFile(time, chokidarStandalone);
-    this.#watchFilesProcess = await this.#webcontainerInstance.spawn("node", [time]);
+    const filename = "chokidar" + Date.now().toString();
+    await this.#webcontainerInstance.fs.writeFile(filename, chokidarStandalone);
+    this.#watchFilesProcess = await this.#webcontainerInstance.spawn("node", [filename]);
     await new Promise<void>((res) =>
       this.#watchFilesProcess!.output.pipeTo(
         new WritableStream({
           write: async (data) => {
             if (!this.#watchFilesChokidarHasRemoved) {
-              await this.rm(time, false);
+              await this.rm(filename, false);
               this.#watchFilesChokidarHasRemoved = true;
               res();
             }
@@ -74,7 +74,7 @@ export class WebContainerInterface {
             // file events
             if (!this.#isWatchFilesActive) return;
             // omit chokidar file events RISKY AGAIN
-            if (data.includes(time)) return;
+            if (data.includes(filename)) return;
 
             console.log(data);
             this.#fileEventsQueue.push(data);
@@ -88,6 +88,19 @@ export class WebContainerInterface {
         })
       )
     );
+  }
+
+  async loadGithub(owner: string, repo: string, branch: string = "main") {
+    // if (!this.#webcontainerInstance) throw new Error("WebContainer is not initialized!");
+    // const url = `https://api.github.com/repos/${owner}/${repo}/zipball/${branch}`;
+    // const t = await this.#webcontainerInstance.spawn("node", ["-e", githubFetchStandalone.replace("$$$GITHUB_URL$$$", url)]);
+    // t!.output.pipeTo(
+    //   new WritableStream({
+    //     write: async (data) => {
+    //       console.log(data);
+    //     },
+    //   })
+    // )
   }
 
   async relocateTerminal(terminal: Terminal) {

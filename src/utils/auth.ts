@@ -11,6 +11,22 @@ import { type emailLoginSchema } from "../types/AuthForm";
 import { supabase } from "./supabaseClient";
 import { supabaseServer } from "./supabaseServer";
 
+export const fetchAuthUserRole = server$(async function () {
+  const access_token = this.cookie.get("access_token")?.value;
+  if (!access_token) return null;
+
+  const res = await supabaseServer.auth.getUser(access_token);
+  if (res.error) return null;
+
+  const privateRoleData = await supabaseServer
+    .from("profiles")
+    .select("role")
+    .eq("id", res.data.user.id);
+
+  if (!validatePrivateData(privateRoleData) || !privateRoleData.data![0].role) return null;
+  return privateRoleData.data![0].role;
+});
+
 export const preload = server$(async function () {
   const ret = Object.assign({}, defaultValue) as GlobalContextType;
   ret.req.url = this.url;

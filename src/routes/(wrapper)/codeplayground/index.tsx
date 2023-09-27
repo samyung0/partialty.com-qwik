@@ -53,6 +53,7 @@ export default component$(() => {
       await interfaceStore.value.relocateTerminal(terminalStore.terminal);
       await interfaceStore.value.mountFiles(filesF);
       await interfaceStore.value.watchFiles();
+      await interfaceStore.value.loadGithub("samyung0", "Template_react_1");
 
       interfaceStore.value.onPort(onPortOpen);
       controlStore.interfaceReady = true;
