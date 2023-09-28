@@ -17,7 +17,7 @@ export interface FileStore extends Entry {}
 
 export interface Entry {
   name: string;
-  path: string;
+  path: string; // always start with a slash
   data: string | number[]; // convert Uint8Array to array since qwik does not serialize Uint8Array
   isBinary: boolean;
   isFolder: boolean;
@@ -77,6 +77,7 @@ export const addFolderTree = (entries: Entry[], path: string, prevPath: string =
   if (path === "") return entries;
   const nextIndex = path.indexOf("/", 1);
   const name = path.slice(1, nextIndex > 0 ? nextIndex : path.length);
+  if (name === "") return entries;
   for (let i = 0; i < entries.length; i++) {
     if (entries[i].name === name)
       return nextIndex > 0
@@ -103,6 +104,7 @@ export const addFolderTree = (entries: Entry[], path: string, prevPath: string =
 export const addFileTree = (entries: Entry[], path: string): Entry[] => {
   const lastIndex = path.lastIndexOf("/");
   const name = path.slice(lastIndex + 1);
+  if (name === "") return entries;
   const retEntries = addFolderTree(entries, path.slice(0, lastIndex));
   for (let i = 0; i < retEntries.length; i++) if (retEntries[i].name === name) return entries;
   const entry: Entry = {

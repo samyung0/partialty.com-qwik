@@ -2,8 +2,7 @@ import { graphql } from "@octokit/graphql";
 import { request } from "@octokit/request";
 
 import binaryExtensions from "binary-extensions";
-import { MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB, ROLE_PERITTED_TO_UPLOAD_R2 } from "~/const";
-import { fetchAuthUserRole } from "~/utils/auth";
+import { MAX_NUMBER_OF_FILES_R2_FETCHGITHUB, MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB } from "~/const";
 import { uploadGithubFetchCloudflare } from "~/utils/uploadGithubFetchCloudflareServer";
 
 const extensions = new Set(binaryExtensions);
@@ -15,14 +14,6 @@ export const uploadRepoToCloudflare = async (
   repo: string,
   branch: string = "main"
 ): Promise<[boolean, string]> => {
-  const role = await fetchAuthUserRole();
-  if (role !== ROLE_PERITTED_TO_UPLOAD_R2) {
-    console.error("UNAUTHED");
-    return [false, "Unauthed"];
-  }
-
-  console.log("AUTHED");
-
   const GITHUB_PUBLIC_TOKEN = import.meta.env.VITE_GITHUB_PUBLIC_TOKEN;
 
   const data = await directFetchGithub(owner, repo, branch, GITHUB_PUBLIC_TOKEN!);
@@ -53,19 +44,26 @@ const directFetchGithub = async (
         authorization: `Bearer ${GITHUB_PUBLIC_TOKEN}`,
       },
     });
+    console.log(res);
     if (res.status !== 200) errored[0] = true;
     if (res.data.message && !res.data.tree) apiRateLimit = true;
 
     if (errored[0] || apiRateLimit) throw new Error();
 
-    const tree = (res.data.tree as GithubEntry[]).filter((entry) => entry.type !== "tree");
+    // will not cache this response to ensure latest file can be fetched
+    const files = (res.data.tree as GithubEntry[]).filter((entry) => entry.type !== "tree");
+    if (files.length > MAX_NUMBER_OF_FILES_R2_FETCHGITHUB) return [false, "Too many files!"];
 
-    const ret: FetchedFile[] = tree.map((entry) => {
+    const ret: FetchedFile[] = files.map((entry) => {
       return { path: entry.path, data: "", resolved: false, isBinary: false, size: 0 };
     });
-    // may need some cache deleting and renewing policies
+
+    // files cooresponds to the latest commit
+    // everytime there is a new commit, the sha value of the file changes
+    // and invalidates the cache (more precisely since the url changed, the cache will result in a miss)
+    // so we dont need to  manually delete the cache
     const cacheStorage = await caches.open("GithubFetch");
-    const cacheMatchesPromises: Promise<Response | undefined>[] = tree.map((entry) =>
+    const cacheMatchesPromises: Promise<Response | undefined>[] = files.map((entry) =>
       cacheStorage.match(new Request(entry.url))
     );
 
@@ -80,7 +78,7 @@ const directFetchGithub = async (
       if (cache === undefined) {
         // cache miss, append to gql fetch list
         cacheUnmatched++;
-        gql += `_${i}: object(oid: "${tree[i].sha}") {
+        gql += `_${i}: object(oid: "${files[i].sha}") {
           ... on Blob {
                  isTruncated
                  byteSize
@@ -122,7 +120,7 @@ const directFetchGithub = async (
 
       const { repository } = res as { repository: Record<string, any> };
 
-      const restAPIPromise = Array(tree.length);
+      const restAPIPromise = Array(files.length);
 
       for (const i in repository) {
         const index = Number(i.slice(1));
@@ -132,18 +130,18 @@ const directFetchGithub = async (
           restAPIPromise[index] = request("GET /repos/{owner}/{repo}/git/blobs/{oid}", {
             owner,
             repo,
-            oid: tree[index].sha,
+            oid: files[index].sha,
             headers: {
               authorization: `Bearer ${GITHUB_PUBLIC_TOKEN}`,
             },
           });
         } else {
           ret[index].data = repository[i].text;
-          ret[index].isBinary = isBinaryPath(tree[index].path);
+          ret[index].isBinary = isBinaryPath(files[index].path);
           ret[index].resolved = true;
 
           cacheStorage.put(
-            new Request(tree[index].url),
+            new Request(files[index].url),
             new Response(
               JSON.stringify({
                 data: repository[i].text,
@@ -160,11 +158,11 @@ const directFetchGithub = async (
       for (let i = 0; i < restAPI.length; i++) {
         if (restAPI[i] !== undefined && restAPI[i] !== null) {
           ret[i].data = restAPI[i].data.content;
-          ret[i].isBinary = isBinaryPath(tree[i].path);
+          ret[i].isBinary = isBinaryPath(files[i].path);
           ret[i].resolved = true;
 
           cacheStorage.put(
-            new Request(tree[i].url),
+            new Request(files[i].url),
             new Response(
               JSON.stringify({
                 data: restAPI[i].data.content,
@@ -185,10 +183,10 @@ const directFetchGithub = async (
     }
 
     return [true, ret];
-  } catch (_) {
+  } catch (e: any) {
     if (apiRateLimit) {
       return [false, "Api rate limit hit!"];
-    } else return [false, errored[1]];
+    } else return [false, errored[1] === "" ? e.toString() : errored[1]];
   }
 };
 

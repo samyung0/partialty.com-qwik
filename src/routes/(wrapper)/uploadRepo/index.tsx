@@ -1,9 +1,17 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { z } from "@builder.io/qwik-city";
+import downloadGithubFetchCloudflareClient from "~/utils/downloadGithubFetchCloudflareClient";
 import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
+
+  downloadGithubFetchCloudflareClient;
+  useVisibleTask$(() => {
+    // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then(data => {
+    //   console.log(data);
+    // })
+  });
 
   const submitHandler = $((_: any, currentTarget: HTMLFormElement): any => {
     const schema = z.object({
@@ -68,8 +76,7 @@ export default component$(() => {
           Upload Repo
         </button>
       </form>
-      <br />
-      <div class="whitespace-pre-wrap pb-16">{message.value}</div>
+      <div class="whitespace-pre-wrap p-10 pt-0">{message.value}</div>
     </div>
   );
 });
