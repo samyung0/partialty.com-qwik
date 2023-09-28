@@ -98,5 +98,20 @@ To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-e
   - web workers
   - @webcontainer/api
   - monaco
+ 
+  We can then set vite compile target accordingly
 
-We can then set vite compile target accordingly
+- **Caching Fetched Github Data**
+
+  When a user fetches github repo files and uploads to Cloudflare R2, the github files will permanenetly cache in the users computer. We need to allow the user to clear the cache so new content can be fetched.
+
+- **Consider switching from webcontainer to sandpack by codesandbox**
+
+  There are currently too many problems with webcontainer, like the crossOriginIsolation, some node functionalities (async storage) not getting implemented, etc.
+
+- **Enable dynamic import of themes**
+  - and possible use a theme switcher library
+
+ - **Configure MicroVM**
+   - amazon ec2?
+   - we need authentication, resource mangement, microvm & docker management, socket connection (or RTC idk), theres a lot
