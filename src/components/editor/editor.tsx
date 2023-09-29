@@ -1,11 +1,20 @@
+import { parse as parseJS } from "@babel/parser";
 import type { NoSerialize, PropFunction, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { parse as parseCSS } from "css-tree";
+import { parse as parseHTML } from "parse5";
 import { getMonaco, getUri, openFile } from "~/components/editor/monaco";
 import FolderStructure from "~/components/folderStructure/folderStructure";
 import type { WebContainerInterface } from "~/components/serverInterface/serverInterface";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
 import type { IStandaloneCodeEditor } from "./monaco";
 import { initMonacoEditor, type ICodeEditorViewState } from "./monaco";
+
+export enum ProgLang {
+  HTML = "html",
+  CSS = "css",
+  JavaScript = "js",
+}
 
 export default component$((props: Props) => {
   const hostRef = useSignal<Element>();
@@ -15,6 +24,19 @@ export default component$((props: Props) => {
     viewStates: {}, // uses fsPath
     openedFiles: [], // !!! will store a file snapshot
     // openedEntriesModels: Entry
+  });
+  const parserStore = useStore({
+    progLang: ProgLang.HTML,
+    ContentToParse: `<!DOCTYPE html>
+    <html>
+    
+    <body>
+        <h1>My First Heading</h1>
+        <p>My first paragraph.</p>
+    </body>
+    
+    </html>`,
+    parsedResult: "There is no parsed result",
   });
 
   const __getEntryFromPath$ = {} as any;
@@ -149,6 +171,21 @@ export default component$((props: Props) => {
     }
   });
 
+  const parseCode = $(() => {
+    switch (parserStore.progLang) {
+      case ProgLang.HTML:
+        // the parsed result is in the type of Document
+        console.log(parseHTML(parserStore.ContentToParse).childNodes);
+        break;
+      case ProgLang.CSS:
+        parserStore.parsedResult = JSON.stringify(parseCSS(parserStore.ContentToParse));
+        break;
+      case ProgLang.JavaScript:
+        parserStore.parsedResult = JSON.stringify(parseJS(parserStore.ContentToParse));
+        break;
+    }
+  });
+
   const addToStage = $(async (entry: Entry) => {
     // for now, only file with non binary data can be open
     try {
@@ -226,6 +263,19 @@ export default component$((props: Props) => {
         <button class="daisyui-btn" onClick$={saveOpenedFile}>
           Save
         </button>
+        <button class="daisyui-btn" onClick$={parseCode}>
+          Submit
+        </button>
+        <select
+          class="daisyui-select daisyui-select-bordered w-full max-w-xs"
+          onChange$={(e) =>
+            (parserStore.progLang = ProgLang[e.target.value as keyof typeof ProgLang])
+          }
+        >
+          {Object.keys(ProgLang).map((lang) => (
+            <option key={lang}>{lang}</option>
+          ))}
+        </select>
       </div>
       <div class="flex">
         <div class="p-4">
@@ -237,7 +287,10 @@ export default component$((props: Props) => {
             />
           </ul>
         </div>
-        <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
+        <div class="flex flex-1">
+          <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
+          <div class="flex-1">{parserStore.parsedResult}</div>
+        </div>
       </div>
     </>
   );

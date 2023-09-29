@@ -42,6 +42,9 @@ export const Navigation = component$(() => {
             <li>
               <Link href="/services">Services</Link>
             </li>
+            <li>
+              <Link href="/codeplayground">Code Playground</Link>
+            </li>
           </ul>
           <div class="ml-10 h-10 border-r border-gray-300"></div>
 

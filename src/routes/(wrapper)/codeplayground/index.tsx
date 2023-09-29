@@ -4,7 +4,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import Editor from "~/components/editor/editor";
 import { WebContainerInterface } from "~/components/serverInterface/serverInterface";
 import Terminal, { type TerminalStore } from "~/components/terminal/terminal";
-import filesF from "~/files";
+import files from "~/files";
 import type { FileStore } from "~/utils/fileUtil";
 
 export default component$(() => {
@@ -51,7 +51,7 @@ export default component$(() => {
     if (controlStore.interfaceReady) return;
     if (terminalStore.terminal && controlStore.interfaceBooted && interfaceStore.value) {
       await interfaceStore.value.relocateTerminal(terminalStore.terminal);
-      await interfaceStore.value.mountFiles(filesF);
+      await interfaceStore.value.mountFiles(files);
       await interfaceStore.value.watchFiles();
       await interfaceStore.value.loadGithub("samyung0", "Template_react_1");
 
@@ -62,7 +62,7 @@ export default component$(() => {
 
   return (
     <>
-      {controlStore.interfaceReady ? (
+      {controlStore.interfaceReady && (
         <Editor
           interfaceStore={interfaceStore}
           onFileSave={$((path: string, data: string) => {
@@ -71,14 +71,14 @@ export default component$(() => {
           fileStore={fileStore}
           editorStyle={{ height: "300px" }}
         />
-      ) : null}
+      )}
       <Terminal terminalStore={terminalStore} style={{ height: "200px" }} />
       <div style={{ position: "relative" }} class="preview">
-        {!controlStore.interfaceReady ? (
+        {!controlStore.interfaceReady && (
           <div style={{ position: "absolute", height: "100%", width: "100%", background: "red" }}>
             Loading...
           </div>
-        ) : null}
+        )}
         <iframe
           style={{ width: "100%" }}
           placeholder="Use the terminal to run a command!"
