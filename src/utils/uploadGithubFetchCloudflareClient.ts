@@ -1,13 +1,9 @@
 import { graphql } from "@octokit/graphql";
 import { request } from "@octokit/request";
 
-import binaryExtensions from "binary-extensions";
 import { MAX_NUMBER_OF_FILES_R2_FETCHGITHUB, MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB } from "~/const";
+import { isBinary } from "~/utils/fileUtil";
 import { uploadGithubFetchCloudflare } from "~/utils/uploadGithubFetchCloudflareServer";
-
-const extensions = new Set(binaryExtensions);
-const isBinaryPath = (path: string) =>
-  extensions.has(path.slice(path.lastIndexOf(".") + 1).toLowerCase());
 
 export const uploadRepoToCloudflare = async (
   owner: string,
@@ -44,7 +40,6 @@ const directFetchGithub = async (
         authorization: `Bearer ${GITHUB_PUBLIC_TOKEN}`,
       },
     });
-    console.log(res);
     if (res.status !== 200) errored[0] = true;
     if (res.data.message && !res.data.tree) apiRateLimit = true;
 
@@ -62,7 +57,7 @@ const directFetchGithub = async (
     // everytime there is a new commit, the sha value of the file changes
     // and invalidates the cache (more precisely since the url changed, the cache will result in a miss)
     // so we dont need to  manually delete the cache
-    const cacheStorage = await caches.open("GithubFetch");
+    const cacheStorage = await caches.open("GithubUpload");
     const cacheMatchesPromises: Promise<Response | undefined>[] = files.map((entry) =>
       cacheStorage.match(new Request(entry.url))
     );
@@ -137,7 +132,7 @@ const directFetchGithub = async (
           });
         } else {
           ret[index].data = repository[i].text;
-          ret[index].isBinary = isBinaryPath(files[index].path);
+          ret[index].isBinary = isBinary(files[index].path);
           ret[index].resolved = true;
 
           cacheStorage.put(
@@ -158,7 +153,7 @@ const directFetchGithub = async (
       for (let i = 0; i < restAPI.length; i++) {
         if (restAPI[i] !== undefined && restAPI[i] !== null) {
           ret[i].data = restAPI[i].data.content;
-          ret[i].isBinary = isBinaryPath(files[i].path);
+          ret[i].isBinary = isBinary(files[i].path);
           ret[i].resolved = true;
 
           cacheStorage.put(

@@ -1,83 +1,96 @@
-import type { GetObjectCommandOutput } from "@aws-sdk/client-s3";
-import { GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
-import { server$ } from "@builder.io/qwik-city";
-import { r2Client } from "~/utils/r2Client";
+import { $ } from "@builder.io/qwik";
+import { PROD_FILES_URL } from "~/const";
+import downloadGithubFetchCloudflareServer from "~/utils/downloadGithubFetchCloudflareServer";
+import { isBinary } from "~/utils/fileUtil";
+import type { FetchedFile } from "~/utils/uploadGithubFetchCloudflareClient";
 
-export default server$(
+export default $(
   async (
     owner: string,
     repo: string,
     branch: string = "main"
-  ): Promise<[true, any] | [false, string]> => {
-    const errored = [false, ""];
-    const bucket = process.env["R2_FETCHGITHUB_BUCKET"];
-
-    const prefix = `${owner}-${repo}-${branch}/`;
+  ): Promise<
+    [false, string] | [true, { success: FetchedFile[]; failed: { key: string; reason: string }[] }]
+  > => {
     try {
-      const res = await r2Client.send(
-        new ListObjectsCommand({
-          Bucket: bucket,
-          Prefix: prefix,
-        })
+      const folder = `${owner}-${repo}-${branch}/`;
+      const baseURL = PROD_FILES_URL;
+
+      const res = await downloadGithubFetchCloudflareServer(owner, repo, branch);
+      if (!res[0]) return res;
+
+      const files = res[1];
+      console.log(files);
+
+      const ret: FetchedFile[] = files.map((entry) => {
+        return {
+          path: entry.Key?.slice(folder.length) ?? "",
+          data: "",
+          resolved: false,
+          isBinary: false,
+          size: entry.Size ?? 0,
+        };
+      });
+
+      const cacheStorage = await caches.open("GithubDownload");
+      const cacheMatchesPromises = files.map((entry) =>
+        cacheStorage.match(new Request(folder + entry.ETag!.slice(1, -1)))
       );
-      if (res.$metadata.httpStatusCode !== 200) errored[0] = true;
-      if (!res.Contents) {
-        errored[0] = true;
-        errored[1] = "Cannot retrieve contents!";
+      const cacheMatches = await Promise.all(cacheMatchesPromises);
+      const fetchPromise = [];
+      const mapToFetch: Record<string, number> = {};
+      for (let i = 0; i < cacheMatches.length; i++) {
+        const cache = cacheMatches[i];
+        ret[i].size = files[i].Size ?? 0;
+        ret[i].isBinary = isBinary(files[i].Key?.split("/").pop() ?? "");
+        if (cache === undefined) {
+          mapToFetch[fetchPromise.length] = i;
+          fetchPromise.push(fetch(`${baseURL}/${files[i].Key!}`));
+        } else {
+          console.log("CACHE HIT");
+          try {
+            const json = await cache.json();
+            ret[i].data = json.data;
+            ret[i].resolved = true;
+          } catch (e: any) {
+            return [false, e.toString()];
+          }
+        }
       }
 
-      if (errored[0]) throw new Error();
+      console.log("To Fetch:", fetchPromise);
 
-      const contentsPromise = res.Contents!.map((content) =>
-        r2Client.send(
-          new GetObjectCommand({
-            Bucket: bucket,
-            Key: content.Key,
-          })
-        )
-      );
-      const content = await Promise.allSettled(contentsPromise);
+      const fetched = await Promise.allSettled(fetchPromise);
+      const failed: { key: string; reason: string }[] = [];
+      for (let i = 0; i < fetched.length; i++) {
+        if (fetched[i].status === "fulfilled") {
+          const data = (fetched[i] as unknown as PromiseFulfilledResult<FileDataType>).value;
+          ret[i].data = data;
+          ret[i].resolved = true;
 
-      const getFulfilled = <T>(
-        p: PromiseSettledResult<T>,
-        index: number
-      ): { file: string; data: T } | null =>
-        p.status === "fulfilled"
-          ? {
-              file: "/" + (res.Contents?.[index].Key?.slice(0, prefix.length) ?? ""),
-              data: p.value,
-            }
-          : null;
-      const getRejected = <T>(
-        p: PromiseSettledResult<T>,
-        index: number
-      ): { file: string; reason: string } | null =>
-        p.status === "rejected"
-          ? {
-              file: "/" + (res.Contents?.[index].Key?.slice(0, prefix.length) ?? ""),
-              reason: p.reason,
-            }
-          : null;
+          cacheStorage.put(
+            new Request(folder + files[mapToFetch[i]].ETag!.slice(1, -1)),
+            new Response(
+              JSON.stringify({
+                data,
+              })
+            )
+          );
+        } else
+          failed.push({
+            key: files[mapToFetch[i]].Key ?? "",
+            reason: (fetched[i] as unknown as PromiseRejectedResult).reason,
+          });
+      }
 
-      return [
-        true,
-        {
-          success: content
-            .map(getFulfilled)
-            .filter((p): p is { file: string; data: GetObjectCommandOutput } => p !== null)
-            .map(async (content) => {
-              return {
-                file: content.file,
-                data: await (content.data.Body?.transformToString() ?? ""),
-              };
-            }),
-          failed: content
-            .map(getRejected)
-            .filter((p): p is { file: string; reason: string } => p !== null),
-        },
-      ];
-    } catch (e: any) {
-      return [false, errored[1] === "" ? e.toString() : errored[1]];
+      // can rmeove resolved in this case
+      // since resolved will be false for those which fetch failed
+
+      return [true, { success: ret, failed }];
+    } catch (e) {
+      return [false, (e as any).toString()];
     }
   }
 );
+
+type FileDataType = string;

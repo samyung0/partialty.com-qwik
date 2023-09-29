@@ -1,13 +1,14 @@
 import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { z } from "@builder.io/qwik-city";
-import downloadGithubFetchCloudflareClient from "~/utils/downloadGithubFetchCloudflareClient";
 import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
 
-  downloadGithubFetchCloudflareClient;
   useVisibleTask$(() => {
+    // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then (x => {
+    //   console.log(x);
+    // })
     // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then(data => {
     //   console.log(data);
     // })

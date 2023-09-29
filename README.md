@@ -95,10 +95,11 @@ To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-e
 ## TODO
 
 - **Add browser version check**
+
   - web workers
   - @webcontainer/api
   - monaco
- 
+
   We can then set vite compile target accordingly
 
 - **Caching Fetched Github Data**
@@ -110,8 +111,9 @@ To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-e
   There are currently too many problems with webcontainer, like the crossOriginIsolation, some node functionalities (async storage) not getting implemented, etc.
 
 - **Enable dynamic import of themes**
+
   - and possible use a theme switcher library
 
- - **Configure MicroVM**
-   - amazon ec2?
-   - we need authentication, resource mangement, microvm & docker management, socket connection (or RTC idk), theres a lot
+- **Configure MicroVM**
+  - amazon ec2?
+  - we need authentication, resource mangement, microvm & docker management, socket connection (or RTC idk), theres a lot

@@ -121,6 +121,15 @@ export const addFileTree = (entries: Entry[], path: string): Entry[] => {
   return entries;
 };
 
+export const base64ToArrayBuffer = (base64: string) => {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+};
+
 export const validateFilePath = (path: string) => {
   // check for both windows and unix
   // Reference: https://github.com/microsoft/vscode/blob/61a18c284feebe3c6ba98b134c2e30c1baa869fb/src/vs/base/common/extpath.ts

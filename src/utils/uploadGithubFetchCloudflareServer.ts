@@ -10,16 +10,8 @@ import { server$ } from "@builder.io/qwik-city";
 
 import { ROLE_PERITTED_TO_UPLOAD_R2 } from "~/const";
 import { fetchAuthUserRole } from "~/utils/auth";
+import { base64ToArrayBuffer } from "~/utils/fileUtil";
 import { contentType } from "~/utils/mimeTypes";
-
-export const base64ToArrayBuffer = (base64: string) => {
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes;
-};
 
 export const uploadGithubFetchCloudflare = server$(async function (
   owner: string,
