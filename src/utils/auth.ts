@@ -188,6 +188,7 @@ export const signInWithGitHub = $(
         },
       })
       .then((res) => {
+        console.log(res);
         if (res.error) errorFn(res.error.toString());
         else navMethod(res.data.url);
       });
