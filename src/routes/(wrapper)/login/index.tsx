@@ -42,7 +42,7 @@ export default component$(() => {
   });
 
   const handleGitHubLogin = $(async () => {
-    console.log(context.req.url?.href || "about:blank");
+    console.error(context.req.url?.href || "about:blank");
     signInWithGitHub(
       context.req.url?.href || "about:blank",
       $(async (url: string) => {
