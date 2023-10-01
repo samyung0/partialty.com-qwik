@@ -2,7 +2,6 @@ import { $ } from "@builder.io/qwik";
 import { PROD_FILES_URL } from "~/const";
 import downloadGithubFetchCloudflareServer from "~/utils/downloadGithubFetchCloudflareServer";
 import { isBinary } from "~/utils/fileUtil";
-import type { FetchedFile } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default $(
   async (
@@ -45,12 +44,19 @@ export default $(
         ret[i].isBinary = isBinary(files[i].Key?.split("/").pop() ?? "");
         if (cache === undefined) {
           mapToFetch[fetchPromise.length] = i;
-          fetchPromise.push(fetch(`${baseURL}/${files[i].Key!}`));
+          fetchPromise.push(
+            fetch(`${baseURL}/${files[i].Key!}`, {
+              headers: {
+                // Range: "0-",
+                // "Content-Range": "bytes 0-/*"
+              },
+            })
+          );
         } else {
           console.log("CACHE HIT");
           try {
-            const json = await cache.json();
-            ret[i].data = json.data;
+            // const json = await cache.json();
+            ret[i].data = ret[i].isBinary ? await cache.arrayBuffer() : await cache.text();
             ret[i].resolved = true;
           } catch (e: any) {
             return [false, e.toString()];
@@ -64,17 +70,15 @@ export default $(
       const failed: { key: string; reason: string }[] = [];
       for (let i = 0; i < fetched.length; i++) {
         if (fetched[i].status === "fulfilled") {
-          const data = (fetched[i] as unknown as PromiseFulfilledResult<FileDataType>).value;
+          const data = ret[i].isBinary
+            ? await (fetched[i] as unknown as PromiseFulfilledResult<Response>).value.arrayBuffer()
+            : await (fetched[i] as unknown as PromiseFulfilledResult<Response>).value.text();
           ret[i].data = data;
           ret[i].resolved = true;
 
           cacheStorage.put(
             new Request(folder + files[mapToFetch[i]].ETag!.slice(1, -1)),
-            new Response(
-              JSON.stringify({
-                data,
-              })
-            )
+            new Response(data)
           );
         } else
           failed.push({
@@ -93,4 +97,18 @@ export default $(
   }
 );
 
-type FileDataType = string;
+export type FetchedFile =
+  | {
+      path: string;
+      data: string;
+      resolved: boolean;
+      isBinary: false;
+      size: number; // in bytes
+    }
+  | {
+      path: string;
+      data: ArrayBuffer;
+      resolved: boolean;
+      isBinary: true;
+      size: number;
+    };

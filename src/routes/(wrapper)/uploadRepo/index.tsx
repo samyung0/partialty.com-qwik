@@ -1,17 +1,31 @@
 import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { z } from "@builder.io/qwik-city";
+import downloadGithubFetchCloudflareClient from "~/utils/downloadGithubFetchCloudflareClient";
 import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
+  const imgRef = useSignal<any>();
 
+  downloadGithubFetchCloudflareClient;
   useVisibleTask$(() => {
     // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then (x => {
     //   console.log(x);
     // })
-    // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then(data => {
+    // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then((data) => {
     //   console.log(data);
-    // })
+    //   if (!data[0]) return;
+    //   const t = data[1].success.filter((x) => x.path === "public/logo512.png")[0];
+    //   if (!t.isBinary) return;
+    //   // const arr = new Uint8Array(t.data);
+    //   const blob = new Blob([t.data]);
+    //   const urlCreator = window.URL || window.webkitURL;
+    //   const imageUrl = urlCreator.createObjectURL(blob);
+    //   const image = document.createElement("img");
+    //   console.log(imageUrl);
+    //   image.src = imageUrl;
+    //   imgRef.value!.append(image);
+    // });
   });
 
   const submitHandler = $((_: any, currentTarget: HTMLFormElement): any => {
@@ -36,7 +50,7 @@ export default component$(() => {
   });
 
   return (
-    <div>
+    <div ref={imgRef}>
       <form
         class="flex flex-col items-start gap-4 p-10"
         preventdefault:submit

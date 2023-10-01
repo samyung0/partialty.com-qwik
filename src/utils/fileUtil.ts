@@ -25,6 +25,14 @@ export interface Entry {
   discrepancy: boolean;
 }
 
+export const arrayBufferToBlob = (arrayBuffer: ArrayBuffer) => {
+  const blob = new Blob([arrayBuffer]);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const urlCreator = window.URL || window.webkitURL;
+  const url = urlCreator.createObjectURL(blob);
+  return url;
+};
+
 export const isBinary = (path: string) => extensions.has(getFileExtension(path));
 
 export const getFileExtension = (path: string) => (path.split(".").pop() ?? "").toLowerCase();
