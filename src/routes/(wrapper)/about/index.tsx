@@ -3,7 +3,6 @@ import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // https://qwik.builder.io/docs/caching/
-  console.log("get");
   cacheControl({
     staleWhileRevalidate: 60 * 60 * 24 * 7,
     maxAge: 60 * 60 * 24 * 7,

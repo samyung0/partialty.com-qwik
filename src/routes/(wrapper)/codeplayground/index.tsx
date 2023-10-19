@@ -1,10 +1,10 @@
 import type { NoSerialize } from "@builder.io/qwik";
 import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import filesF from "~/__filesTest";
 import Editor from "~/components/editor/editor";
 import { WebContainerInterface } from "~/components/serverInterface/serverInterface";
 import Terminal, { type TerminalStore } from "~/components/terminal/terminal";
-import filesF from "~/files";
 import type { FileStore } from "~/utils/fileUtil";
 
 export default component$(() => {

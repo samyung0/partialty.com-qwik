@@ -14,7 +14,7 @@ export default component$(() => {
         <section>
           <Hero />
           <div class="flex w-full justify-center py-12">
-            <Link href="/members/dashboard">
+            <Link prefetch href="/members/dashboard">
               <ButtonAction label="Dashboard" />
             </Link>
           </div>

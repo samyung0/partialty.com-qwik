@@ -28,7 +28,8 @@ export default defineConfig((userConfig) => {
         },
       },
     ],
-    define: {},
+    // node_modules\@babel\types\lib\definitions\core.js
+    define: { "process.env.BABEL_TYPES_8_BREAKING": "false" },
     preview: {
       headers: {
         "Cache-Control": "public, max-age=600",
