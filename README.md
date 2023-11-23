@@ -70,6 +70,91 @@ Locale Resolution order:
 
 To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-extract` script in package.json!
 
+### Customizing Qwik-city
+
+✘ Qwik 1.2.9 (cannot run pnpm build, failed with top-level await error)
+
+1. **Exposing loadClientData for manual prefetching**
+
+   In packages\qwik-city\runtime\src\use-endpoint.ts, add the @public flag before the loadClientData function declaration:
+
+```js
+/** @public */
+export const loadClientData = async (...
+```
+
+    And then in packages\qwik-city\runtime\src\index.ts, add the following to export the function:
+
+```js
+export { loadClientData } from "./use-endpoint";
+```
+
+2. **Feat: Adding in layout switching**
+
+   We will add in a feature in router outlet that reads the layout attribute and render the page accordingly, if the child with the name identical as the layout is not exported from the route, the default child will be rendered.
+
+   In packages\qwik-city\runtime\src\router-outlet-component.tsx, replace the whole funciton with:
+
+   ```jsx
+    /** @public */
+    export const RouterOutlet = component$(({ layout = 'default' }: { layout?: string }) => {
+      const forbiddenValues = ['head', 'headings', 'onStaticGenerate'];
+      if (layout in forbiddenValues) {
+        console.warn('head, headings and onStaticGenerate are not valid layout names !!!');
+      }
+
+      // TODO Option to remove this shim, especially for MFEs.
+      const shimScript = shim();
+
+      _jsxBranch();
+
+      const nonce = useServerData<string | undefined>('nonce');
+      const { value } = useContext(ContentInternalContext);
+      if (value && value.length > 0) {
+        const contentsLen = value.length;
+        let cmp: JSXNode | null = null;
+        for (let i = contentsLen - 1; i >= 0; i--) {
+          if (!(layout in forbiddenValues) && value[i][layout]) {
+            cmp = jsx(value[i][layout], {
+              children: cmp,
+            });
+          } else if (value[i].default) {
+            cmp = jsx(value[i].default, {
+              children: cmp,
+            });
+          }
+        }
+        return (
+          <>
+            {cmp}
+            <script dangerouslySetInnerHTML={shimScript} nonce={nonce}></script>
+          </>
+        );
+      }
+      return SkipRender;
+    });
+   ```
+
+   **_Check if we need to integrate any new features implemented in router outlet from qwik!!!_**
+
+   Then in packages\qwik-city\runtime\src\types.ts, for PageModule and LayoutModule, add the following key value pair:
+
+   ```ts
+   readonly [x: string]: any;
+   ```
+
+- **Building and Pushing to Github**
+
+  - `pnpm install` (delete all pnpm folders in user/AppData/local, remove node_modules folder and reinstall pnpm if operation not permitted error shows)
+  - `pnpm api.update`
+  - `npx tsm scripts/index.ts --tsc --build --api --eslint --platform-binding --wasm --prepare-release`
+
+  Go to qwik-city/bin and do git init and set remote main to `https://github.com/samyung0/qwikcity-dist`, then commit all files and push with this command
+
+  ```git
+  git push --set-upstream main main -f
+  ```
+
 ## Caution
 
 - **Routing and Embedding**
