@@ -1,0 +1,12 @@
+{
+  "page1": {
+    "changeLocale": "言語",
+    "dates": "日付",
+    "head": {
+      "description": "ない",
+      "title": "タイトル"
+    },
+    "numbers": "数字",
+    "title": "{{name}} デモ"
+  }
+}

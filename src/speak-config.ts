@@ -1,12 +1,8 @@
 import type { SpeakConfig } from "qwik-speak";
+import lang from "../lang.json";
 
 export const config: SpeakConfig = {
-  defaultLocale: { lang: "en", currency: "USD" },
-  supportedLocales: [
-    { lang: "zh-HK", currency: "HKD" },
-    { lang: "ja", currency: "JPY" },
-    { lang: "en", currency: "USD" },
-  ],
+  ...lang,
   assets: [
     "app", // Translations shared by the pages
   ],

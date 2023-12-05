@@ -1,0 +1,8 @@
+{
+  "defaultLocale": { "lang": "en-US", "currency": "USD" },
+  "supportedLocales": [
+    { "lang": "zh-HK", "currency": "HKD" },
+    { "lang": "ja-JP", "currency": "JPY" },
+    { "lang": "en-US", "currency": "USD" }
+  ]
+}

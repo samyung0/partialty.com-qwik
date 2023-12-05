@@ -30,9 +30,9 @@ export default component$(() => {
 
   const submitHandler = $((_: any, currentTarget: HTMLFormElement): any => {
     const schema = z.object({
-      owner: z.string().max(255).nonempty(),
-      repo: z.string().max(255).nonempty(),
-      branch: z.string().max(255).nonempty(),
+      owner: z.string().max(255).min(1),
+      repo: z.string().max(255).min(1),
+      branch: z.string().max(255).min(1),
     });
     type SchemaType = z.infer<typeof schema>;
     const form = Object.fromEntries(new FormData(currentTarget).entries()) as SchemaType;

@@ -1,7 +1,8 @@
 import { component$ } from "@builder.io/qwik";
-import { useFormatDate, useFormatNumber, useTranslate } from "qwik-speak";
+import { inlineTranslate, useFormatDate, useFormatNumber, useSpeak } from "qwik-speak";
 
 import { $ } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { server$ } from "@builder.io/qwik-city";
 import type { SpeakLocale } from "qwik-speak";
 import { useSpeakConfig } from "qwik-speak";
@@ -16,20 +17,32 @@ export const storeLocaleCookie = server$(function (lang: string) {
   });
 });
 
+export const head: DocumentHead = () => {
+  const t = inlineTranslate();
+  return {
+    title: t("page1.head.title@@Translation"),
+    meta: [{ name: "description", content: t("page1.head.description@@Description") }],
+  };
+};
+
 export default component$(() => {
-  const t = useTranslate();
+  const t = inlineTranslate();
   const fd = useFormatDate();
   const fn = useFormatNumber();
   const config = useSpeakConfig();
 
+  useSpeak({ assets: ["page1"] });
+
   const navigateByLocale$ = $((newLocale: SpeakLocale) => {
-    storeLocaleCookie(newLocale.lang).then(() => location.reload());
+    const url = new URL(window.location.href);
+    url.searchParams.delete("lang");
+    storeLocaleCookie(newLocale.lang).then(() => (location.href = url.href));
   });
 
   return (
     <>
       <div>
-        <h2>{t("app.changeLocale@@Change locale")}</h2>
+        <h2>{t("page1.changeLocale@@Change locale")}</h2>
         {config.supportedLocales.map((value) => (
           <button
             style={{
@@ -44,7 +57,7 @@ export default component$(() => {
           </button>
         ))}
       </div>
-      <h1>{t("app.title@@{{name}} demo", { name: "Qwik Speak" })}</h1>
+      <h1>{t("page1.title@@{{name}} demo", { name: "Qwik Speak" })}</h1>
       <p>
         ???
         {fd(Date.now(), {
@@ -54,10 +67,10 @@ export default component$(() => {
         })}
       </p>
 
-      <h3>{t("main.dates@@Dates")}</h3>
+      <h3>{t("page1.dates@@Dates")}</h3>
       <p>{fd(Date.now(), { dateStyle: "full", timeStyle: "short" })}</p>
 
-      <h3>{t("main.numbers@@Numbers")}</h3>
+      <h3>{t("page1.numbers@@Numbers")}</h3>
       <p>{fn(1000000, { style: "currency" })}</p>
     </>
   );

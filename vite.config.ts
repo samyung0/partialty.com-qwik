@@ -1,7 +1,9 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
-import { defineConfig, loadEnv, type Connect } from "vite";
+import { qwikSpeakInline } from "qwik-speak/inline";
+import { defineConfig, type Connect } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import lang from "./lang.json";
 
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
   if (req.url === "/codeplayground/") {
@@ -12,11 +14,16 @@ const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, respons
 };
 
 export default defineConfig((userConfig) => {
-  process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
+  // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
     plugins: [
       qwikCity(),
       qwikVite(),
+      qwikSpeakInline({
+        supportedLangs: lang.supportedLocales.map((locale) => locale.lang),
+        defaultLang: lang.defaultLocale.lang,
+        assetsPath: "i18n",
+      }),
       tsconfigPaths(),
       {
         name: "cross-origin-isolation",

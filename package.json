@@ -27,7 +27,7 @@
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
     "qwik": "qwik",
-    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en,zh-HK,ja --assetsPath=i18n",
+    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en-US,zh-HK,ja-JP --assetsPath=i18n",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt"
   },
   "devDependencies": {
@@ -60,7 +60,7 @@
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
-    "qwik-speak": "^0.16.0",
+    "qwik-speak": "^0.17.0",
     "rename-cli": "^7.0.2",
     "supabase": "^1.86.2",
     "tailwindcss": "3.3.3",

@@ -1,6 +1,6 @@
 import { parse } from "@babel/parser";
-import { component$, useComputed$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { JS, _JS } from "~/utils/instructions/instructions-v1";
+import { component$, useComputed$, useSignal } from "@builder.io/qwik";
+// import { JS, _JS } from "~/utils/instructions/instructions-v1";
 
 export const removeASTLocation = (ast: any) => {
   if (Array.isArray(ast)) {
@@ -38,19 +38,19 @@ export default component$(() => {
       return "";
     }
   });
-  useVisibleTask$(async () => {
-    const a = JS("VariableDeclaration", {
-      declarations: [
-        JS("VariableDeclarator", {
-          id: JS("Identifier", { name: "x" }),
-          init: JS("NumericLiteral", { value: 10 }),
-        }),
-      ],
-    });
-    console.log(_JS.SCOPABLE_TYPES);
-    // console.log(a);
-    // JS.
-  });
+  // useVisibleTask$(async () => {
+  //   const a = JS("VariableDeclaration", {
+  //     declarations: [
+  //       JS("VariableDeclarator", {
+  //         id: JS("Identifier", { name: "x" }),
+  //         init: JS("NumericLiteral", { value: 10 }),
+  //       }),
+  //     ],
+  //   });
+  //   console.log(_JS.SCOPABLE_TYPES);
+  //   // console.log(a);
+  //   // JS.
+  // });
   return (
     <div>
       <span>Type the code in JS/TS</span>

@@ -1,6 +1,6 @@
 import { component$, createContextId, useContextProvider, useStore } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
-import { QwikSpeakProvider } from "qwik-speak";
+import { useQwikSpeak } from "qwik-speak";
 import { config } from "~/speak-config";
 import { translationFn } from "~/speak-function";
 import { RouterHead } from "./components/router-head/router-head";
@@ -18,19 +18,19 @@ export default component$(() => {
   const layoutStore = useStore({ value: "default" });
   useContextProvider(layoutContext, layoutStore);
 
+  useQwikSpeak({ config, translationFn });
+
   return (
-    <QwikSpeakProvider config={config} translationFn={translationFn}>
-      <QwikCityProvider>
-        <head>
-          <meta charSet="utf-8" />
-          <link rel="manifest" href="/manifest.json" />
-          <RouterHead />
-          <ServiceWorkerRegister />
-        </head>
-        <body lang="en" class={themeStore.value}>
-          <RouterOutlet layout={layoutStore.value} />
-        </body>
-      </QwikCityProvider>
-    </QwikSpeakProvider>
+    <QwikCityProvider>
+      <head>
+        <meta charSet="utf-8" />
+        <link rel="manifest" href="/manifest.json" />
+        <RouterHead />
+        <ServiceWorkerRegister />
+      </head>
+      <body lang="en" class={themeStore.value}>
+        <RouterOutlet layout={layoutStore.value} />
+      </body>
+    </QwikCityProvider>
   );
 });
