@@ -1,1 +1,10 @@
-{}
+{
+  "app": {
+    "page1": {
+      "head": {
+        "description": "內容",
+        "title": "香港"
+      }
+    }
+  }
+}

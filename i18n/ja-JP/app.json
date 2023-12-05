@@ -1,1 +1,10 @@
-{}
+{
+  "app": {
+    "page1": {
+      "head": {
+        "description": "ない",
+        "title": "タイトル"
+      }
+    }
+  }
+}

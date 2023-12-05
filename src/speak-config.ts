@@ -7,6 +7,6 @@ export const config: SpeakConfig = {
     "app", // Translations shared by the pages
   ],
   runtimeAssets: [
-    "runtime", // Translations with dynamic keys or parameters
+    // "runtime", // Translations with dynamic keys or parameters
   ],
 };

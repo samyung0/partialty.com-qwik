@@ -20,8 +20,8 @@ export const storeLocaleCookie = server$(function (lang: string) {
 export const head: DocumentHead = () => {
   const t = inlineTranslate();
   return {
-    title: t("page1.head.title@@Translation"),
-    meta: [{ name: "description", content: t("page1.head.description@@Description") }],
+    title: t("app.page1.head.title@@Translation"),
+    meta: [{ name: "description", content: t("app.page1.head.description@@Description") }],
   };
 };
 
