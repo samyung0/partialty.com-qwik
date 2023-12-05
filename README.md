@@ -78,16 +78,16 @@ To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-e
 
    In packages\qwik-city\runtime\src\use-endpoint.ts, add the @public flag before the loadClientData function declaration:
 
-```js
-/** @public */
-export const loadClientData = async (...
-```
-
+    ```js
+    /** @public */
+    export const loadClientData = async (...
+    ```
+    
     And then in packages\qwik-city\runtime\src\index.ts, add the following to export the function:
-
-```js
-export { loadClientData } from "./use-endpoint";
-```
+    
+    ```js
+    export { loadClientData } from "./use-endpoint";
+    ```
 
 2. **Feat: Adding in layout switching**
 
