@@ -22,5 +22,13 @@
     }
   },
   "files": ["./.eslintrc.cjs"],
-  "include": ["src", "./*.d.ts", "./*.config.ts", "./tailwind.config.js", "./postcss.config.js"]
+  "include": [
+    "src",
+    "./*.d.ts",
+    "./*.config.ts",
+    "./tailwind.config.js",
+    "./postcss.config.js",
+    "drizzle_turso"
+  ],
+  "exclude": ["supabase"]
 }

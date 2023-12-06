@@ -2,10 +2,6 @@
   "page1": {
     "changeLocale": "Change locale",
     "dates": "Dates",
-    "head": {
-      "description": "Description",
-      "title": "Translation"
-    },
     "numbers": "Numbers",
     "title": "{{name}} demo"
   }

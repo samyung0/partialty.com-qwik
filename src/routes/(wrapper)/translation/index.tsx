@@ -1,11 +1,10 @@
 import { component$ } from "@builder.io/qwik";
-import { inlineTranslate, useFormatDate, useFormatNumber, useSpeak } from "qwik-speak";
+import { inlineTranslate, useFormatDate, useFormatNumber, useSpeakConfig } from "qwik-speak";
 
 import { $ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { server$ } from "@builder.io/qwik-city";
 import type { SpeakLocale } from "qwik-speak";
-import { useSpeakConfig } from "qwik-speak";
 
 export const storeLocaleCookie = server$(function (lang: string) {
   this.cookie.set("lang", lang, {
@@ -31,8 +30,6 @@ export default component$(() => {
   const fn = useFormatNumber();
   const config = useSpeakConfig();
 
-  useSpeak({ assets: ["page1"] });
-
   const navigateByLocale$ = $((newLocale: SpeakLocale) => {
     const url = new URL(window.location.href);
     url.searchParams.delete("lang");
@@ -40,7 +37,7 @@ export default component$(() => {
   });
 
   return (
-    <>
+    <div>
       <div>
         <h2>{t("page1.changeLocale@@Change locale")}</h2>
         {config.supportedLocales.map((value) => (
@@ -72,6 +69,6 @@ export default component$(() => {
 
       <h3>{t("page1.numbers@@Numbers")}</h3>
       <p>{fn(1000000, { style: "currency" })}</p>
-    </>
+    </div>
   );
 });

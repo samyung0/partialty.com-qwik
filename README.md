@@ -40,11 +40,10 @@ Now for each page under Root (excluding Root), it will try to look for the expor
 ### Switching Locale
 
 ```js
-// import speak config
-const newLocale = config.supportedLocales[0] // e.g. using the first locale
-
-// Within the app: we can call server$ and set the cookie
+// changing by cookies
 export const storeLocaleCookie = server$(function (lang: string) {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("lang");
   this.cookie.set("lang", lang, {
     path: "/",
     maxAge: [7, "days"],
@@ -53,12 +52,9 @@ export const storeLocaleCookie = server$(function (lang: string) {
     secure: true,
   });
 });
-storeLocaleCookie(newLocale.lang).then(() => location.reload());
+storeLocaleCookie(newLocale.lang).then(() => (location.href = url.href));
 
-// OR
-
-// Outside the app, we can add a search param to the url
-// LOSES all states
+// changing by params
 const url = new URL(location.href);
 url.searchParams.set("lang", newLocale.lang);
 location.href = url.toString();
@@ -68,7 +64,13 @@ Locale Resolution order:
 
 > URL search params > cookie > request header > default locale
 
-To add a locale, make sure you edit the `speak-config.ts` and also `qwik-speak-extract` script in package.json!
+**To add a page that supports internationalization:**
+
+Add a layout file that includes the `useSpeak({assets: ["pageName"]})`. Key in the route file should be `pageName.A.B...` and the keys in the document head should be `app.pageName.head.title` or `app.pageName.head.description`, etc.
+
+**To add a locale:**
+
+Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
 ### Customizing Qwik-city
 

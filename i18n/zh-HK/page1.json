@@ -2,10 +2,6 @@
   "page1": {
     "changeLocale": "變更語言",
     "dates": "日期",
-    "head": {
-      "description": "內容",
-      "title": "香港"
-    },
     "numbers": "數字",
     "title": "{{name}} 範例"
   }
