@@ -129,7 +129,6 @@ export const login = $(function (
 // we can clear the upstash redis cache but its not necessary
 // eviction is enabled so old data will be removed when storage is full
 export const logoutHelper = server$(function (globalContext: GlobalContextType) {
-  console.log(globalContext.session);
   this.cookie.delete("access_token");
   this.cookie.delete("refresh_token");
 

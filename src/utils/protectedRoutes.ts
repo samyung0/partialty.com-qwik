@@ -4,7 +4,11 @@
 
 import { profiles } from "../../drizzle_turso/schema/profile";
 
-export const protectedRoutes = [
+export const protectedRoutes: {
+  path: string;
+  authRolesPermitted: string[];
+  redirectTo: string;
+}[] = [
   {
     path: "/members", // also matches for /members /members/a /members/a/b
     authRolesPermitted: profiles.role.enumValues, // the roles are matched against the roles in profile, NOT auth
