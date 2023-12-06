@@ -9,9 +9,9 @@ import { type FetchedFile } from "~/utils/uploadGithubFetchCloudflareClient";
 import { server$ } from "@builder.io/qwik-city";
 
 import { ROLE_PERITTED_TO_UPLOAD_R2 } from "~/const";
-import { fetchAuthUserRole } from "~/utils/auth";
 import { base64ToArrayBuffer } from "~/utils/fileUtil";
 import { contentType } from "~/utils/mimeTypes";
+import { fetchAuthUserRole } from "~/utils/tursodb";
 
 export const uploadGithubFetchCloudflare = server$(async function (
   owner: string,

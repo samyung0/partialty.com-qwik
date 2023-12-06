@@ -1,17 +1,17 @@
 import { type RequestEvent } from "@builder.io/qwik-city";
 import { type Session } from "@supabase/supabase-js";
+import type { InferSelectModel } from "drizzle-orm";
+import type { profiles } from "../../drizzle_turso/schema/profile";
 
 export interface GlobalContextType {
   isLoggedIn: boolean;
   privateData: {
-    data: any;
-    resolved: boolean;
-    initiated: boolean;
+    data: {
+      profile: InferSelectModel<typeof profiles> | null;
+    };
   };
   publicData: {
     data: any;
-    resolved: boolean;
-    initiated: boolean;
   };
   req: {
     url: RequestEvent["url"] | null;
@@ -22,14 +22,12 @@ export interface GlobalContextType {
 export const defaultValue: GlobalContextType = {
   isLoggedIn: false,
   privateData: {
-    data: null,
-    resolved: false,
-    initiated: false,
+    data: {
+      profile: null,
+    },
   },
   publicData: {
     data: null,
-    resolved: false,
-    initiated: false,
   },
   req: {
     url: null,

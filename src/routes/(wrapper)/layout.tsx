@@ -19,7 +19,7 @@ export const globalContext = createContextId<GlobalContextType>("global");
 
 export const useRedirectLoader = routeLoader$(async (request) => {
   // bind to the root request since request inside server$ has different request object
-  const context = await preload.bind(request)();
+  const context = await preload();
 
   // userRole can be null if error
   const [shouldRedirect, redirectTo] = checkProtectedPath(
@@ -44,12 +44,9 @@ export default component$(() => {
 
     authStateChange(globalStore).then((res) => (subscription = res.data.subscription));
 
-    globalStore.publicData.initiated = true;
     loadPublicData().then((res) => {
       console.log("loaded public data ", res);
       globalStore.publicData.data = res;
-      globalStore.publicData.initiated = false;
-      globalStore.publicData.resolved = true;
     });
 
     cleanup(() => {

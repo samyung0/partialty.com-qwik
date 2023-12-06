@@ -4,28 +4,15 @@ import { type AuthResponse, type AuthTokenResponse, type Session } from "@supaba
 import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
+import { eq } from "drizzle-orm";
 import { getCacheJson, setCacheJson } from "~/utils/cache";
-import { loadPrivateDataHelper, validatePrivateData } from "~/utils/privateActions";
+import drizzle from "~/utils/drizzle";
 import { checkProtectedPath } from "~/utils/redirect";
+import { loadPrivateData } from "~/utils/tursodb";
+import { profiles } from "../../drizzle_turso/schema/profile";
 import { type emailLoginSchema } from "../types/AuthForm";
 import { supabase } from "./supabaseClient";
 import { supabaseServer } from "./supabaseServer";
-
-export const fetchAuthUserRole = server$(async function () {
-  const access_token = this.cookie.get("access_token")?.value;
-  if (!access_token) return null;
-
-  const res = await supabaseServer.auth.getUser(access_token);
-  if (res.error) return null;
-
-  const privateRoleData = await supabaseServer
-    .from("profiles")
-    .select("role")
-    .eq("id", res.data.user.id);
-
-  if (!validatePrivateData(privateRoleData) || !privateRoleData.data![0].role) return null;
-  return privateRoleData.data![0].role;
-});
 
 export const preload = server$(async function () {
   const ret = Object.assign({}, defaultValue) as GlobalContextType;
@@ -65,20 +52,24 @@ export const preload = server$(async function () {
   }
   ret.session = Object.assign({}, res.data.session);
 
-  const privateRoleData = await supabaseServer
-    .from("profiles")
-    .select("role")
-    .eq("id", res.data.user!.id);
+  let userRole = null;
+  try {
+    userRole = (
+      await drizzle
+        .select({
+          role: profiles.role,
+        })
+        .from(profiles)
+        .where(eq(profiles.id, res.data.user!.id))
+        .limit(1)
+    )[0].role;
+  } catch (e) {
+    console.error(e);
+    return ret;
+  }
 
   console.log("initial cache miss with time ", performance.now() - time1);
-  if (!validatePrivateData(privateRoleData)) {
-    console.log(res.error);
-    return ret;
-  }
-  if (!privateRoleData.data![0].role) {
-    console.log("ROLE DATA MISSING");
-    return ret;
-  }
+
   loginHelper.bind(this)(
     {
       access_token: res.data.session!.access_token,
@@ -88,9 +79,9 @@ export const preload = server$(async function () {
   );
   setCacheJson(
     `cached_session${res.data.session!.access_token}`,
-    JSON.stringify(Object.assign({}, res.data.session, { userRole: privateRoleData.data![0].role }))
+    JSON.stringify(Object.assign({}, res.data.session, { userRole: userRole }))
   );
-  ret.session.userRole = privateRoleData.data![0].role;
+  ret.session.userRole = userRole;
   return ret;
 });
 
@@ -129,6 +120,7 @@ export const login = $(function (
 
   globalContext.session = session;
   globalContext.isLoggedIn = true;
+  globalContext.session.userRole = globalContext.privateData.data.profile!.role;
 
   loginHelper(cookie, sessionExpiresIn);
   return true;
@@ -137,10 +129,11 @@ export const login = $(function (
 // we can clear the upstash redis cache but its not necessary
 // eviction is enabled so old data will be removed when storage is full
 export const logoutHelper = server$(function (globalContext: GlobalContextType) {
+  console.log(globalContext.session);
   this.cookie.delete("access_token");
   this.cookie.delete("refresh_token");
 
-  return checkProtectedPath(globalContext.req.url?.pathname, globalContext.session?.user);
+  return checkProtectedPath(globalContext.req.url?.pathname, globalContext.session?.userRole);
 });
 
 export const logout = $(async function (globalContext: GlobalContextType) {
@@ -242,9 +235,17 @@ export const signUpWithPassword = $(
   }
 );
 
+export const updateSessionCache = $(async (globalStore: GlobalContextType) => {
+  const toCache = Object.assign({}, globalStore.session, {
+    userRole: globalStore.privateData.data.profile!.role,
+  });
+  console.log("cached user role and session");
+  setCacheJson(`cached_session${globalStore.session!.access_token}`, JSON.stringify(toCache));
+});
+
 export const authStateChange = $(async (globalStore: GlobalContextType) => {
   return supabase.auth.onAuthStateChange(async (event, session) => {
-    console.log(event);
+    console.log("AUTH:", event);
 
     if (!session || !session.access_token || !session.refresh_token) {
       logout(globalStore);
@@ -254,7 +255,12 @@ export const authStateChange = $(async (globalStore: GlobalContextType) => {
       access_token: session.access_token,
       refresh_token: session.refresh_token,
     };
+    if (!globalStore.privateData.data.profile) {
+      globalStore.privateData.data.profile = await loadPrivateData(session.user.id);
+    }
+    console.log("loaded private data.");
+
     const shouldUpdateCache = await login(globalStore, session, cookies, session.expires_in);
-    if (shouldUpdateCache) loadPrivateDataHelper(globalStore);
+    if (shouldUpdateCache) updateSessionCache(globalStore);
   });
 });
