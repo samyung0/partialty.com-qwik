@@ -26,7 +26,6 @@
     "preview": "qwik build preview && vite preview --open",
     "serve": "node server/entry.express",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik",
     "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en-US,zh-HK,ja-JP --assetsPath=i18n",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.dev.config.ts",
@@ -36,7 +35,8 @@
     "db:prod:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:push": "drizzle-kit push:sqlite --config drizzle_turso/drizzle.prod.config.ts",
-    "db:prod": "drizzle-kit studio --config drizzle_turso/drizzle.prod.config.ts"
+    "db:prod": "drizzle-kit studio --config drizzle_turso/drizzle.prod.config.ts",
+    "dev:email": "email dev"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.2.19",
@@ -50,6 +50,7 @@
     "@types/mime-db": "^1.43.2",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^20.4.5",
+    "@types/react": "^18.2.43",
     "@typescript-eslint/eslint-plugin": "6.2.0",
     "@typescript-eslint/parser": "6.2.0",
     "@vercel/ncc": "^0.38.0",
@@ -70,6 +71,7 @@
     "prettier-plugin-organize-imports": "^3.2.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "qwik-speak": "^0.17.0",
+    "react": "^18.2.0",
     "rename-cli": "^7.0.2",
     "supabase": "^1.115.4",
     "tailwindcss": "3.3.3",
@@ -83,6 +85,7 @@
     "@aws-sdk/client-s3": "^3.420.0",
     "@babel/parser": "^7.23.0",
     "@libsql/client": "^0.4.0-pre.5",
+    "@react-email/components": "0.0.12",
     "@supabase/supabase-js": "^2.32.0",
     "@upstash/redis": "^1.22.0",
     "@webcontainer/api": "^1.1.5",
@@ -93,6 +96,7 @@
     "mime-db": "^1.52.0",
     "octokit": "^3.1.1",
     "qwik-ionicons": "^1.0.5",
+    "react-email": "1.10.0",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0"
   }

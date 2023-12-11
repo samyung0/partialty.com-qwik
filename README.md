@@ -76,7 +76,7 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
 ✘ Qwik 1.2.9 (cannot run pnpm build, failed with top-level await error)
 
-1. **Exposing loadClientData for manual prefetching**
+1. **Exposing loadClientData for manual prefetching and adding removeClientDataCache**
 
    In packages\qwik-city\runtime\src\use-endpoint.ts, add the @public flag before the loadClientData function declaration:
 
@@ -85,10 +85,22 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
    export const loadClientData = async (...
    ```
 
+   then add the function removeClientDataCache:
+
+   ```js
+   /** @public */
+   export const removeClientDataCache = () => {
+     const keys = CLIENT_DATA_CACHE.keys();
+     for (const key of keys) {
+       CLIENT_DATA_CACHE.delete(key);
+     }
+   };
+   ```
+
    And then in packages\qwik-city\runtime\src\index.ts, add the following to export the function:
 
    ```js
-   export { loadClientData } from "./use-endpoint";
+   export { loadClientData, removeClientDataCache } from "./use-endpoint";
    ```
 
 2. **Feat: Adding in layout switching**
@@ -149,15 +161,29 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
   - `pnpm install` (delete all pnpm folders in user/AppData/local, remove node_modules folder and reinstall pnpm if operation not permitted error shows)
   - `pnpm api.update`
+  - `npm run build.qwik-city`
   - `npx tsm scripts/index.ts --tsc --build --api --eslint --platform-binding --wasm --prepare-release`
 
-  Go to qwik-city/bin and do git init and set remote main to `https://github.com/samyung0/qwikcity-dist`, then commit all files and push with this command
+  Go to qwik-city/bin and do git init and set remote main to `https://github.com/samyung0/qwikcity-dist`, then commit all files and push:
 
   ```git
-  git push --set-upstream main main -f
+  cd packages/qwik-city/lib
+  git init
+  git remote add origin https://github.com/samyung0/qwikcity-dist
+  git add .
+  git commit -m "init"
+  git push origin main -f
   ```
 
+  `cd packages/qwik-city/lib && git init && git remote remove origin && git remote add origin https://github.com/samyung0/qwikcity-dist && git add . && git commit -m "init" && git push origin main -f`
+
 ## Caution
+
+- **Good Practice: Do not prefetch routes that require auth**
+
+  An issue is that if the user prefetches a route while authed, and then logouts while staying on the same page and clicks into the prefetched page, the user can visit the site as authed since Qwik already stores a version of the authed site in serialized data and it will not fetch the site data again since it is cached already.
+
+  One of the solution is to clear the client data cache that persists route info by creating a function inside of qwik-city, and calling the function everytime there is an auth change.
 
 - **Routing and Embedding**
 

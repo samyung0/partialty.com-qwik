@@ -1,5 +1,5 @@
 import { $, type QRL } from "@builder.io/qwik";
-import { server$, type z } from "@builder.io/qwik-city";
+import { removeClientDataCache, server$, type z } from "@builder.io/qwik-city";
 import { type AuthResponse, type AuthTokenResponse, type Session } from "@supabase/supabase-js";
 import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
@@ -246,6 +246,15 @@ export const authStateChange = $(async (globalStore: GlobalContextType) => {
   return supabase.auth.onAuthStateChange(async (event, session) => {
     console.log("AUTH:", event);
 
+    if (
+      event !== "INITIAL_SESSION" &&
+      event !== "MFA_CHALLENGE_VERIFIED" &&
+      event !== "PASSWORD_RECOVERY" &&
+      event !== "TOKEN_REFRESHED"
+    ) {
+      removeClientDataCache();
+    }
+
     if (!session || !session.access_token || !session.refresh_token) {
       logout(globalStore);
       return;
@@ -256,8 +265,8 @@ export const authStateChange = $(async (globalStore: GlobalContextType) => {
     };
     if (!globalStore.privateData.data.profile) {
       globalStore.privateData.data.profile = await loadPrivateData(session.user.id);
+      console.log("loaded private data.");
     }
-    console.log("loaded private data.");
 
     const shouldUpdateCache = await login(globalStore, session, cookies, session.expires_in);
     if (shouldUpdateCache) updateSessionCache(globalStore);

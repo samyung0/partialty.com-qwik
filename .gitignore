@@ -47,3 +47,5 @@ tmp
 
 # Vercel
 .vercel
+
+.react-email

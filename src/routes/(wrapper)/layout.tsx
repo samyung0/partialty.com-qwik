@@ -19,7 +19,7 @@ export const globalContext = createContextId<GlobalContextType>("global");
 
 export const useRedirectLoader = routeLoader$(async (request) => {
   // bind to the root request since request inside server$ has different request object
-  const context = await preload();
+  const context = await preload.bind(this)();
 
   // userRole can be null if error
   const [shouldRedirect, redirectTo] = checkProtectedPath(
