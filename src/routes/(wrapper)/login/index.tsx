@@ -32,18 +32,18 @@ export default component$(() => {
         // MODULARALIZE THIS
         test.value!.style.opacity = "0";
         await new Promise((res) => setTimeout(res, 150));
-        console.log("URL", context.req.url?.href);
 
         // TODO: for same page nav, we can do view transition
-        nav(context.req.url?.href || "about:blank");
+        nav(context.req.url?.origin + "/staging");
       }),
       $((e) => (message.message = e))
     );
   });
 
   const handleGitHubLogin = $(async () => {
+    console.log(context.req.url);
     signInWithGitHub(
-      context.req.url?.href || "about:blank",
+      context.req.url?.origin + "/staging",
       $(async (url: string) => {
         // MODULARALIZE THIS
         test.value!.style.opacity = "0";
@@ -56,7 +56,7 @@ export default component$(() => {
 
   const handleGoogleLogin = $(async () => {
     signinWithGoogle(
-      context.req.url?.href || "about:blank",
+      context.req.url?.origin + "/staging",
       $(async (url: string) => {
         // MODULARALIZE THIS
         test.value!.style.opacity = "0";

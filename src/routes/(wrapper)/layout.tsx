@@ -9,10 +9,9 @@ import {
 import { type Subscription } from "@supabase/supabase-js";
 
 // import { useRedirectLoader } from "~/routes/(wrapper)/plugin@Redirect";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import { defaultValue, type GlobalContextType } from "~/types/GlobalContext";
 import { authStateChange, preload } from "~/utils/auth";
-import { loadPublicData } from "~/utils/publicActions";
 import { checkProtectedPath } from "~/utils/redirect";
 
 export const globalContext = createContextId<GlobalContextType>("global");
@@ -26,7 +25,13 @@ export const useRedirectLoader = routeLoader$(async (request) => {
     context.req.url!.pathname,
     context.session?.userRole
   );
-  if (shouldRedirect) throw request.redirect(308, redirectTo);
+  if (shouldRedirect) {
+    request.cookie.set("redirectedFrom", request.url.pathname),
+      {
+        path: "/",
+      };
+    throw request.redirect(308, redirectTo);
+  }
   return context;
 });
 
@@ -38,16 +43,12 @@ export default component$(() => {
     }) as GlobalContextType
   );
   useContextProvider(globalContext, globalStore);
+  const nav = useNavigate();
 
   useVisibleTask$(async ({ cleanup }) => {
     let subscription: Subscription | null = null;
 
-    authStateChange(globalStore).then((res) => (subscription = res.data.subscription));
-
-    loadPublicData().then((res) => {
-      console.log("loaded public data ", res);
-      globalStore.publicData.data = res;
-    });
+    authStateChange(globalStore, nav).then((res) => (subscription = res.data.subscription));
 
     cleanup(() => {
       subscription?.unsubscribe();

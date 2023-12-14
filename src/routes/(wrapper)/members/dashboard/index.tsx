@@ -1,6 +1,7 @@
 import { component$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link } from "@builder.io/qwik-city";
+import { DBLogout } from "~/utils/auth";
 
 export default component$(() => {
   const isShow = useSignal(true);
@@ -14,6 +15,9 @@ export default component$(() => {
           </Link>
         </div>
       )}
+      <button onClick$={DBLogout} class="ml-10">
+        Logout
+      </button>
     </main>
   );
 });

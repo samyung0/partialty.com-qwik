@@ -1,13 +1,12 @@
 import { $, type QRL } from "@builder.io/qwik";
-import { removeClientDataCache, server$, type z } from "@builder.io/qwik-city";
+import { removeClientDataCache, server$, type RouteNavigate, type z } from "@builder.io/qwik-city";
 import { type AuthResponse, type AuthTokenResponse, type Session } from "@supabase/supabase-js";
 import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
 import { eq } from "drizzle-orm";
-import { getCacheJson, setCacheJson } from "~/utils/cache";
 import drizzle from "~/utils/drizzle";
-import { checkProtectedPath } from "~/utils/redirect";
+import { getCacheJson, setCacheJson } from "~/utils/redisSessionCache";
 import { loadPrivateData } from "~/utils/tursodb";
 import { profiles } from "../../drizzle_turso/schema/profile";
 import { type emailLoginSchema } from "../types/AuthForm";
@@ -128,23 +127,23 @@ export const login = $(function (
 
 // we can clear the upstash redis cache but its not necessary
 // eviction is enabled so old data will be removed when storage is full
-export const logoutHelper = server$(function (globalContext: GlobalContextType) {
-  this.cookie.delete("access_token");
-  this.cookie.delete("refresh_token");
-
-  return checkProtectedPath(globalContext.req.url?.pathname, globalContext.session?.userRole);
+export const logoutHelper = server$(function () {
+  this.cookie.delete("access_token", { path: "/" });
+  this.cookie.delete("refresh_token", { path: "/" });
 });
 
-export const logout = $(async function (globalContext: GlobalContextType) {
+export const logout = $(async function (globalContext: GlobalContextType, nav: RouteNavigate) {
   console.log("logging out");
-  const [shouldRedirect, redirectTo] = await logoutHelper(globalContext);
 
   globalContext.session = null;
   globalContext.isLoggedIn = false;
 
+  // const [shouldRedirect, redirectTo] =
+  await logoutHelper();
+
   // force page redirect if on protected route
   // could change this behavior
-  if (shouldRedirect) return window.location.replace(redirectTo);
+  // if (shouldRedirect) return window.location.replace(redirectTo);
 });
 
 export const DBLogout = $(() => supabase.auth.signOut());
@@ -242,33 +241,33 @@ export const updateSessionCache = $(async (globalStore: GlobalContextType) => {
   setCacheJson(`cached_session${globalStore.session!.access_token}`, JSON.stringify(toCache));
 });
 
-export const authStateChange = $(async (globalStore: GlobalContextType) => {
+export const authStateChange = $(async (globalStore: GlobalContextType, nav: RouteNavigate) => {
   return supabase.auth.onAuthStateChange(async (event, session) => {
     console.log("AUTH:", event);
 
-    if (
-      event !== "INITIAL_SESSION" &&
-      event !== "MFA_CHALLENGE_VERIFIED" &&
-      event !== "PASSWORD_RECOVERY" &&
-      event !== "TOKEN_REFRESHED"
-    ) {
+    if (event === "SIGNED_OUT" || event === "SIGNED_IN" || event === "USER_UPDATED") {
       removeClientDataCache();
     }
 
-    if (!session || !session.access_token || !session.refresh_token) {
-      logout(globalStore);
+    if (event === "SIGNED_OUT") {
+      await logout(globalStore, nav);
+      nav();
       return;
     }
-    const cookies = {
-      access_token: session.access_token,
-      refresh_token: session.refresh_token,
-    };
-    if (!globalStore.privateData.data.profile) {
-      globalStore.privateData.data.profile = await loadPrivateData(session.user.id);
-      console.log("loaded private data.");
-    }
+    if (event === "SIGNED_IN") {
+      const cookies = {
+        access_token: session!.access_token,
+        refresh_token: session!.refresh_token,
+      };
+      if (!globalStore.privateData.data.profile) {
+        globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
+        console.log("loaded profile data.");
+      }
 
-    const shouldUpdateCache = await login(globalStore, session, cookies, session.expires_in);
-    if (shouldUpdateCache) updateSessionCache(globalStore);
+      const shouldUpdateCache = await login(globalStore, session!, cookies, session!.expires_in);
+      if (shouldUpdateCache) updateSessionCache(globalStore);
+
+      nav();
+    }
   });
 });

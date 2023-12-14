@@ -7,12 +7,14 @@ export const checkProtectedPath = (path: string | undefined, role: any): [boolea
   // in case somehow the path is empty, redirect to homepage and refresh
   if (!path) return [true, redirectTo];
 
+  console.log("role:", role);
+
   for (const i of protectedRoutes) {
     const re = new RegExp(i.path);
-    if (re.test(path)) {
+    if (i.exact ? i.path === path : re.test(path)) {
       redirectTo = i.redirectTo;
-      if (role) shouldRedirect = !i.authRolesPermitted.includes(role);
-      else shouldRedirect = i.authRolesPermitted.length !== 0; // if no roles permitted, then only UNAUTHED persons can access
+      if (i.authRolesPermitted.length > 0) shouldRedirect = !i.authRolesPermitted.includes(role);
+      else shouldRedirect = !!role; // if no roles permitted, then only UNAUTHED persons can access
       break;
     }
   }
