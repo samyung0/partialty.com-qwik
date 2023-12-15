@@ -133,7 +133,7 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
               children: cmp,
             });
           } else if (value[i].default) {
-            cmp = jsx(value[i].default, {
+            cmp = jsx(value[i].default as any, {
               children: cmp,
             });
           }
@@ -175,7 +175,7 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
   git push origin main -f
   ```
 
-  `cd packages/qwik-city/lib && git init && git remote remove origin && git remote add origin https://github.com/samyung0/qwikcity-dist && git add . && git commit -m "init" && git push origin main -f`
+  `cd packages/qwik-city/lib && git init && git remote add origin https://github.com/samyung0/qwikcity-dist && git add . && git commit -m "init" && git push origin main -f`
 
 ## Caution
 
