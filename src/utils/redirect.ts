@@ -7,8 +7,6 @@ export const checkProtectedPath = (path: string | undefined, role: any): [boolea
   // in case somehow the path is empty, redirect to homepage and refresh
   if (!path) return [true, redirectTo];
 
-  console.log("role:", role);
-
   for (const i of protectedRoutes) {
     const re = new RegExp(i.path);
     if (i.exact ? i.path === path : re.test(path)) {

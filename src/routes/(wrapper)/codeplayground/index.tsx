@@ -79,11 +79,7 @@ export default component$(() => {
             Loading...
           </div>
         ) : null}
-        <iframe
-          style={{ width: "100%" }}
-          placeholder="Use the terminal to run a command!"
-          ref={refIframe}
-        ></iframe>
+        <iframe style={{ width: "100%" }} ref={refIframe}></iframe>
       </div>
     </>
   );
