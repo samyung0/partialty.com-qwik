@@ -1,5 +1,5 @@
 import { type PropFunction } from "@builder.io/qwik";
-import type { DirEnt, WebContainerProcess } from "@webcontainer/api";
+import type { BufferEncoding, DirEnt, WebContainerProcess } from "@webcontainer/api";
 import { WebContainer } from "@webcontainer/api";
 import { type Terminal } from "xterm";
 import type { FileStore, Tree } from "~/utils/fileUtil";
@@ -156,27 +156,27 @@ export class WebContainerInterface {
   }
 
   async mountFiles(files: Tree) {
-    return await this.#webcontainerInstance?.mount(files);
+    return await this.#webcontainerInstance!.mount(files);
   }
 
-  async getFile(path: string) {
+  async readFile(path: string) {
     // should not directly return Uint8Array since its not serializable in qwik
-    const data = await this.#webcontainerInstance?.fs.readFile(path);
-    return data ? Array.from(data) : data;
+    const data = await this.#webcontainerInstance!.fs.readFile(path);
+    return Array.from(data);
   }
 
-  async getSimpleFile(path: string) {
-    return await this.#webcontainerInstance?.fs.readFile(path, "utf-8");
+  async readSimpleFile(path: string) {
+    return await this.#webcontainerInstance!.fs.readFile(path, "utf-8");
   }
 
-  async getDir(path: string, withFileTypes: boolean = true, encoding?: string) {
+  async readdir(path: string, withFileTypes: boolean = true, encoding?: BufferEncoding) {
     // the type reference for webcontainer api is written in a weird way
     return withFileTypes
-      ? await this.#webcontainerInstance?.fs.readdir(path, {
+      ? await this.#webcontainerInstance!.fs.readdir(path, {
           encoding,
           withFileTypes: true,
         })
-      : await this.#webcontainerInstance?.fs.readdir(path, {
+      : await this.#webcontainerInstance!.fs.readdir(path, {
           encoding,
           withFileTypes: false,
         });
@@ -184,18 +184,18 @@ export class WebContainerInterface {
 
   async mkdir(path: string, recursive: boolean = true) {
     return recursive
-      ? await this.#webcontainerInstance?.fs.mkdir(path, { recursive: true })
-      : await this.#webcontainerInstance?.fs.mkdir(path, { recursive: false });
+      ? await this.#webcontainerInstance!.fs.mkdir(path, { recursive: true })
+      : await this.#webcontainerInstance!.fs.mkdir(path, { recursive: false });
   }
 
   async rm(path: string, recursive: boolean = true) {
     return recursive
-      ? await this.#webcontainerInstance?.fs.rm(path, { recursive: true })
-      : await this.#webcontainerInstance?.fs.rm(path, { recursive: false });
+      ? await this.#webcontainerInstance!.fs.rm(path, { recursive: true })
+      : await this.#webcontainerInstance!.fs.rm(path, { recursive: false });
   }
 
-  async writeFile(path: string, data: string, encoding?: string) {
-    return await this.#webcontainerInstance?.fs.writeFile(path, data, { encoding });
+  async writeFile(path: string, data: string, encoding?: BufferEncoding) {
+    return await this.#webcontainerInstance!.fs.writeFile(path, data, { encoding });
   }
 
   async runTerminal(
@@ -204,8 +204,8 @@ export class WebContainerInterface {
     showInTerminal: boolean = true,
     cbOnOutput?: PropFunction<(data: string) => any>
   ) {
-    const process = await this.#webcontainerInstance?.spawn(command, args);
-    process?.output.pipeTo(
+    const process = await this.#webcontainerInstance!.spawn(command, args);
+    process.output.pipeTo(
       new WritableStream({
         write: (data) => {
           cbOnOutput?.(data);
@@ -213,19 +213,19 @@ export class WebContainerInterface {
         },
       })
     );
-    return await process?.exit;
+    return await process.exit;
   }
 
   onPort(func: PropFunction<(port: number, type: "close" | "open", url: string) => any>) {
-    return this.#webcontainerInstance?.on("port", func);
+    return this.#webcontainerInstance!.on("port", func);
   }
 
   onServerReady(func: PropFunction<(port: number, url: string) => any>) {
-    return this.#webcontainerInstance?.on("server-ready", func);
+    return this.#webcontainerInstance!.on("server-ready", func);
   }
 
   onError(func: PropFunction<(error: { message: string }) => any>) {
-    return this.#webcontainerInstance?.on("error", (error: { message: string }) => {
+    return this.#webcontainerInstance!.on("error", (error: { message: string }) => {
       this.isErrored = true;
       func(error);
     });
@@ -237,7 +237,7 @@ export class WebContainerInterface {
     // DO NOT simply rm(*)
     this.#isWatchFilesActive = false;
     this.#watchFilesProcess?.kill();
-    ((await this.getDir("/")) as DirEnt<string>[]).forEach((dirEnt) => this.rm(dirEnt.name));
+    ((await this.readdir("/")) as DirEnt<string>[]).forEach((dirEnt) => this.rm(dirEnt.name));
   }
 
   close() {

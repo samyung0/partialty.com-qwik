@@ -52,13 +52,13 @@ export default component$((props: Props) => {
     return (
       (await getEntryFromPath$(path, props.fileStore)) !== null &&
       editorStore.openedFiles.filter((entry: Entry) => entry.path === path).length === 1 &&
-      (await props.interfaceStore.value?.getFile(path)) !== undefined
+      (await props.interfaceStore.value?.readFile(path)) !== undefined
     );
   });
 
   const verifyFileUnchanged = $(async (path: string) => {
     // non binary data file only
-    const data = await props.interfaceStore.value?.getSimpleFile(path);
+    const data = await props.interfaceStore.value?.readSimpleFile(path);
     if (data === undefined) return false;
     // entry.discrepancy already checks
     // we just do a double check by retrieving the file from fs
@@ -152,7 +152,7 @@ export default component$((props: Props) => {
   const addToStage = $(async (entry: Entry) => {
     // for now, only file with non binary data can be open
     try {
-      const data = await props.interfaceStore.value?.getSimpleFile(entry.path);
+      const data = await props.interfaceStore.value?.readSimpleFile(entry.path);
       if (data === undefined) return null;
       if (editorStore.openedFiles.filter((e) => e.path === entry.path).length === 0)
         editorStore.openedFiles.push({ ...entry, data });

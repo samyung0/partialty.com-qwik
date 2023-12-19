@@ -19,7 +19,7 @@ export const fetchAuthUserRole = server$(async function () {
           role: profiles.role,
         })
         .from(profiles)
-        .where(eq(profiles.id, res.data.user!.id))
+        .where(eq(profiles.id, res.data.user.id))
         .limit(1)
     )[0].role;
   } catch (e) {
