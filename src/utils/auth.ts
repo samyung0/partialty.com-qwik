@@ -40,7 +40,7 @@ export const preload = server$(async function () {
   // cache miss
   // refresh session and get user role in supabase
   time1 = performance.now();
-  const res = await supabaseServer.auth.setSession({
+  const res = await supabaseServer(this).auth.setSession({
     access_token: access_token.value,
     refresh_token: refresh_token.value,
   });
@@ -54,7 +54,7 @@ export const preload = server$(async function () {
   let userRole = null;
   try {
     userRole = (
-      await drizzle
+      await drizzle(this)
         .select({
           role: profiles.role,
         })
@@ -132,7 +132,7 @@ export const logoutHelper = server$(function () {
   this.cookie.delete("refresh_token", { path: "/" });
 });
 
-export const logout = $(async function (globalContext: GlobalContextType, nav: RouteNavigate) {
+export const logout = $(async function (globalContext: GlobalContextType) {
   console.log("logging out");
 
   globalContext.session = null;
@@ -245,12 +245,20 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
   return supabase.auth.onAuthStateChange(async (event, session) => {
     console.log("AUTH:", event);
 
+    if (event === "INITIAL_SESSION") {
+      if (!globalStore.isLoggedIn || !session) return;
+      if (!globalStore.privateData.data.profile) {
+        globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
+        console.log("loaded profile data.");
+      }
+    }
+
     if (event === "SIGNED_OUT" || event === "SIGNED_IN" || event === "USER_UPDATED") {
       removeClientDataCache();
     }
 
     if (event === "SIGNED_OUT") {
-      await logout(globalStore, nav);
+      await logout(globalStore);
       nav();
       return;
     }

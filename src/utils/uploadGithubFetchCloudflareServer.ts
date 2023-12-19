@@ -25,7 +25,9 @@ export const uploadGithubFetchCloudflare = server$(async function (
   }
 
   const url = `${owner}-${repo}-${branch}/`;
-  const bucket = process.env["R2_FETCHGITHUB_BUCKET"]!;
+  const bucket = this.env.get("R2_FETCHGITHUB_BUCKET");
+
+  if (!bucket) return [false, "No env R2_FETCHGITHUB_BUCKET"];
 
   const error = [false, ""];
   const yakusoku: Promise<PutObjectCommandOutput>[] = Array(files.length);
@@ -42,7 +44,7 @@ export const uploadGithubFetchCloudflare = server$(async function (
       if (_contentType) arg.ContentType = _contentType;
       else arg.ContentType = "text/plain";
 
-      yakusoku[i] = r2Client.send(new PutObjectCommand(arg));
+      yakusoku[i] = r2Client(this).send(new PutObjectCommand(arg));
     } catch (e) {
       error[0] = false;
       error[1] = "Buffer error! " + e + " at file " + JSON.stringify(files[i]);

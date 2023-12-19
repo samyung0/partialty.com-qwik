@@ -1,10 +1,9 @@
 import * as dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.production" });
 
-if (!process.env.TURSO_PROD_URL)
-  throw new Error("Cannot retrieve database url! Check env variables!");
-if (!process.env.TURSO_PROD_TOKEN)
+if (!process.env.TURSO_URL) throw new Error("Cannot retrieve database url! Check env variables!");
+if (!process.env.TURSO_TOKEN)
   throw new Error("Cannot retrieve database token! Check env variables!");
 
 export default {
@@ -13,7 +12,7 @@ export default {
   driver: "turso",
   dbCredentials: {
     // url: "file:./drizzle_turso/local.db"
-    url: process.env.TURSO_PROD_URL,
-    authToken: process.env.TURSO_PROD_TOKEN,
+    url: process.env.TURSO_URL,
+    authToken: process.env.TURSO_TOKEN,
   },
 } satisfies Config;

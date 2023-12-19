@@ -8,13 +8,13 @@ export const fetchAuthUserRole = server$(async function () {
   const access_token = this.cookie.get("access_token")?.value;
   if (!access_token) return null;
 
-  const res = await supabaseServer.auth.getUser(access_token);
+  const res = await supabaseServer(this).auth.getUser(access_token);
   if (res.error) return null;
 
   let userRole = null;
   try {
     userRole = (
-      await drizzle
+      await drizzle(this)
         .select({
           role: profiles.role,
         })
@@ -30,8 +30,8 @@ export const fetchAuthUserRole = server$(async function () {
   return userRole;
 });
 
-export const loadPrivateData = server$((id: string) => {
-  return drizzle
+export const loadPrivateData = server$(function (id: string) {
+  return drizzle(this)
     .select()
     .from(profiles)
     .where(eq(profiles.id, id))
