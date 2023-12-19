@@ -3,7 +3,7 @@ import { Link } from "@builder.io/qwik-city";
 import { ButtonStd } from "~/components/ui/button-std";
 import { Logo } from "../logo/logo";
 
-import { globalContext } from "~/routes/(wrapper)/layout";
+import { globalContext } from "~/context/globalContext";
 import { DBLogout } from "~/utils/auth";
 
 // import { themeContext } from "~/root";

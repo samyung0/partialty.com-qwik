@@ -38,5 +38,9 @@ export const loadPrivateData = server$(function (id: string) {
     .limit(1)
     .then(([data]) => {
       return data;
+    })
+    .catch((e) => {
+      console.error(e);
+      return null;
     });
 });

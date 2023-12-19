@@ -1,10 +1,10 @@
 import { $, type QRL } from "@builder.io/qwik";
 import { removeClientDataCache, server$, type RouteNavigate, type z } from "@builder.io/qwik-city";
 import { type AuthResponse, type AuthTokenResponse, type Session } from "@supabase/supabase-js";
-import deepEqual from "lodash.isequal";
 import { defaultValue, type GlobalContextType } from "../types/GlobalContext";
 
 import { eq } from "drizzle-orm";
+import { DEFAULTROLE } from "~/const";
 import drizzle from "~/utils/drizzle";
 import { getCacheJson, setCacheJson } from "~/utils/redisSessionCache";
 import { loadPrivateData } from "~/utils/tursodb";
@@ -63,9 +63,10 @@ export const preload = server$(async function () {
         .limit(1)
     )[0].role;
   } catch (e) {
-    console.error(e);
-    return ret;
+    // console.log(e);
   }
+
+  userRole = userRole ?? DEFAULTROLE;
 
   console.log("initial cache miss with time ", performance.now() - time1);
 
@@ -103,18 +104,18 @@ export const setLoginCookies = server$(function (cookie, _sessionExpiresIn) {
 
 export const login = $(function (globalContext: GlobalContextType, session: Session) {
   console.log("login");
-  if (globalContext.session) {
-    const compare = JSON.parse(JSON.stringify(globalContext.session));
-    if (compare["userRole"]) delete compare["userRole"];
-    if (deepEqual(compare, session)) return false;
-  }
+  // if (globalContext.session) {
+  //   const compare = JSON.parse(JSON.stringify(globalContext.session));
+  //   if (compare["userRole"]) delete compare["userRole"];
+  //   if (deepEqual(compare, session)) return false;
+  // }
 
   globalContext.session = session;
   globalContext.isLoggedIn = true;
-  globalContext.session.userRole = globalContext.privateData.data.profile!.role;
+  globalContext.session.userRole = globalContext.privateData.data.profile?.role ?? DEFAULTROLE;
 
   // loginHelper(cookie, sessionExpiresIn);
-  return true;
+  // return true;
 });
 
 // we can clear the upstash redis cache but its not necessary
@@ -162,18 +163,17 @@ export const signInWithGitHub = $(
     navMethod: Function,
     errorFn: QRL<(V: any) => any> | Console["error"] = console.error
   ) => {
-    return supabase.auth
-      .signInWithOAuth({
-        provider: "github",
-        options: {
-          redirectTo: redirectURL,
-          skipBrowserRedirect: true,
-        },
-      })
-      .then((res) => {
-        if (res.error) errorFn(res.error.toString());
-        else navMethod(res.data.url);
-      });
+    return supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: redirectURL,
+        // skipBrowserRedirect: false,
+      },
+    });
+    // .then((res) => {
+    //   if (res.error) errorFn(res.error.toString());
+    //   else navMethod(res.data.url);
+    // });
   }
 );
 
@@ -183,22 +183,21 @@ export const signinWithGoogle = $(
     navMethod: Function,
     errorFn: QRL<(V: any) => any> | Console["error"] = console.error
   ) => {
-    return supabase.auth
-      .signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: redirectURL,
-          skipBrowserRedirect: true,
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
+    return supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: redirectURL,
+        // skipBrowserRedirect: true,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
         },
-      })
-      .then((res) => {
-        if (res.error) errorFn(res.error.toString());
-        else navMethod(res.data.url);
-      });
+      },
+    });
+    // .then((res) => {
+    //   if (res.error) errorFn(res.error.toString());
+    //   else navMethod(res.data.url);
+    // });
   }
 );
 
@@ -207,14 +206,14 @@ export const signUpWithPassword = $(
     data: z.infer<typeof emailLoginSchema>,
     callbackFn: QRL<(V: AuthResponse) => any>,
     errorFn: QRL<(V: any) => any> | Console["error"] = console.error,
-    redirectURL: string = "/"
+    emailRedirectURL: string = "/"
   ) => {
     return supabase.auth
       .signUp({
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: redirectURL,
+          emailRedirectTo: emailRedirectURL,
         },
       })
       .then((res) => {
@@ -227,7 +226,7 @@ export const signUpWithPassword = $(
 
 export const updateSessionCache = $(async (globalStore: GlobalContextType) => {
   const toCache = Object.assign({}, globalStore.session, {
-    userRole: globalStore.privateData.data.profile!.role,
+    userRole: globalStore.privateData.data.profile?.role ?? DEFAULTROLE,
   });
   console.log("cached user role and session");
   setCacheJson(`cached_session${globalStore.session!.access_token}`, JSON.stringify(toCache));
@@ -244,6 +243,7 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
         !globalStore.privateData.data.profile &&
         !globalStore.privateData.fetching.profile
       ) {
+        globalStore.privateData.fetching.profile = true;
         globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
         console.log("loaded profile data.");
       }
@@ -256,10 +256,8 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
     if (event === "SIGNED_OUT") {
       await logout(globalStore);
       nav();
-      return;
     }
     if (event === "SIGNED_IN") {
-      console.log("nav");
       const cookies = {
         access_token: session!.access_token,
         refresh_token: session!.refresh_token,
@@ -272,8 +270,8 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
         globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
         console.log("loaded profile data.");
       }
-      const shouldUpdateCache = await login(globalStore, session!);
-      if (shouldUpdateCache) updateSessionCache(globalStore);
+      await login(globalStore, session!);
+      updateSessionCache(globalStore);
     }
   });
 });

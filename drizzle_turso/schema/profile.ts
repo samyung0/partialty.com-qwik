@@ -1,4 +1,5 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { DEFAULTROLE } from "~/const";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),
@@ -8,6 +9,6 @@ export const profiles = sqliteTable("profiles", {
   last_signed_in: text("last_signed_in"),
   role: text("role", { enum: ["free", "paid", "teacher"] })
     .notNull()
-    .default("free"),
+    .default(DEFAULTROLE),
   stripe_id: text("stripe_id"),
 });

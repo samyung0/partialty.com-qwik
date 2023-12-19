@@ -208,6 +208,8 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
 ## TODO
 
+- **Use onchange from webcontainer instead of chokidar**
+
 - **Add browser version check**
 
   - web workers

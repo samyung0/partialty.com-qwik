@@ -3,7 +3,7 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
-import { globalContext } from "~/routes/(wrapper)/layout";
+import { globalContext } from "~/context/globalContext";
 import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
 import { signInWithGitHub, signInWithPassword, signinWithGoogle } from "~/utils/auth";
 
@@ -30,8 +30,8 @@ export default component$(() => {
       },
       $(async () => {
         // MODULARALIZE THIS
-        test.value!.style.opacity = "0";
-        await new Promise((res) => setTimeout(res, 150));
+        // test.value!.style.opacity = "0";
+        // await new Promise((res) => setTimeout(res, 150));
 
         // TODO: for same page nav, we can do view transition
         nav(context.req.url?.origin + "/staging");
@@ -41,13 +41,12 @@ export default component$(() => {
   });
 
   const handleGitHubLogin = $(async () => {
-    console.log(context.req.url);
     signInWithGitHub(
       context.req.url?.origin + "/staging",
       $(async (url: string) => {
         // MODULARALIZE THIS
-        test.value!.style.opacity = "0";
-        await new Promise((res) => setTimeout(res, 150));
+        // test.value!.style.opacity = "0";
+        // await new Promise((res) => setTimeout(res, 150));
         nav(url);
       }),
       $((e) => (message.message = e))
@@ -59,8 +58,8 @@ export default component$(() => {
       context.req.url?.origin + "/staging",
       $(async (url: string) => {
         // MODULARALIZE THIS
-        test.value!.style.opacity = "0";
-        await new Promise((res) => setTimeout(res, 150));
+        // test.value!.style.opacity = "0";
+        // await new Promise((res) => setTimeout(res, 150));
         nav(url);
       }),
       $((e) => (message.message = e))

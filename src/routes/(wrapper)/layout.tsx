@@ -1,20 +1,12 @@
-import {
-  component$,
-  createContextId,
-  Slot,
-  useContextProvider,
-  useStore,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { component$, Slot, useContextProvider, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { type Subscription } from "@supabase/supabase-js";
 
 // import { useRedirectLoader } from "~/routes/(wrapper)/plugin@Redirect";
 import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
+import { globalContext } from "~/context/globalContext";
 import { defaultValue, type GlobalContextType } from "~/types/GlobalContext";
 import { authStateChange, preload } from "~/utils/auth";
 import { checkProtectedPath } from "~/utils/redirect";
-
-export const globalContext = createContextId<GlobalContextType>("global");
 
 export const useRedirectLoader = routeLoader$(async (request) => {
   // bind to the root request since request inside server$ has different request object
@@ -26,10 +18,9 @@ export const useRedirectLoader = routeLoader$(async (request) => {
     context.session?.userRole
   );
   if (shouldRedirect) {
-    request.cookie.set("redirectedFrom", request.url.pathname),
-      {
-        path: "/",
-      };
+    request.cookie.set("redirectedFrom", request.url.pathname, {
+      path: "/",
+    });
     throw request.redirect(308, redirectTo);
   }
   return context;
@@ -45,6 +36,7 @@ export default component$(() => {
   useContextProvider(globalContext, globalStore);
   const nav = useNavigate();
 
+  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async ({ cleanup }) => {
     let subscription: Subscription | null = null;
 

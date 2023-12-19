@@ -1,8 +1,9 @@
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { Message } from "~/components/ui/message";
+import { globalContext } from "~/context/globalContext";
 import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
 import { signUpWithPassword } from "~/utils/auth";
 
@@ -12,6 +13,7 @@ export default component$(() => {
   const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const nav = useNavigate();
   const termsChecked = useSignal(false);
+  const context = useContext(globalContext);
 
   const handleEmailSignup = $(() => {
     isLoading.value = true;
@@ -33,12 +35,12 @@ export default component$(() => {
       result.data,
       $(() => {
         isLoading.value = false;
-        nav("/");
       }),
       $((e) => {
         isLoading.value = false;
         message.message = e;
-      })
+      }),
+      context.req.url?.origin + "/staging"
     );
   });
 
