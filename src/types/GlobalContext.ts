@@ -9,6 +9,9 @@ export interface GlobalContextType {
     data: {
       profile: InferSelectModel<typeof profiles> | null;
     };
+    fetching: {
+      profile: boolean;
+    };
   };
   publicData: {
     data: any;
@@ -24,6 +27,9 @@ export const defaultValue: GlobalContextType = {
   privateData: {
     data: {
       profile: null,
+    },
+    fetching: {
+      profile: false,
     },
   },
   publicData: {

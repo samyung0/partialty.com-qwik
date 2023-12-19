@@ -29,7 +29,7 @@ export const preload = server$(async function () {
 
   // cache hit in upstash redis
   let time1 = performance.now();
-  const redisCache = await getCacheJson(`cached_session${access_token.value}`);
+  const redisCache = await getCacheJson.bind(this)(`cached_session${access_token.value}`);
   if (redisCache && redisCache.userRole) {
     console.log("initial cache hit with time ", performance.now() - time1);
     ret.session = redisCache;
@@ -69,14 +69,14 @@ export const preload = server$(async function () {
 
   console.log("initial cache miss with time ", performance.now() - time1);
 
-  loginHelper.bind(this)(
+  setLoginCookies.bind(this)(
     {
       access_token: res.data.session!.access_token,
       refresh_token: res.data.session!.refresh_token,
     },
     res.data.session?.expires_in
   );
-  setCacheJson(
+  setCacheJson.bind(this)(
     `cached_session${res.data.session!.access_token}`,
     JSON.stringify(Object.assign({}, res.data.session, { userRole: userRole }))
   );
@@ -84,7 +84,7 @@ export const preload = server$(async function () {
   return ret;
 });
 
-export const loginHelper = server$(function (cookie, _sessionExpiresIn) {
+export const setLoginCookies = server$(function (cookie, _sessionExpiresIn) {
   this.cookie.set("access_token", cookie.access_token, {
     httpOnly: true,
     sameSite: "lax",
@@ -101,15 +101,7 @@ export const loginHelper = server$(function (cookie, _sessionExpiresIn) {
   });
 });
 
-export const login = $(function (
-  globalContext: GlobalContextType,
-  session: Session,
-  cookie: {
-    access_token: string;
-    refresh_token: string;
-  },
-  sessionExpiresIn: number
-) {
+export const login = $(function (globalContext: GlobalContextType, session: Session) {
   console.log("login");
   if (globalContext.session) {
     const compare = JSON.parse(JSON.stringify(globalContext.session));
@@ -121,7 +113,7 @@ export const login = $(function (
   globalContext.isLoggedIn = true;
   globalContext.session.userRole = globalContext.privateData.data.profile!.role;
 
-  loginHelper(cookie, sessionExpiresIn);
+  // loginHelper(cookie, sessionExpiresIn);
   return true;
 });
 
@@ -246,8 +238,12 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
     console.log("AUTH:", event);
 
     if (event === "INITIAL_SESSION") {
-      if (!globalStore.isLoggedIn || !session) return;
-      if (!globalStore.privateData.data.profile) {
+      if (
+        globalStore.isLoggedIn &&
+        session &&
+        !globalStore.privateData.data.profile &&
+        !globalStore.privateData.fetching.profile
+      ) {
         globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
         console.log("loaded profile data.");
       }
@@ -263,19 +259,21 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
       return;
     }
     if (event === "SIGNED_IN") {
+      console.log("nav");
       const cookies = {
         access_token: session!.access_token,
         refresh_token: session!.refresh_token,
       };
+      await setLoginCookies(cookies, session!.expires_in);
+      nav();
+
       if (!globalStore.privateData.data.profile) {
+        globalStore.privateData.fetching.profile = true;
         globalStore.privateData.data.profile = await loadPrivateData(session!.user.id);
         console.log("loaded profile data.");
       }
-
-      const shouldUpdateCache = await login(globalStore, session!, cookies, session!.expires_in);
+      const shouldUpdateCache = await login(globalStore, session!);
       if (shouldUpdateCache) updateSessionCache(globalStore);
-
-      nav();
     }
   });
 });
