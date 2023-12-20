@@ -2,7 +2,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 
 export const onGet: RequestHandler = async ({ cacheControl, url }) => {
   // https://qwik.builder.io/docs/caching/
-  if (url.pathname === "/" || url.pathname === "/about/") {
+  if (url.pathname === "/about/") {
     cacheControl({
       public: true,
       staleWhileRevalidate: 60 * 60 * 24 * 7,
@@ -17,6 +17,15 @@ export const onGet: RequestHandler = async ({ cacheControl, url }) => {
         sMaxAge: 60 * 60 * 24,
       },
       "CDN-Cache-Control"
+    );
+    cacheControl(
+      {
+        public: true,
+        staleWhileRevalidate: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24,
+        sMaxAge: 60 * 60 * 24,
+      },
+      "Vercel-CDN-Cache-Control"
     );
   }
 };

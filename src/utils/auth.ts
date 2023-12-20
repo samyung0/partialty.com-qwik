@@ -255,7 +255,7 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
 
     if (event === "SIGNED_OUT") {
       await logout(globalStore);
-      nav();
+      nav("/");
     }
     if (event === "SIGNED_IN") {
       const cookies = {
@@ -263,7 +263,7 @@ export const authStateChange = $(async (globalStore: GlobalContextType, nav: Rou
         refresh_token: session!.refresh_token,
       };
       await setLoginCookies(cookies, session!.expires_in);
-      nav();
+      nav("/members/dashboard");
 
       if (!globalStore.privateData.data.profile) {
         globalStore.privateData.fetching.profile = true;
