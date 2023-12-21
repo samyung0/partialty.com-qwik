@@ -2,7 +2,7 @@ import { component$, Slot, useContextProvider, useStore, useVisibleTask$ } from 
 import { type Subscription } from "@supabase/supabase-js";
 
 // import { useRedirectLoader } from "~/routes/(wrapper)/plugin@Redirect";
-import type { RequestHandler} from "@builder.io/qwik-city";
+import type { RequestHandler } from "@builder.io/qwik-city";
 import { routeLoader$, useNavigate } from "@builder.io/qwik-city";
 import { globalContext } from "~/context/globalContext";
 import { config } from "~/speak-config";
