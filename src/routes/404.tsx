@@ -1,10 +1,18 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { inlineTranslate } from "qwik-speak";
 
-export const onGet: RequestHandler = ({ status }) => {
-  status(404);
-};
+// export const onGet: RequestHandler = ({ status }) => {
+//   status(404);
+// };
+
+// export const onStaticGenerate: StaticGenerateHandler = () => {
+//   return {
+//     params: config.supportedLocales.map(locale => {
+//       return { lang: locale.lang !== config.defaultLocale.lang ? locale.lang : '.' };
+//     })
+//   };
+// };
 
 export const head: DocumentHead = () => {
   const t = inlineTranslate();
