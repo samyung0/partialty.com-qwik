@@ -1,5 +1,11 @@
 {
   "app": {
+    "404page": {
+      "head": {
+        "description": "Cannot retrive page content! Please check if the url is valid!",
+        "title": "Not Found"
+      }
+    },
     "page1": {
       "head": {
         "description": "Description",

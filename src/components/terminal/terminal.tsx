@@ -1,9 +1,9 @@
 import type { NoSerialize } from "@builder.io/qwik";
-import { component$, noSerialize, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, noSerialize, useSignal, useStyles$, useVisibleTask$ } from "@builder.io/qwik";
 
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import "xterm/css/xterm.css";
+import xtermStyles from "xterm/css/xterm.css?inline";
 
 interface Props {
   style?: Record<string, string>;
@@ -17,6 +17,7 @@ export interface TerminalStore {
 }
 
 export default component$((props: Props) => {
+  useStyles$(xtermStyles);
   const refTerminal = useSignal<HTMLElement>();
 
   useVisibleTask$(async ({ cleanup }) => {

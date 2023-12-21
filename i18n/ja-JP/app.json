@@ -1,5 +1,11 @@
 {
   "app": {
+    "404page": {
+      "head": {
+        "description": "お探しのページがみつかりませんでした",
+        "title": "エラー"
+      }
+    },
     "page1": {
       "head": {
         "description": "ない",

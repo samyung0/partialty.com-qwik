@@ -5,7 +5,7 @@ import { defineConfig, type Connect } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import lang from "./lang.json";
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
-  if (req.url === "/codeplayground/") {
+  if (req.url && /^\/.+\/codeplayground/.test(req.url)) {
     response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
     response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   }

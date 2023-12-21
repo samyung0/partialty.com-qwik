@@ -1,5 +1,11 @@
 {
   "app": {
+    "404page": {
+      "head": {
+        "description": "此頁面並不存在",
+        "title": "404"
+      }
+    },
     "page1": {
       "head": {
         "description": "內容",

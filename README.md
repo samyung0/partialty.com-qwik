@@ -161,9 +161,8 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
   - `pnpm install` (delete all pnpm folders in user/AppData/local, remove node_modules folder and reinstall pnpm if operation not permitted error shows)
   - `pnpm api.update`
-  - `npx tsm scripts/index.ts --tsc --build --api --eslint --platform-binding --wasm --prepare-release`
-  - `npm run build.qwik-city`
-  - `tsm scripts/index.ts --tsc --build --api --eslint --platform-binding --wasm --prepare-release` (run again)
+  - `npm run build.full`
+  - `npx tsm scripts/index.ts --api`
 
   Go to qwik-city/bin and do git init and set remote main to `https://github.com/samyung0/qwikcity-dist`, then commit all files and push:
 
