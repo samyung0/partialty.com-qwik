@@ -87,7 +87,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.420.0",
     "@babel/parser": "^7.23.0",
-    "@libsql/client": "^0.4.0-pre.5",
+    "@libsql/client": "^0.3.6",
+    "@lucia-auth/adapter-sqlite": "^2.0.1",
     "@react-email/components": "0.0.12",
     "@supabase/realtime-js": "^2.8.4",
     "@supabase/supabase-js": "^2.32.0",
@@ -97,6 +98,7 @@
     "comlink": "^4.4.1",
     "drizzle-orm": "^0.29.1",
     "lodash.isequal": "^4.5.0",
+    "lucia": "^2.7.6",
     "mime-db": "^1.52.0",
     "octokit": "^3.1.1",
     "qwik-ionicons": "^1.0.5",

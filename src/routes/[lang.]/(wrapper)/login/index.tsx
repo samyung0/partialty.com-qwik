@@ -1,71 +1,27 @@
-import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
-import { Link, useNavigate } from "@builder.io/qwik-city";
+import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { Form, Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
+import { useLoginWithPassword } from "~/auth/login";
 import { Message } from "~/components/ui/message";
-import { globalContext } from "~/context/globalContext";
-import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
-import { signInWithGitHub, signInWithPassword, signinWithGoogle } from "~/utils/auth";
+import { defaultLoginValue } from "~/types/Signup";
 
 export default component$(() => {
-  const context = useContext(globalContext);
-  const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const message: any = useStore({ message: undefined, status: "error" });
   const nav = useNavigate();
+  const loginWithPassword = useLoginWithPassword();
+
+  useTask$(({ track }) => {
+    track(() => loginWithPassword.status);
+    if (loginWithPassword.status === 400)
+      message.message = Object.values(loginWithPassword.value?.fieldErrors ?? {})
+        .flat()
+        .join("\n");
+    if (loginWithPassword.status === 500) message.message = loginWithPassword.value?.message;
+    if (loginWithPassword.status === 200) nav("/members/dashboard/");
+  });
 
   const test = useSignal<HTMLElement>();
-
-  const handleEmailLogin = $(async () => {
-    const result = emailLoginSchema.safeParse(emailForm);
-
-    if (!result.success) {
-      message.message = result.error.issues[0].message;
-      return;
-    }
-
-    signInWithPassword(
-      {
-        email: result.data.email,
-        password: result.data.password,
-      },
-      $(async () => {
-        // MODULARALIZE THIS
-        // test.value!.style.opacity = "0";
-        // await new Promise((res) => setTimeout(res, 150));
-
-        // TODO: for same page nav, we can do view transition
-        nav(context.req.url?.origin + "/staging");
-      }),
-      $((e) => (message.message = e))
-    );
-  });
-
-  const handleGitHubLogin = $(async () => {
-    signInWithGitHub(
-      context.req.url?.origin + "/staging",
-      $(async (url: string) => {
-        // MODULARALIZE THIS
-        // test.value!.style.opacity = "0";
-        // await new Promise((res) => setTimeout(res, 150));
-        nav(url);
-      }),
-      $((e) => (message.message = e))
-    );
-  });
-
-  const handleGoogleLogin = $(async () => {
-    signinWithGoogle(
-      context.req.url?.origin + "/staging",
-      $(async (url: string) => {
-        // MODULARALIZE THIS
-        // test.value!.style.opacity = "0";
-        // await new Promise((res) => setTimeout(res, 150));
-        nav(url);
-      }),
-      $((e) => (message.message = e))
-    );
-  });
-
   return (
     <div
       ref={test}
@@ -90,7 +46,7 @@ export default component$(() => {
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <button
-                  onClick$={() => handleGoogleLogin()}
+                  onClick$={() => {}}
                   class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with Google</span>
@@ -108,7 +64,7 @@ export default component$(() => {
 
               <div>
                 <button
-                  onClick$={handleGitHubLogin}
+                  onClick$={() => {}}
                   class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with GitHub</span>
@@ -131,19 +87,12 @@ export default component$(() => {
               </div>
             </div>
           </div>
-          <form
-            preventdefault:submit
-            onSubmit$={handleEmailLogin}
-            class="space-y-6"
-            action="#"
-            method="POST"
-          >
+          <Form action={loginWithPassword} class="space-y-6">
             <div>
               <label class="block text-sm font-medium text-gray-700">Email address</label>
               <div class="mt-1">
                 <input
-                  value={emailForm.email}
-                  onInput$={(e: any) => (emailForm.email = e.target.value)}
+                  value={defaultLoginValue.email}
                   id="email"
                   name="email"
                   type="email"
@@ -155,8 +104,7 @@ export default component$(() => {
               <label class="mt-4 block text-sm font-medium text-gray-700">Password</label>
               <div class="mt-1">
                 <input
-                  value={emailForm.password}
-                  onInput$={(e: any) => (emailForm.password = e.target.value)}
+                  value={defaultLoginValue.password}
                   id="password"
                   name="password"
                   type="password"
@@ -183,7 +131,7 @@ export default component$(() => {
                 Log in
               </button>
             </div>
-          </form>
+          </Form>
           <Message message={message} classText="mt-3" />
         </div>
       </div>

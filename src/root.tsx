@@ -21,7 +21,9 @@ export default component$(() => {
   useQwikSpeak({ config, translationFn });
 
   return (
-    <QwikCityProvider>
+    <QwikCityProvider
+      allowedParams={{ lang: config.supportedLocales.map((locale) => locale.lang) }}
+    >
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />

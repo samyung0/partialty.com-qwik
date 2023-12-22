@@ -1,21 +1,17 @@
-import { $, component$, useContext } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { component$, useContext } from "@builder.io/qwik";
+import { Link, useNavigate } from "@builder.io/qwik-city";
 import { ButtonStd } from "~/components/ui/button-std";
 import { Logo } from "../logo/logo";
 
+import { logout } from "~/auth/logout";
 import { globalContext } from "~/context/globalContext";
-import { DBLogout } from "~/utils/auth";
 
 // import { themeContext } from "~/root";
 
 export const Navigation = component$(() => {
-  // const nav = useNavigate();
+  const nav = useNavigate();
   const context = useContext(globalContext);
   // const theme = useContext(themeContext);
-
-  const handleLogout = $(() => {
-    DBLogout();
-  });
 
   return (
     <nav
@@ -53,7 +49,13 @@ export const Navigation = component$(() => {
 
           {context.isLoggedIn && (
             <>
-              <button onClick$={handleLogout} class="ml-10">
+              <button
+                onClick$={async () => {
+                  logout();
+                  nav("/");
+                }}
+                class="ml-10"
+              >
                 Logout
               </button>
               <Link prefetch href="/members/dashboard">

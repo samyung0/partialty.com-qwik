@@ -1,14 +1,15 @@
+import { sql } from "drizzle-orm";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),
-  created_at: text("created_at").notNull(),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   email: text("email").notNull().unique(),
   phone: text("phone"),
-  last_signed_in: text("last_signed_in"),
+  lastSignedIn: text("last_signed_in").default(sql`CURRENT_TIMESTAMP`),
   role: text("role", { enum: ["free", "paid", "teacher"] })
     .notNull()
     .default(DEFAULTROLE),
-  stripe_id: text("stripe_id"),
+  stripeId: text("stripe_id"),
 });

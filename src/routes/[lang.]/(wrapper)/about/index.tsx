@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import { Link, type DocumentHead, type RequestHandler } from "@builder.io/qwik-city";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // https://qwik.builder.io/docs/caching/
@@ -11,7 +11,11 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <h1 class="h-screen">About Page</h1>;
+  return <>
+  <h1>About Page</h1>;
+  <Link href="/dsadsadsadsadsa">click</Link>
+  </>
+  
 });
 
 export const head: DocumentHead = {

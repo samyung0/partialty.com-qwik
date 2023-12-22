@@ -1,12 +1,16 @@
-import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { z } from "@builder.io/qwik-city";
+import { globalContext } from "~/context/globalContext";
 import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
   const imgRef = useSignal<any>();
 
+  const context = useContext(globalContext);
+
   useVisibleTask$(() => {
+    console.log(context);
     // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then (x => {
     //   console.log(x);
     // })

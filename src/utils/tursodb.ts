@@ -2,7 +2,7 @@ import { server$ } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
 import drizzle from "~/utils/drizzle";
 import { supabaseServer } from "~/utils/supabaseServer";
-import { profiles } from "../../drizzle_turso/schema/profile";
+import { profiles } from "../../drizzle_turso/schema/profiles";
 
 export const fetchAuthUserRole = server$(async function () {
   const access_token = this.cookie.get("access_token")?.value;

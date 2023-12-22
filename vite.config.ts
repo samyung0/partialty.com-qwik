@@ -4,6 +4,7 @@ import { qwikSpeakInline } from "qwik-speak/inline";
 import { defineConfig, type Connect } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import lang from "./lang.json";
+import { config } from "./src/speak-config";
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
   if (req.url && /^\/.+\/codeplayground/.test(req.url)) {
     response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
@@ -16,7 +17,11 @@ export default defineConfig((userConfig) => {
   // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
     plugins: [
-      qwikCity(),
+      qwikCity({
+        allowedParams: {
+          lang: config.supportedLocales.map(locale => locale.lang)
+        }
+      }),
       qwikVite(),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),

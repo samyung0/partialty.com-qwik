@@ -1,47 +1,26 @@
-import { $, component$, useContext, useSignal, useStore } from "@builder.io/qwik";
-import { Link, useNavigate } from "@builder.io/qwik-city";
+import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { Form, Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
+import { useSignupWithPassword } from "~/auth/signup";
 import { Message } from "~/components/ui/message";
-import { globalContext } from "~/context/globalContext";
-import { emailLoginSchema, initialFormValue, type EmailLoginForm } from "~/types/AuthForm";
-import { signUpWithPassword } from "~/utils/auth";
+import { defaultLoginValue } from "~/types/Signup";
 
 export default component$(() => {
   const message = useStore<any>({ message: undefined, status: "error" });
   const isLoading = useSignal(false);
-  const emailForm = useStore(Object.assign({}, initialFormValue) as EmailLoginForm);
   const nav = useNavigate();
   const termsChecked = useSignal(false);
-  const context = useContext(globalContext);
+  const signup = useSignupWithPassword();
 
-  const handleEmailSignup = $(() => {
-    isLoading.value = true;
-
-    if (!termsChecked.value) {
-      message.message = "You must agree to our terms, privacy and disclaimer before signing up";
-      isLoading.value = false;
-      return;
-    }
-
-    const result = emailLoginSchema.safeParse(emailForm);
-    if (!result.success) {
-      message.message = result.error.issues[0].message;
-      isLoading.value = false;
-      return;
-    }
-
-    signUpWithPassword(
-      result.data,
-      $(() => {
-        isLoading.value = false;
-      }),
-      $((e) => {
-        isLoading.value = false;
-        message.message = e;
-      }),
-      context.req.url?.origin + "/staging"
-    );
+  useTask$(({ track }) => {
+    track(() => signup.status);
+    if (signup.status === 400)
+      message.message = Object.values(signup.value?.fieldErrors ?? {})
+        .flat()
+        .join("\n");
+    if (signup.status === 500) message.message = signup.value?.message;
+    if (signup.status === 200) nav("/members/dashboard/");
   });
 
   return (
@@ -61,7 +40,7 @@ export default component$(() => {
 
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <div class="bg-white px-4 py-8 shadow sm:rounded-sm sm:px-10">
-          <form onSubmit$={handleEmailSignup} preventdefault:submit class="space-y-6">
+          <Form action={signup} class="space-y-6">
             <div>
               <label class="block text-sm font-medium text-gray-700">Email address</label>
               <div class="mt-1">
@@ -71,8 +50,7 @@ export default component$(() => {
                   type="email"
                   autoComplete="email"
                   required
-                  value={emailForm.email}
-                  onInput$={(e: any) => (emailForm.email = e.target.value)}
+                  value={defaultLoginValue.email}
                   class="block w-full appearance-none rounded-sm border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                 />
               </div>
@@ -87,8 +65,7 @@ export default component$(() => {
                   type="password"
                   autoComplete="password"
                   required
-                  value={emailForm.password}
-                  onInput$={(e: any) => (emailForm.password = e.target.value)}
+                  value={defaultLoginValue.password}
                   class="block w-full appearance-none rounded-sm border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
                 />
               </div>
@@ -132,7 +109,7 @@ export default component$(() => {
               </button>
             </div>
             <Message message={message} />
-          </form>
+          </Form>
         </div>
       </div>
     </div>
