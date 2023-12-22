@@ -5,7 +5,7 @@ import { emailLoginSchema } from "~/types/Signup";
 
 export const useLoginWithPassword = globalAction$(async function (data, event) {
   try {
-    const Auth = auth(event);
+    const Auth = auth();
     const authRequest = Auth.handleRequest(event);
     const key = await Auth.useKey("email", data.email, data.password);
 

@@ -5,7 +5,7 @@ import { emailLoginSchema } from "~/types/Signup";
 
 export const useSignupWithPassword = globalAction$(async function (data, event) {
   try {
-    const Auth = auth(event);
+    const Auth = auth();
     const user = await Auth.createUser({
       key: {
         providerId: "email",
@@ -23,7 +23,6 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     const authRequest = Auth.handleRequest(event);
     authRequest.setSession(session);
 
-    Auth.deleteDeadUserSessions(user.userId);
   } catch (e: any) {
     if (e instanceof LibsqlError) {
       if (e.message.includes("UNIQUE constraint failed: profiles.email"))

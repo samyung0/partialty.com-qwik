@@ -6,11 +6,11 @@ import tursoClient from "~/utils/tursoClient";
 
 let _auth: ReturnType<typeof _lucia> | null = null;
 
-const _lucia = (env: RequestEventBase["env"]) =>
+const _lucia = () =>
   lucia({
     env: import.meta.env.MODE !== "production" ? "DEV" : "PROD",
     middleware: qwik(),
-    adapter: libsql(tursoClient(env), {
+    adapter: libsql(tursoClient(), {
       user: "profiles",
       key: "user_key",
       session: "user_session",
@@ -32,9 +32,12 @@ const _lucia = (env: RequestEventBase["env"]) =>
     },
   });
 
-export const auth = ({ env }: RequestEventBase) => {
-  if (_auth) return _auth;
-  _auth = _lucia(env);
+export const initLuciaIfNeeded = async () => {
+  if(!_auth) _auth = _lucia();
+}
+
+export const auth = () => {
+  if (!_auth) throw new Error("Lucia auth not initialized");
   return _auth;
 };
 
