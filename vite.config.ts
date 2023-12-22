@@ -19,8 +19,8 @@ export default defineConfig((userConfig) => {
     plugins: [
       qwikCity({
         allowedParams: {
-          lang: config.supportedLocales.map(locale => locale.lang)
-        }
+          lang: config.supportedLocales.map((locale) => locale.lang),
+        },
       }),
       qwikVite(),
       qwikSpeakInline({

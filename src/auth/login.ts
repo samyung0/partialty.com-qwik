@@ -1,7 +1,7 @@
 import { globalAction$, zod$ } from "@builder.io/qwik-city";
+import { LuciaError } from "lucia";
 import { auth } from "~/auth/lucia";
 import { emailLoginSchema } from "~/types/Signup";
-import { LuciaError } from "lucia";
 
 export const useLoginWithPassword = globalAction$(async function (data, event) {
   try {
@@ -17,8 +17,7 @@ export const useLoginWithPassword = globalAction$(async function (data, event) {
   } catch (e) {
     if (
       e instanceof LuciaError &&
-      (e.message === "AUTH_INVALID_KEY_ID" ||
-        e.message === "AUTH_INVALID_PASSWORD")
+      (e.message === "AUTH_INVALID_KEY_ID" || e.message === "AUTH_INVALID_PASSWORD")
     ) {
       // user does not exist or invalid password
       return event.fail(500, { message: "Incorrect username or password" });

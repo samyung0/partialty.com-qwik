@@ -1,5 +1,4 @@
 import { $ } from "@builder.io/qwik";
-import type { GlobalContextType } from "../types/GlobalContext";
 
 export const loadPublicData = $(() => {
   // const r = new Promise<GlobalContextType["publicData"]["data"]>((res, rej) =>
@@ -8,5 +7,5 @@ export const loadPublicData = $(() => {
   //   }, 0)
   // );
   // return r;
-  return {}
+  return {};
 });

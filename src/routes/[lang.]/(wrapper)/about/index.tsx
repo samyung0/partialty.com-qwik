@@ -11,11 +11,11 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 };
 
 export default component$(() => {
-  return <>
-  <h1>About Page</h1>;
-  <Link href="/dsadsadsadsadsa">click</Link>
-  </>
-  
+  return (
+    <>
+      <h1>About Page</h1>;<Link href="/dsadsadsadsadsa">click</Link>
+    </>
+  );
 });
 
 export const head: DocumentHead = {

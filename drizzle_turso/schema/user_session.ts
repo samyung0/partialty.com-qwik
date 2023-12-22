@@ -9,9 +9,9 @@ export const user_session = sqliteTable("user_session", {
     .references(() => profiles.id),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   activeExpires: blob("active_expires", {
-    mode: "bigint"
+    mode: "bigint",
   }).notNull(),
   idleExpires: blob("idle_expires", {
-    mode: "bigint"
+    mode: "bigint",
   }).notNull(),
 });
