@@ -14,7 +14,7 @@ export const fetchAuthUserRole = server$(async function () {
   let userRole = null;
   try {
     userRole = (
-      await drizzle(this)
+      await drizzle()
         .select({
           role: profiles.role,
         })
@@ -31,7 +31,7 @@ export const fetchAuthUserRole = server$(async function () {
 });
 
 export const loadPrivateData = server$(function (id: string) {
-  return drizzle(this)
+  return drizzle()
     .select()
     .from(profiles)
     .where(eq(profiles.id, id))

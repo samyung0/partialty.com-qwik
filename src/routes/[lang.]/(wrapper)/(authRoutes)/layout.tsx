@@ -4,7 +4,7 @@ import { auth } from "~/auth/lucia";
 import { checkProtectedPath } from "~/utils/redirect";
 
 export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = auth(event).handleRequest(event);
+  const authRequest = auth().handleRequest(event);
 
   const time1 = performance.now();
   const session = await authRequest.validate();

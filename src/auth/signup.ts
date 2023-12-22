@@ -22,7 +22,6 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     });
     const authRequest = Auth.handleRequest(event);
     authRequest.setSession(session);
-
   } catch (e: any) {
     if (e instanceof LibsqlError) {
       if (e.message.includes("UNIQUE constraint failed: profiles.email"))

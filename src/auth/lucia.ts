@@ -1,4 +1,3 @@
-import type { RequestEventBase } from "@builder.io/qwik-city";
 import { libsql } from "@lucia-auth/adapter-sqlite";
 import { lucia } from "lucia";
 import { qwik } from "lucia/middleware";
@@ -33,8 +32,8 @@ const _lucia = () =>
   });
 
 export const initLuciaIfNeeded = async () => {
-  if(!_auth) _auth = _lucia();
-}
+  if (!_auth) _auth = _lucia();
+};
 
 export const auth = () => {
   if (!_auth) throw new Error("Lucia auth not initialized");
