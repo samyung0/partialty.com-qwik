@@ -74,9 +74,55 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
 
 ### Customizing Qwik-city
 
-✘ Qwik 1.2.9 (cannot run pnpm build, failed with top-level await error)
+Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
-1. **Exposing loadClientData for manual prefetching and adding removeClientDataCache**
+1. **Feat: optional param routing and allowedParams**
+
+   Replace packages\qwik-city\runtime\src\route-matcher with doc\qwik-city\route-matcher
+
+   Replace packages\qwik-city\runtime\src\routing with doc\qwik-city\routing
+
+   Replace packages\qwik-city\middleware\request-handler\request-handler with doc\qwik-city\request-handler
+
+   In packages\qwik-city\buildtime\vite\dev-server.ts, replace matchRouteRequest function with the following:
+
+   ```ts
+   const matchRouteRequest = (pathname: string) => {
+     for (const route of ctx.routes) {
+       let params = matchRoute(route.pathname, pathname, ctx.opts.allowedParams);
+       if (params) {
+         return { route, params };
+       }
+
+       if (ctx.opts.trailingSlash && !pathname.endsWith("/")) {
+         params = matchRoute(route.pathname, pathname + "/", ctx.opts.allowedParams);
+         if (params) {
+           return { route, params };
+         }
+       }
+     }
+
+     return null;
+   };
+   ```
+
+   In packages\qwik-city\utils\fs.unit.ts,<br />
+   packages\qwik-city\buildtime\markdown\markdown-url.unit.ts,<br />
+   packages\qwik-city\buildtime\routing\resolve-source-file.unit.ts, <br />
+   whenever there is `const opts: NormalizedPluginOptions`, add the following to the object: (should have 4)
+
+   ```ts
+   allowedParams: {
+   }
+   ```
+
+   In packages\qwik-city\buildtime\types.ts, in PluginOptions, add:
+
+   ```ts
+   allowedParams?: Record<string, string[]>;
+   ```
+
+2. **Exposing loadClientData for manual prefetching and adding removeClientDataCache**
 
    In packages\qwik-city\runtime\src\use-endpoint.ts, add the @public flag before the loadClientData function declaration:
 
@@ -103,58 +149,24 @@ Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
    export { loadClientData, removeClientDataCache } from "./use-endpoint";
    ```
 
-2. **Feat: Adding in layout switching**
+3. **Feat: Adding in layout switching**
 
    We will add in a feature in router outlet that reads the layout attribute and render the page accordingly, if the child with the name identical as the layout is not exported from the route, the default child will be rendered.
 
-   In packages\qwik-city\runtime\src\router-outlet-component.tsx, replace the whole funciton with:
-
-   ```jsx
-    /** @public */
-    export const RouterOutlet = component$(({ layout = 'default' }: { layout?: string }) => {
-      const forbiddenValues = ['head', 'headings', 'onStaticGenerate'];
-      if (layout in forbiddenValues) {
-        console.warn('head, headings and onStaticGenerate are not valid layout names !!!');
-      }
-
-      // TODO Option to remove this shim, especially for MFEs.
-      const shimScript = shim();
-
-      _jsxBranch();
-
-      const nonce = useServerData<string | undefined>('nonce');
-      const { value } = useContext(ContentInternalContext);
-      if (value && value.length > 0) {
-        const contentsLen = value.length;
-        let cmp: JSXNode | null = null;
-        for (let i = contentsLen - 1; i >= 0; i--) {
-          if (!(layout in forbiddenValues) && value[i][layout]) {
-            cmp = jsx(value[i][layout], {
-              children: cmp,
-            });
-          } else if (value[i].default) {
-            cmp = jsx(value[i].default as any, {
-              children: cmp,
-            });
-          }
-        }
-        return (
-          <>
-            {cmp}
-            <script dangerouslySetInnerHTML={shimScript} nonce={nonce}></script>
-          </>
-        );
-      }
-      return SkipRender;
-    });
-   ```
+   Replace packages\qwik-city\runtime\src\router-outlet-component with doc/qwik-city/router-outlet-component
 
    **_Check if we need to integrate any new features implemented in router outlet from qwik!!!_**
 
-   Then in packages\qwik-city\runtime\src\types.ts, for PageModule and LayoutModule, add the following key value pair:
+   Then in packages\qwik-city\runtime\src\types.ts, in PageModule and LayoutModule, add the following key value pair:
 
    ```ts
    readonly [x: string]: any;
+   ```
+
+   and in QwikCityPlan, add the following (for allowedParams):
+
+   ```ts
+   readonly allowedParams?: Record<string, string[]>;
    ```
 
 - **Building and Pushing to Github**

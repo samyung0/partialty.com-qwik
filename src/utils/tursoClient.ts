@@ -5,7 +5,6 @@ let client: Client | null = null;
 
 export const initTursoIfNeeded = async (env: RequestEventBase["env"]) => {
   if (!client) {
-    console.log("init turso");
     if (!env.get("TURSO_URL") || !env.get("TURSO_TOKEN")) {
       console.error("TURSO ENV VARIABLE ERROR SERVER");
       return null;

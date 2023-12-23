@@ -1,5 +1,5 @@
 import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { Form, Link, useNavigate } from "@builder.io/qwik-city";
+import { Form, Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { useLoginWithPassword } from "~/auth/login";
@@ -7,9 +7,15 @@ import { Message } from "~/components/ui/message";
 import { defaultLoginValue } from "~/types/Signup";
 
 export default component$(() => {
-  const message: any = useStore({ message: undefined, status: "error" });
   const nav = useNavigate();
   const loginWithPassword = useLoginWithPassword();
+  const params = useLocation().url.searchParams;
+  const message: any = useStore({ message: undefined, status: "error" });
+
+  useTask$(({ track }) => {
+    track(() => params.get("errMessage"));
+    message.message = params.get("errMessage");
+  });
 
   useTask$(({ track }) => {
     track(() => loginWithPassword.status);
@@ -34,7 +40,7 @@ export default component$(() => {
         <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Log in</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or{" "}
-          <Link href="/signup" class="font-medium text-sky-600 hover:text-sky-500">
+          <Link href="/signup/" class="font-medium text-sky-600 hover:text-sky-500">
             create an account
           </Link>
         </p>
@@ -45,8 +51,8 @@ export default component$(() => {
           <div class="">
             <div class="grid grid-cols-2 gap-3">
               <div>
-                <button
-                  onClick$={() => {}}
+                <Link
+                  href="/login/google/"
                   class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with Google</span>
@@ -59,12 +65,12 @@ export default component$(() => {
                     {" "}
                     <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />{" "}
                   </svg>
-                </button>
+                </Link>
               </div>
 
               <div>
-                <button
-                  onClick$={() => {}}
+                <Link
+                  href="/login/github/"
                   class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span class="sr-only">Log in with GitHub</span>
@@ -75,7 +81,7 @@ export default component$(() => {
                       clip-rule="evenodd"
                     />
                   </svg>
-                </button>
+                </Link>
               </div>
             </div>
             <div class="relative py-5">

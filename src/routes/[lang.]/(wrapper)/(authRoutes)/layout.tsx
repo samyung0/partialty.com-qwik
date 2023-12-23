@@ -1,10 +1,18 @@
 import { Slot, component$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import { auth } from "~/auth/lucia";
+import { auth, initLuciaIfNeeded } from "~/auth/lucia";
+import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { checkProtectedPath } from "~/utils/redirect";
+import { initTursoIfNeeded } from "~/utils/tursoClient";
+
+// turso, drizzle and lucia are all initialized per page request
+// since edge and serverless functions are stateless
+export const onRequest: RequestHandler = async ({ env, url }) => {
+  await initTursoIfNeeded(env);
+  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env, url.origin)]);
+};
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
-  // https://qwik.builder.io/docs/caching/
   cacheControl({
     maxAge: 0,
     sMaxAge: 0,

@@ -6,6 +6,6 @@ export const onGet: RequestHandler = async ({ cacheControl, url }) => {
     public: true,
     maxAge: 5,
     sMaxAge: 10,
-    staleWhileRevalidate: 60 * 60 * 24 * 365,
+    staleWhileRevalidate: 60 * 60 * 24 * 7,
   });
 };

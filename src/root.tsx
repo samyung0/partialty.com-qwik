@@ -1,12 +1,17 @@
 import { component$, createContextId, useContextProvider, useStore } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { useQwikSpeak } from "qwik-speak";
-import { config } from "~/speak-config";
+import { config as _config } from "~/speak-config";
 import { translationFn } from "~/speak-function";
 import { RouterHead } from "./components/router-head/router-head";
 import "./global.css";
 
 // import { defaultValue, type envType } from "~/types/Env";
+
+export const config = {
+  runtime: "edge",
+  preferredRegions: ["hkg1", "cdg1", "sfo1"],
+};
 
 export const themeContext = createContextId<{ value: string }>("theme");
 export const layoutContext = createContextId<{ value: string }>("layout");
@@ -18,12 +23,10 @@ export default component$(() => {
   const layoutStore = useStore({ value: "default" });
   useContextProvider(layoutContext, layoutStore);
 
-  useQwikSpeak({ config, translationFn });
+  useQwikSpeak({ config: _config, translationFn });
 
   return (
-    <QwikCityProvider
-      allowedParams={{ lang: config.supportedLocales.map((locale) => locale.lang) }}
-    >
+    <QwikCityProvider>
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />
