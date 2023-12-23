@@ -5,5 +5,5 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 export const onRequest: RequestHandler = async ({ env }) => {
   await initTursoIfNeeded(env);
-  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded()]);
+  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env)]);
 };

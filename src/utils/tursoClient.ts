@@ -1,16 +1,11 @@
 import type { RequestEventBase } from "@builder.io/qwik-city";
-import { createClient, type Client } from "@libsql/client";
+import { createClient, type Client } from "@libsql/client/web";
 
 let client: Client | null = null;
 
-// const TURSO_URL = process.env["TURSO_URL"];
-// const TURSO_TOKEN = process.env["TURSO_TOKEN"];
-
-// if(!TURSO_URL || !TURSO_TOKEN) console.error("TURSO ENV VARIABLE ERROR SERVER");
-
 export const initTursoIfNeeded = async (env: RequestEventBase["env"]) => {
   if (!client) {
-    console.log("yoyoyo");
+    console.log("init turso");
     if (!env.get("TURSO_URL") || !env.get("TURSO_TOKEN")) {
       console.error("TURSO ENV VARIABLE ERROR SERVER");
       return null;
