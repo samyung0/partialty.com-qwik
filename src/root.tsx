@@ -6,13 +6,6 @@ import { translationFn } from "~/speak-function";
 import { RouterHead } from "./components/router-head/router-head";
 import "./global.css";
 
-// import { defaultValue, type envType } from "~/types/Env";
-
-export const config = {
-  runtime: "edge",
-  preferredRegions: ["hkg1", "cdg1", "sfo1"],
-};
-
 export const themeContext = createContextId<{ value: string }>("theme");
 export const layoutContext = createContextId<{ value: string }>("layout");
 
