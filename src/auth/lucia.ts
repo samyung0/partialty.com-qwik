@@ -1,6 +1,7 @@
 import type { RequestEvent } from "@builder.io/qwik-city";
 import { libsql } from "@lucia-auth/adapter-sqlite";
 import { github, google } from "@lucia-auth/oauth/providers";
+import * as argon2 from "argon2";
 import { lucia } from "lucia";
 import { qwik } from "lucia/middleware";
 import tursoClient from "~/utils/tursoClient";
@@ -32,6 +33,10 @@ const _lucia = () =>
       key: "user_key",
       session: "user_session",
     }),
+    passwordHash: {
+      generate: argon2.hash,
+      validate: (password: string, hash: string) => argon2.verify(hash, password),
+    },
     getUserAttributes: (user) => {
       return {
         email: user.email,
