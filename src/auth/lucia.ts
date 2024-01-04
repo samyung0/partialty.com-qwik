@@ -54,7 +54,6 @@ const _lucia = () =>
 
 export const initLuciaIfNeeded = async (env: RequestEvent["env"], origin: string) => {
   if (!_auth) {
-    console.log("init");
     _auth = _lucia();
   }
   if (!_github) _github = _githubAuth(_auth, env);
