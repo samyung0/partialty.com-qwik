@@ -74,13 +74,44 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 1. **Feat: optional param routing and allowedParams**
 
+   In packages\qwik-city\buildtime\types.ts, in `PluginOptions`, add:
+
+   ```ts
+   allowedParams?: Record<string, string[]>;
+   ```
+
+   In packages\qwik-city\runtime\src\types.ts, in `QwikCityPlan`, add:
+
+   ```ts
+   readonly allowedParams?: Record<string, string[]>;
+   ```
+
+   In packages\qwik-city\runtime\src\qwik-city-plan.ts, add:
+
+   ```ts
+   export const allowedParams = {};
+   ```
+
+   and ensure `allowedParams` is exported like this:
+
+   ```ts
+   export default {
+     routes,
+     menus,
+     trailingSlash,
+     basePathname,
+     cacheModules,
+     allowedParams,
+   };
+   ```
+
    Replace packages\qwik-city\runtime\src\route-matcher with doc\qwik-city\route-matcher
 
    Replace packages\qwik-city\runtime\src\routing with doc\qwik-city\routing
 
    Replace packages\qwik-city\middleware\request-handler\request-handler with doc\qwik-city\request-handler
 
-   In packages\qwik-city\buildtime\vite\dev-server.ts, replace matchRouteRequest function with the following:
+   In packages\qwik-city\buildtime\vite\dev-server.ts, replace `matchRouteRequest` function with the following:
 
    ```ts
    const matchRouteRequest = (pathname: string) => {
@@ -102,6 +133,46 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    };
    ```
 
+   In scripts\api.ts, replace `referenceDts` with the following:
+
+   ```ts
+   const referenceDts = `
+    declare module '@qwik-city-plan' {
+      export const routes: any[];
+      export const menus: any[];
+      export const trailingSlash: boolean;
+      export const basePathname: string;
+      export const cacheModules: boolean;
+      export const allowedParams = {};
+      const defaultExport: {
+        routes: any[];
+        menus: any[];
+        trailingSlash: boolean;
+        basePathname: string;
+        cacheModules: boolean;
+        allowedParams: Record<string, string[]>
+      };
+      export default defaultExport;
+    }
+    `;
+   ```
+
+   In packages\qwik-city\buildtime\runtime-generation\generate-qwik-city-plan.ts, add the following line:
+
+   ```ts
+   c.push(`export const allowedParams = ${JSON.stringify(ctx.opts.allowedParams)};`);
+   ```
+
+   and make sure `allowedParams` is exported like this:
+
+   ```ts
+   c.push(
+     `export default { routes, serverPlugins, menus, trailingSlash, allowedParams, basePathname, cacheModules };`
+   );
+   ```
+
+   In packages\qwik-city\runtime\src\qwik-city-component.tsx, for every loadRoute called (should be 3 in total), add `qwikCity.allowedParams` as the last argument.
+
    In packages\qwik-city\utils\fs.unit.ts,<br />
    packages\qwik-city\buildtime\markdown\markdown-url.unit.ts,<br />
    packages\qwik-city\buildtime\routing\resolve-source-file.unit.ts, <br />
@@ -110,12 +181,6 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    ```ts
    allowedParams: {
    }
-   ```
-
-   In packages\qwik-city\buildtime\types.ts, in PluginOptions, add:
-
-   ```ts
-   allowedParams?: Record<string, string[]>;
    ```
 
 2. **Exposing loadClientData for manual prefetching and adding removeClientDataCache**
@@ -159,18 +224,11 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    readonly [x: string]: any;
    ```
 
-   and in QwikCityPlan, add the following (for allowedParams):
-
-   ```ts
-   readonly allowedParams?: Record<string, string[]>;
-   ```
-
 - **Building and Pushing to Github**
 
   - `pnpm install` (delete all pnpm folders in user/AppData/local, remove node_modules folder and reinstall pnpm if operation not permitted error shows)
   - `pnpm api.update`
   - `npm run build.full`
-  - `npx tsm scripts/index.ts --api`
 
   Go to qwik-city/bin and do git init and set remote main to `https://github.com/samyung0/qwikcity-dist`, then commit all files and push:
 
