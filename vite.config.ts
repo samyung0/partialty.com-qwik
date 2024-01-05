@@ -22,7 +22,11 @@ export default defineConfig((userConfig) => {
           lang: config.supportedLocales.map((locale) => locale.lang),
         },
       }),
-      qwikVite(),
+      qwikVite({
+        entryStrategy: {
+          type: "component",
+        },
+      }),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),
         defaultLang: lang.defaultLocale.lang,
