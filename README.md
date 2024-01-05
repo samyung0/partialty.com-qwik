@@ -210,7 +210,21 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    export { loadClientData, removeClientDataCache } from "./use-endpoint";
    ```
 
-3. **Feat: Adding in layout switching**
+3. **Prefetch links on visible instead of hover**
+
+   Prefetching links on hover is slow and have a noticeable delay. Besides, prefetching links when it enter the viewport is the default prefetching strategy for many other frameworks.
+
+   In packages\qwik-city\runtime\src\link-component.tsx, change the if condition of `prefetchLinkResources` to:
+
+   ```ts
+   if (isOnVisible) {
+     // either this is a mouseover event, probably on desktop
+     // or the link is visible, and the viewport width is less than X
+     loadClientData(new URL(elm.href), elm);
+   }
+   ```
+
+4. **Feat: Adding in layout switching**
 
    We will add in a feature in router outlet that reads the layout attribute and render the page accordingly, if the child with the name identical as the layout is not exported from the route, the default child will be rendered.
 
