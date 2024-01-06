@@ -7,9 +7,10 @@ import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
 
 export const useRenderedCode = routeLoader$(async () => {
   const renderedCode: Record<string, string> = {};
-  Object.entries(codeBlock).forEach(async ([key, code]) => {
+  const entries = Object.entries(codeBlock);
+  for (const [key, code] of entries) {
     renderedCode[`${key}Rendered`] = await renderIndexCodeBlock({ code });
-  });
+  }
   return renderedCode as Record<`${keyof typeof codeBlock}Rendered`, string>;
 });
 

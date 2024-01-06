@@ -9,7 +9,6 @@ import { useRenderedCode } from "~/routes/[lang.]/(wrapper)";
 
 export default component$(() => {
   const rendered = useRenderedCode().value;
-  // console.log(rendered, displayCodeOrder);
   const codeDisplay = useSignal(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
