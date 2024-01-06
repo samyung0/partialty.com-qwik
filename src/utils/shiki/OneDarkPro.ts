@@ -11,6 +11,6 @@ export default server$(async () => {
   });
 
   // optionally, load themes and languages after creation
-  await highlighter.loadTheme(import("shikiji/themes/vitesse-light.mjs"));
+  // await highlighter.loadTheme(import("shikiji/themes/vitesse-light.mjs"));
   return highlighter;
 });

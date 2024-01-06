@@ -10,7 +10,7 @@ import Button from './Button.astro';
   <Button title="Button 3" />
 </div>`;
 
-export const astroCodeRendered = renderIndexCodeBlock({ code, language: "tsx" });
+export const astroCodeRendered = renderIndexCodeBlock({ code });
 const _astroCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _astroCodeBlankChar.push(0);

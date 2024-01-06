@@ -9,7 +9,7 @@ const code = `export default function MyApp() {
   );
 }`;
 
-export const reactCodeRendered = renderIndexCodeBlock({ code, language: "tsx" });
+export const reactCodeRendered = renderIndexCodeBlock({ code });
 const _reactCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _reactCodeBlankChar.push(0);
