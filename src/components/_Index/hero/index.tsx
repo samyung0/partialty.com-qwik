@@ -8,9 +8,8 @@ import blankChar from "~/components/_Index/codeBlock/blankChar";
 import { useRenderedCode } from "~/routes/[lang.]/(wrapper)";
 
 export default component$(() => {
-  // THIS COMPONENT DOES NOT DO FULL RE-RENDER //
-
   const rendered = useRenderedCode().value;
+  // console.log(rendered, displayCodeOrder);
   const codeDisplay = useSignal(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
@@ -56,10 +55,14 @@ export default component$(() => {
             <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
               <pre class="text-lg font-bold leading-8">
                 {typeWriter.blankCharArr.map((blankCount, index) => [
-                  <span key={`typeWriterBlankLine${index}`}>
+                  <span
+                    key={`typeWriterBlankLine${displayCodeOrder[typeWriter.displayIndex]}${index}`}
+                  >
                     {Array.from(Array(blankCount)).map((_, index2) => (
                       <span
-                        key={`typeWriterBlankChar${index}-${index2}`}
+                        key={`typeWriterBlankChar${
+                          displayCodeOrder[typeWriter.displayIndex]
+                        }${index}-${index2}`}
                         class={
                           typeWriter.revealedCharArr[index] > index2
                             ? "bg-transparent"
