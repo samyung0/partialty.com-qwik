@@ -6,7 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import lang from "./lang.json";
 import { config } from "./src/speak-config";
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
-  if (req.url && /^\/.+\/codeplayground/.test(req.url)) {
+  if (req.url && /^(\/.*)?\/codeplayground/.test(req.url)) {
     response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
     response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   }

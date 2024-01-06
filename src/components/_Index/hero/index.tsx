@@ -1,0 +1,85 @@
+import { component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
+import animateShow from "~/components/_Index/codeAnimation/animateShow";
+import codeStrings from "~/components/_Index/codeBlock";
+import { useCodeBlock } from "~/routes/[lang.]/(wrapper)";
+
+export default component$(() => {
+  const codeBlock = useCodeBlock();
+  const codeDisplay = useSignal<string>(codeBlock.value.reactCode);
+
+  // requestAnimationFrame calls every 1000/60 = 16.667
+  const typeWriter = useStore<TypeWriter>({
+    displayIndex: 0,
+    displayCode: codeStrings["reactCode"],
+    blankCharArr: codeBlock.value["reactCodeBlankChar"],
+    revealedCharArr: Array(codeBlock.value["reactCodeBlankChar"].length).fill(0),
+    currentChar: 0,
+    currentRow: 0,
+    totalChar: codeStrings["reactCode"].length,
+    instance: null,
+    appearStart: 0,
+    disappearStart: 0,
+    timeAfterLastChar: 0,
+    timeAfterAnimationFinished: 0,
+    previousTimeStamp: 0,
+    smallestIntervalBetweenCharAppear: 15,
+    largestIntervalBetweenCharAppear: 60,
+    smallestIntervalBetweenCharDisappear: 15,
+    largestIntervalBetweenCharDisappear: 60,
+    appearDurationUntilFullSpeed: 1000,
+    disppearDurationUntilFullSpeed: 1000,
+    disappearDelay: 1000,
+    appearDelay: 300,
+    initialDelay: 300,
+  });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    if (!typeWriter.instance) {
+      typeWriter.instance = setTimeout(async () => {
+        window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeBlock, codeDisplay));
+      }, typeWriter.initialDelay);
+    }
+  });
+  return (
+    <section class="relative bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-background-yellow">
+      <div class="relative z-10 flex h-[100vh] justify-center">
+        <div class="flex flex-1 items-center justify-end">
+          <div class="relative flex h-[400px] w-[600px] items-start justify-stretch overflow-hidden bg-code-editor-one-dark-pro p-8 shadow-2xl">
+            <div dangerouslySetInnerHTML={codeDisplay.value}></div>
+            <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
+              <pre class="text-lg font-bold leading-8">
+                {typeWriter.blankCharArr.map((blankCount, index) => [
+                  <span key={`typeWriterBlankLine${index}`}>
+                    {Array.from(Array(blankCount)).map((_, index2) => (
+                      <span
+                        key={`typeWriterBlankChar${index}-${index2}`}
+                        class={
+                          typeWriter.revealedCharArr[index] > index2
+                            ? "bg-transparent"
+                            : "bg-code-editor-one-dark-pro"
+                        }
+                      >
+                        &nbsp;
+                      </span>
+                    ))}
+                  </span>,
+                  "\n",
+                ])}
+              </pre>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-1 flex-col items-start justify-center pl-[3vw] text-primary-dark-gray">
+          <p class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3rem]">
+            Learn Web Development like you have <i>never </i>before.
+          </p>
+          <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray">
+            Get Started
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+});

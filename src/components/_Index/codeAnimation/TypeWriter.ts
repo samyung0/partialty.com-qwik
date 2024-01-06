@@ -1,0 +1,25 @@
+import type codeStrings from "~/components/_Index/codeBlock";
+export type TypeWriter = {
+  displayIndex: number;
+  displayCode: (typeof codeStrings)[keyof typeof codeStrings];
+  blankCharArr: number[];
+  revealedCharArr: number[];
+  currentChar: number;
+  currentRow: number;
+  totalChar: number;
+  instance: any;
+  appearStart: number;
+  disappearStart: number;
+  timeAfterLastChar: number;
+  timeAfterAnimationFinished: number;
+  previousTimeStamp: number;
+  smallestIntervalBetweenCharAppear: number;
+  largestIntervalBetweenCharAppear: number;
+  smallestIntervalBetweenCharDisappear: number;
+  largestIntervalBetweenCharDisappear: number;
+  appearDurationUntilFullSpeed: number;
+  disppearDurationUntilFullSpeed: number;
+  disappearDelay: number;
+  appearDelay: number;
+  initialDelay: number;
+};

@@ -1,5 +1,5 @@
 import { type PropFunction } from "@builder.io/qwik";
-import type { BufferEncoding, DirEnt, WebContainerProcess } from "@webcontainer/api";
+import type { BufferEncoding, WebContainerProcess } from "@webcontainer/api";
 import { WebContainer } from "@webcontainer/api";
 import { type Terminal } from "xterm";
 import type { FileStore, Tree } from "~/utils/fileUtil";
@@ -20,12 +20,12 @@ export class WebContainerInterface {
   isErrored: boolean;
 
   constructor(fileStore: FileStore) {
-    if ((globalThis as any).webcontainerInstance) {
-      throw new Error("Webcontainer is already initialized!");
-    }
-    if ((globalThis as any).webContainerClosed) {
-      throw new Error("Webcontainer is already closed!");
-    }
+    // if ((globalThis as any).webcontainerInstance) {
+    //   throw new Error("Webcontainer is already initialized!");
+    // }
+    // if ((globalThis as any).webContainerClosed) {
+    //   throw new Error("Webcontainer is already closed!");
+    // }
     this.#webcontainerInstance = null;
     this.#shellProcess = null;
     this.#terminal = null;
@@ -41,7 +41,7 @@ export class WebContainerInterface {
   async init() {
     try {
       this.#webcontainerInstance = await WebContainer.boot();
-      (globalThis as any).webcontainerInstance = this.#webcontainerInstance;
+      // (globalThis as any).webcontainerInstance = this.#webcontainerInstance;
     } catch (e) {
       console.error(e);
       this.isErrored = true;
@@ -231,14 +231,14 @@ export class WebContainerInterface {
     });
   }
 
-  async clean() {
-    // should not teardown the webcontainer instance since it can only be called once
-    // instead we simply remove all files
-    // DO NOT simply rm(*)
-    this.#isWatchFilesActive = false;
-    this.#watchFilesProcess?.kill();
-    ((await this.readdir("/")) as DirEnt<string>[]).forEach((dirEnt) => this.rm(dirEnt.name));
-  }
+  // async clean() {
+  //   // should not teardown the webcontainer instance since it can only be called once
+  //   // instead we simply remove all files
+  //   // DO NOT simply rm(*)
+  //   this.#isWatchFilesActive = false;
+  //   this.#watchFilesProcess?.kill();
+  //   ((await this.readdir("/")) as DirEnt<string>[]).forEach((dirEnt) => this.rm(dirEnt.name));
+  // }
 
   close() {
     // !! should only be called when the page is removed
@@ -247,7 +247,7 @@ export class WebContainerInterface {
     this.#watchFilesProcess?.kill();
     if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
     this.#webcontainerInstance?.teardown();
-    (globalThis as any).webContainerClosed = true;
-    (globalThis as any).webcontainerInstance = null;
+    // (globalThis as any).webContainerClosed = true;
+    // (globalThis as any).webcontainerInstance = null;
   }
 }

@@ -1,5 +1,5 @@
 import { $, component$ } from "@builder.io/qwik";
-import { Link, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { Link, removeClientDataCache, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import { logout } from "~/auth/logout";
 
 export default component$(() => {
@@ -7,6 +7,7 @@ export default component$(() => {
 
   const handleLogout = $(async () => {
     logout();
+    removeClientDataCache();
     nav("/");
   });
 

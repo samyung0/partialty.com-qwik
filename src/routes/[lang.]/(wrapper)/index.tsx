@@ -1,10 +1,27 @@
 import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-// import { Speak } from "qwik-speak";
-import { Footer } from "~/components/site/footer/footer";
-import { Hero } from "~/components/site/hero/hero";
-import { Navigation } from "~/components/site/navigation/navigation";
-import { ButtonAction } from "~/components/ui/button-action";
+import { routeLoader$ } from "@builder.io/qwik-city";
+import codeBlock from "~/components/_Index/codeBlock";
+// import reactCode from "~/components/_Index/codeBlock/reactCode";
+import Hero from "~/components/_Index/hero/index";
+import Nav from "~/components/_Index/nav/index";
+import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
+
+export const useCodeBlock = routeLoader$<Record<string, any>>(() => {
+  const blankCharArr: Record<string, number[]> = {};
+  const renderedArr: Record<string, string> = {};
+  Object.entries(codeBlock).forEach(([key, val]) => {
+    blankCharArr[`${key}BlankChar`] = [0];
+    Array.from(val).forEach((char: string) => {
+      if (char === "\n") blankCharArr[`${key}BlankChar`].push(0);
+      else blankCharArr[`${key}BlankChar`][blankCharArr[`${key}BlankChar`].length - 1]++;
+    });
+    renderedArr[key] = renderIndexCodeBlock({ code: val, language: "tsx" });
+  });
+  return {
+    ...renderedArr,
+    ...blankCharArr,
+  };
+});
 
 export default component$(() => {
   // useVisibleTask$(() => {
@@ -14,17 +31,9 @@ export default component$(() => {
   //   }, 1000);
   // });
   return (
-    <main>
-      <Navigation />
-      <section>
-        <Hero />
-        <div class="flex w-full justify-center py-12">
-          <Link prefetch href="/members/dashboard">
-            <ButtonAction label="Dashboard" />
-          </Link>
-        </div>
-      </section>
-      <Footer />
+    <main class="min-h-[100vh] bg-background-light-gray">
+      <Nav />
+      <Hero />
     </main>
   );
 });
