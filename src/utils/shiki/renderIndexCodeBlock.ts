@@ -1,9 +1,11 @@
 import { server$ } from "@builder.io/qwik-city";
-import { addClassToHast, codeToHtml, type BundledLanguage } from "shikiji";
+import { addClassToHast } from "shikiji";
+import OneDarkPro from "~/utils/shiki/OneDarkPro";
 
-export default server$(({ code, language }: { code: string; language?: BundledLanguage }) => {
-  const html = codeToHtml(code, {
-    lang: language ?? "tsx",
+export default server$(async ({ code }: { code: string }) => {
+  const highlighter = await OneDarkPro();
+  const html = highlighter.codeToHtml(code, {
+    lang: "tsx",
     theme: "one-dark-pro",
     transformers: [
       {
