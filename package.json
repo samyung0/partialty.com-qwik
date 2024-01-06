@@ -6,8 +6,9 @@
   },
   "private": true,
   "pre-commit": [
-    "fmt",
+    "lint",
     "lint.fix",
+    "fmt",
     "git:add"
   ],
   "trustedDependencies": [

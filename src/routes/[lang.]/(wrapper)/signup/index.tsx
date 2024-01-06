@@ -3,7 +3,6 @@ import { Form, Link, useNavigate } from "@builder.io/qwik-city";
 
 import Image from "~/assets/img/icon.png?jsx";
 import { useSignupWithPassword } from "~/auth/signup";
-import { Message } from "~/components/ui/message";
 import { defaultLoginValue } from "~/types/Signup";
 
 export default component$(() => {
@@ -108,7 +107,6 @@ export default component$(() => {
                 Sign up
               </button>
             </div>
-            <Message message={message} />
           </Form>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import codeBlock from "~/components/_Index/codeBlock";
-// import reactCode from "~/components/_Index/codeBlock/reactCode";
 import Hero from "~/components/_Index/hero/index";
 import Nav from "~/components/_Index/nav/index";
 import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
