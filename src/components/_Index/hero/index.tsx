@@ -1,22 +1,25 @@
 import { component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateShow from "~/components/_Index/codeAnimation/animateShow";
+import displayCodeOrder from "~/components/_Index/codeAnimation/displayCodeOrder";
 import codeStrings from "~/components/_Index/codeBlock";
 import { useCodeBlock } from "~/routes/[lang.]/(wrapper)";
 
 export default component$(() => {
+  // THIS COMPONENT DOES NOT DO FULL RE-RENDER //
+
   const codeBlock = useCodeBlock();
-  const codeDisplay = useSignal<string>(codeBlock.value.reactCode);
+  const codeDisplay = useSignal<string>(codeBlock.value[displayCodeOrder[0]]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
     displayIndex: 0,
-    displayCode: codeStrings["reactCode"],
-    blankCharArr: codeBlock.value["reactCodeBlankChar"],
-    revealedCharArr: Array(codeBlock.value["reactCodeBlankChar"].length).fill(0),
+    displayCode: codeStrings[displayCodeOrder[0]],
+    blankCharArr: codeBlock.value[`${displayCodeOrder[0]}BlankChar`],
+    revealedCharArr: Array(codeBlock.value[`${displayCodeOrder[0]}BlankChar`].length).fill(0),
     currentChar: 0,
     currentRow: 0,
-    totalChar: codeStrings["reactCode"].length,
+    totalChar: codeStrings[displayCodeOrder[0]].length,
     instance: null,
     appearStart: 0,
     disappearStart: 0,
