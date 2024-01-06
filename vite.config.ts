@@ -13,7 +13,7 @@ const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, respons
   next();
 };
 
-export default defineConfig((userConfig) => {
+export default defineConfig(() => {
   // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
     plugins: [
@@ -23,9 +23,9 @@ export default defineConfig((userConfig) => {
         },
       }),
       qwikVite({
-        entryStrategy: {
-          type: "component",
-        },
+        // entryStrategy: {
+        //   type: "component",
+        // },
       }),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),
@@ -53,6 +53,11 @@ export default defineConfig((userConfig) => {
     preview: {
       headers: {
         "Cache-Control": "public, max-age=600",
+      },
+    },
+    esbuild: {
+      supported: {
+        "top-level-await": true,
       },
     },
   };

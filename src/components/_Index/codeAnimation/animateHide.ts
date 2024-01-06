@@ -6,7 +6,6 @@ import switchCodeDisplayed from "~/components/_Index/codeAnimation/switchCodeDis
 
 const animateHide = (
   typeWriter: TypeWriter,
-  codeBlock: Signal<Record<string, any>>,
   codeDisplay: Signal<string>,
   timeStamp: number
 ): void => {
@@ -14,7 +13,6 @@ const animateHide = (
     typeWriter.disappearStart = timeStamp;
     typeWriter.previousTimeStamp = timeStamp;
   }
-  // console.log(timeStamp - typeWriter.disappearStart);
   if (
     typeWriter.currentChar < 0 &&
     typeWriter.timeAfterAnimationFinished >= typeWriter.appearDelay
@@ -24,8 +22,8 @@ const animateHide = (
     typeWriter.previousTimeStamp = 0;
     typeWriter.timeAfterAnimationFinished = 0;
     typeWriter.timeAfterLastChar = 0;
-    switchCodeDisplayed(typeWriter, codeBlock, codeDisplay);
-    window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeBlock, codeDisplay));
+    switchCodeDisplayed(typeWriter, codeDisplay);
+    window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
     return;
   }
   if (typeWriter.currentChar >= 0) {
@@ -48,7 +46,7 @@ const animateHide = (
     }
   } else typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
   typeWriter.previousTimeStamp = timeStamp;
-  window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeBlock, codeDisplay));
+  window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay));
 };
 
 export default animateHide;

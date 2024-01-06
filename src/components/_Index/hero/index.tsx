@@ -2,24 +2,26 @@ import { component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qw
 import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateShow from "~/components/_Index/codeAnimation/animateShow";
 import displayCodeOrder from "~/components/_Index/codeAnimation/displayCodeOrder";
-import codeStrings from "~/components/_Index/codeBlock";
-import { useCodeBlock } from "~/routes/[lang.]/(wrapper)";
+
+import codeBlock from "~/components/_Index/codeBlock";
+import blankChar from "~/components/_Index/codeBlock/blankChar";
+import rendered from "~/components/_Index/codeBlock/rendered";
 
 export default component$(() => {
   // THIS COMPONENT DOES NOT DO FULL RE-RENDER //
 
-  const codeBlock = useCodeBlock();
-  const codeDisplay = useSignal<string>(codeBlock.value[displayCodeOrder[0]]);
+  // const codeBlock = useCodeBlock();
+  const codeDisplay = useSignal<string>(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
     displayIndex: 0,
-    displayCode: codeStrings[displayCodeOrder[0]],
-    blankCharArr: codeBlock.value[`${displayCodeOrder[0]}BlankChar`],
-    revealedCharArr: Array(codeBlock.value[`${displayCodeOrder[0]}BlankChar`].length).fill(0),
+    displayCode: codeBlock[displayCodeOrder[0]],
+    blankCharArr: blankChar[`${displayCodeOrder[0]}BlankChar`],
+    revealedCharArr: Array(blankChar[`${displayCodeOrder[0]}BlankChar`].length).fill(0),
     currentChar: 0,
     currentRow: 0,
-    totalChar: codeStrings[displayCodeOrder[0]].length,
+    totalChar: codeBlock[displayCodeOrder[0]].length,
     instance: null,
     appearStart: 0,
     disappearStart: 0,
@@ -30,8 +32,8 @@ export default component$(() => {
     largestIntervalBetweenCharAppear: 60,
     smallestIntervalBetweenCharDisappear: 15,
     largestIntervalBetweenCharDisappear: 60,
-    appearDurationUntilFullSpeed: 1000,
-    disppearDurationUntilFullSpeed: 1000,
+    appearDurationUntilFullSpeed: 2000,
+    disppearDurationUntilFullSpeed: 2000,
     disappearDelay: 1000,
     appearDelay: 300,
     initialDelay: 300,
@@ -41,7 +43,7 @@ export default component$(() => {
   useVisibleTask$(() => {
     if (!typeWriter.instance) {
       typeWriter.instance = setTimeout(async () => {
-        window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeBlock, codeDisplay));
+        window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
       }, typeWriter.initialDelay);
     }
   });

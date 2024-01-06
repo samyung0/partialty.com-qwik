@@ -1,19 +1,20 @@
-import * as shiki from "shiki";
-import GithubDark from "./OneDarkPro";
+import { server$ } from "@builder.io/qwik-city";
+import { addClassToHast, codeToHtml, type BundledLanguage } from "shikiji";
 
-export default ({ code, language }: { code: string; language?: string }) => {
-  const tokens = GithubDark.codeToThemedTokens(code, language ?? "javascript");
-  const html = shiki.renderToHtml(tokens, {
-    fg: GithubDark.getForegroundColor("one-dark-pro"), // Set a specific foreground color.
-    bg: GithubDark.getBackgroundColor("one-dark-pro"),
-    elements: {
-      pre({ className, style, children }) {
-        return `<pre class="${className} w-[100%] text-lg" style="${style}" tabindex="0">${children}</pre>`;
+export default server$(async ({ code, language }: { code: string; language?: BundledLanguage }) => {
+  const html = codeToHtml(code, {
+    lang: language ?? "tsx",
+    theme: "one-dark-pro",
+    transformers: [
+      {
+        pre(node) {
+          addClassToHast(node, `w-[100%] text-lg`);
+        },
+        line(node) {
+          addClassToHast(node, `font-bold leading-8`);
+        },
       },
-      line({ className, children, _index }) {
-        return `<span class="${className} font-bold leading-8">${children}</span>`;
-      },
-    },
+    ],
   });
   return html;
-};
+});

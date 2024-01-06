@@ -5,7 +5,6 @@ import { disappearEasingFunction } from "~/components/_Index/codeAnimation/easin
 
 const animateShow = (
   typeWriter: TypeWriter,
-  codeBlock: Signal<Record<string, any>>,
   codeDisplay: Signal<string>,
   timeStamp: number
 ): void => {
@@ -23,7 +22,7 @@ const animateShow = (
     typeWriter.previousTimeStamp = 0;
     typeWriter.timeAfterAnimationFinished = 0;
     typeWriter.timeAfterLastChar = 0;
-    window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeBlock, codeDisplay));
+    window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay));
     return;
   }
   if (typeWriter.currentChar < typeWriter.totalChar) {
@@ -46,7 +45,7 @@ const animateShow = (
     }
   } else typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
   typeWriter.previousTimeStamp = timeStamp;
-  window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeBlock, codeDisplay));
+  window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
 };
 
 export default animateShow;
