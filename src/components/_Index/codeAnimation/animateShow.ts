@@ -2,12 +2,14 @@ import type { Signal } from "@builder.io/qwik";
 import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateHide from "~/components/_Index/codeAnimation/animateHide";
 import { disappearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
+import type codeBlock from "~/components/_Index/codeBlock";
 
 const animateShow = (
   typeWriter: TypeWriter,
   codeDisplay: Signal<string>,
+  rendered: Record<`${keyof typeof codeBlock}Rendered`, string>,
   timeStamp: number
-): void => {
+) => {
   if (typeWriter.appearStart === 0) {
     typeWriter.appearStart = timeStamp;
     typeWriter.previousTimeStamp = timeStamp;
@@ -22,7 +24,7 @@ const animateShow = (
     typeWriter.previousTimeStamp = 0;
     typeWriter.timeAfterAnimationFinished = 0;
     typeWriter.timeAfterLastChar = 0;
-    window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay));
+    window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay, rendered));
     return;
   }
   if (typeWriter.currentChar < typeWriter.totalChar) {
@@ -45,7 +47,7 @@ const animateShow = (
     }
   } else typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
   typeWriter.previousTimeStamp = timeStamp;
-  window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
+  window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay, rendered));
 };
 
 export default animateShow;

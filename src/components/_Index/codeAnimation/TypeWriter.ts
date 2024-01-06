@@ -1,7 +1,7 @@
-import type codeStrings from "~/components/_Index/codeBlock";
+import type codeBlock from "~/components/_Index/codeBlock";
 export type TypeWriter = {
   displayIndex: number;
-  displayCode: (typeof codeStrings)[keyof typeof codeStrings];
+  displayCode: (typeof codeBlock)[keyof typeof codeBlock];
   blankCharArr: number[];
   revealedCharArr: number[];
   currentChar: number;

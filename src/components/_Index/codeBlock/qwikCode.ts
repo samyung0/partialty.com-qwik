@@ -7,7 +7,7 @@ export default component$(() => {
   return <section>A Joke!</section>;
 });`;
 
-export const qwikCodeRendered = await renderIndexCodeBlock({ code, language: "tsx" });
+export const qwikCodeRendered = renderIndexCodeBlock({ code, language: "tsx" });
 const _qwikCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _qwikCodeBlankChar.push(0);

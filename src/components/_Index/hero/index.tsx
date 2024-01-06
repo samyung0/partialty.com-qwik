@@ -5,13 +5,13 @@ import displayCodeOrder from "~/components/_Index/codeAnimation/displayCodeOrder
 
 import codeBlock from "~/components/_Index/codeBlock";
 import blankChar from "~/components/_Index/codeBlock/blankChar";
-import rendered from "~/components/_Index/codeBlock/rendered";
+import { useRenderedCode } from "~/routes/[lang.]/(wrapper)";
 
 export default component$(() => {
   // THIS COMPONENT DOES NOT DO FULL RE-RENDER //
 
-  // const codeBlock = useCodeBlock();
-  const codeDisplay = useSignal<string>(rendered[`${displayCodeOrder[0]}Rendered`]);
+  const rendered = useRenderedCode().value;
+  const codeDisplay = useSignal(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
@@ -40,10 +40,10 @@ export default component$(() => {
   });
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
+  useVisibleTask$(async () => {
     if (!typeWriter.instance) {
       typeWriter.instance = setTimeout(async () => {
-        window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
+        window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay, rendered));
       }, typeWriter.initialDelay);
     }
   });

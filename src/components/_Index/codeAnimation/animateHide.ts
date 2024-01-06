@@ -3,12 +3,14 @@ import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateShow from "~/components/_Index/codeAnimation/animateShow";
 import { disappearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
 import switchCodeDisplayed from "~/components/_Index/codeAnimation/switchCodeDisplayed";
+import type codeBlock from "~/components/_Index/codeBlock";
 
-const animateHide = (
+const animateHide = async (
   typeWriter: TypeWriter,
   codeDisplay: Signal<string>,
+  rendered: Record<`${keyof typeof codeBlock}Rendered`, string>,
   timeStamp: number
-): void => {
+) => {
   if (typeWriter.disappearStart === 0) {
     typeWriter.disappearStart = timeStamp;
     typeWriter.previousTimeStamp = timeStamp;
@@ -22,8 +24,8 @@ const animateHide = (
     typeWriter.previousTimeStamp = 0;
     typeWriter.timeAfterAnimationFinished = 0;
     typeWriter.timeAfterLastChar = 0;
-    switchCodeDisplayed(typeWriter, codeDisplay);
-    window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay));
+    switchCodeDisplayed(typeWriter, codeDisplay, rendered);
+    window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay, rendered));
     return;
   }
   if (typeWriter.currentChar >= 0) {
@@ -46,7 +48,7 @@ const animateHide = (
     }
   } else typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
   typeWriter.previousTimeStamp = timeStamp;
-  window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay));
+  window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay, rendered));
 };
 
 export default animateHide;

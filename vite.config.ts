@@ -23,9 +23,9 @@ export default defineConfig(() => {
         },
       }),
       qwikVite({
-        // entryStrategy: {
-        //   type: "component",
-        // },
+        entryStrategy: {
+          type: "component",
+        },
       }),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),
@@ -53,11 +53,6 @@ export default defineConfig(() => {
     preview: {
       headers: {
         "Cache-Control": "public, max-age=600",
-      },
-    },
-    esbuild: {
-      supported: {
-        "top-level-await": true,
       },
     },
   };
