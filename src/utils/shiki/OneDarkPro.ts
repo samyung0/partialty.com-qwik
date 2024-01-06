@@ -3,14 +3,11 @@ import { getHighlighterCore } from "shikiji/core";
 import oneDarkPro from "shikiji/themes/one-dark-pro.mjs";
 import { getWasmInlined } from "shikiji/wasm";
 
+const highlighter = getHighlighterCore({
+  themes: [oneDarkPro],
+  langs: [import("shikiji/langs/tsx.mjs")],
+  loadWasm: getWasmInlined,
+});
 export default server$(async () => {
-  const highlighter = await getHighlighterCore({
-    themes: [oneDarkPro],
-    langs: [import("shikiji/langs/tsx.mjs")],
-    loadWasm: getWasmInlined,
-  });
-
-  // optionally, load themes and languages after creation
-  // await highlighter.loadTheme(import("shikiji/themes/vitesse-light.mjs"));
-  return highlighter;
+  return await highlighter;
 });
