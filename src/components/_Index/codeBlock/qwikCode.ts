@@ -1,4 +1,4 @@
-import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
+import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
 
 // make sure there are no blank lines at the start and end of the string !!!
 const code = `import { component$ } from '@builder.io/qwik';
