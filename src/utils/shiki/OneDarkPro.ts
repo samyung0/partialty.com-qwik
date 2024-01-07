@@ -1,4 +1,3 @@
-import { $ } from "@builder.io/qwik";
 import { getHighlighterCore } from "shikiji/core";
 import oneDarkPro from "shikiji/themes/one-dark-pro.mjs";
 import { getWasmInlined } from "shikiji/wasm";
@@ -8,6 +7,6 @@ const highlighter = getHighlighterCore({
   langs: [import("shikiji/langs/tsx.mjs")],
   loadWasm: getWasmInlined,
 });
-export default $(async () => {
+export default async () => {
   return await highlighter;
-});
+};

@@ -1,10 +1,2 @@
-import type codeBlock from "~/components/_Index/codeBlock";
-import { astroCodeBlankChar } from "~/components/_Index/codeBlock/astroCode";
-import { qwikCodeBlankChar } from "~/components/_Index/codeBlock/qwikCode";
-import { reactCodeBlankChar } from "~/components/_Index/codeBlock/reactCode";
-
-export default {
-  astroCodeBlankChar,
-  qwikCodeBlankChar,
-  reactCodeBlankChar,
-} as Record<`${keyof typeof codeBlock}BlankChar`, number[]>;
+import type $blankChar from "./$blankChar";
+export default import.meta.compileTime("./$blankChar.ts") as ReturnType<typeof $blankChar>["data"];

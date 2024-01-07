@@ -2,6 +2,7 @@ import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import { qwikSpeakInline } from "qwik-speak/inline";
 import { defineConfig, type Connect } from "vite";
+import compileTime from "vite-plugin-compile-time";
 import tsconfigPaths from "vite-tsconfig-paths";
 import lang from "./lang.json";
 import { config } from "./src/speak-config";
@@ -16,6 +17,11 @@ const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, respons
 export default defineConfig(() => {
   // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
+    build: {
+      rollupOptions: {
+        external: [/shikiji\/.*/, /shikiji-core\/.*/],
+      },
+    },
     plugins: [
       qwikCity({
         allowedParams: {
@@ -42,6 +48,7 @@ export default defineConfig(() => {
           server.middlewares.use(crossOriginIsolationMiddleware);
         },
       },
+      compileTime(),
     ],
     // node_modules\@babel\types\lib\definitions\core.js
     define: { "process.env.BABEL_TYPES_8_BREAKING": "false" },

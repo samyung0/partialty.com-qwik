@@ -2,15 +2,13 @@ import { component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qw
 import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateShow from "~/components/_Index/codeAnimation/animateShow";
 import displayCodeOrder from "~/components/_Index/codeAnimation/displayCodeOrder";
+import rendered from "~/components/_Index/codeBlock/rendered";
 
 import codeBlock from "~/components/_Index/codeBlock";
 import blankChar from "~/components/_Index/codeBlock/blankChar";
-import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
-// import { useRenderedCode } from "~/routes/[lang.]/(wrapper)";
 
 export default component$(() => {
-  // const rendered = useRenderedCode().value;
-  const codeDisplay = useSignal<string>("");
+  const codeDisplay = useSignal(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
@@ -40,14 +38,7 @@ export default component$(() => {
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    // renderedCode = renderedCode as Record<`${keyof typeof codeBlock}Rendered`, string>;
     if (!typeWriter.instance) {
-      const rendered: Record<string, string> = {};
-      const entries = Object.entries(codeBlock);
-      for (const [key, code] of entries) {
-        rendered[`${key}Rendered`] = await renderIndexCodeBlock({ code });
-      }
-      codeDisplay.value = rendered[`${displayCodeOrder[0]}Rendered`];
       typeWriter.instance = setTimeout(async () => {
         window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay, rendered));
       }, typeWriter.initialDelay);
