@@ -1,1 +1,1 @@
-export * from "../server/entry.express.mjs";
+export * from "../server/entry.express.js";
