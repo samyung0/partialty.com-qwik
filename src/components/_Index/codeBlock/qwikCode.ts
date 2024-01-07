@@ -1,4 +1,4 @@
-import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
+// import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
 
 // make sure there are no blank lines at the start and end of the string !!!
 const code = `import { component$ } from '@builder.io/qwik';
@@ -7,7 +7,7 @@ export default component$(() => {
   return <section>A Joke!</section>;
 });`;
 
-export const qwikCodeRendered = renderIndexCodeBlock({ code });
+// export const qwikCodeRendered = renderIndexCodeBlock({ code });
 const _qwikCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _qwikCodeBlankChar.push(0);

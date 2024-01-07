@@ -1,4 +1,4 @@
-import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
+// import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
 
 // make sure there are no blank lines at the start and end of the string !!!
 const code = `export default function MyApp() {
@@ -9,7 +9,7 @@ const code = `export default function MyApp() {
   );
 }`;
 
-export const reactCodeRendered = renderIndexCodeBlock({ code });
+// export const reactCodeRendered = renderIndexCodeBlock({ code });
 const _reactCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _reactCodeBlankChar.push(0);

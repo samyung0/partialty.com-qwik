@@ -1,4 +1,4 @@
-import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
+// import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
 
 // make sure there are no blank lines at the start and end of the string !!!
 const code = `---
@@ -10,7 +10,7 @@ import Button from './Button.astro';
   <Button title="Button 3" />
 </div>`;
 
-export const astroCodeRendered = renderIndexCodeBlock({ code });
+// export const astroCodeRendered = renderIndexCodeBlock({ code });
 const _astroCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
   if (char === "\n") _astroCodeBlankChar.push(0);
