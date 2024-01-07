@@ -18,7 +18,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/deno/vite.config.ts",
+    "build.server": "vite build -c adapters/express/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",
@@ -40,7 +40,7 @@
     "lint.fix": "eslint \"src/**/*.ts*\" --fix",
     "preview": "qwik build preview && vite preview --open",
     "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en-US,zh-HK,ja-JP --assetsPath=i18n",
-    "serve": "deno run --allow-net --allow-read --allow-env server/entry.deno.js",
+    "serve": "node server/entry.express",
     "start": "vite --open --mode ssr"
   },
   "devDependencies": {
@@ -50,7 +50,7 @@
     "@types/babel__traverse": "^7.20.2",
     "@types/compression": "^1.7.2",
     "@types/eslint": "^8.44.8",
-    "@types/express": "4.17.17",
+    "@types/express": "^4.17.19",
     "@types/lodash.isequal": "^4.5.6",
     "@types/mime-db": "^1.43.2",
     "@types/mime-types": "^2.1.1",
