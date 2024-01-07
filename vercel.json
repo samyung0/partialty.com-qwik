@@ -1,5 +1,7 @@
 {
-  "routes": [{ "src": "/api/.*", "dest": "api/index.go" }],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "curl -fsSL https://bun.sh/install | bash && ~/.bun/bin/bun install --frozen-lockfile",
+  "buildCommand": "~/.bun/bin/bun run build",
   "headers": [
     {
       "source": "/build/(.*)",
