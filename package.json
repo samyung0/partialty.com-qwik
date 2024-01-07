@@ -31,6 +31,7 @@
     "db:prod:push": "drizzle-kit push:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "deploy": "vercel deploy",
     "dev": "concurrently --handle-input -c \"auto\" \"vite --mode ssr\" \"bun --watch bun/index.ts\"",
+    "start:server": "bun bun/index.ts",
     "dev:server": "bun --watch bun/index.ts",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "dev:email": "email dev",
