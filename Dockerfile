@@ -8,4 +8,4 @@ COPY . .
 
 ENV NODE_ENV production
 
-CMD [ "bun", "start:server" ]
+CMD [ "bun", "start" ]
