@@ -45,7 +45,7 @@ export default component$(() => {
     }
   });
   return (
-    <section class="relative bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-background-yellow">
+    <section class="relative h-[100vh] bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-sea">
       <div class="relative z-10 flex h-[100vh] justify-center">
         <div class="flex flex-1 items-center justify-end">
           <div class="relative flex h-[400px] w-[600px] items-start justify-stretch overflow-hidden bg-code-editor-one-dark-pro p-8 shadow-2xl">
@@ -77,10 +77,10 @@ export default component$(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-1 flex-col items-start justify-center pl-[3vw] text-primary-dark-gray">
-          <p class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3rem]">
+        <div class="flex flex-1 flex-col items-start justify-center pl-[8vw] ">
+          <h1 class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3rem]">
             Learn Web Development like you have <i>never </i>before.
-          </p>
+          </h1>
           <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray">
             Get Started
           </button>

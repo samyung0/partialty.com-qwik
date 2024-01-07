@@ -53,20 +53,19 @@ export default {
         ],
       },
       colors: {
-        "primary-dark-gray": "#3e3e3e",
-        "background-white": "#fff",
+        "primary-dark-gray": "#1f2937",
         "background-light-gray": "#f7f7f7",
-        // "background-dark-gray": "#29272a",
         "code-editor-one-dark-pro": "#282c34",
-        "background-yellow": "#fcd34d",
+        yellow: "#fcd34d",
         mint: "#6fdcbf",
         "mint-up": "#a5d4bb",
         "mint-down": "#55af96",
         lilac: "#ae8fdb",
         sea: "#72cada",
-        highlight: "#ae8fdb",
         "lilac-up": "#b1b1d8",
         sherbet: "#fef8b4",
+        "light-yellow": "#ffff43",
+        pink: "#f7b8c2",
         rose: "#dc849b",
         marshmellow: "#d695b6",
         peach: "#f2c3c0",
@@ -89,11 +88,21 @@ export default {
     // use the theme context and conditionally adds the class name after
 
     // check components/site/navigation for exmaples
-    plugin(function ({ addVariant }) {
+    plugin(function ({ addVariant, addComponents, theme }) {
       addVariant("theme-test", ":is(.theme-test &)");
-    }),
-    plugin(function ({ addVariant }) {
       addVariant("theme-test2", ":is(.theme-test2 &)");
+      addComponents({
+        ".highlight-yellow": {
+          background: `url(/highlightSVG/yellow.svg)`,
+          margin: "-2px -6px",
+          padding: "2px  6px",
+        },
+        ".highlight-pink": {
+          background: `url(/highlightSVG/pink.svg)`,
+          margin: "-2px -6px",
+          padding: "2px  6px",
+        },
+      });
     }),
   ],
   daisyui: {

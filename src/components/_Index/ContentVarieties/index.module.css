@@ -1,0 +1,29 @@
+@keyframes textAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.textAppear {
+  animation: textAppear 0.5s ease-out forwards;
+}
+
+@keyframes titleAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.titleAppear {
+  animation: titleAppear 0.5s ease-out forwards;
+}
