@@ -99,7 +99,6 @@
     "@react-email/components": "0.0.12",
     "@supabase/realtime-js": "^2.8.4",
     "@supabase/supabase-js": "^2.32.0",
-    "@upstash/redis": "^1.22.0",
     "@webcontainer/api": "1.1.8",
     "axios": "^1.4.0",
     "comlink": "^4.4.1",
