@@ -17,11 +17,6 @@ const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, respons
 export default defineConfig(() => {
   // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
-    build: {
-      rollupOptions: {
-        external: [/shikiji\/.*/, /shikiji-core\/.*/],
-      },
-    },
     plugins: [
       qwikCity({
         allowedParams: {
