@@ -17,5 +17,5 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	e.GET("/api", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World This is api!")
 	})
-	e.Logger.Fatal(e.Start(":1323"))
+	e.ServeHTTP(w, r)
 }
