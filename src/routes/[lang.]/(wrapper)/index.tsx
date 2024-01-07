@@ -1,18 +1,15 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
-import codeBlock from "~/components/_Index/codeBlock";
 import Hero from "~/components/_Index/hero/index";
 import Nav from "~/components/_Index/nav/index";
-import renderIndexCodeBlock from "~/utils/shiki/renderIndexCodeBlock";
 
-export const useRenderedCode = routeLoader$(async () => {
-  const renderedCode: Record<string, string> = {};
-  const entries = Object.entries(codeBlock);
-  for (const [key, code] of entries) {
-    renderedCode[`${key}Rendered`] = await renderIndexCodeBlock({ code });
-  }
-  return renderedCode as Record<`${keyof typeof codeBlock}Rendered`, string>;
-});
+// export const useRenderedCode = routeLoader$(async () => {
+//   const renderedCode: Record<string, string> = {};
+//   const entries = Object.entries(codeBlock);
+//   for (const [key, code] of entries) {
+//     renderedCode[`${key}Rendered`] = await renderIndexCodeBlock({ code });
+//   }
+//   return renderedCode as Record<`${keyof typeof codeBlock}Rendered`, string>;
+// });
 
 export default component$(() => {
   // useVisibleTask$(() => {
