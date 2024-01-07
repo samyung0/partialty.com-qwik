@@ -18,7 +18,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/express/vite.config.ts",
+    "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",
@@ -83,7 +83,7 @@
     "tailwindcss": "3.3.3",
     "typescript": "^5.3.2",
     "undici": "5.22.1",
-    "vercel": "33.0.2",
+    "vercel": "^29.1.1",
     "vite": "^5.0.6",
     "vite-tsconfig-paths": "^4.2.1"
   },

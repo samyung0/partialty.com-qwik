@@ -1,8 +1,8 @@
-import { server$ } from "@builder.io/qwik-city";
+import { $ } from "@builder.io/qwik";
 import { addClassToHast } from "shikiji";
 import OneDarkPro from "~/utils/shiki/OneDarkPro";
 
-export default server$(async ({ code }: { code: string }) => {
+export default $(async ({ code }: { code: string }) => {
   const highlighter = await OneDarkPro();
   const html = highlighter.codeToHtml(code, {
     lang: "tsx",
