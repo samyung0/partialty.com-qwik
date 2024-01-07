@@ -1,5 +1,5 @@
 import { addClassToHast } from "shikiji";
-import OneDarkPro from "~/utils/shiki/OneDarkPro";
+import OneDarkPro from "~/utils/shikiji/OneDarkPro";
 
 export default async ({ code }: { code: string }) => {
   const highlighter = await OneDarkPro();
