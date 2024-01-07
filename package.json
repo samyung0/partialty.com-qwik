@@ -18,7 +18,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
+    "build.server": "vite build -c adapters/deno/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",
@@ -35,13 +35,13 @@
     "dev:email": "email dev",
     "fmt": "eslint \"src/**/*.ts*\" --fix && prettier --write .",
     "fmt.check": "prettier --check .",
+    "git:add": "git add .",
     "lint": "eslint \"src/**/*.ts*\" && tsc --noEmit",
     "lint.fix": "eslint \"src/**/*.ts*\" --fix",
     "preview": "qwik build preview && vite preview --open",
     "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en-US,zh-HK,ja-JP --assetsPath=i18n",
-    "serve": "node server/entry.express",
-    "start": "vite --open --mode ssr",
-    "git:add": "git add ."
+    "serve": "deno run --allow-net --allow-read --allow-env server/entry.deno.js",
+    "start": "vite --open --mode ssr"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.3.2",
@@ -83,7 +83,7 @@
     "tailwindcss": "3.3.3",
     "typescript": "^5.3.2",
     "undici": "5.22.1",
-    "vercel": "^29.1.1",
+    "vercel": "33.0.2",
     "vite": "^5.0.6",
     "vite-tsconfig-paths": "^4.2.1"
   },

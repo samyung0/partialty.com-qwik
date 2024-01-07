@@ -1,7 +1,7 @@
 import type { Signal } from "@builder.io/qwik";
 import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
 import animateHide from "~/components/_Index/codeAnimation/animateHide";
-import { disappearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
+import { appearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
 import type codeBlock from "~/components/_Index/codeBlock";
 
 const animateShow = (
@@ -31,13 +31,13 @@ const animateShow = (
     if (timeStamp - typeWriter.previousTimeStamp < 100) {
       // if the tab is inactive, we will pause the animation
       typeWriter.timeAfterLastChar += timeStamp - typeWriter.previousTimeStamp;
-      const ratio = disappearEasingFunction(
-        Math.min(timeStamp - typeWriter.disappearStart, typeWriter.appearDurationUntilFullSpeed) /
+      const ratio = appearEasingFunction(
+        Math.min(timeStamp - typeWriter.appearStart, typeWriter.appearDurationUntilFullSpeed) /
           typeWriter.appearDurationUntilFullSpeed
       );
       const interval =
-        typeWriter.largestIntervalBetweenCharDisappear * (1 - ratio) +
-        typeWriter.smallestIntervalBetweenCharDisappear * ratio;
+        typeWriter.largestIntervalBetweenCharAppear * (1 - ratio) +
+        typeWriter.smallestIntervalBetweenCharAppear * ratio;
       if (typeWriter.timeAfterLastChar > interval) {
         if (typeWriter.displayCode[typeWriter.currentChar] === "\n") typeWriter.currentRow++;
         else typeWriter.revealedCharArr[typeWriter.currentRow]++;
