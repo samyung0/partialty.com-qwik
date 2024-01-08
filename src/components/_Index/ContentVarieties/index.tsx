@@ -47,7 +47,7 @@ export default component$(() => {
             <br />
             written in{" "}
             <span class="underline decoration-wavy [text-underline-offset:12px]">simple</span>{" "}
-            languages.
+            words.
           </h1>
         </div>
         <div class="relative flex h-[60%] items-start">
