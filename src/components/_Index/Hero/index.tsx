@@ -7,33 +7,37 @@ import rendered from "~/components/_Index/codeBlock/rendered";
 import codeBlock from "~/components/_Index/codeBlock";
 import blankChar from "~/components/_Index/codeBlock/blankChar";
 
+import styles from "./index.module.css";
+
 export default component$(() => {
+  // rendered (syntax highlighted) codes at COMPILE TIME
+  // no wasm file shipped to client
   const codeDisplay = useSignal(rendered[`${displayCodeOrder[0]}Rendered`]);
 
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
-    displayIndex: 0,
-    displayCode: codeBlock[displayCodeOrder[0]],
-    blankCharArr: blankChar[`${displayCodeOrder[0]}BlankChar`],
-    revealedCharArr: Array(blankChar[`${displayCodeOrder[0]}BlankChar`].length).fill(0),
-    currentChar: 0,
-    currentRow: 0,
-    totalChar: codeBlock[displayCodeOrder[0]].length,
-    instance: null,
-    appearStart: 0,
-    disappearStart: 0,
-    timeAfterLastChar: 0,
-    timeAfterAnimationFinished: 0,
-    previousTimeStamp: 0,
-    smallestIntervalBetweenCharAppear: 30,
-    largestIntervalBetweenCharAppear: 30,
-    smallestIntervalBetweenCharDisappear: 15,
-    largestIntervalBetweenCharDisappear: 60,
+    displayIndex: 0, // which code snippet to display
+    displayCode: codeBlock[displayCodeOrder[0]], // raw code snippet
+    blankCharArr: blankChar[`${displayCodeOrder[0]}BlankChar`], // counts number of lines and number of chars per line
+    revealedCharArr: Array(blankChar[`${displayCodeOrder[0]}BlankChar`].length).fill(0), // stores the number of blank chars that are NOT displayed per row, used for rendering
+    currentChar: 0, // total displayed char in the current snippet
+    currentRow: 0, // corresponds to the revealedCharArr
+    totalChar: codeBlock[displayCodeOrder[0]].length, // static sum of the total char of snippet
+    instance: null, // timer
+    appearStart: 0, // used in requestAnimationFrame
+    disappearStart: 0, // used in requestAnimationFrame
+    timeAfterLastChar: 0, // used in requestAnimationFrame
+    timeAfterAnimationFinished: 0, // used in requestAnimationFrame, records the delay after finishing displaying a whole code snippet
+    previousTimeStamp: 0, // used in requestAnimationFrame
+    smallestIntervalBetweenCharAppear: 30, // used to calculate the speed of showing the char, the smaller, the faster the speed will eventually get
+    largestIntervalBetweenCharAppear: 30, // initial speed
+    smallestIntervalBetweenCharDisappear: 15, // used to calculate the speed of hiding the char, the smaller, the faster the speed will eventually get
+    largestIntervalBetweenCharDisappear: 60, // initial speed
     appearDurationUntilFullSpeed: 2000,
     disppearDurationUntilFullSpeed: 2000,
-    disappearDelay: 1000,
-    appearDelay: 300,
-    initialDelay: 300,
+    disappearDelay: 2000, // how long the animation pauses until it shows the next snippet
+    appearDelay: 300, // how long the animation pauses until the char disappears
+    initialDelay: 300, // initial delay on animation when window loads
   });
 
   // eslint-disable-next-line qwik/no-use-visible-task
@@ -44,6 +48,8 @@ export default component$(() => {
       }, typeWriter.initialDelay);
     }
   });
+  let blankCharSum = 0,
+    currentCharWithoutNewLine = typeWriter.currentChar + 1;
   return (
     <section class="relative h-[100vh] bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-sea">
       <div class="relative z-10 flex h-[100vh] justify-center">
@@ -52,33 +58,49 @@ export default component$(() => {
             <div dangerouslySetInnerHTML={codeDisplay.value}></div>
             <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
               <pre class="text-lg font-bold leading-8">
-                {typeWriter.blankCharArr.map((blankCount, index) => [
-                  <span
-                    key={`typeWriterBlankLine${displayCodeOrder[typeWriter.displayIndex]}${index}`}
-                  >
-                    {Array.from(Array(blankCount)).map((_, index2) => (
-                      <span
-                        key={`typeWriterBlankChar${
-                          displayCodeOrder[typeWriter.displayIndex]
-                        }${index}-${index2}`}
-                        class={
-                          typeWriter.revealedCharArr[index] > index2
-                            ? "bg-transparent"
-                            : "bg-code-editor-one-dark-pro"
-                        }
-                      >
-                        &nbsp;
-                      </span>
-                    ))}
-                  </span>,
-                  "\n",
-                ])}
+                {typeWriter.blankCharArr.map((blankCount, index) => {
+                  currentCharWithoutNewLine--;
+                  return [
+                    <span
+                      key={`typeWriterBlankLine${
+                        displayCodeOrder[typeWriter.displayIndex]
+                      }${index}`}
+                    >
+                      {Array.from(Array(blankCount)).map((_, index2) => {
+                        blankCharSum++;
+                        return (
+                          <span
+                            key={`typeWriterBlankChar${
+                              displayCodeOrder[typeWriter.displayIndex]
+                            }${index}-${index2}`}
+                            class={
+                              (typeWriter.revealedCharArr[index] > index2
+                                ? "bg-transparent "
+                                : "bg-code-editor-one-dark-pro ") +
+                              (currentCharWithoutNewLine === blankCharSum
+                                ? typeWriter.appearStart === 0
+                                  ? styles.blinkingCursorDisappearing
+                                  : styles.blinkingCursorAppearing
+                                : "")
+                            }
+                            // dangerouslySetInnerHTML={
+                            //   currentCharWithoutNewLine === blankCharSum ? "|" : "&nbsp;"
+                            // }
+                          >
+                            &nbsp;
+                          </span>
+                        );
+                      })}
+                    </span>,
+                    "\n",
+                  ];
+                })}
               </pre>
             </div>
           </div>
         </div>
         <div class="flex flex-1 flex-col items-start justify-center pl-[8vw] ">
-          <h1 class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3rem]">
+          <h1 class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
             Learn Web Development like you have <i>never </i>before.
           </h1>
           <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray">

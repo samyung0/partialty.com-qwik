@@ -1,14 +1,13 @@
 @keyframes textAppear {
   from {
+    transform: translateY(40px);
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-
 .textAppear {
   animation: textAppear 0.5s ease-out forwards;
 }

@@ -72,6 +72,7 @@ export default {
         biscuit: "#ad998a",
         oat: "#cbc1bd",
         mid: "#cccccc",
+        dark: "#404040",
         "dark-down": "#303145",
       },
     },
