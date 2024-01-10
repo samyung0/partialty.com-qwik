@@ -5,7 +5,7 @@ import styles from "./index.module.css";
 const texts = [
   <p key="text1" class={"text-xl leading-[2.5rem] tracking-wide"}>
     <strong>React</strong> is a JavaScript framework that helps build{" "}
-    <span class="border-light-yellow border-b-8">interactive and reusable user interfaces</span>. It
+    <span class="border-b-8 border-light-yellow">interactive and reusable user interfaces</span>. It
     simplifies UI development by breaking it down into smaller components that{" "}
     <span class="highlight-pink">update efficiently</span>.
   </p>,

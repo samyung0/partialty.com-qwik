@@ -1,4 +1,5 @@
 import { component$ } from "@builder.io/qwik";
+import ContentAudio from "~/components/_Index/ContentAudio";
 import ContentInteractive from "~/components/_Index/ContentInteractive";
 import ContentVariaties from "~/components/_Index/ContentVarieties";
 import Hero from "~/components/_Index/Hero";
@@ -23,6 +24,7 @@ export default component$(() => {
       <Hero />
       <ContentVariaties />
       <ContentInteractive />
+      <ContentAudio />
     </main>
   );
 });

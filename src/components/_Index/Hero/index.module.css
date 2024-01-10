@@ -1,8 +1,16 @@
 @keyframes blink {
-  0% {opacity: 1;}
-  40% {opacity: 1;}
-  60% {opacity: 0;}
-  100% {opacity: 0;}
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .blinkingCursorDisappearing {
@@ -17,7 +25,7 @@
     font-size: 22px;
     top: 0;
     left: 20px;
-    animation: blink .6s linear infinite alternate;
+    animation: blink 0.6s linear infinite alternate;
   }
 }
 
@@ -33,6 +41,6 @@
     color: #f7f7f7;
     top: 0;
     left: 10px;
-    animation: blink .6s linear infinite alternate;
+    animation: blink 0.6s linear infinite alternate;
   }
 }
