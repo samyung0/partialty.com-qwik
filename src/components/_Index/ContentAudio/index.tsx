@@ -2,24 +2,30 @@ import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 
 import { AudioPlayer } from "~/components/audioPlayer/audioPlayer";
 
-const texts = [
-  "React is a JavaScript framework that helps build interactive and",
-  "reusable user interfaces. It simplifies UI development by breaking it",
-  "down into smaller components that update efficiently.",
-];
-
-const timeIntervals = [
-  { from: 2.7, to: 3.5 },
-  { from: 3.6, to: 5 },
-  { from: 10, to: 11.136 },
-];
+import styles from "./index.module.css";
 
 export default component$(() => {
-  const el;
   const playButtonClicked = useSignal(false);
+  const elapsedTime = useSignal<number>(0); // length of the audio bar
+  const instantTime = useSignal([
+    { from: 2.7, highlight: false },
+    { from: 3.3, highlight: false },
+    { from: 9.8, highlight: false },
+  ]);
 
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {});
+
+  useVisibleTask$(({ track }) => {
+    track(() => elapsedTime.value);
+
+    instantTime.value = instantTime.value.map((instant) =>
+      elapsedTime.value >= instant.from
+        ? { ...instant, highlight: true }
+        : { ...instant, highlight: false }
+    );
+    console.log(elapsedTime.value);
+    console.log(instantTime.value);
+  });
 
   return (
     <section class="h-[100vh] bg-pink">
@@ -41,16 +47,37 @@ export default component$(() => {
               <div class="gap relative flex   h-[70%] w-[80%]   flex-col gap-12">
                 <p class="font bold text-3xl font-bold">Welcome to React</p>
                 <div class="w-full pb-6">
-                  <p key="text1" class={"text-xl leading-[2.5rem] tracking-wide"}>
-                    <strong>React</strong> is a JavaScript framework that helps build{" "}
-                    <span id="highlight-1" class="border-b-8 border-light-yellow">
-                      interactive and reusable user interfaces
-                    </span>
-                    . It simplifies UI development by breaking it down into smaller components that{" "}
-                    <span class="highlight-pink">update efficiently</span>.
-                  </p>
+                  <div class={"text-xl leading-[2.5rem] tracking-wide"}>
+                    <p key="row-1">
+                      <strong>React</strong> is a JavaScript framework that helps build{" "}
+                      <span
+                        data-text="interactive and"
+                        class={`${instantTime.value[0].highlight && styles.highlight_word}`}
+                      >
+                        interactive and
+                      </span>
+                    </p>
+                    <p key="row-2">
+                      <span
+                        data-text="reusable user interfaces"
+                        class={`${instantTime.value[1].highlight && styles.highlight_word}`}
+                      >
+                        reusable user interfaces
+                      </span>
+                      . It simplifies UI development by breaking it
+                    </p>
+                    <p key="row-3">
+                      down into smaller components that{" "}
+                      <span
+                        data-text=".update efficiently"
+                        class={` ${instantTime.value[2].highlight && styles.highlight_word_2}`}
+                      >
+                        update efficiently.
+                      </span>
+                    </p>
+                  </div>
                 </div>
-                <AudioPlayer startPlay={playButtonClicked} />
+                <AudioPlayer startPlay={playButtonClicked} elapsedTime={elapsedTime} />
               </div>
             </div>
           </div>

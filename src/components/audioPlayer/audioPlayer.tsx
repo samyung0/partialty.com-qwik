@@ -7,12 +7,14 @@ import PlayIcon from "~/assets/svg/play-arrow-rounded.svg";
 
 interface AudioPlayerProps {
   startPlay: Signal<boolean>;
+  elapsedTime: Signal<number>;
 }
 
-export const AudioPlayer = component$(({ startPlay }) => {
+export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTime }) => {
   const isPlaying = useSignal<boolean>(false);
   const duration = useSignal<number>();
-  const elapsedTime = useSignal<number>(0);
+
+  const playerTime = useSignal<number>(0); // updated time the audio is playing
   const jumpTo = useSignal<number>();
   const audioRef = useSignal<HTMLAudioElement | undefined>();
 
@@ -51,8 +53,8 @@ export const AudioPlayer = component$(({ startPlay }) => {
         min={0}
         max={duration.value}
         value={elapsedTime.value}
-        onInput$={(e) => {
-          jumpTo.value = e.target.value;
+        onInput$={(e: Event, currentTarget: HTMLInputElement) => {
+          jumpTo.value = Number(currentTarget.value);
         }}
         class=" mx-6 h-1 w-96 rounded-lg"
       />
@@ -60,9 +62,9 @@ export const AudioPlayer = component$(({ startPlay }) => {
       <audio
         ref={audioRef}
         src={Song}
-        onTimeUpdate$={(e) => {
-          if (!duration.value) duration.value = e.target.duration;
-          elapsedTime.value = e.target.currentTime;
+        onTimeUpdate$={(e: Event, currentTarget: HTMLAudioElement) => {
+          if (!duration.value) duration.value = currentTarget.duration;
+          elapsedTime.value = currentTarget.currentTime;
         }}
       />
     </div>
