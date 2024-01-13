@@ -29,8 +29,7 @@
     "tailwind.config.js",
     "postcss.config.js",
     "drizzle_turso",
-    "emails",
-    "bun"
+    "emails"
   ],
-  "exclude": ["doc"]
+  "exclude": ["doc", "bun"]
 }

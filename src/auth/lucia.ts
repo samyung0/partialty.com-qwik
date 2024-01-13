@@ -26,6 +26,7 @@ const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"])
 const _lucia = () =>
   lucia({
     env: import.meta.env.MODE === "production" ? "PROD" : "DEV",
+
     middleware: qwik(),
     adapter: libsql(tursoClient(), {
       user: "profiles",

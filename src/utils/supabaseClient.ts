@@ -9,8 +9,8 @@ const supabaseAnonPublic = import.meta.env.VITE_SUPABASE_ANON_KEY;
 if (!supabaseUrl || !supabaseAnonPublic) console.error("ENV VARIABLE ERROR CLIENT");
 
 export const supabase = createClient<Supabase>(
-  supabaseUrl,
-  supabaseAnonPublic
+  supabaseUrl!,
+  supabaseAnonPublic!
   // {
   //   auth: {
   //     persistSession: false,
