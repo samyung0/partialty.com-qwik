@@ -17,7 +17,9 @@
     "outDir": "tmp",
     "noEmit": true,
     "types": ["node", "vite/client", "vite-plugin-compile-time/client"],
+    "baseUrl": ".",
     "paths": {
+      "*": ["./node_modules/*", "./bun/node_modules/*"],
       "~/*": ["./src/*"]
     }
   },
