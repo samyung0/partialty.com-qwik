@@ -3,11 +3,13 @@
 // make sure there are no blank lines at the start and end of the string !!!
 const code = `---
 import Button from './Button.astro';
+import MyReactButton from './MyReactButton.jsx';
+import MySvelteButton from './MySvelteButton.svelte';
 ---
 <div>
-  <Button title="Button 1" />
-  <Button title="Button 2" />
-  <Button title="Button 3" />
+  <Button />
+  <MyReactButton client:idle />
+  <MySvelteButton client:load />
 </div>`;
 
 // export const astroCodeRendered = renderIndexCodeBlock({ code });

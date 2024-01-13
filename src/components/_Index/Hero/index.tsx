@@ -53,7 +53,7 @@ export default component$(() => {
   return (
     <section class="relative h-[100vh] bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-sea">
       <div class="relative z-10 flex h-[100vh] justify-center">
-        <div class="flex flex-1 items-center justify-end">
+        <div class="flex w-[50%] items-center justify-end pr-[6vw]">
           <div class="relative flex h-[400px] w-[600px] items-start justify-stretch overflow-hidden bg-code-editor-one-dark-pro p-8 shadow-2xl">
             <div dangerouslySetInnerHTML={codeDisplay.value}></div>
             <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
@@ -98,11 +98,21 @@ export default component$(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-1 flex-col items-start justify-center pl-[8vw] ">
-          <h1 class="max-w-[500px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
-            Learn Web Development like you have <i>never </i>before.
+        <div class="flex w-[50%] flex-col items-start justify-center ">
+          <h1 class="max-w-[600px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
+            Learn{" "}
+            <span class="relative inline-block p-1">
+              <span
+                class={
+                  "-z-1 absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-light-yellow " +
+                  styles.animateInitialText
+                }
+              ></span>
+              <span class="relative z-10">Web Development</span>
+            </span>{" "}
+            like you have <i>never</i> before.
           </h1>
-          <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray">
+          <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray shadow-2xl">
             Get Started
           </button>
         </div>
