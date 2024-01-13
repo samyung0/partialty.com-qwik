@@ -9,6 +9,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "elysia": "^0.8.8"
+    "@elysiajs/cors": "^0.8.0",
+    "@elysiajs/cron": "^0.8.0",
+    "elysia": "^0.8.8",
+    "elysia-compression": "^0.0.7",
+    "elysia-helmet": "^1.0.1",
+    "elysia-rate-limit": "^2.0.1"
   }
 }

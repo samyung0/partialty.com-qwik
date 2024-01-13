@@ -30,6 +30,5 @@
     "postcss.config.js",
     "drizzle_turso",
     "emails"
-  ],
-  "exclude": ["doc", "bun"]
+  ]
 }
