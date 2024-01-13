@@ -1,5 +1,5 @@
 import { type BaseType } from "./base";
-import ExtendColor from "./extend/color";
+import ExtendColor from "./extend/colors";
 import ExtendFontFamily from "./extend/fontFamily";
 
 const extendedTheme = {

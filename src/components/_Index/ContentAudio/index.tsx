@@ -1,6 +1,6 @@
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 
-import { AudioPlayer } from "~/components/audioPlayer/audioPlayer";
+import { AudioPlayer } from "~/components/_Index/audioPlayer/audioPlayer";
 
 export default component$(() => {
   const playButtonClicked = useSignal(false);

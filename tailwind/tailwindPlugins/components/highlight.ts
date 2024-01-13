@@ -1,6 +1,6 @@
 import type { AddComponents, Theme } from "../index";
 
-const component = (addComponents: AddComponents, _theme: Theme) => {
+const component = (addComponents: AddComponents, theme: Theme) => {
   addComponents({
     ".highlight-yellow": {
       background: `no-repeat center url(/src/assets/svg/highlightSVG/yellow.svg)`,
