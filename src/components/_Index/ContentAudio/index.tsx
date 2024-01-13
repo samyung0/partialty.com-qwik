@@ -2,8 +2,6 @@ import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 
 import { AudioPlayer } from "~/components/audioPlayer/audioPlayer";
 
-import styles from "./index.module.css";
-
 export default component$(() => {
   const playButtonClicked = useSignal(false);
   const elapsedTime = useSignal<number>(0); // length of the audio bar
@@ -51,28 +49,46 @@ export default component$(() => {
                     <p key="row-1">
                       <strong>React</strong> is a JavaScript framework that helps build{" "}
                       <span
-                        data-text="interactive and"
-                        class={`${instantTime.value[0].highlight && styles.highlight_word}`}
+                        // data-text="interactive and"
+                        // class={`${instantTime.value[0].highlight && styles.highlight_word}`}
+                        class="relative"
                       >
-                        interactive and
+                        <span
+                          class={`${
+                            instantTime.value[0].highlight && "highlight-underline"
+                          } absolute z-10 w-full bg-background-light-gray`}
+                        >
+                          interactive and
+                        </span>
+                        <span class="relative border-b-8 border-light-yellow">interactive and</span>
                       </span>
                     </p>
                     <p key="row-2">
-                      <span
-                        data-text="reusable user interfaces"
-                        class={`${instantTime.value[1].highlight && styles.highlight_word}`}
-                      >
-                        reusable user interfaces
-                      </span>
-                      . It simplifies UI development by breaking it
+                      <span class="relative">
+                        <span
+                          class={`${
+                            instantTime.value[1].highlight && "highlight-underline"
+                          } absolute z-10 w-full bg-background-light-gray`}
+                        >
+                          reusable user interfaces.&lrm;
+                        </span>
+                        <span class="relative border-b-8 border-light-yellow">
+                          reusable user interfaces.
+                        </span>
+                      </span>{" "}
+                      It simplifies UI development by breaking it
                     </p>
                     <p key="row-3">
                       down into smaller components that{" "}
-                      <span
-                        data-text=".update efficiently"
-                        class={` ${instantTime.value[2].highlight && styles.highlight_word_2}`}
-                      >
-                        update efficiently.
+                      <span class="relative">
+                        <span
+                          class={`${
+                            instantTime.value[2].highlight && "highlight-underline"
+                          } absolute z-10 w-full bg-background-light-gray`}
+                        >
+                          update efficiently.&lrm;
+                        </span>
+                        <span class="highlight-pink-audio relative ">update efficiently.</span>
                       </span>
                     </p>
                   </div>

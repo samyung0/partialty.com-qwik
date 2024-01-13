@@ -6,6 +6,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .highlight-underline {
+    background-color: #f7f7f7;
+    direction: rtl;
+    top: -px;
+    right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    animation: highlight 1.5s ease-out forwards;
+  }
+}
+
+@keyframes highlight {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
+
 @font-face {
   font-family: "mosk";
   src: url("/font/Mosk/Mosk Ultra-Bold 900.ttf") format("truetype");
