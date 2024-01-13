@@ -1,3 +1,4 @@
 import Elysia from "elysia";
 
-export default new Elysia().get("/health", () => "OK");
+const app = new Elysia().get("/health", () => "OK");
+export default app;

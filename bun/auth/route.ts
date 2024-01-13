@@ -1,4 +1,5 @@
 import { Elysia, t } from "elysia";
+import passwordToHash from "./passwordToHash";
 import verifyHash from "./verifyHash";
 
 const app = new Elysia().group("/auth", (app) => {
@@ -12,7 +13,7 @@ const app = new Elysia().group("/auth", (app) => {
           return { error: true, message: "Bad Request" };
         }
         try {
-          const hash = await Bun.password.hash(body.password);
+          const hash = await passwordToHash(body.password);
           return { error: false, data: hash };
         } catch (e) {
           return { error: true, message: (e as any).toString() };
