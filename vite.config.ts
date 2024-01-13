@@ -24,9 +24,9 @@ export default defineConfig(() => {
         },
       }),
       qwikVite({
-        // entryStrategy: {
-        //   type: "component",
-        // },
+        entryStrategy: {
+          type: "component",
+        },
       }),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),
@@ -56,14 +56,6 @@ export default defineConfig(() => {
       headers: {
         "Cache-Control": "public, max-age=600",
       },
-    },
-    build: {
-      rollupOptions: {
-        external: ["bun"],
-      },
-    },
-    optimizeDeps: {
-      exclude: ["bun"],
     },
   };
 });

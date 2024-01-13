@@ -1,0 +1,52 @@
+import { type ExtendType } from "../extend";
+
+export default {
+  fontFamily: {
+    mosk: [
+      "mosk",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      "Helvetica Neue",
+      "Segoe UI",
+      "Arial",
+      "sans-serif",
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol",
+    ],
+    rubik: [
+      "rubik",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      "Helvetica Neue",
+      "Segoe UI",
+      "Arial",
+      "sans-serif",
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol",
+    ],
+    firaCode: [
+      "Fira Code",
+      "Menlo",
+      "Monaco",
+      "Lucida Console",
+      "Liberation Mono",
+      "DejaVu Sans Mono",
+      "Bitstream Vera Sans Mono",
+      "Courier New",
+      "monospace",
+    ],
+    cascadiaCode: [
+      "Cascadia Code",
+      "Menlo",
+      "Monaco",
+      "Lucida Console",
+      "Liberation Mono",
+      "DejaVu Sans Mono",
+      "Bitstream Vera Sans Mono",
+      "Courier New",
+      "monospace",
+    ],
+  },
+} satisfies { fontFamily: ExtendType["fontFamily"] };

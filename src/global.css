@@ -16,7 +16,7 @@
 
 /* @font-face {
   font-family: "rubik";
-  src: url("/font/Rubik/Rubik-Regular.ttf") format("truetype");
+  src: url('/font/Rubik/Rubik-Regular.ttf') format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: "rubik";
-  src: url("/font/Rubik/Rubik-Bold.ttf") format("truetype");
+  src: url('/font/Rubik/Rubik-Bold.ttf') format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -32,7 +32,7 @@
 
 /* @font-face {
   font-family: "Fira Code";
-  src: url("/font/Fira Code/FiraCode-Regular.ttf") format("truetype");
+  src: url('/font/Fira Code/FiraCode-Regular.ttf') format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -40,7 +40,7 @@
 
 @font-face {
   font-family: "Fira Code";
-  src: url("/font/Fira Code/FiraCode-Light.ttf") format("truetype");
+  src: url('/font/Fira Code/FiraCode-Light.ttf') format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -98,8 +98,8 @@ html {
   --background-end-rgb: #f7f7f7;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
   text-rendering: optimizeLegibility;
   direction: ltr;
 }

@@ -36,8 +36,8 @@ export default component$(() => {
     appearDurationUntilFullSpeed: 2000,
     disppearDurationUntilFullSpeed: 2000,
     disappearDelay: 2000, // how long the animation pauses until it shows the next snippet
-    appearDelay: 300, // how long the animation pauses until the char disappears
-    initialDelay: 300, // initial delay on animation when window loads
+    appearDelay: 2000, // how long the animation pauses until the char disappears
+    initialDelay: 0, // initial delay on animation when window loads
   });
 
   // eslint-disable-next-line qwik/no-use-visible-task
@@ -81,11 +81,10 @@ export default component$(() => {
                                 ? typeWriter.appearStart === 0
                                   ? styles.blinkingCursorDisappearing
                                   : styles.blinkingCursorAppearing
+                                : currentCharWithoutNewLine === -1 && blankCharSum === 1
+                                ? styles.blinkingCursorEmptyCode
                                 : "")
                             }
-                            // dangerouslySetInnerHTML={
-                            //   currentCharWithoutNewLine === blankCharSum ? "|" : "&nbsp;"
-                            // }
                           >
                             &nbsp;
                           </span>
