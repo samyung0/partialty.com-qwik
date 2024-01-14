@@ -177,8 +177,9 @@ const Projects = (
 
 export default component$(() => {
   return (
-    <nav class="absolute right-0 top-0 z-20 p-6 pr-[15vw]">
-      <ul class="flex items-center gap-6 text-base font-bold tracking-wide">
+    <nav class="absolute left-0 top-0 z-20 flex w-full p-6">
+      <div class="w-[50%] pr-[6vw]"></div>
+      <ul class="flex w-[50%] items-center gap-6 text-base font-bold tracking-wide">
         <li class="relative px-6 py-2 [&:hover>div]:flex [&:hover_img]:rotate-180">
           <Link prefetch href={"/"} class={"flex gap-2"}>
             <span>Courses</span>
@@ -220,7 +221,7 @@ export default component$(() => {
           </Link>
         </li>
         <li class="rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray">
-          <Link prefetch href={"/"}>
+          <Link prefetch href={"/login"}>
             Login | Signup
           </Link>
         </li>

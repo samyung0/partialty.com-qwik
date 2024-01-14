@@ -24,9 +24,9 @@ export default defineConfig(() => {
         },
       }),
       qwikVite({
-        entryStrategy: {
-          type: "component",
-        },
+        // entryStrategy: {
+        //   type: "component",
+        // },
       }),
       qwikSpeakInline({
         supportedLangs: lang.supportedLocales.map((locale) => locale.lang),

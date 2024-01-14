@@ -18,13 +18,5 @@ export const onRequest: RequestHandler = ({ request, locale, params, error }) =>
   lang =
     config.supportedLocales.find((value) => value.lang === lang)?.lang || config.defaultLocale.lang;
 
-  // cookie.set("lang", lang, {
-  //   path: "/",
-  //   maxAge: [7, "days"],
-  //   httpOnly: false,
-  //   sameSite: "lax",
-  //   secure: true,
-  // });
-
   locale(lang);
 };
