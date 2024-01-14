@@ -1,7 +1,5 @@
-/**
- * Tailwind CSS imports
- * View the full documentation at https://tailwindcss.com
- */
+@import "./animation.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -156,7 +154,6 @@ body {
   .highlight-underline {
     background-color: #f7f7f7;
     direction: rtl;
-    top: -px;
     right: 0;
     white-space: nowrap;
     overflow: hidden;

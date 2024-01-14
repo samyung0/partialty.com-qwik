@@ -4,7 +4,8 @@ import { useQwikSpeak } from "qwik-speak";
 import { config as _config } from "~/speak-config";
 import { translationFn } from "~/speak-function";
 import { RouterHead } from "./components/router-head/router-head";
-import "./global.css";
+
+import "../tailwind/css/global.css";
 
 export const themeContext = createContextId<{ value: string }>("theme");
 export const layoutContext = createContextId<{ value: string }>("layout");

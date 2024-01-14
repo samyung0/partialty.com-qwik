@@ -1,52 +1,11 @@
+import defaultTheme from "tailwindcss/defaultTheme";
 import { type ExtendType } from "../extend";
 
 export default {
   fontFamily: {
-    mosk: [
-      "mosk",
-      "-apple-system",
-      "BlinkMacSystemFont",
-      "Helvetica Neue",
-      "Segoe UI",
-      "Arial",
-      "sans-serif",
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol",
-    ],
-    rubik: [
-      "rubik",
-      "-apple-system",
-      "BlinkMacSystemFont",
-      "Helvetica Neue",
-      "Segoe UI",
-      "Arial",
-      "sans-serif",
-      "Apple Color Emoji",
-      "Segoe UI Emoji",
-      "Segoe UI Symbol",
-    ],
-    firaCode: [
-      "Fira Code",
-      "Menlo",
-      "Monaco",
-      "Lucida Console",
-      "Liberation Mono",
-      "DejaVu Sans Mono",
-      "Bitstream Vera Sans Mono",
-      "Courier New",
-      "monospace",
-    ],
-    cascadiaCode: [
-      "Cascadia Code",
-      "Menlo",
-      "Monaco",
-      "Lucida Console",
-      "Liberation Mono",
-      "DejaVu Sans Mono",
-      "Bitstream Vera Sans Mono",
-      "Courier New",
-      "monospace",
-    ],
+    mosk: ["mosk", ...defaultTheme.fontFamily.sans],
+    rubik: ["rubik", ...defaultTheme.fontFamily.sans],
+    firaCode: ["Fira Code", ...defaultTheme.fontFamily.mono],
+    cascadiaCode: ["Cascadia Code", ...defaultTheme.fontFamily.mono],
   },
-} satisfies { fontFamily: ExtendType["fontFamily"] };
+} satisfies { fontFamily: NonNullable<ExtendType["fontFamily"]> };

@@ -24,4 +24,4 @@ export default {
     dark: "#404040",
     "dark-down": "#303145",
   },
-} satisfies { colors: ExtendType["colors"] };
+} satisfies { colors: NonNullable<ExtendType["colors"]> };

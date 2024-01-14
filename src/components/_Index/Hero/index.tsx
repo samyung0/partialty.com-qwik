@@ -104,7 +104,7 @@ export default component$(() => {
             <span class="relative inline-block p-1">
               <span
                 class={
-                  "-z-1 absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-light-yellow " +
+                  "-z-1 test absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-light-yellow" +
                   styles.animateInitialText
                 }
               ></span>

@@ -6,6 +6,7 @@ export default {
   ...tailwindThemes,
   darkMode: "class",
   plugins: [
+    tailwindPlugins(),
     require("daisyui"),
     // Method 1: directly use the variant inline: theme-test:bg-red
     // however it does not work well with prettier plugin rn
@@ -16,7 +17,6 @@ export default {
     // use the theme context and conditionally adds the class name after
 
     // check components/site/navigation for exmaples
-    tailwindPlugins(),
   ],
   daisyui: {
     themes: ["light"],
