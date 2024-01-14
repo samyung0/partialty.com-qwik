@@ -36,6 +36,7 @@ export const setBioSchema = z.object({
   avatar: CloudinaryDefaultPicSchema,
   nickname: z.string().min(1).max(50, "Nickname is too long"),
   customAvatar: z.boolean(),
+  userId: z.string().min(1),
 });
 
 export type EmailLoginForm = z.infer<typeof emailLoginSchema>;
