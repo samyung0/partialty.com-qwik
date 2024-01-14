@@ -1,4 +1,5 @@
 import { qwikCity } from "@builder.io/qwik-city/vite";
+import { qwikReact } from "@builder.io/qwik-react/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
 import { qwikSpeakInline } from "qwik-speak/inline";
 import { defineConfig, type Connect } from "vite";
@@ -44,6 +45,7 @@ export default defineConfig(() => {
         },
       },
       compileTime(),
+      qwikReact(),
     ],
     // node_modules\@babel\types\lib\definitions\core.js
     define: { "process.env.BABEL_TYPES_8_BREAKING": "false" },

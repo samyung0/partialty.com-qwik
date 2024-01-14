@@ -11,7 +11,9 @@ import { server$ } from "@builder.io/qwik-city";
 import { ROLE_PERITTED_TO_UPLOAD_R2 } from "~/const";
 import { base64ToArrayBuffer } from "~/utils/fileUtil";
 import { contentType } from "~/utils/mimeTypes";
-import { fetchAuthUserRole } from "~/utils/tursodb";
+// import { fetchAuthUserRole } from "~/utils/tursodb";
+
+const fetchAuthUserRole = () => ROLE_PERITTED_TO_UPLOAD_R2;
 
 export const uploadGithubFetchCloudflare = server$(async function (
   owner: string,

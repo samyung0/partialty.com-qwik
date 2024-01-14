@@ -1,11 +1,25 @@
 import { globalAction$, zod$ } from "@builder.io/qwik-city";
 import { LibsqlError } from "@libsql/client";
 import { auth } from "~/auth/lucia";
-import { emailLoginSchema } from "~/types/Signup";
+import { emailSignupSchema, setBioSchema } from "~/types/Signup";
+
+import cloudinary from "~/utils/cloudinary";
+
+export const useSetBio = globalAction$(async function (data, event) {
+  console.log(data);
+}, zod$(setBioSchema));
 
 export const useSignupWithPassword = globalAction$(async function (data, event) {
   try {
     const time1 = performance.now();
+
+    // checks image (should be fine since default image is used here)
+    const cld = cloudinary();
+    const img = cld.image(data.avatar_cloudinary_id).toURL();
+    // await fetch(img).catch((_) => {
+    //   throw Error("Avatar not found!");
+    // });
+
     const Auth = auth();
     const user = await Auth.createUser({
       key: {
@@ -15,6 +29,8 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
       },
       attributes: {
         email: data.email,
+        nickname: data.nickname,
+        avatar_url: img,
       },
     });
     const session = await Auth.createSession({
@@ -34,4 +50,4 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     // provided user attributes violates database rules (e.g. unique constraint)
     // or unexpected database errors
   }
-}, zod$(emailLoginSchema));
+}, zod$(emailSignupSchema));

@@ -5,6 +5,8 @@ import { lucia } from "lucia";
 import { qwik } from "lucia/middleware";
 import tursoClient from "~/utils/tursoClient";
 
+import bunApp from "~/_api/bun/util/edenTreaty";
+
 let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
 let _google: ReturnType<typeof _googleAuth> | null = null;
@@ -26,7 +28,25 @@ const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"])
 const _lucia = () =>
   lucia({
     env: import.meta.env.MODE === "production" ? "PROD" : "DEV",
-
+    passwordHash: {
+      generate: async (password) => {
+        const res = await bunApp.auth.signup.passwordToHash.post({
+          time: Date.now(),
+          password,
+        });
+        if (res.error || res.data.error) throw Error(res.data?.message);
+        return res.data.data ?? "";
+      },
+      validate: async (password, hash) => {
+        const res = await bunApp.auth.login.hashToPassword.post({
+          time: Date.now(),
+          password,
+          hash,
+        });
+        if (res.error || res.data.error) throw Error(res.data?.message);
+        return !!res.data.isVerified;
+      },
+    },
     middleware: qwik(),
     adapter: libsql(tursoClient(), {
       user: "profiles",
@@ -44,6 +64,7 @@ const _lucia = () =>
         username: user.username,
         avatar_url: user.avatar_url,
         github_id: user.github_id,
+        nickname: user.nickname,
       };
     },
     getSessionAttributes: (session) => {

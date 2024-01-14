@@ -10,8 +10,9 @@ declare namespace Lucia {
     stripe_id?: string;
     created_at?: string;
     username?: string;
-    avatar_url?: string;
+    avatar_url: string;
     github_id?: number;
+    nickname: string;
   };
   type DatabaseSessionAttributes = {
     created_at?: string;

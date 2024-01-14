@@ -7,7 +7,6 @@ const app = new Elysia().group("/auth", (app) => {
     .post(
       "/signup/passwordToHash",
       async ({ body, set }) => {
-        console.log(Date.now(), body.time);
         if (Date.now() - body.time > 3 * 60 * 1000) {
           set.status = 400;
           return { error: true, message: "Bad Request" };
@@ -29,7 +28,6 @@ const app = new Elysia().group("/auth", (app) => {
     .post(
       "/login/hashToPassword",
       async ({ body, set }) => {
-        console.log(Date.now(), body.time);
         if (Date.now() - body.time > 3 * 60 * 1000) {
           set.status = 400;
           return { error: true, message: "Bad Request" };
@@ -38,7 +36,7 @@ const app = new Elysia().group("/auth", (app) => {
           if (await verifyHash(body.password, body.hash)) {
             return { error: false, isVerified: true };
           } else {
-            return { error: true, isVerified: false, message: "Incorrect Password!" };
+            return { error: false, isVerified: false, message: "Incorrect Password!" };
           }
         } catch (e) {
           return { error: true, isVerified: false, message: (e as any).toString() };
