@@ -18,9 +18,10 @@ export const onGet: RequestHandler = async (request) => {
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;
-      const attributes: any = {
+      const attributes: Lucia.DatabaseUserAttributes = {
         username: googleUser.name,
         avatar_url: googleUser.picture,
+        nickname: googleUser.name,
       };
       if (googleUser.email) attributes.email = googleUser.email;
       const user = await createUser({

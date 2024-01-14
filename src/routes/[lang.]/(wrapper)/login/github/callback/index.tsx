@@ -18,9 +18,10 @@ export const onGet: RequestHandler = async (request) => {
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;
-      const attributes: any = {
+      const attributes: Lucia.DatabaseUserAttributes = {
         username: githubUser.login,
         avatar_url: githubUser.avatar_url,
+        nickname: githubUser.login,
       };
       if (githubUser.email) attributes.email = githubUser.email;
       const user = await createUser({
