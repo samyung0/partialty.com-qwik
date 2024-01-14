@@ -221,7 +221,7 @@ export default component$(() => {
           </Link>
         </li>
         <li class="rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray">
-          <Link prefetch href={"/login"}>
+          <Link prefetch href={"/login"} class="whitespace-nowrap">
             Login | Signup
           </Link>
         </li>
