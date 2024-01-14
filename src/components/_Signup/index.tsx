@@ -274,7 +274,7 @@ export default component$(
                   </button>
                 </form>
 
-                <div class="relative my-10 mb-6 flex items-center">
+                <div class="relative my-10 mb-6 flex items-center self-stretch">
                   <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
                   <span class="px-4 tracking-wide">or</span>
                   <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
