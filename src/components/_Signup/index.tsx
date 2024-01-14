@@ -303,7 +303,7 @@ export default component$(
                   <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
                 </div>
 
-                <div class="flex items-center justify-evenly">
+                <div class="flex items-center justify-evenly self-stretch">
                   <Link class="p-4 pt-0" aria-label="Login With Google" href="/login/google/">
                     <img src={GoogleIcon} alt="Login With Google" width={55} height={55} />
                   </Link>
