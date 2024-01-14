@@ -1,5 +1,5 @@
 import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { Form, Link, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { useLoginWithPassword } from "~/auth/login";
 
 import GithubIcon from "~/assets/svg/logo-github.svg";
@@ -12,6 +12,10 @@ export default component$(() => {
     email: "",
     password: "",
     wrongInfo: "",
+  });
+  const form = useStore({
+    email: "",
+    password: "",
   });
   const nav = useNavigate();
   const isLoggingIn = useSignal(false);
@@ -30,6 +34,7 @@ export default component$(() => {
     if (loginWithPassword.status === 200) {
       nav("/members/dashboard/");
     }
+    isLoggingIn.value = false;
   });
   return (
     <section class="flex h-[100vh] items-center justify-center bg-sherbet">
@@ -37,7 +42,17 @@ export default component$(() => {
         <div>
           <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">Login</h1>
           <br />
-          <Form action={loginWithPassword} class="space-y-6">
+          <form
+            preventdefault:submit
+            onSubmit$={() => {
+              isLoggingIn.value = true;
+              loginWithPassword.submit({
+                email: form.email,
+                password: form.password,
+              });
+            }}
+            class="space-y-6"
+          >
             <div>
               <label for="email" class="cursor-pointer text-lg">
                 Email address
@@ -48,6 +63,8 @@ export default component$(() => {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  value={form.email}
+                  onInput$={(_, el) => (form.email = el.value)}
                   required
                   class={
                     "block w-[300px] rounded-md border-2 px-3 py-2 " +
@@ -67,6 +84,8 @@ export default component$(() => {
                   name="password"
                   type="password"
                   autoComplete="password"
+                  value={form.password}
+                  onInput$={(_, el) => (form.password = el.value)}
                   required
                   class={
                     "block w-[300px] rounded-md border-2 px-3 py-2 " +
@@ -82,7 +101,6 @@ export default component$(() => {
             </div>
             <br />
             <button
-              onClick$={() => (isLoggingIn.value = true)}
               disabled={isLoggingIn.value}
               type="submit"
               class="block w-full rounded-lg bg-primary-dark-gray p-4 text-background-light-gray"
@@ -109,7 +127,7 @@ export default component$(() => {
               )}
               {!isLoggingIn.value && <span>Log in</span>}
             </button>
-          </Form>
+          </form>
 
           <div class="relative my-10 mb-6 flex items-center">
             <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
