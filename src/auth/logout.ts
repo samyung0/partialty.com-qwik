@@ -10,4 +10,6 @@ export const logout = server$(async function () {
 
   await Auth.invalidateSession(session.sessionId);
   authRequest.setSession(null);
+
+  Auth.deleteDeadUserSessions(session.user.userId);
 });

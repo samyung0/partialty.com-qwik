@@ -13,6 +13,7 @@ export const profiles = sqliteTable("profiles", {
     .default(DEFAULTROLE),
   stripeId: text("stripe_id"),
   username: text("username"),
-  avatarUrl: text("avatar_url"),
+  avatarUrl: text("avatar_url").notNull(),
   githubId: blob("github_id", { mode: "bigint" }),
+  nickname: text("nickname").notNull(),
 });

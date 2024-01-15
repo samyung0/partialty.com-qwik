@@ -23,5 +23,6 @@ export default {
     mid: "#cccccc",
     dark: "#404040",
     "dark-down": "#303145",
+    tomato: "#ff6347",
   },
 } satisfies { colors: NonNullable<ExtendType["colors"]> };

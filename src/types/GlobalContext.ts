@@ -1,7 +1,7 @@
 export interface GlobalContextType {
-  isLoggedIn: boolean;
+  // isLoggedIn: boolean;
 }
 
 export const defaultValue: GlobalContextType = {
-  isLoggedIn: false,
+  // isLoggedIn: false,
 };

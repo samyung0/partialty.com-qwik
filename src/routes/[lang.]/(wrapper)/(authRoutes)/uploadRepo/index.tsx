@@ -1,7 +1,7 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { z } from "@builder.io/qwik-city";
+import { Link, z } from "@builder.io/qwik-city";
 import { globalContext } from "~/context/globalContext";
-import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
+import { test, uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
@@ -10,7 +10,7 @@ export default component$(() => {
   const context = useContext(globalContext);
 
   useVisibleTask$(() => {
-    console.log(context);
+    // console.log(context);
     // downloadGithubFetchCloudflareClient("samyung0", "Template_react_1").then (x => {
     //   console.log(x);
     // })
@@ -51,8 +51,13 @@ export default component$(() => {
     });
   });
 
+  useVisibleTask$(() => {
+    test();
+  });
+
   return (
     <div ref={imgRef}>
+      <Link href={"/uploadRepo/github/"}>Click</Link>
       <form
         class="flex flex-col items-start gap-4 p-10"
         preventdefault:submit

@@ -15,7 +15,8 @@
     "elysia": "^0.8.8",
     "elysia-compression": "^0.0.7",
     "elysia-helmet": "^1.0.1",
-    "elysia-ip": "^0.0.5",
-    "elysia-rate-limit": "^2.0.1"
+    "elysia-rate-limit": "^2.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "octokit": "^3.1.2"
   }
 }

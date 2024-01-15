@@ -2,6 +2,7 @@
 // it is not systematic at this moment
 // if new routes are added, redirecting needs to be added again for that layout
 
+import { ROLES_PERITTED_TO_UPLOAD_R2 } from "~/const";
 import { profiles } from "../../drizzle_turso/schema/profiles";
 
 export const protectedRoutes: {
@@ -28,7 +29,7 @@ export const protectedRoutes: {
   },
   {
     path: "/uploadRepo",
-    authRolesPermitted: profiles.role.enumValues,
+    authRolesPermitted: ROLES_PERITTED_TO_UPLOAD_R2,
     redirectTo: "/login/",
   },
 ];
