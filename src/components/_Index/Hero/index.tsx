@@ -48,6 +48,9 @@ export default component$(() => {
       }, typeWriter.initialDelay);
     }
   });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+
   let blankCharSum = 0,
     currentCharWithoutNewLine = typeWriter.currentChar + 1;
   return (

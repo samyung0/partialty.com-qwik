@@ -14,6 +14,9 @@ export default async (
   typeWriter.displayCode = codeBlock[name];
   typeWriter.blankCharArr = blankChar[`${name}BlankChar`];
   typeWriter.revealedCharArr = Array(blankChar[`${name}BlankChar`].length).fill(0);
+  console.log(typeWriter.blankCharArr);
+  console.log(typeWriter.revealedCharArr);
+
   typeWriter.totalChar = typeWriter.displayCode.length;
   codeDisplay.value = rendered[`${name}Rendered`];
 };

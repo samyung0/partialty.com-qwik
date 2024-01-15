@@ -16,10 +16,13 @@ const animateHide = async (
     typeWriter.previousTimeStamp = timeStamp;
   }
   if (
-    typeWriter.currentChar < 0 &&
+    typeWriter.currentChar < 10 &&
     typeWriter.timeAfterAnimationFinished >= typeWriter.appearDelay
   ) {
+    console.log("Hide Yes");
+
     typeWriter.currentChar = 0;
+    typeWriter.currentRow = 0;
     typeWriter.disappearStart = 0;
     typeWriter.previousTimeStamp = 0;
     typeWriter.timeAfterAnimationFinished = 0;
@@ -28,7 +31,7 @@ const animateHide = async (
     window.requestAnimationFrame(animateShow.bind(null, typeWriter, codeDisplay, rendered));
     return;
   }
-  if (typeWriter.currentChar >= 0) {
+  if (typeWriter.currentChar >= 10) {
     if (timeStamp - typeWriter.previousTimeStamp < 100) {
       // if the tab is inactive, we will pause the animation
       typeWriter.timeAfterLastChar += timeStamp - typeWriter.previousTimeStamp;
@@ -46,7 +49,10 @@ const animateHide = async (
         typeWriter.timeAfterLastChar -= interval;
       }
     }
-  } else typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
+  } else {
+    typeWriter.timeAfterAnimationFinished += timeStamp - typeWriter.previousTimeStamp;
+    console.log("Hide No");
+  }
   typeWriter.previousTimeStamp = timeStamp;
   window.requestAnimationFrame(animateHide.bind(null, typeWriter, codeDisplay, rendered));
 };
