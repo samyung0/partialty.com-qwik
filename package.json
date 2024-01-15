@@ -111,7 +111,6 @@
     "elysia": "^0.8.8",
     "elysia-compression": "^0.0.7",
     "elysia-helmet": "^1.0.1",
-    "elysia-ip": "^0.0.5",
     "elysia-rate-limit": "^2.0.1",
     "lodash.isequal": "^4.5.0",
     "lucia": "^2.7.6",

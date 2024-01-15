@@ -1,9 +1,22 @@
 import { Elysia, t } from "elysia";
+import generateJWTForGithub from "./generateJWTForGithub";
 import passwordToHash from "./passwordToHash";
 import verifyHash from "./verifyHash";
 
 const app = new Elysia().group("/auth", (app) => {
   return app
+    .post(
+      "/githubApp/generateJWT",
+      async ({ body }) => {
+        const jwt = await generateJWTForGithub(body.id);
+        return jwt;
+      },
+      {
+        body: t.Object({
+          id: t.String(),
+        }),
+      }
+    )
     .post(
       "/signup/passwordToHash",
       async ({ body, set }) => {

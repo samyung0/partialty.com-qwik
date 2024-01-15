@@ -8,12 +8,8 @@ import { type FetchedFile } from "~/utils/uploadGithubFetchCloudflareClient";
 
 import { server$ } from "@builder.io/qwik-city";
 
-import { ROLE_PERITTED_TO_UPLOAD_R2 } from "~/const";
 import { base64ToArrayBuffer } from "~/utils/fileUtil";
 import { contentType } from "~/utils/mimeTypes";
-// import { fetchAuthUserRole } from "~/utils/tursodb";
-
-const fetchAuthUserRole = () => ROLE_PERITTED_TO_UPLOAD_R2;
 
 export const uploadGithubFetchCloudflare = server$(async function (
   owner: string,
@@ -21,11 +17,6 @@ export const uploadGithubFetchCloudflare = server$(async function (
   branch: string,
   files: FetchedFile[]
 ): Promise<[boolean, string]> {
-  const role = await fetchAuthUserRole.bind(this)();
-  if (role !== ROLE_PERITTED_TO_UPLOAD_R2) {
-    return [false, "Unauthed"];
-  }
-
   const url = `${owner}-${repo}-${branch}/`;
   const bucket = this.env.get("R2_FETCHGITHUB_BUCKET");
 

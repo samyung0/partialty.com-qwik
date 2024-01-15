@@ -3,7 +3,7 @@ import { cron } from "@elysiajs/cron";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { helmet } from "elysia-helmet";
-import { ip } from "elysia-ip";
+// import { ip } from "elysia-ip";
 import { rateLimit } from "elysia-rate-limit";
 import AuthRoute from "./auth/route";
 import HealthRoute from "./health/route";
@@ -12,7 +12,7 @@ const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];
 
 const app = new Elysia()
-  .use(ip())
+  // .use(ip())
   .use(
     rateLimit({
       duration: 10000,
@@ -42,6 +42,9 @@ const app = new Elysia()
   .use(helmet())
   .use(HealthRoute)
   .use(AuthRoute)
+  .post("/idk", ({ body }) => {
+    console.log(body);
+  })
   .listen(port)
   .onError(({ code, error }) => {
     return new Response(error.toString());

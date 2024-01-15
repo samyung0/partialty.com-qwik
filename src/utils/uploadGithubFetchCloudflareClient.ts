@@ -1,3 +1,4 @@
+import { server$ } from "@builder.io/qwik-city";
 import { graphql } from "@octokit/graphql";
 import { request } from "@octokit/request";
 
@@ -22,6 +23,16 @@ export const uploadRepoToCloudflare = async (
 
   return await uploadGithubFetchCloudflare(owner, repo, branch, data[1] as FetchedFile[]);
 };
+
+export const test = server$(async function () {
+  console.log("hello");
+  const res = await request("GET /users/samyung0/repos", {
+    headers: {
+      authorization: `Bearer ${this.cookie.get("github_access_token")!.value}`,
+    },
+  });
+  // console.log("RES", res.data);
+});
 
 const directFetchGithub = async (
   owner: string,
