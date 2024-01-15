@@ -14,11 +14,6 @@ const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost
 const app = new Elysia()
   // .use(ip())
   .use(
-    rateLimit({
-      duration: 10000,
-    })
-  )
-  .use(
     cors({
       origin: (request) => {
         const origin = request.headers.get("origin");
@@ -28,7 +23,11 @@ const app = new Elysia()
       },
     })
   )
-  // .use(ip()) //currently does not have any types
+  .use(
+    rateLimit({
+      duration: 10000,
+    })
+  )
   .use(
     cron({
       name: "heartbeat",

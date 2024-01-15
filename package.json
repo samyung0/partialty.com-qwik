@@ -115,7 +115,7 @@
     "lodash.isequal": "^4.5.0",
     "lucia": "^2.7.6",
     "mime-db": "^1.52.0",
-    "octokit": "^3.1.1",
+    "octokit": "^3.1.2",
     "qwik-ionicons": "^1.0.5",
     "qwik-transition": "^0.0.7",
     "react-dom": "^18.2.0",

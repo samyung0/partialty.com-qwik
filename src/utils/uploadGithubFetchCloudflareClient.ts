@@ -25,13 +25,12 @@ export const uploadRepoToCloudflare = async (
 };
 
 export const test = server$(async function () {
-  console.log("hello");
-  const res = await request("GET /users/samyung0/repos", {
+  const res = await request("GET /users/samyung999/repos?type=private", {
     headers: {
       authorization: `Bearer ${this.cookie.get("github_access_token")!.value}`,
     },
   });
-  // console.log("RES", res.data);
+  console.log("RES", res.data);
 });
 
 const directFetchGithub = async (

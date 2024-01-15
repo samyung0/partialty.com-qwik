@@ -18,6 +18,7 @@ export const onGet: RequestHandler = async (request) => {
     // console.log(request.env.get("GITHUB_REPO_ID"), request.env.get("GITHUB_REPO_SECRET"), code);
     const jwt = await bunApp.auth.githubApp.generateJWT.post({
       id: request.env.get("GITHUB_REPO_APPID")!,
+      installationId,
     });
     if (jwt.error) throw Error("Server Error! Please try again later");
     const res = await fetch(

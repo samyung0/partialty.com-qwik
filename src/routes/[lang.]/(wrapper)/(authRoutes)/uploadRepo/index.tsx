@@ -1,7 +1,7 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Link, z } from "@builder.io/qwik-city";
 import { globalContext } from "~/context/globalContext";
-import { uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
+import { test, uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
 export default component$(() => {
   const message = useSignal("");
@@ -51,10 +51,9 @@ export default component$(() => {
     });
   });
 
-  // useVisibleTask$(() => {
-  //   console.log("wtf");
-  //   test();
-  // })
+  useVisibleTask$(() => {
+    test();
+  });
 
   return (
     <div ref={imgRef}>
