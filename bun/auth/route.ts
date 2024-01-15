@@ -24,6 +24,7 @@ const app = new Elysia().group("/auth", (app) => {
         });
         const repos = await octokit.request("GET /search/repositories", {
           q: "user:samyung0",
+          per_page: 999,
         });
         console.log("REPOS", repos.data.total_count, repos.data.incomplete_results);
       },
