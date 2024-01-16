@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "dfb35fd8-7cf6-488a-a053-28d1312ea4d6",
+  "id": "618d58d1-1791-4f83-8e93-b4cc4f3f1463",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "email_verification_token": {
@@ -23,11 +23,10 @@
         },
         "expires": {
           "name": "expires",
-          "type": "integer",
+          "type": "blob",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -121,6 +120,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "google_id": {
+          "name": "google_id",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "nickname": {
           "name": "nickname",
           "type": "text",
@@ -137,13 +143,7 @@
           "default": false
         }
       },
-      "indexes": {
-        "profiles_email_unique": {
-          "name": "profiles_email_unique",
-          "columns": ["email"],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
