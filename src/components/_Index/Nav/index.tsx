@@ -102,6 +102,7 @@ export default component$(() => {
     avatarUrl: "",
   });
 
+  getUser;
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     const res = await getUser();
