@@ -23,7 +23,7 @@ export const onGet: RequestHandler = async (request) => {
         avatar_url: googleUser.picture,
         nickname: googleUser.name,
       };
-      if (googleUser.email) attributes.email = googleUser.email;
+      if (googleUser.email && googleUser.email_verified) attributes.email = googleUser.email;
       const user = await createUser({
         attributes,
       });

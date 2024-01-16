@@ -15,6 +15,7 @@ const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"],
   google(lucia, {
     clientId: env.get("GOOGLE_ID")!,
     clientSecret: env.get("GOOGLE_SECRET")!,
+    scope: ["email"],
     redirectUri: origin + "/login/google/callback/",
   });
 
@@ -23,10 +24,7 @@ const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"],
     clientId: env.get("GITHUB_ID")!,
     clientSecret: env.get("GITHUB_SECRET")!,
     scope: ["user"],
-    redirectUri:
-      import.meta.env.MODE === "production"
-        ? origin + "/login/github/callback/"
-        : "http://localhost:5173/login/github/callback/",
+    redirectUri: origin + "/login/github/callback/",
   });
 
 const _lucia = () =>
@@ -79,6 +77,7 @@ const _lucia = () =>
   });
 
 export const initLuciaIfNeeded = async (env: RequestEvent["env"], origin: string) => {
+  console.log(origin);
   if (!_auth) {
     _auth = _lucia();
   }

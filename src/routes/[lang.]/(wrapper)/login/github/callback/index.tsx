@@ -13,7 +13,8 @@ export const onGet: RequestHandler = async (request) => {
   }
 
   try {
-    const { getExistingUser, githubUser, createUser } = await githubAuth().validateCallback(code);
+    const { getExistingUser, githubUser, createUser, githubTokens } =
+      await githubAuth().validateCallback(code);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();
@@ -23,7 +24,16 @@ export const onGet: RequestHandler = async (request) => {
         avatar_url: githubUser.avatar_url,
         nickname: githubUser.login,
       };
-      if (githubUser.email) attributes.email = githubUser.email;
+      const emails = await fetch("https://api.github.com/user/emails", {
+        headers: {
+          Authorization: `Bearer ${githubTokens.accessToken}`,
+        },
+      }).then((res) => res.json());
+      const primaryEmail = emails.filter(
+        (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) =>
+          email.primary
+      )[0];
+      if (primaryEmail && primaryEmail.verified) attributes.email = primaryEmail.email;
       const user = await createUser({
         attributes,
       });
