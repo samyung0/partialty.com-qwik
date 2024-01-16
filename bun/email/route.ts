@@ -23,6 +23,7 @@ const app = new Elysia().group("/mail", (app) => {
   return app.post(
     "/sendMail/verifyMail",
     async ({ body, headers }) => {
+      console.log(headers);
       if (!headers["upstash-signature"]) throw Error("Server Error!");
 
       const r = new Receiver({
