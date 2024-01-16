@@ -22,7 +22,7 @@ const senderName = "Partialty";
 const app = new Elysia().group("/mail", (app) => {
   return app.post(
     "/sendMail/verifyMail",
-    async ({ body, headers }) => {
+    async ({ body, headers, request }) => {
       if (!headers["upstash-signature"]) throw Error("Server Error!");
 
       const r = new Receiver({
@@ -35,11 +35,11 @@ const app = new Elysia().group("/mail", (app) => {
       const isValid = await r
         .verify({
           signature: headers["upstash-signature"],
-          body: JSON.stringify(body),
+          body: await request.text(),
           clockTolerance: 1,
         })
         .catch((e) => {
-          console.log("NOPE", e);
+          throw new Error("Server Error!");
         });
 
       if (!isValid) throw new Error("Server Error!");
