@@ -1,6 +1,6 @@
 import type { Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { Form, Link, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { useSetBio, useSignupWithPassword } from "~/auth/signup";
 
 import GithubIcon from "~/assets/svg/logo-github.svg";
@@ -334,7 +334,7 @@ export default component$(
                   Let's make a funny profile.
                 </h1>
                 <br />
-                <Form class="relative space-y-6">
+                <form preventdefault:submit class="relative space-y-6">
                   <div class="absolute right-0 top-0 flex flex-col gap-2 p-2">
                     <button type="button" onClick$={restoreOriginalAvatar}>
                       <img
@@ -428,7 +428,7 @@ export default component$(
                     )}
                     {!loadingStepTwo.value && <span>Sign up</span>}
                   </button>
-                </Form>
+                </form>
               </div>
             </div>
           </div>
