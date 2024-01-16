@@ -53,7 +53,7 @@ const app = new Elysia().group("/mail", (app) => {
       const resend = new Resend(Bun.env.RESEND_API_KEY!);
 
       const emailRes = await resend.emails.send({
-        from: "automatic@partialty.com",
+        from: "Partial <automatic@partialty.com>",
         to: content.receiverEmail,
         subject: "Verify Your Partialty Account",
         html: res,
