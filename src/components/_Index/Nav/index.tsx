@@ -1,10 +1,8 @@
 import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { Link, server$ } from "@builder.io/qwik-city";
+import { Link } from "@builder.io/qwik-city";
 
 import ArrowDown from "~/assets/svg/caret-down-outline.svg";
-import { auth, initLuciaIfNeeded } from "~/auth/lucia";
-import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
-import { initTursoIfNeeded } from "~/utils/tursoClient";
+import getUser from "~/components/_Index/Nav/getUser";
 
 const Courses = (
   <div class="rounded-md border-4 border-primary-dark-gray bg-primary-dark-gray text-background-light-gray">
@@ -106,17 +104,7 @@ export default component$(() => {
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    const res = await server$(async function () {
-      try {
-        await initTursoIfNeeded(this.env);
-        await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(this.env, this.url.origin)]);
-        const authRequest = auth().handleRequest(this);
-        const session = await authRequest.validate();
-        return session;
-      } catch (e) {
-        /* empty */
-      }
-    })();
+    const res = await getUser();
     login.isLoading = false;
     if (res) {
       login.isLoggedIn = true;
@@ -178,7 +166,7 @@ export default component$(() => {
           </span>
         ) : login.isLoggedIn ? (
           <li>
-            <Link prefetch href={"/profile/"} aria-label="Go to profile">
+            <Link prefetch href={"/members/dashboard/"} aria-label="Go to profile">
               <img
                 src={login.avatarUrl}
                 alt="Avatar"

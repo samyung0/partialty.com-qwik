@@ -11,20 +11,26 @@ let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
 let _google: ReturnType<typeof _googleAuth> | null = null;
 
-const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], origin: string) =>
+const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], _origin: string) =>
   google(lucia, {
     clientId: env.get("GOOGLE_ID")!,
     clientSecret: env.get("GOOGLE_SECRET")!,
     scope: ["email"],
-    redirectUri: origin + "/login/google/callback/",
+    redirectUri:
+      import.meta.env.MODE === "production"
+        ? "https://www.partialty.com/login/google/callback/"
+        : "http://localhost:5173/login/google/callback/",
   });
 
-const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], origin: string) =>
+const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], _origin: string) =>
   github(lucia, {
     clientId: env.get("GITHUB_ID")!,
     clientSecret: env.get("GITHUB_SECRET")!,
     scope: ["user"],
-    redirectUri: origin + "/login/github/callback/",
+    redirectUri:
+      import.meta.env.MODE === "production"
+        ? "https://www.partialty.com/login/github/callback/"
+        : "http://localhost:5173/login/github/callback/",
   });
 
 const _lucia = () =>
