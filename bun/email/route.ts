@@ -30,11 +30,17 @@ const app = new Elysia().group("/mail", (app) => {
         nextSigningKey: Bun.env.QSTASH_NEXT_SIGNING_KEY!,
       });
 
-      const isValid = await r.verify({
-        signature: headers["upstash-signature"],
-        body: JSON.stringify(body),
-        clockTolerance: 1,
-      });
+      console.log("BeforeVerify");
+
+      const isValid = await r
+        .verify({
+          signature: headers["upstash-signature"],
+          body: JSON.stringify(body),
+          clockTolerance: 1,
+        })
+        .catch((e) => {
+          console.log("NOPE", e);
+        });
 
       if (!isValid) throw new Error("Server Error!");
 
