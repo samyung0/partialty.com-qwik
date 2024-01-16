@@ -36,7 +36,7 @@ export const useSetBio = globalAction$(async function (data, event) {
   try {
     await drizzle
       .update(profiles)
-      .set({ avatarUrl: secure_url, nickname: data.nickname })
+      .set({ avatar_url: secure_url, nickname: data.nickname })
       .where(eq(profiles.id, data.userId));
 
     const Auth = auth();
@@ -72,10 +72,14 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
         email: data.email,
         nickname: data.nickname,
         avatar_url: img,
+        email_verified: false,
       },
     });
 
     console.log("Time taken to signup: ", performance.now() - time1);
+
+    // const emailToken = await generateEmailTokens(user.userId);
+    // const verifyLink = import.meta.env.MODE === "production" ? `https://`
 
     return user;
   } catch (e: any) {

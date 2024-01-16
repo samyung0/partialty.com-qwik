@@ -1,6 +1,7 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import { auth, googleAuth } from "~/auth/lucia";
+import type { Lucia } from "~/lucia";
 
 export const onGet: RequestHandler = async (request) => {
   const storedState = request.cookie.get("google_oauth_state")?.value;
@@ -15,6 +16,8 @@ export const onGet: RequestHandler = async (request) => {
   try {
     const { getExistingUser, googleUser, createUser } = await googleAuth().validateCallback(code);
 
+    console.log(googleUser);
+
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;
@@ -22,8 +25,13 @@ export const onGet: RequestHandler = async (request) => {
         username: googleUser.name,
         avatar_url: googleUser.picture,
         nickname: googleUser.name,
+        email_verified: false,
+        google_id: BigInt(googleUser.sub),
       };
-      if (googleUser.email && googleUser.email_verified) attributes.email = googleUser.email;
+      if (googleUser.email && googleUser.email_verified) {
+        attributes.email = googleUser.email;
+        attributes.email_verified = true;
+      }
       const user = await createUser({
         attributes,
       });

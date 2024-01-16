@@ -1,0 +1,10 @@
+{
+  "name": "react-email",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "email dev"
+  },
+  "author": "",
+  "license": "ISC"
+}

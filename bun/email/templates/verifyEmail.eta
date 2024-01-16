@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<html dir="ltr" lang="en">
+
+  <head>
+    <style>
+      @font-face {
+        font-family: 'Varela Round';
+        font-style: normal;
+        font-weight: 400;
+        mso-font-alt: 'sans-serif';
+        src: url(https://fonts.gstatic.com/s/varelaround/v20/w8gdH283Tvk__Lua32TysjIfpcuPP9g.woff2) format('woff2');
+      }
+
+      * {
+        font-family: 'Varela Round', sans-serif;
+      }
+    </style>
+  </head>
+  <div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">Verify your Email Address to make your account more secure and link your account with other Google or Github accounts.<div> ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿</div>
+  </div>
+
+  <body style="margin:0px;padding:0px;color:rgb(31,41,55)">
+    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-height:100vh;min-height:100vh;overflow:auto;background-color:rgb(111,220,191);padding-top:100px;padding-bottom:100px">
+      <tbody>
+        <tr>
+          <td>
+            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;border-radius:1rem;background-color:rgb(31,41,55);padding:2.5rem">
+              <tbody>
+                <tr style="width:100%">
+                  <td>
+                    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
+                      <tbody style="width:100%">
+                        <tr style="width:100%">
+                          <h1 style="padding-bottom:1.25rem;font-size:1.875rem;line-height:2.25rem;font-weight:700;letter-spacing:0.025em;color:rgb(247,247,247)">Partialty.com</h1>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
+                      <tbody style="width:100%">
+                        <tr style="width:100%">
+                          <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;border-radius:1rem;background-color:rgb(247,247,247);padding:2rem">
+                            <tbody>
+                              <tr style="width:100%">
+                                <td>
+                                  <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="padding-top:3rem;padding-bottom:3rem">
+                                    <tbody style="width:100%">
+                                      <tr style="width:100%">
+                                        <td align="center" data-id="__react-email-column"><a style="color:#067df7;text-decoration:none" target="_blank" href="<%= it.verifyLink %>"><img alt="Mail" height="100" src="https://res.cloudinary.com/dhthx6tn6/image/upload/v1705394184/emailTemplates/mail-outline_sqmt9c.png" style="display:block;outline:none;border:none;text-decoration:none" width="100" />
+                                            <p style="font-size:1.125rem;line-height:1.75rem;margin:16px 0;margin-top:0.5rem;border-radius:0.75rem;background-color:rgb(252,211,77);padding-left:2rem;padding-right:2rem;padding-top:0.5rem;padding-bottom:0.5rem;font-weight:700;letter-spacing:0.025em;display:inline-block;color:rgb(31,41,55)">Verify Email Address</p>
+                                          </a></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation">
+                                    <tbody style="width:100%">
+                                      <tr style="width:100%">
+                                        <td data-id="__react-email-column">
+                                          <p style="font-size:1.25rem;line-height:1.75rem;margin:16px 0;font-weight:700;letter-spacing:0.025em">Congratulations!</p>
+                                          <p style="font-size:14px;line-height:24px;margin:16px 0;display:inline;letter-spacing:0.025em">Looks like you have successfully created a new account. To secure your account and&nbsp;</p>
+                                          <p style="font-size:14px;line-height:24px;margin:16px 0;display:inline;border-bottom-width:4px;border-left-width:0px;border-right-width:0px;border-top-width:0px;border-style:solid;border-color:rgb(174,143,219);letter-spacing:0.025em">connect your other google or github accounts</p>
+                                          <p style="font-size:14px;line-height:24px;margin:16px 0;display:inline;letter-spacing:0.025em">, please verify your account by clicking on the link above.</p>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="padding-top:3rem">
+                            <tbody style="width:100%">
+                              <tr style="width:100%">
+                                <td data-id="__react-email-column" style="color:rgb(247,247,247)">
+                                  <p style="font-size:0.75rem;line-height:1rem;margin:16px 0">This is an automatically generated email. Please do not reply.</p>
+                                  <p style="font-size:0.75rem;line-height:1rem;margin:16px 0">Copyright © 2024 Partialty</p>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+
+</html>

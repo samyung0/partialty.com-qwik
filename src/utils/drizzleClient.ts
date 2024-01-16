@@ -1,13 +1,11 @@
 import { type Client } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 import tursoClient from "~/utils/tursoClient";
-import { profiles } from "../../drizzle_turso/schema/profiles";
-import { user_key } from "../../drizzle_turso/schema/user_key";
-import { user_session } from "../../drizzle_turso/schema/user_session";
+import schemaExport from "../../drizzle_turso/schemaExport";
 
 let client: ReturnType<typeof init> | null = null;
 
-const init = (client: Client) => drizzle(client, { schema: { profiles, user_key, user_session } });
+const init = (client: Client) => drizzle(client, { schema: schemaExport });
 
 export const initDrizzleIfNeeded = async () => {
   if (!client) {

@@ -8,11 +8,13 @@ if (!process.env.TURSO_TOKEN)
 
 export default {
   schema: "./drizzle_turso/schema/*",
-  out: "./drizzle_turso/drizzle",
+  out: "./drizzle_turso/drizzle_dev",
   driver: "turso",
   dbCredentials: {
     // url: "file:./drizzle_turso/local.db"
     url: process.env.TURSO_URL,
     authToken: process.env.TURSO_TOKEN,
   },
+  verbose: true,
+  strict: true,
 } satisfies Config;

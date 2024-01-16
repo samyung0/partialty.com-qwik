@@ -35,30 +35,7 @@ Now for each page under Root (excluding Root), it will try to look for the expor
 
 ### Switching Locale
 
-```js
-// changing by cookies
-export const storeLocaleCookie = server$(function (lang: string) {
-  const url = new URL(window.location.href);
-  url.searchParams.delete("lang");
-  this.cookie.set("lang", lang, {
-    path: "/",
-    maxAge: [7, "days"],
-    httpOnly: false,
-    sameSite: "lax",
-    secure: true,
-  });
-});
-storeLocaleCookie(newLocale.lang).then(() => (location.href = url.href));
-
-// changing by params
-const url = new URL(location.href);
-url.searchParams.set("lang", newLocale.lang);
-location.href = url.toString();
-```
-
-Locale Resolution order:
-
-> URL search params > cookie > request header > default locale
+- **TODO**
 
 **To add a page that supports internationalization:**
 
@@ -287,7 +264,9 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## TODO
 
-- **Use onchange from webcontainer instead of chokidar**
+- **Linking multiple accounts with same verified email**
+
+- **Use onchange from webcontainer instead of chokidar (need node v20 !!)**
 
 - **Add browser version check**
 
@@ -297,9 +276,7 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
   We can then set vite compile target accordingly
 
-- **Caching Fetched Github Data**
-
-  When a user fetches github repo files and uploads to Cloudflare R2, the github files will permanenetly cache in the users computer. We need to allow the user to clear the cache so new content can be fetched.
+- **Installing github app and fetching repo**
 
 - **Consider switching from webcontainer to sandpack by codesandbox**
 

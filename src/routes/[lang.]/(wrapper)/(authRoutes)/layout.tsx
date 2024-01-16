@@ -1,5 +1,6 @@
 import { Slot, component$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
+import type { Session } from "lucia";
 import { auth, initLuciaIfNeeded } from "~/auth/lucia";
 import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { checkProtectedPath } from "~/utils/redirect";
@@ -25,7 +26,13 @@ export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = auth().handleRequest(event);
 
   const time1 = performance.now();
-  const session = await authRequest.validate();
+  let session: Session | null = null;
+  try {
+    session = await authRequest.validate();
+  } catch (e) {
+    /* empty */
+  }
+
   console.log("Time to validate session: ", performance.now() - time1);
 
   const [shouldRedirect, redirectTo] = checkProtectedPath(

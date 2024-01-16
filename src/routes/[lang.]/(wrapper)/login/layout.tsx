@@ -1,4 +1,5 @@
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
+import type { Session } from "lucia";
 import { auth, initLuciaIfNeeded } from "~/auth/lucia";
 import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { checkProtectedPath } from "~/utils/redirect";
@@ -8,7 +9,12 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = auth().handleRequest(event);
 
-  const session = await authRequest.validate();
+  let session: Session | null = null;
+  try {
+    session = await authRequest.validate();
+  } catch (e) {
+    /* empty */
+  }
 
   const [shouldRedirect, redirectTo] = checkProtectedPath(
     event.url.pathname,

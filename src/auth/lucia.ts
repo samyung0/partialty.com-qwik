@@ -67,6 +67,7 @@ const _lucia = () =>
         avatar_url: user.avatar_url,
         github_id: user.github_id,
         nickname: user.nickname,
+        email_verified: user.email_verified,
       };
     },
     getSessionAttributes: (session) => {
@@ -77,7 +78,6 @@ const _lucia = () =>
   });
 
 export const initLuciaIfNeeded = async (env: RequestEvent["env"], origin: string) => {
-  console.log(origin);
   if (!_auth) {
     _auth = _lucia();
   }

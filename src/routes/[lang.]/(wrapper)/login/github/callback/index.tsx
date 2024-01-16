@@ -1,6 +1,7 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import { auth, githubAuth } from "~/auth/lucia";
+import type { Lucia } from "~/lucia";
 
 export const onGet: RequestHandler = async (request) => {
   const storedState = request.cookie.get("github_oauth_state")?.value;
@@ -16,6 +17,8 @@ export const onGet: RequestHandler = async (request) => {
     const { getExistingUser, githubUser, createUser, githubTokens } =
       await githubAuth().validateCallback(code);
 
+    console.log(githubUser);
+
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;
@@ -23,6 +26,8 @@ export const onGet: RequestHandler = async (request) => {
         username: githubUser.login,
         avatar_url: githubUser.avatar_url,
         nickname: githubUser.login,
+        email_verified: false,
+        github_id: BigInt(githubUser.id),
       };
       const emails = await fetch("https://api.github.com/user/emails", {
         headers: {
@@ -33,7 +38,10 @@ export const onGet: RequestHandler = async (request) => {
         (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) =>
           email.primary
       )[0];
-      if (primaryEmail && primaryEmail.verified) attributes.email = primaryEmail.email;
+      if (primaryEmail && primaryEmail.verified) {
+        attributes.email = primaryEmail.email;
+        attributes.email_verified = true;
+      }
       const user = await createUser({
         attributes,
       });
