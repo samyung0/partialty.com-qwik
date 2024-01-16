@@ -22,7 +22,7 @@ const senderName = "Partialty";
 const app = new Elysia().group("/mail", (app) => {
   return app.post(
     "/sendMail/verifyMail",
-    async ({ body, headers, request }) => {
+    async ({ body, headers }) => {
       if (!headers["upstash-signature"]) throw Error("Server Error!");
 
       const r = new Receiver({
@@ -30,9 +30,8 @@ const app = new Elysia().group("/mail", (app) => {
         nextSigningKey: Bun.env.QSTASH_NEXT_SIGNING_KEY!,
       });
 
-      console.log("BeforeVerify");
-      const content = await request.text();
-      console.log("content:", content);
+      const content = JSON.parse(body as any);
+      if (!content.verifyLink || !content.receiverEmail) throw new Error("server Error");
 
       const isValid = await r
         .verify({
@@ -49,13 +48,13 @@ const app = new Elysia().group("/mail", (app) => {
       console.log("OK");
 
       const res = eta.render("verifyEmail.eta", {
-        verifyLink: body.verifyLink,
+        verifyLink: content.verifyLink,
       });
       let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
       sendSmtpEmail.subject = "Verify Your Partialty Account";
       sendSmtpEmail.htmlContent = res;
       sendSmtpEmail.sender = { email: senderMail, name: senderName };
-      sendSmtpEmail.to = [{ email: body.receiverEmail }];
+      sendSmtpEmail.to = [{ email: content.receiverEmail }];
       await apiInstance.sendTransacEmail(sendSmtpEmail).then(
         (data) => {
           console.log("API called successfully. Returned data: " + data.body.messageId);
@@ -71,10 +70,10 @@ const app = new Elysia().group("/mail", (app) => {
       };
     },
     {
-      body: t.Object({
-        verifyLink: t.String(),
-        receiverEmail: t.String(),
-      }),
+      async parse(ctx) {
+        return await ctx.request.text();
+      },
+      body: t.Not(t.Undefined()),
     }
   );
 });
