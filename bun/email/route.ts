@@ -52,12 +52,14 @@ const app = new Elysia().group("/mail", (app) => {
       });
       const resend = new Resend(Bun.env.RESEND_API_KEY!);
 
-      resend.emails.send({
+      const emailRes = await resend.emails.send({
         from: "automatic@partialty.com",
         to: content.receiverEmail,
         subject: "Verify Your Partialty Account",
         html: res,
       });
+
+      console.log(emailRes);
 
       // let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
       // sendSmtpEmail.subject = "Verify Your Partialty Account";
