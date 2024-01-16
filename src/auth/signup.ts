@@ -4,6 +4,7 @@ import { auth } from "~/auth/lucia";
 import { emailSignupSchema, setBioSchema } from "~/types/Signup";
 
 import { eq } from "drizzle-orm";
+import generateEmailTokens from "~/auth/generateEmailTokens";
 import cloudinary from "~/utils/cloudinary";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../drizzle_turso/schema/profiles";
@@ -78,13 +79,39 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
 
     console.log("Time taken to signup: ", performance.now() - time1);
 
-    // const emailToken = await generateEmailTokens(user.userId);
+    if (!event.env.get("QSTASH_URL") || !event.env.get("QSTASH_TOKEN")) {
+      console.error("Unable to send verification email!");
+    }
+
+    const emailToken = await generateEmailTokens(user.userId);
+    const res = await fetch(
+      event.env.get("QSTASH_URL")! + "https://api.partialty.com/mail/sendMail/verifyMail",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${event.env.get("QSTASH_TOKEN")!}`,
+        },
+        body: JSON.stringify({
+          verifyLink:
+            import.meta.env.MODE === "production"
+              ? `https://www.partialty.com/auth/email/verifyToken/${emailToken}`
+              : `http://localhost:5173/auth/email/verifyToken/${emailToken}`,
+          receiverEmail: data.email,
+        }),
+      }
+    )
+      .then((x) => x.json())
+      .catch((e) => {
+        console.error("Unable to send verification email! ", e);
+      });
+
+    console.log(res);
     // const verifyLink = import.meta.env.MODE === "production" ? `https://`
 
     return user;
   } catch (e: any) {
     if (e instanceof LibsqlError) {
-      if (e.message.includes("UNIQUE constraint failed: profiles.email"))
+      if (e.message.includes("UNIQUE constraint failed: user_key.id"))
         return event.fail(500, { message: `Error! User already exists` });
     }
     return event.fail(500, { message: e.toString() });
