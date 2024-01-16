@@ -31,11 +31,13 @@ const app = new Elysia().group("/mail", (app) => {
       });
 
       console.log("BeforeVerify");
+      const content = await request.text();
+      console.log("content:", content);
 
       const isValid = await r
         .verify({
           signature: headers["upstash-signature"],
-          body: await request.text(),
+          body: content,
           clockTolerance: 1,
         })
         .catch((e) => {
