@@ -17,11 +17,14 @@ export default component$(() => {
   // requestAnimationFrame calls every 1000/60 = 16.667
   const typeWriter = useStore<TypeWriter>({
     displayIndex: 0, // which code snippet to display
+    displayCodeOrder: displayCodeOrder,
     displayCode: codeBlock[displayCodeOrder[0]], // raw code snippet
+    codeOutputIndex: -1,
     blankCharArr: blankChar[`${displayCodeOrder[0]}BlankChar`], // counts number of lines and number of chars per line
     revealedCharArr: Array(blankChar[`${displayCodeOrder[0]}BlankChar`].length).fill(0), // stores the number of blank chars that are NOT displayed per row, used for rendering
     currentChar: 0, // total displayed char in the current snippet
     currentRow: 0, // corresponds to the revealedCharArr
+    rollbackTo: 0, //
     totalChar: codeBlock[displayCodeOrder[0]].length, // static sum of the total char of snippet
     instance: null, // timer
     appearStart: 0, // used in requestAnimationFrame
@@ -48,6 +51,9 @@ export default component$(() => {
       }, typeWriter.initialDelay);
     }
   });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+
   let blankCharSum = 0,
     currentCharWithoutNewLine = typeWriter.currentChar + 1;
   return (

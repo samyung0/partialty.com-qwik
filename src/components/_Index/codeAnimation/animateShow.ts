@@ -19,6 +19,9 @@ const animateShow = (
     typeWriter.currentChar >= typeWriter.totalChar &&
     typeWriter.timeAfterAnimationFinished >= typeWriter.disappearDelay
   ) {
+    typeWriter.codeOutputIndex =
+      (typeWriter.codeOutputIndex % typeWriter.displayCodeOrder.length) + 1;
+
     typeWriter.currentChar = typeWriter.totalChar - 1;
     typeWriter.appearStart = 0;
     typeWriter.previousTimeStamp = 0;

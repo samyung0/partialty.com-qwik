@@ -1,11 +1,14 @@
 import type codeBlock from "~/components/_Index/codeBlock";
 export type TypeWriter = {
   displayIndex: number;
+  displayCodeOrder: (keyof typeof codeBlock)[];
   displayCode: (typeof codeBlock)[keyof typeof codeBlock];
+  codeOutputIndex: number;
   blankCharArr: number[];
   revealedCharArr: number[];
   currentChar: number;
   currentRow: number;
+  rollbackTo: number;
   totalChar: number;
   instance: any;
   appearStart: number;
