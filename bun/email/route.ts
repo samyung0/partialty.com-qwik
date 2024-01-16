@@ -23,30 +23,29 @@ const app = new Elysia().group("/mail", (app) => {
   return app.post(
     "/sendMail/verifyMail",
     async ({ body, headers }) => {
-      console.log(headers);
       if (!headers["upstash-signature"]) throw Error("Server Error!");
 
       const r = new Receiver({
         currentSigningKey: Bun.env.QSTASH_CURRENT_SIGNING_KEY!,
         nextSigningKey: Bun.env.QSTASH_NEXT_SIGNING_KEY!,
       });
-
       const content = JSON.parse(body as any);
       if (!content.verifyLink || !content.receiverEmail) throw new Error("server Error");
 
       const isValid = await r
         .verify({
           signature: headers["upstash-signature"],
-          body: content,
+          body: body as string,
           clockTolerance: 1,
         })
         .catch((e) => {
+          console.log(e);
           throw new Error("Server Error!");
         });
 
       if (!isValid) throw new Error("Server Error!");
 
-      console.log("OK");
+      console.log("Verify Email Sent");
 
       const res = eta.render("verifyEmail.eta", {
         verifyLink: content.verifyLink,
