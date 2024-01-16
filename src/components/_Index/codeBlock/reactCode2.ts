@@ -3,7 +3,7 @@ const code = `export default function MyApp() {
     <div class="flex h-[100%] w-full">
       <div class="w-[30%] bg-white"/>
       <div class="flex w-[70%] items-center bg-yellow">
-        <p class="m-8 font-mosk text-[1.5em]">
+        <p class="m-8 text-[1.5em]">
           Let's learn web development
         </p>
       </div>
