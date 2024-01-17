@@ -486,7 +486,7 @@ export default component$(() => {
                     </button>
                   </div>
                 </div>
-                <Link href={currentProject.codeSpace} class="mt-6 flex gap-2">
+                <Link href={currentProject.codeSpace} class="mt-6 flex gap-2 self-start">
                   <span class="border-b-2 border-primary-dark-gray">Go to Codespace</span>
                   <img src={ArrowRightSVG} alt="Right Arrow" width={15} height={15} />
                 </Link>
