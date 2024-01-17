@@ -63,7 +63,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray">
               <ul>
                 <li class="p-6">
-                  <Link prefetch href="/profiles/" class="flex items-center gap-3">
+                  <Link prefetch href="/profile/" class="flex items-center gap-3">
                     <img src={PersonSVG} alt="Profile" width={30} height={30} />
                     <span class="whitespace-nowrap">My Profile</span>
                   </Link>
