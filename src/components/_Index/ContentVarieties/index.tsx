@@ -27,7 +27,7 @@ const texts = [
 const titles = ["React", "Next.js", "Astro"];
 
 export default component$(() => {
-  const delay = useSignal(3000);
+  const delay = useSignal(2000);
   const textIndex = useSignal(0);
 
   // eslint-disable-next-line qwik/no-use-visible-task
