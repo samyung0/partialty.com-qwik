@@ -236,6 +236,10 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## Caution
 
+- **Installing ElysiaJS dependencies twice**
+
+  Since we are using typesafe api calls via edenTreaty in Bun, we need to install the dependencies used by ElysiaJS in our root folder for the typescript to pickup. However, when we are deploying the bun app, only the files inside of `bun` will be deployed (to save space since we don't need to install so many dependencies). This creates a problem where we need to install any dependency used by ElysiaJS twice: once in the root folder, and once inside of `bun` folder.
+
 - **Good Practice: Do not prefetch routes that require auth**
 
   An issue is that if the user prefetches a route while authed, and then logouts while staying on the same page and clicks into the prefetched page, the user can visit the site as authed since Qwik already stores a version of the authed site in serialized data and it will not fetch the site data again since it is cached already.
