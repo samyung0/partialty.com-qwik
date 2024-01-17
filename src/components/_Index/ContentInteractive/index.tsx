@@ -17,29 +17,29 @@ const codeSnippets = [
   </div>,
   <div key="snippet-2" class="flex h-[100%] w-full">
     <div class="w-[30%] bg-white" />
-    <div class="flex w-[70%] items-center bg-tomato">
+    <div class="flex w-[70%] items-center bg-red-400">
       <p class="m-8 text-[1.5em]">Let's learn web development</p>
     </div>
   </div>,
   <div key="snippet-3" class="flex h-[100%] w-full">
     <div class="w-[30%] bg-white" />
-    <div class="flex w-[70%] items-center bg-tomato">
+    <div class="flex w-[70%] items-center bg-red-400">
       <p class="m-8 text-[2.5em]">Let's learn web development</p>
     </div>
   </div>,
   <div key="snippet-4" class="flex h-[100%] w-full">
     <div class="w-[30%] bg-white" />
-    <div class="flex w-[70%] items-center bg-tomato">
+    <div class="flex w-[70%] items-center bg-red-400">
       <p class="m-8 text-[1.5em]">Let's learn web development</p>
     </div>
   </div>,
 ];
 
 const replaceStringArr = [
-  { from: "bg-yellow", to: "bg-tomato", row: 4, pos: 52 },
+  { from: "bg-yellow-400", to: "bg-red-400", row: 4, pos: 56 },
   { from: "text-[1.5em]", to: "text-[2.5em]", row: 5, pos: 33 },
   { from: "text-[2.5em]", to: "text-[1.5em]", row: 5, pos: 33 },
-  { from: "bg-tomato", to: "bg-yellow", row: 4, pos: 52 },
+  { from: "bg-red-400", to: "bg-yellow-400", row: 4, pos: 53 },
 ];
 
 export default component$(() => {
@@ -49,7 +49,7 @@ export default component$(() => {
 
   const blankCharArr = useSignal(blankChar["reactCode2BlankChar"]);
   const cursorRow = useSignal(replaceStringArr[0].row);
-  const cursorPos = useSignal(52);
+  const cursorPos = useSignal(replaceStringArr[0].pos);
 
   useVisibleTask$(() => {
     let stringToRemove = replaceStringArr[replaceStringIdx.value].from;
@@ -122,10 +122,6 @@ export default component$(() => {
       setTimeout(hideChar, 30);
     };
     setTimeout(hideChar, 1000);
-  });
-
-  useVisibleTask$(() => {
-    console.log(blankCharArr.value);
   });
 
   return (

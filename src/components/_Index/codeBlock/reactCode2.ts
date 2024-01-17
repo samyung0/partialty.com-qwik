@@ -2,7 +2,7 @@ const code = `export default function MyApp() {
   return (
     <div class="flex h-[100%] w-full">
       <div class="w-[30%] bg-white"/>
-      <div class="flex w-[70%] items-center bg-yellow">
+      <div class="flex w-[70%] items-center bg-yellow-400">
         <p class="m-8 text-[1.5em]">
           Let's learn web development
         </p>
