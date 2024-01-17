@@ -27,8 +27,7 @@ export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTim
 
   useVisibleTask$(({ track }) => {
     track(() => jumpTo.value);
-    console.log(duration.value);
-    console.log(jumpTo.value);
+
     if (jumpTo.value && audioRef.value) audioRef.value.currentTime = jumpTo.value;
   });
 

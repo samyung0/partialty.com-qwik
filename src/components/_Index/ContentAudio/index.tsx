@@ -21,8 +21,6 @@ export default component$(() => {
         ? { ...instant, highlight: true }
         : { ...instant, highlight: false }
     );
-    console.log(elapsedTime.value);
-    console.log(instantTime.value);
   });
 
   return (
