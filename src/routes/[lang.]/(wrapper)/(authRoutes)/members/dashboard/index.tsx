@@ -6,7 +6,7 @@ export default component$(() => {
   const nav = useNavigate();
 
   const handleLogout = $(async () => {
-    logout();
+    await logout();
     removeClientDataCache();
     nav("/");
   });

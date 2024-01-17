@@ -47,7 +47,6 @@ export const useUserLoader = routeLoader$(async (event) => {
   // checkProtectedPath should do all the redirecting
   // this is for type safety
   if (!session) throw event.redirect(302, "/");
-
   return session;
 });
 

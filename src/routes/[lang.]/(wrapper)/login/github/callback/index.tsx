@@ -1,7 +1,10 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { OAuthRequestError } from "@lucia-auth/oauth";
+import { and, eq } from "drizzle-orm";
 import { auth, githubAuth } from "~/auth/lucia";
 import type { Lucia } from "~/lucia";
+import drizzleClient from "~/utils/drizzleClient";
+import { profiles } from "../../../../../../../drizzle_turso/schema/profiles";
 
 export const onGet: RequestHandler = async (request) => {
   const storedState = request.cookie.get("github_oauth_state")?.value;
@@ -14,10 +17,8 @@ export const onGet: RequestHandler = async (request) => {
   }
 
   try {
-    const { getExistingUser, githubUser, createUser, githubTokens } =
+    const { getExistingUser, githubUser, createUser, githubTokens, createKey } =
       await githubAuth().validateCallback(code);
-
-    console.log(githubUser);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();
@@ -27,7 +28,7 @@ export const onGet: RequestHandler = async (request) => {
         avatar_url: githubUser.avatar_url,
         nickname: githubUser.login,
         email_verified: false,
-        github_id: BigInt(githubUser.id),
+        github_id: String(githubUser.id),
       };
       const emails = await fetch("https://api.github.com/user/emails", {
         headers: {
@@ -39,13 +40,34 @@ export const onGet: RequestHandler = async (request) => {
           email.primary
       )[0];
       if (primaryEmail && primaryEmail.verified) {
-        attributes.email = primaryEmail.email;
-        attributes.email_verified = true;
+        const drizzle = drizzleClient();
+        const existingDatabaseUserWithEmail = await drizzle
+          .select()
+          .from(profiles)
+          .where(and(eq(profiles.email, primaryEmail.email), eq(profiles.email_verified, true)))
+          .limit(1);
+        if (existingDatabaseUserWithEmail.length > 0) {
+          const user = Auth.transformDatabaseUser(existingDatabaseUserWithEmail[0]);
+          await createKey(user.userId);
+          await drizzle
+            .update(profiles)
+            .set({ github_id: String(githubUser.id) })
+            .where(eq(profiles.id, user.userId));
+          return user;
+        } else {
+          attributes.email = primaryEmail.email;
+          attributes.email_verified = true;
+          const user = await createUser({
+            attributes,
+          });
+          return user;
+        }
+      } else {
+        const user = await createUser({
+          attributes,
+        });
+        return user;
       }
-      const user = await createUser({
-        attributes,
-      });
-      return user;
     };
 
     const Auth = auth();

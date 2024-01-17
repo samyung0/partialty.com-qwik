@@ -105,7 +105,7 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
         console.error("Unable to send verification email! ", e);
       });
 
-    console.log(res);
+    console.log("Email Send:", res);
     // const verifyLink = import.meta.env.MODE === "production" ? `https://`
 
     return user;

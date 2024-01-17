@@ -8,7 +8,6 @@ import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
 
 export const useLoader = routeLoader$(async (request) => {
   const token = request.params.token;
-  console.log(token);
 
   request.cacheControl({
     maxAge: 0,

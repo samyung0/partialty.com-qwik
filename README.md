@@ -264,8 +264,6 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## TODO
 
-- **Linking multiple accounts with same verified email**
-
 - **Use onchange from webcontainer instead of chokidar (need node v20 !!)**
 
 - **Add browser version check**

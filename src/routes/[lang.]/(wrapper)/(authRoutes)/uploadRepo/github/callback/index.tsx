@@ -52,41 +52,4 @@ export const onGet: RequestHandler = async (request) => {
     throw request.redirect(302, "/uploadRepo/?errMessage=" + e);
   }
   throw request.redirect(302, "/uploadRepo/");
-
-  // try {
-  //   const { getExistingUser, githubUser, createUser } = await githubAuthRepoAccess().validateCallback(code);
-
-  //   const getUser = async () => {
-  //     const existingUser = await getExistingUser();
-  //     if (existingUser) return existingUser;
-  //     else throw Error("Dsadas")
-  //     // const attributes: Lucia.DatabaseUserAttributes = {
-  //     //   username: githubUser.login,
-  //     //   avatar_url: githubUser.avatar_url,
-  //     //   nickname: githubUser.login,
-  //     // };
-  //     // if (githubUser.email) attributes.email = githubUser.email;
-  //     // const user = await createUser({
-  //     //   attributes,
-  //     // });
-  //     // return user;
-  //   };
-
-  //   const Auth = auth();
-
-  //   const user = await getUser();
-  //   const session = await Auth.createSession({
-  //     userId: user.userId,
-  //     attributes: {},
-  //   });
-  //   const authRequest = Auth.handleRequest(request);
-  //   authRequest.setSession(session);
-  // } catch (e) {
-  //   console.error(e);
-  //   if (e instanceof OAuthRequestError) {
-  //     throw request.redirect(302, "/login/?errMessage=OAuth failed!");
-  //   }
-  //   throw request.redirect(302, "/login/?errMessage=" + e);
-  // }
-  // throw request.redirect(302, "/uploadRepo/");
 };
