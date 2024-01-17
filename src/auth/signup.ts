@@ -111,7 +111,10 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     return user;
   } catch (e: any) {
     if (e instanceof LibsqlError) {
-      if (e.message.includes("UNIQUE constraint failed: user_key.id"))
+      if (
+        e.message.includes("UNIQUE constraint failed: user_key.id") ||
+        e.message.includes("UNIQUE constraint failed: profiles.email")
+      )
         return event.fail(500, { message: `Error! User already exists` });
     }
     return event.fail(500, { message: e.toString() });
