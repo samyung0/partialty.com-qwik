@@ -2,7 +2,7 @@ import type { AddComponents, Theme } from "../index";
 
 const component = (addComponents: AddComponents, theme: Theme) => {
   addComponents({
-    ".highlight-yellow": {
+    ".highbright-yellow": {
       background: `no-repeat center url(/src/assets/svg/highlightSVG/yellow.svg)`,
       "background-size": "100% 100%",
       margin: "-2px -6px",

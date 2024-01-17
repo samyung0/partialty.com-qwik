@@ -268,6 +268,8 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## TODO
 
+- **Add search to dashboard 'my courses'**
+
 - **Use onchange from webcontainer instead of chokidar (need node v20 !!)**
 
 - **Add browser version check**

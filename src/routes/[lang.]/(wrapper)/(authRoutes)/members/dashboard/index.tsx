@@ -1,9 +1,13 @@
 import { $, component$ } from "@builder.io/qwik";
-import { Link, removeClientDataCache, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { removeClientDataCache, useNavigate, type DocumentHead } from "@builder.io/qwik-city";
 import { logout } from "~/auth/logout";
+
+import Dashboard from "~/components/_Dashboard";
+import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 
 export default component$(() => {
   const nav = useNavigate();
+  const user = useUserLoader();
 
   const handleLogout = $(async () => {
     await logout();
@@ -12,20 +16,8 @@ export default component$(() => {
   });
 
   return (
-    <main>
-      <div class="text-gray-900">
-        <div class="text-2xl">Welcome to the Dashboard Page</div>
-        <Link href="/">
-          <button class="text-sm text-sky-500 hover:text-sky-400">Home page</button>
-        </Link>
-        <Link href="/test/">
-          <button class="text-sm text-sky-500 hover:text-sky-400">Test page</button>
-        </Link>
-      </div>
-
-      <button class="ml-10" onClick$={handleLogout}>
-        Logout
-      </button>
+    <main class="">
+      <Dashboard user={user.value}></Dashboard>
     </main>
   );
 });

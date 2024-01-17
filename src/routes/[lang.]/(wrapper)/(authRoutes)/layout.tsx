@@ -1,7 +1,7 @@
 import { Slot, component$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import type { Session } from "lucia";
 import { auth, initLuciaIfNeeded } from "~/auth/lucia";
+import type { LuciaSession } from "~/types/LuciaSession";
 import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { checkProtectedPath } from "~/utils/redirect";
 import { initTursoIfNeeded } from "~/utils/tursoClient";
@@ -26,7 +26,7 @@ export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = auth().handleRequest(event);
 
   const time1 = performance.now();
-  let session: Session | null = null;
+  let session: LuciaSession | null = null;
   try {
     session = await authRequest.validate();
   } catch (e) {
@@ -46,8 +46,9 @@ export const useUserLoader = routeLoader$(async (event) => {
 
   // checkProtectedPath should do all the redirecting
   // this is for type safety
+
   if (!session) throw event.redirect(302, "/");
-  return session;
+  return session.user;
 });
 
 export default component$(() => {

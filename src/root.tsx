@@ -11,7 +11,7 @@ export const themeContext = createContextId<{ value: string }>("theme");
 export const layoutContext = createContextId<{ value: string }>("layout");
 
 export default component$(() => {
-  const themeStore = useStore({ value: "" });
+  const themeStore = useStore({ value: "default" });
   useContextProvider(themeContext, themeStore);
 
   const layoutStore = useStore({ value: "default" });

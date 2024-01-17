@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "618d58d1-1791-4f83-8e93-b4cc4f3f1463",
+  "id": "12335aea-9603-47e2-9b21-f4e8e4514920",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "email_verification_token": {
@@ -115,14 +115,14 @@
         },
         "github_id": {
           "name": "github_id",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "google_id": {
           "name": "google_id",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -143,7 +143,13 @@
           "default": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "profiles_email_unique": {
+          "name": "profiles_email_unique",
+          "columns": ["email"],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}

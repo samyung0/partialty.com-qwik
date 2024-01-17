@@ -114,6 +114,7 @@
     "elysia-compression": "^0.0.7",
     "elysia-helmet": "^1.0.1",
     "elysia-rate-limit": "^2.0.1",
+    "fuse.js": "^7.0.0",
     "lodash.isequal": "^4.5.0",
     "lucia": "^2.7.6",
     "mime-db": "^1.52.0",

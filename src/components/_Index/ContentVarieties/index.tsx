@@ -5,21 +5,22 @@ import styles from "./index.module.css";
 const texts = [
   <p key="text1" class={"text-xl leading-[2.5rem] tracking-wide"}>
     <strong>React</strong> is a JavaScript framework that helps build{" "}
-    <span class="border-b-8 border-light-yellow">interactive and reusable user interfaces</span>. It
-    simplifies UI development by breaking it down into smaller components that{" "}
+    <span class="border-b-8 border-bright-yellow">interactive and reusable user interfaces</span>.
+    It simplifies UI development by breaking it down into smaller components that{" "}
     <span class="highlight-pink">update efficiently</span>.
   </p>,
   <p key="text2" class="text-xl leading-[2.5rem] tracking-wide">
     <strong>Next.js</strong> is a framework for building web applications with{" "}
     <strong>React</strong>. It simplifies{" "}
-    <span class="highlight-yellow">server-side rendering</span>, routing, and code splitting, making
-    it easier to create <span class="highlight-pink">fast and optimized</span> websites with React.
+    <span class="highbright-yellow">server-side rendering</span>, routing, and code splitting,
+    making it easier to create <span class="highlight-pink">fast and optimized</span> websites with
+    React.
   </p>,
   <p key="text3" class="text-xl leading-[2.5rem] tracking-wide">
     <strong>Astro</strong> is a framework that enables developers to build websites using a mix of{" "}
     <span class="border-b-8 border-lilac">static and dynamic</span> content. It allows for faster
     performance, easier maintenance, and seamless integration with{" "}
-    <span class="highlight-yellow">other frameworks</span>.
+    <span class="highbright-yellow">other frameworks</span>.
   </p>,
 ];
 
@@ -83,7 +84,7 @@ export default component$(() => {
                   {/* <p class="text-xl leading-[2.5rem] tracking-wide">
                   <strong>Next.js</strong> is a framework for building web applications with{" "}
                   <strong>React</strong>. It simplifies{" "}
-                  <span class="highlight-yellow">server-side rendering</span>, routing, and
+                  <span class="highbright-yellow">server-side rendering</span>, routing, and
                   code splitting, making it easier to create{" "}
                   <span class="highlight-pink">fast and optimized</span> websites with React.
                 </p> */}

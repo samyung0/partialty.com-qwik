@@ -60,7 +60,9 @@ export default component$(() => {
                         >
                           interactive and
                         </span>
-                        <span class="relative border-b-8 border-light-yellow">interactive and</span>
+                        <span class="relative border-b-8 border-bright-yellow">
+                          interactive and
+                        </span>
                       </span>
                     </p>
                     <p key="row-2">
@@ -72,7 +74,7 @@ export default component$(() => {
                         >
                           reusable user interfaces.&lrm;
                         </span>
-                        <span class="relative border-b-8 border-light-yellow">
+                        <span class="relative border-b-8 border-bright-yellow">
                           reusable user interfaces.
                         </span>
                       </span>{" "}

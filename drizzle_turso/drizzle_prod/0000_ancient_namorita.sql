@@ -15,8 +15,8 @@ CREATE TABLE `profiles` (
 	`stripe_id` text,
 	`username` text,
 	`avatar_url` text NOT NULL,
-	`github_id` blob,
-	`google_id` blob,
+	`github_id` text,
+	`google_id` text,
 	`nickname` text NOT NULL,
 	`email_verified` integer DEFAULT false NOT NULL
 );
@@ -37,3 +37,5 @@ CREATE TABLE `user_session` (
 	`idle_expires` blob NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `profiles`(`id`) ON UPDATE no action ON DELETE no action
 );
+--> statement-breakpoint
+CREATE UNIQUE INDEX `profiles_email_unique` ON `profiles` (`email`);
