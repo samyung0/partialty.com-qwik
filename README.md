@@ -268,6 +268,10 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## TODO
 
+- **(maybe) Complete the oauth linking**
+
+  Currently, only when the user signs up with password, then verify email, THEN the oauth accounts that are signed in after will be linked and only one user profile will exist, so we (maybe) need to handle the other case: the user signs up with oauth first then email, and whether the email is verified later
+
 - **Add search to dashboard 'my courses'**
 
 - **Use onchange from webcontainer instead of chokidar (need node v20 !!)**

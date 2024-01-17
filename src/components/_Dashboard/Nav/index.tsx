@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { $, component$ } from "@builder.io/qwik";
+import { Link, removeClientDataCache, useNavigate } from "@builder.io/qwik-city";
 
 import ArrowDown from "~/assets/svg/caret-down-outline.svg";
 import NavCourses from "~/components/NavCourses";
@@ -7,8 +7,15 @@ import type { LuciaSession } from "~/types/LuciaSession";
 
 import LogoutSVG from "~/assets/svg/log-out-outline.svg";
 import PersonSVG from "~/assets/svg/person-outline.svg";
+import { logout } from "~/auth/logout";
 
 export default component$(({ user }: { user: LuciaSession["user"] }) => {
+  const nav = useNavigate();
+  const handleLogout = $(async () => {
+    await logout();
+    removeClientDataCache();
+    nav("/");
+  });
   return (
     <nav>
       <ul class="m-auto flex w-[80%] items-center gap-6 py-6 text-base font-bold tracking-wide">
@@ -70,7 +77,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 </li>
                 <div></div>
                 <li class="p-6 pt-0">
-                  <button class="flex items-center gap-3">
+                  <button onClick$={handleLogout} class="flex items-center gap-3">
                     <img src={LogoutSVG} alt="Profile" width={30} height={30} />
                     <span>Logout</span>
                   </button>
