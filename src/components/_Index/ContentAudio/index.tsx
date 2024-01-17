@@ -30,7 +30,9 @@ export default component$(() => {
       <div class="flex h-[100vh] flex-col items-center justify-center">
         <div class="flex h-[40%] items-center justify-center">
           <h1 class="text-center font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
-            Audio-word highlighting to synchronize audio playback <br /> with corresponding text
+            Audio-guided courses which highlight content
+            <br />
+            according to the audio
           </h1>
         </div>
         <div class=" relative flex h-[60%] items-start">
