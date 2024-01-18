@@ -66,19 +66,19 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
               class="transition-transform"
             />
           </div>
-          <div class="absolute left-[50%] top-[100%] hidden w-[200px] -translate-x-[50%] pt-3">
+          <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
             <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray">
               <ul>
-                <li class="p-6">
-                  <Link prefetch href="/profile/" class="flex items-center gap-3">
-                    <img src={PersonSVG} alt="Profile" width={30} height={30} />
+                <li class="p-4">
+                  <Link prefetch href="/profile/" class="flex items-center gap-2">
+                    <img src={PersonSVG} alt="Profile" width={25} height={25} />
                     <span class="whitespace-nowrap">My Profile</span>
                   </Link>
                 </li>
                 <div></div>
-                <li class="p-6 pt-0">
-                  <button onClick$={handleLogout} class="flex items-center gap-3">
-                    <img src={LogoutSVG} alt="Profile" width={30} height={30} />
+                <li class="p-4 pt-0">
+                  <button onClick$={handleLogout} class="flex items-center gap-2">
+                    <img src={LogoutSVG} alt="Profile" width={25} height={25} />
                     <span>Logout</span>
                   </button>
                 </li>

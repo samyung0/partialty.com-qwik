@@ -12,21 +12,39 @@ const app = new Elysia().group("/auth", (app) => {
     .post(
       "/test",
       async ({ body }) => {
+        const auth = createAppAuth({
+          appId: body.id,
+          privateKey: await Bun.file(
+            path.resolve(import.meta.dir, "../keys/partialty-com-dev.2024-01-14.private-key.pem")
+          ).text(),
+        });
+
+        const installationAuth = await auth({
+          type: "installation",
+          installationId: body.installationId,
+        });
         const octokit = new Octokit({
-          authStrategy: createAppAuth,
-          auth: {
-            appId: body.id,
-            privateKey: await Bun.file(
-              path.resolve(import.meta.dir, "../keys/partialty-com-dev.2024-01-14.private-key.pem")
-            ).text(),
-            installationId: body.installationId,
-          },
+          auth: installationAuth.token, // directly pass the token
         });
-        const repos = await octokit.request("GET /search/repositories", {
-          q: "user:samyung0",
-          per_page: 999,
-        });
-        console.log("REPOS", repos.data.total_count, repos.data.incomplete_results);
+        // const octokit = new Octokit({
+        //   authStrategy: createAppAuth,
+        //   auth: {
+        //     appId: body.id,
+        //     privateKey: await Bun.file(
+        //       path.resolve(import.meta.dir, "../keys/partialty-com-dev.2024-01-14.private-key.pem")
+        //     ).text(),
+        //     installationId: body.installationId,
+        //     // clientSecret: "1a74f4103ffe9c69145fde29c1558dc4a74bd8f1",
+        //     // clientId: "Iv1.dd2454918fc36078"
+        //   },
+        // });
+        const res = await octokit.rest.users.getAuthenticated();
+        console.log(res);
+        // const repos = await octokit.request("GET /search/repositories", {
+        //   q: "user:samyung0",
+        //   per_page: 999,
+        // });
+        // console.log("REPOS", repos.data.total_count, repos.data.incomplete_results);
       },
       {
         body: t.Object({

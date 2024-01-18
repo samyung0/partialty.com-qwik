@@ -1,4 +1,5 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
+import { LibsqlError } from "@libsql/client";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import { and, eq } from "drizzle-orm";
 import { auth, githubAuth } from "~/auth/lucia";
@@ -81,6 +82,17 @@ export const onGet: RequestHandler = async (request) => {
     authRequest.setSession(session);
   } catch (e) {
     console.error(e);
+    if (e instanceof LibsqlError) {
+      if (
+        e.message.includes("UNIQUE constraint failed: user_key.id") ||
+        e.message.includes("UNIQUE constraint failed: profiles.email")
+      ) {
+        throw request.redirect(
+          302,
+          "/login/?errMessage=Error! User already exists! Try verifying your email first before logging in with other means."
+        );
+      }
+    }
     if (e instanceof OAuthRequestError) {
       throw request.redirect(302, "/login/?errMessage=OAuth failed!");
     }
