@@ -8,6 +8,13 @@
       "when": 1705458269076,
       "tag": "0000_dark_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1705576131561,
+      "tag": "0001_wise_ma_gnuci",
+      "breakpoints": true
     }
   ]
 }

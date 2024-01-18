@@ -8,6 +8,13 @@
       "when": 1705459354361,
       "tag": "0000_ancient_namorita",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1705576140595,
+      "tag": "0001_huge_madame_web",
+      "breakpoints": true
     }
   ]
 }
