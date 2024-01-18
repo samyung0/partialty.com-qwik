@@ -1,7 +1,8 @@
 import type { Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from "@builder.io/qwik";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { useSetBio, useSignupWithPassword } from "~/auth/signup";
+import recaptcha from "~/components/_Signup/recaptcha";
 
 import GithubIcon from "~/assets/svg/logo-github.svg";
 import GoogleIcon from "~/assets/svg/logo-google.svg";
@@ -15,9 +16,13 @@ import Dragndrop from "~/components/_Signup/dragndrop";
 
 export default component$(
   ({ cloudinaryDefaultPics }: { cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[]> }) => {
+    recaptcha;
+
     const params = useLocation().url.searchParams;
     const setBio = useSetBio();
     const signupWithPassword = useSignupWithPassword();
+
+    const recaptchaReady = useSignal(false);
 
     const firstForm = useStore({
       email: "",
@@ -100,6 +105,34 @@ export default component$(
       }
     });
 
+    // eslint-disable-next-line qwik/no-use-visible-task
+    useVisibleTask$(() => {
+      const recaptcha = document.createElement("script");
+      recaptcha.src =
+        "https://www.google.com/recaptcha/api.js?render=" +
+        import.meta.env.VITE_GOOGLE_RECAPTCHA_V3;
+      recaptcha.async = true;
+      recaptcha.onload = () => {
+        (globalThis as any).grecaptcha.ready(function () {
+          recaptchaReady.value = true;
+          //   (globalThis as any).grecaptcha
+          //     .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: "submit" })
+          //     .then(async function (token: string) {
+          //       const res = await server$(async function () {
+          //         console.log("YOOO", this.env.get("GOOGLE_RECAPTCHA_V3_SECRET"));
+          //         return await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${this.env.get("GOOGLE_RECAPTCHA_V3_SECRET")!}&response=${token}`, {
+          //           method: "POST",
+          //         }).then((x) => x.json());
+          //       })();
+          //       console.log(res);
+          //       // Add your logic to submit to your backend server here.
+          //     });
+          // });
+        });
+      };
+      document.body.append(recaptcha);
+    });
+
     const restoreOriginalAvatar = $(() => {
       defaultBio.avatar = JSON.parse(JSON.stringify(originalAvatar.value));
       customAvatar.value = false;
@@ -151,6 +184,28 @@ export default component$(
       };
     });
 
+    const handleSubmitPartOne = $(async () => {
+      if (!recaptchaReady.value) {
+        formError.error = "Holdon, we are still loading google captcha :P";
+        return;
+      }
+      loadingStepOne.value = true;
+      formError.error = "";
+      const captchaResult = await (globalThis as any).grecaptcha
+        .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: "submit" })
+        .then(async (token: string) => await recaptcha(token));
+      if (!captchaResult.success) {
+        loadingStepOne.value = false;
+        formError.error = "Looks like captcha thinks that you are not a human (。_。)";
+        return;
+      }
+      signupWithPassword.submit({
+        ...firstForm,
+        avatar_cloudinary_id: defaultBio.avatar.public_id,
+        nickname: defaultBio.nickname,
+      });
+    });
+
     return (
       <section class="flex h-[100vh] items-center justify-center bg-sherbet">
         <div class="w-[50vw] min-w-[400px] max-w-[600px]  overflow-hidden ">
@@ -166,18 +221,7 @@ export default component$(
                   Sign up
                 </h1>
                 <br />
-                <form
-                  preventdefault:submit
-                  onSubmit$={() => {
-                    loadingStepOne.value = true;
-                    signupWithPassword.submit({
-                      ...firstForm,
-                      avatar_cloudinary_id: defaultBio.avatar.public_id,
-                      nickname: defaultBio.nickname,
-                    });
-                  }}
-                  class="space-y-6"
-                >
+                <form preventdefault:submit onSubmit$={handleSubmitPartOne} class="space-y-6">
                   <input
                     type="text"
                     name="avatar_cloudinary_id"
@@ -265,6 +309,9 @@ export default component$(
                       {formError.wrongRePassword || formError.error}
                     </p>
                   </div>
+                  {/* <div class="g-recaptcha" data-sitekey={"6LcrulQpAAAAAEaVgoLxOZRbQMwIFYBDwHj0VAXG"}>
+                    Submit
+                  </div> */}
                   <br />
                   <button
                     type="submit"
