@@ -11,6 +11,12 @@
         "description": "Cannot retrive page content! Please check if the url is valid!",
         "title": "Not Found"
       }
+    },
+    "pageUnauth": {
+      "head": {
+        "description": "Unauthorized!",
+        "title": "401"
+      }
     }
   }
 }

@@ -11,6 +11,12 @@
         "description": "お探しのページがみつかりませんでした",
         "title": "エラー"
       }
+    },
+    "pageUnauth": {
+      "head": {
+        "description": "Unauthorized!",
+        "title": "401"
+      }
     }
   }
 }

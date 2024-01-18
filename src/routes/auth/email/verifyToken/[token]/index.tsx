@@ -9,12 +9,6 @@ import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
 export const useLoader = routeLoader$(async (request) => {
   const token = request.params.token;
 
-  request.cacheControl({
-    maxAge: 0,
-    sMaxAge: 0,
-    noStore: true,
-    noCache: true,
-  });
   try {
     const userId = await verifyEmailTokens(token);
     const drizzle = drizzleClient();
