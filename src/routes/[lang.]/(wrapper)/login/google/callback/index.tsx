@@ -21,8 +21,6 @@ export const onGet: RequestHandler = async (request) => {
     const { getExistingUser, googleUser, createUser, createKey } =
       await googleAuth().validateCallback(code);
 
-    console.log(googleUser);
-
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;

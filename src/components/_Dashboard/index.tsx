@@ -1,8 +1,8 @@
 import { component$ } from "@builder.io/qwik";
 import Footer from "~/components/Footer";
+import Nav from "~/components/Nav";
 import Courses from "~/components/_Dashboard/Courses";
 import GettingStarted from "~/components/_Dashboard/GettingStarted";
-import Nav from "~/components/_Dashboard/Nav";
 import type { LuciaSession } from "~/types/LuciaSession";
 import Projects from "./Projects";
 

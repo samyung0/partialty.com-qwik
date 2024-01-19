@@ -20,7 +20,7 @@
     "build.preview": "vite build --ssr src/entry.preview.tsx",
     "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
-    "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && ncc build ./src/$$chokidarEntry.js -o ./src/assets/chokidar -m && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
+    "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && cd compile && ncc build ./chokidarEntry.js -o ../src/assets/chokidar -m && cd .. && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.dev.config.ts",
@@ -48,7 +48,6 @@
     "serve": "node server/entry.express"
   },
   "devDependencies": {
-    "@builder.io/partytown": "^0.8.1",
     "@builder.io/qwik": "^1.3.2",
     "@builder.io/qwik-city": "https://github.com/samyung0/qwikcity-dist",
     "@types/babel__generator": "^7.6.5",
@@ -109,6 +108,7 @@
     "@types/react-dom": "^18.2.18",
     "@webcontainer/api": "1.1.8",
     "axios": "^1.4.0",
+    "chokidar": "^3.5.3",
     "comlink": "^4.4.1",
     "drizzle-orm": "^0.29.1",
     "elysia": "^0.8.8",
@@ -126,6 +126,8 @@
     "react-dropzone-esm": "^15.0.1",
     "react-email": "1.10.0",
     "react-player": "^2.14.1",
+    "slate": "^0.101.5",
+    "slate-react": "^0.101.5",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0"
   },

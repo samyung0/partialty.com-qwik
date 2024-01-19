@@ -1,8 +1,6 @@
-import { partytownVite } from "@builder.io/partytown/utils";
 import { qwikCity } from "@builder.io/qwik-city/vite";
 import { qwikReact } from "@builder.io/qwik-react/vite";
 import { qwikVite } from "@builder.io/qwik/optimizer";
-import { join } from "path";
 import { qwikSpeakInline } from "qwik-speak/inline";
 import { defineConfig, type Connect } from "vite";
 import compileTime from "vite-plugin-compile-time";
@@ -48,7 +46,6 @@ export default defineConfig(() => {
       },
       compileTime(),
       qwikReact(),
-      partytownVite({ dest: join(__dirname, "dist", "~partytown") }),
     ],
     // node_modules\@babel\types\lib\definitions\core.js
     define: { "process.env.BABEL_TYPES_8_BREAKING": "false" },
