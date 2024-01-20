@@ -37,28 +37,35 @@ export const onGet: RequestHandler = async (request) => {
           Authorization: `Bearer ${githubTokens.accessToken}`,
         },
       }).then((res) => res.json());
-      const primaryEmail = emails.filter(
-        (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) =>
-          email.primary
-      )[0];
-      if (primaryEmail && primaryEmail.verified) {
-        const drizzle = drizzleClient();
-        const existingDatabaseUserWithEmail = await drizzle
-          .select()
-          .from(profiles)
-          .where(and(eq(profiles.email, primaryEmail.email), eq(profiles.email_verified, true)))
-          .limit(1);
-        if (existingDatabaseUserWithEmail.length > 0) {
-          const user = Auth.transformDatabaseUser(existingDatabaseUserWithEmail[0]);
-          await createKey(user.userId);
-          await drizzle
-            .update(profiles)
-            .set({ github_id: String(githubUser.id), github_username: githubUser.login })
-            .where(eq(profiles.id, user.userId));
-          return user;
+      if (Array.isArray(emails)) {
+        const primaryEmail = emails.filter(
+          (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) =>
+            email.primary
+        )[0];
+        if (primaryEmail && primaryEmail.verified) {
+          const drizzle = drizzleClient();
+          const existingDatabaseUserWithEmail = await drizzle
+            .select()
+            .from(profiles)
+            .where(and(eq(profiles.email, primaryEmail.email), eq(profiles.email_verified, true)))
+            .limit(1);
+          if (existingDatabaseUserWithEmail.length > 0) {
+            const user = Auth.transformDatabaseUser(existingDatabaseUserWithEmail[0]);
+            await createKey(user.userId);
+            await drizzle
+              .update(profiles)
+              .set({ github_id: String(githubUser.id), github_username: githubUser.login })
+              .where(eq(profiles.id, user.userId));
+            return user;
+          } else {
+            attributes.email = primaryEmail.email;
+            attributes.email_verified = true;
+            const user = await createUser({
+              attributes,
+            });
+            return user;
+          }
         } else {
-          attributes.email = primaryEmail.email;
-          attributes.email_verified = true;
           const user = await createUser({
             attributes,
           });
