@@ -5,7 +5,7 @@
 Run
 
 ```html
-npm run ci npm run dev
+bun i cd bun && bun i bun run dev
 ```
 
 ### Switching Theme
