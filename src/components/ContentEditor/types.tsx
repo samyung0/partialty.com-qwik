@@ -62,6 +62,11 @@ export type CustomText = {
   code?: true;
   italic?: true;
   underline?: true;
+  strikethrough?: true;
+  superscript?: true;
+  subscript?: true;
+  background?: string;
+  color?: string;
 };
 export type CustomElement =
   | ParagraphElement

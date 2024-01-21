@@ -19,7 +19,7 @@ export const BlockButton = ({
           ? `border-b-2 border-black`
           : ""
       }
-      onMouseDown={(event) => {
+      onClick={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}

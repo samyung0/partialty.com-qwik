@@ -117,6 +117,7 @@
     "elysia-helmet": "^1.0.1",
     "elysia-rate-limit": "^2.0.1",
     "fuse.js": "^7.0.0",
+    "is-hotkey": "^0.2.0",
     "lodash.isequal": "^4.5.0",
     "lucia": "^2.7.6",
     "lucide-react": "^0.312.0",

@@ -2,11 +2,10 @@
 import { useEffect, useRef } from "react";
 import { Editor, Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
-import { Portal } from "~/components/ContentEditor/components";
 import { isMarkActive, toggleMark } from "~/components/ContentEditor/markFn";
 import type { CustomMarkFormat } from "~/components/ContentEditor/types";
 
-import { Bold, Italic, Underline } from "lucide-react";
+import { Bold, Code, Italic, Strikethrough, Underline } from "lucide-react";
 
 export const HoveringToolbar = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,20 +42,20 @@ export const HoveringToolbar = () => {
   });
 
   return (
-    <Portal>
-      <div
-        ref={ref}
-        className={"border-2-black absolute z-10 hidden gap-2 border-2 bg-white p-2"}
-        onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
-          // prevent toolbar from taking focus away from editor
-          e.preventDefault();
-        }}
-      >
-        <FormatButton format="bold" children={<Bold size={20} />} />
-        <FormatButton format="italic" children={<Italic size={20} />} />
-        <FormatButton format="underline" children={<Underline size={20} />} />
-      </div>
-    </Portal>
+    <div
+      ref={ref}
+      className={"border-2-black absolute z-10 hidden gap-2 border-2 bg-white p-2"}
+      onMouseDown={(e: React.MouseEvent<HTMLElement>) => {
+        // prevent toolbar from taking focus away from editor
+        e.preventDefault();
+      }}
+    >
+      <FormatButton format="bold" children={<Bold size={20} />} />
+      <FormatButton format="italic" children={<Italic size={20} />} />
+      <FormatButton format="underline" children={<Underline size={20} />} />
+      <FormatButton format="strikethrough" children={<Strikethrough size={20} />} />
+      <FormatButton format="code" children={<Code size={20} />} />
+    </div>
   );
 };
 
