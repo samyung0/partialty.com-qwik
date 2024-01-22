@@ -2,7 +2,7 @@ import { type RequestHandler } from "@builder.io/qwik-city";
 import { validateLocale } from "qwik-speak";
 import { config } from "~/speak-config";
 
-export const onRequest: RequestHandler = ({ request, locale, params, error }) => {
+export const onRequest: RequestHandler = ({ request, locale, params }) => {
   // const langCookie = cookie.get("lang");
   const acceptLanguage = request.headers.get("accept-language");
 

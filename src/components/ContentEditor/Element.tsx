@@ -1,5 +1,7 @@
 /** @jsxImportSource react */
 import type { RenderElementProps } from "slate-react";
+import { EmbedElement } from "~/components/ContentEditor/Embed";
+import { LinkElement } from "~/components/ContentEditor/Link";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
   const style = { textAlign: element.align || "left" } as const;
@@ -58,6 +60,10 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
           {children}
         </ul>
       );
+    case "embed":
+      return <EmbedElement attributes={attributes} element={element} children={children} />;
+    case "link":
+      return <LinkElement attributes={attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

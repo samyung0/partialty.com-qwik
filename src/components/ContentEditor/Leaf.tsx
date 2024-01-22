@@ -37,5 +37,9 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     children = <span style={{ color: leaf.color }}>{children}</span>;
   }
 
-  return <span {...attributes}>{children}</span>;
+  return (
+    <span className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : null}`} {...attributes}>
+      {children}
+    </span>
+  );
 };

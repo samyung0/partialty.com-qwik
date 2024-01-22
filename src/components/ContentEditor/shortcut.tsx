@@ -17,7 +17,6 @@ export const withShortcuts = (editor: Editor) => {
 
   editor.insertText = (text) => {
     const { selection } = editor;
-    console.log(selection);
 
     if (text.endsWith(" ") && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection;

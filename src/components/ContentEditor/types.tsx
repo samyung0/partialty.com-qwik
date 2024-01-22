@@ -7,53 +7,77 @@ export type List = "numbered-list" | "bulleted-list";
 export type ParagraphElement = {
   type: "paragraph";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 
 export type CodeElement = {
   type: "code";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type BlockQuote = {
   type: "block-quote";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type HeadingOne = {
   type: "heading-one";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type HeadingTwo = {
   type: "heading-two";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type HeadingThree = {
   type: "heading-three";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type HeadingFour = {
   type: "heading-four";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type ListItem = {
   type: "list-item";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type NumberedList = {
   type: "numbered-list";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 export type BulletedList = {
   type: "bulleted-list";
   align?: Align;
-  children: CustomText[];
+  url?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type VideoEmbed = {
+  type: "embed";
+  align?: Align;
+  url?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type UrlLink = {
+  type: "link";
+  align?: Align;
+  url?: string;
+  children: (CustomText | CustomElement)[];
 };
 
 export type CustomText = {
@@ -78,7 +102,9 @@ export type CustomElement =
   | HeadingThree
   | HeadingFour
   | ListItem
-  | NumberedList;
+  | NumberedList
+  | VideoEmbed
+  | UrlLink;
 
 export type BlockFormat = Align | List | CustomElement["type"];
 export type CustomElementType = CustomElement["type"];

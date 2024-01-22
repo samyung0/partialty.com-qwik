@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 import { Editor, Element as SlateElement, Transforms } from "slate";
-import { useSlate } from "slate-react";
+import { ReactEditor, useSlate } from "slate-react";
+import { toggleLinkAtSelection } from "~/components/ContentEditor/Link";
 import type { Align, BlockFormat, CustomElementType, List } from "~/components/ContentEditor/types";
 import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/ContentEditor/types";
 
@@ -19,9 +20,76 @@ export const BlockButton = ({
           ? `border-b-2 border-black`
           : ""
       }
+      onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const LinkButton = ({
+  format,
+  children,
+}: {
+  format: BlockFormat;
+  children: React.ReactNode;
+}) => {
+  const editor = useSlate();
+  return (
+    <button
+      className={
+        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+          ? `border-b-2 border-black`
+          : ""
+      }
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={(event) => {
+        event.preventDefault();
+        toggleLinkAtSelection(editor);
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const EmbedButton = ({
+  format,
+  children,
+}: {
+  format: BlockFormat;
+  children: React.ReactNode;
+}) => {
+  const editor = useSlate();
+  return (
+    <button
+      // className={
+      //   isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+      //     ? `border-b-2 border-black`
+      //     : ""
+      // }
+      // onMouseDown={(event) => event.preventDefault()}
+      onClick={(event) => {
+        // event.stopPropagation();
+        // event.preventDefault();
+        ReactEditor.focus(editor);
+        editor.insertNode(
+          {
+            type: "embed",
+            url: "about:blank",
+            children: [{ text: "" }],
+          },
+          {
+            at: editor.selection || {
+              anchor: { path: [0, 0], offset: 0 },
+              focus: { path: [0, 0], offset: 0 },
+            },
+          }
+        );
       }}
     >
       {children}

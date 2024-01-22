@@ -1,0 +1,21 @@
+@tailwind components;
+@layer components {
+  .highlight-underline {
+    background-color: #f7f7f7;
+    direction: rtl;
+    right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    animation: highlight 1.5s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  }
+}
+
+@keyframes highlight {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
