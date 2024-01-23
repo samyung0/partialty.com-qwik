@@ -18,7 +18,15 @@ CREATE TABLE `profiles` (
 	`github_id` text,
 	`google_id` text,
 	`nickname` text NOT NULL,
-	`email_verified` integer DEFAULT false NOT NULL
+	`email_verified` integer DEFAULT false NOT NULL,
+	`github_username` text,
+	`membership_plan` integer
+);
+--> statement-breakpoint
+CREATE TABLE `user_assets` (
+	`user_id` text PRIMARY KEY NOT NULL,
+	`cloudinary_images` blob,
+	FOREIGN KEY (`user_id`) REFERENCES `profiles`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `user_key` (

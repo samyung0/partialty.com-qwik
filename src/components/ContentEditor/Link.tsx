@@ -11,7 +11,7 @@ import type { UrlLink } from "~/components/ContentEditor/types";
 import { isUrl } from "~/utils/isUrl";
 
 export const withLink = (editor: Editor) => {
-  const { insertData, insertText, isInline, deleteBackward } = editor;
+  const { insertData, insertText, isInline, deleteBackward, insertBreak } = editor;
 
   editor.isInline = (element) => ["link"].includes(element.type) || isInline(element);
 
@@ -75,8 +75,20 @@ export const withLink = (editor: Editor) => {
           match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
           at: Editor.unhangRange(editor, editor.selection),
         });
+        const cursorBackward = Editor.after(editor, editor.selection, { unit: "character" });
+        const matchAfter = Editor.above(editor, {
+          match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
+          at: cursorBackward,
+        });
+
+        const cursorForward = Editor.before(editor, editor.selection, { unit: "character" });
+        const matchBefore = Editor.above(editor, {
+          match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
+          at: cursorForward,
+        });
 
         if (match) {
+          // remove empty
           if (Node.string(match[0]) === "") {
             Transforms.unwrapNodes(editor, {
               match: (n) => SlateElement.isElement(n) && n.type === "link",
@@ -84,17 +96,108 @@ export const withLink = (editor: Editor) => {
             return;
           }
         }
+
+        // join
+        if (matchBefore && matchAfter) {
+          const combinedUrl = Node.string(matchBefore[0]) + Node.string(matchAfter[0]);
+          Transforms.removeNodes(editor);
+          Transforms.insertNodes(
+            editor,
+            {
+              type: "paragraph",
+              children: [
+                {
+                  text: "",
+                },
+                {
+                  type: "link",
+                  url: combinedUrl,
+                  children: [{ text: combinedUrl }],
+                },
+                { text: "" },
+              ],
+            },
+            { at: editor.selection }
+          );
+          Transforms.select(editor, {
+            focus: cursorForward!,
+            anchor: cursorForward!,
+          });
+        }
       });
     }
     deleteBackward(...args);
   };
 
+  editor.insertBreak = (...args) => {
+    Promise.resolve().then(() => {
+      if (isBlockActive(editor, "link", "type")) {
+        if (editor.selection) {
+          // delete below blank lines
+          {
+            const block = Editor.above(editor, {
+              match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
+            });
+            const path = block ? block[1] : [];
+            const start = Editor.start(editor, path);
+            const end = Editor.end(editor, path);
+            const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
+            const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
+            if (w1 === "" && w2 === "") {
+              Transforms.unwrapNodes(editor);
+              Transforms.insertNodes(editor, {
+                type: "paragraph",
+                children: [{ text: "" }],
+              });
+            }
+          }
+          // delete above blank lines
+          {
+            const cursor = Editor.before(editor, editor.selection, { unit: "character" });
+            const block = Editor.above(editor, {
+              match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
+              at: cursor,
+            });
+            const path = block ? block[1] : [];
+            const start = Editor.start(editor, path);
+            const end = Editor.end(editor, path);
+            const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
+            const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
+            if (w1 === "" && w2 === "") {
+              const cursor2 = Editor.before(editor, cursor!, { unit: "character" });
+              // idk how this works, but it just does
+              Transforms.unwrapNodes(editor, { at: cursor });
+              Transforms.insertNodes(
+                editor,
+                {
+                  type: "paragraph",
+                  children: [{ text: "" }],
+                },
+                { at: cursor2 }
+              );
+              Transforms.unwrapNodes(editor, { at: cursor2 });
+            }
+          }
+        }
+      }
+    });
+    insertBreak(...args);
+  };
+
   editor.insertData = (data) => {
-    console.log("Data:", data, isUrl(data));
     const text = data.getData("text/plain");
 
     if (text && isUrl(text)) {
       wrapLink(editor, text);
+      Transforms.move(editor, {
+        distance: 1,
+        unit: "character",
+      });
+      Transforms.move(editor, {
+        distance: 1,
+        unit: "character",
+        reverse: true,
+      });
     } else {
       insertData(data);
     }
@@ -110,7 +213,7 @@ const unwrapLink = (editor: Editor) => {
 };
 
 const wrapLink = (editor: Editor, url: string) => {
-  if (isLinkActive(editor)) {
+  if (isBlockActive(editor, "link", "type")) {
     unwrapLink(editor);
   }
 
@@ -128,13 +231,6 @@ const wrapLink = (editor: Editor, url: string) => {
     Transforms.wrapNodes(editor, link, { split: true });
     Transforms.collapse(editor, { edge: "end" });
   }
-};
-
-const isLinkActive = (editor: Editor) => {
-  const [link] = Editor.nodes(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
-  });
-  return !!link;
 };
 
 export const HoveringLink = ({
@@ -185,9 +281,11 @@ export const HoveringLink = ({
     const {
       x: nodeX,
       height: nodeHeight,
-      y: nodeY,
+      y: _nodeY,
       width: nodeWidth,
     } = linkDOMNode.getBoundingClientRect();
+
+    const nodeY = _nodeY + document.documentElement.scrollTop;
 
     if (
       (!inFocus &&

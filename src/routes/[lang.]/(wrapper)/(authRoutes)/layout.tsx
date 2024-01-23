@@ -8,9 +8,9 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 // turso, drizzle and lucia are all initialized per page request
 // since edge and serverless functions are stateless
-export const onRequest: RequestHandler = async ({ env, url }) => {
+export const onRequest: RequestHandler = async ({ env }) => {
   await initTursoIfNeeded(env);
-  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env, url.origin)]);
+  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env)]);
 };
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
@@ -35,13 +35,13 @@ export const useUserLoader = routeLoader$(async (event) => {
 
   console.log("Time to validate session: ", performance.now() - time1);
 
-  const [shouldRedirect, redirectTo] = checkProtectedPath(
+  const [shouldRedirect, redirectTo, searchParams] = checkProtectedPath(
     event.url.pathname,
     session?.user.role ?? ""
   );
 
   if (shouldRedirect) {
-    throw event.redirect(302, redirectTo);
+    throw event.redirect(302, redirectTo + "?" + searchParams.toString());
   }
 
   // checkProtectedPath should do all the redirecting

@@ -1,9 +1,7 @@
 /** @jsxImportSource react */
 import { qwikify$ } from "@builder.io/qwik-react";
 
-// Import React dependencies.
-import { useCallback, useState } from "react";
-// Import the Slate editor factory.
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { BaseEditor, Descendant } from "slate";
 import { createEditor } from "slate";
 import type { HistoryEditor } from "slate-history";
@@ -12,8 +10,9 @@ import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-rea
 import { Editable, Slate, withReact } from "slate-react";
 
 import { Element } from "~/components/ContentEditor/Element";
-import { withEmbeds } from "~/components/ContentEditor/Embed";
+import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
 import { HoveringToolbar } from "~/components/ContentEditor/HoveringToolbar";
+import { CenterImageChooser } from "~/components/ContentEditor/Images";
 import { Leaf } from "~/components/ContentEditor/Leaf";
 import { HoveringLink, withLink } from "~/components/ContentEditor/Link";
 import Toolbar from "~/components/ContentEditor/Toolbar";
@@ -21,6 +20,8 @@ import onKeyDown from "~/components/ContentEditor/hotkey";
 import { withShortcuts } from "~/components/ContentEditor/shortcut";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
 import Prose from "~/components/Prose";
+import type { CloudinaryPublicPic } from "~/types/Cloudinary";
+import type { LuciaSession } from "~/types/LuciaSession";
 
 declare module "slate" {
   interface CustomTypes {
@@ -80,21 +81,36 @@ const initialValue: Descendant[] = [
   },
 ];
 
-const App = () => {
+const ContentEditorReact = ({
+  initialUserAssets,
+  user,
+}: {
+  initialUserAssets: { cloudinaryImages: CloudinaryPublicPic[] };
+  user: LuciaSession["user"];
+}) => {
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
     withShortcuts(withLink(withEmbeds(withReact(withHistory(createEditor())))))
   );
 
-  // const [previousSelection, selection, setSelection] = useSelection(editor);
+  const userImages = useRef<[Promise<string>, CloudinaryPublicPic][]>([]);
 
-  // const onChangeHandler = useCallback(
-  //   (document) => {
-  //     onChange(document);
-  //     setSelection(editor.selection);
-  //   },
-  //   [editor.selection, onChange, setSelection]
-  // );
+  useEffect(() => {
+    const images: [Promise<string>, CloudinaryPublicPic][] = [];
+
+    const sortedImages = initialUserAssets.cloudinaryImages.toSorted(function (a, b) {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+    for (let i = 0; i < sortedImages.length; i++) {
+      images.push([
+        fetch(sortedImages[i].secure_url)
+          .then((res) => res.blob())
+          .then((blob) => URL.createObjectURL(blob)),
+        sortedImages[i],
+      ]);
+    }
+    userImages.current = images;
+  }, []);
 
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, []);
 
@@ -102,10 +118,21 @@ const App = () => {
     return <Leaf {...props} />;
   }, []);
 
+  const [showImageChooser, setShowImageChooser] = useState(false);
+
   return (
-    <div className="p-10">
+    <div className="flex flex-col items-center justify-center p-10">
       <Slate editor={editor} initialValue={initialValue}>
-        <Toolbar />
+        {showImageChooser && (
+          <CenterImageChooser
+            setShowImageChooser={setShowImageChooser}
+            userId={user.userId}
+            userImages={userImages.current}
+            editor={editor}
+          />
+        )}
+        <Toolbar setShowImageChooser={setShowImageChooser} />
+        <HoveringEmbed />
         <HoveringLink />
         <HoveringToolbar />
         <Prose>
@@ -146,4 +173,4 @@ const App = () => {
   );
 };
 
-export default qwikify$(App, { eagerness: "load" });
+export default qwikify$(ContentEditorReact, { eagerness: "load" });

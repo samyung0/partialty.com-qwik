@@ -1,22 +1,27 @@
 import { protectedRoutes } from "~/utils/protectedRoutes";
 
-export const checkProtectedPath = (path: string | undefined, role: any): [boolean, string] => {
+export const checkProtectedPath = (
+  path: string | undefined,
+  role: any
+): [boolean, string, URLSearchParams] => {
   let shouldRedirect = false,
     redirectTo = "/"; // default to base
+  const searchParams = new URLSearchParams();
 
   // in case somehow the path is empty, redirect to homepage and refresh
-  if (!path) return [true, redirectTo];
+  if (!path) return [true, redirectTo, searchParams];
 
   for (const i of protectedRoutes) {
     const re = new RegExp(i.path);
     if (i.exact ? i.path === path : re.test(path)) {
+      searchParams.append("redirectedFrom", path || "/");
       redirectTo = i.redirectTo;
       if (i.authRolesPermitted.length > 0) shouldRedirect = !i.authRolesPermitted.includes(role);
       else shouldRedirect = !!role; // if no roles permitted, then only UNAUTHED persons can access
       break;
     }
   }
-  return [shouldRedirect, redirectTo];
+  return [shouldRedirect, redirectTo, searchParams];
 };
 
 // export const useRedirectLoader = routeLoader$(async (request) => {

@@ -1,0 +1,1 @@
+ALTER TABLE user_assets ADD `cloudinary_images` text;

@@ -1,15 +1,11 @@
-import type { RequestEventBase } from "@builder.io/qwik-city";
 import { Cloudinary } from "@cloudinary/url-gen";
+import { CLOUDINARY_NAME } from "~/const/cloudinary";
 
 let client: Cloudinary | null = null;
 
-export const initCloudinaryIfNeeded = async (env: RequestEventBase["env"]) => {
+export const initCloudinaryIfNeeded = async () => {
   if (!client) {
-    if (!env.get("CLOUDINARY_NAME")) {
-      console.error("CLOUDINARY_NAME VARIABLE ERROR SERVER");
-      return null;
-    }
-    client = new Cloudinary({ cloud: { cloudName: env.get("CLOUDINARY_NAME")! } });
+    client = new Cloudinary({ cloud: { cloudName: CLOUDINARY_NAME } });
   }
 };
 

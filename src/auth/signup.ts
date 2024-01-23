@@ -5,6 +5,7 @@ import { emailSignupSchema, setBioSchema } from "~/types/Signup";
 
 import { eq } from "drizzle-orm";
 import generateEmailTokens from "~/auth/generateEmailTokens";
+import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import cloudinary from "~/utils/cloudinary";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../drizzle_turso/schema/profiles";
@@ -13,12 +14,12 @@ export const useSetBio = globalAction$(async function (data, event) {
   let secure_url: string = data.avatar.secure_url;
   if (data.customAvatar) {
     try {
-      if (!event.env.get("CLOUDINARY_NAME") || !event.env.get("CLOUDINARY_PRESET")) {
+      if (!event.env.get("CLOUDINARY_PRESET_PROFILEPIC")) {
         return event.fail(500, { message: "Server Error! Please try again later." });
       }
-      const url = `https://api.cloudinary.com/v1_1/${event.env.get("CLOUDINARY_NAME")!}/upload`;
+      const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
       const fd = new FormData();
-      fd.append("upload_preset", event.env.get("CLOUDINARY_PRESET")!);
+      fd.append("upload_preset", event.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
       fd.append("file", data.avatar.secure_url);
       const res = await fetch(url, {
         method: "POST",
@@ -105,7 +106,7 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
         console.error("Unable to send verification email! ", e);
       });
 
-    console.log("Email Send:", res);
+    // console.log("Email Send:", res);
     // const verifyLink = import.meta.env.MODE === "production" ? `https://`
 
     return user;

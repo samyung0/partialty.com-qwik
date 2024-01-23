@@ -8,6 +8,9 @@ import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../../../../../drizzle_turso/schema/profiles";
 
 export const onGet: RequestHandler = async (request) => {
+  const redirectedFrom = request.cookie.get("redirectedFrom")?.value;
+  request.cookie.delete("redirectedFrom");
+
   const storedState = request.cookie.get("google_oauth_state")?.value;
   const url = new URL(request.url);
   const state = url.searchParams.get("state");
@@ -90,5 +93,6 @@ export const onGet: RequestHandler = async (request) => {
     }
     throw request.redirect(302, "/login/?errMessage=" + e);
   }
+  if (redirectedFrom) throw request.redirect(302, redirectedFrom);
   throw request.redirect(302, "/members/dashboard/");
 };

@@ -1,6 +1,7 @@
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import type { Session } from "lucia";
 import { auth, initLuciaIfNeeded } from "~/auth/lucia";
+import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import type { CloudinaryDefaultPic } from "~/types/Cloudinary";
 import { initCloudinaryIfNeeded } from "~/utils/cloudinary";
 import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
@@ -29,29 +30,21 @@ export const useUserLoader = routeLoader$(async (event) => {
   return session;
 });
 
-export const onRequest: RequestHandler = async ({ env, url }) => {
+export const onRequest: RequestHandler = async ({ env }) => {
   await initTursoIfNeeded(env);
-  await Promise.all([
-    initDrizzleIfNeeded(),
-    initLuciaIfNeeded(env, url.origin),
-    initCloudinaryIfNeeded(env),
-  ]);
+  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env), initCloudinaryIfNeeded()]);
 };
 
 export const useCloudinaryDefaultPic = routeLoader$<CloudinaryDefaultPic[]>(
   async ({ env, redirect }) => {
     try {
-      if (
-        !env.get("CLOUDINARY_API_KEY") ||
-        !env.get("CLOUDINARY_API_SECRET") ||
-        !env.get("CLOUDINARY_NAME")
-      ) {
+      if (!env.get("CLOUDINARY_API_KEY") || !env.get("CLOUDINARY_API_SECRET")) {
         console.error("CLOUDINARY ENV ERROR SERVER!");
         throw Error();
       }
 
       const defaultProfilePics = await fetch(
-        `https://api.cloudinary.com/v1_1/${env.get("CLOUDINARY_NAME")!}/resources/search`,
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/resources/search`,
         {
           method: "POST",
           headers: {

@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 import type { RenderElementProps } from "slate-react";
 import { EmbedElement } from "~/components/ContentEditor/Embed";
+import { ImageBlock } from "~/components/ContentEditor/Images";
 import { LinkElement } from "~/components/ContentEditor/Link";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
@@ -64,6 +65,8 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       return <EmbedElement attributes={attributes} element={element} children={children} />;
     case "link":
       return <LinkElement attributes={attributes} element={element} children={children} />;
+    case "image":
+      return <ImageBlock attributes={attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

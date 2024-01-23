@@ -7,6 +7,7 @@ import GoogleIcon from "~/assets/svg/logo-google.svg";
 
 export default component$(() => {
   const loginWithPassword = useLoginWithPassword();
+  const search = useLocation().url.search;
   const params = useLocation().url.searchParams;
   const formError = useStore({
     email: "",
@@ -32,7 +33,8 @@ export default component$(() => {
     }
     if (loginWithPassword.status === 500) formError.wrongInfo = loginWithPassword.value?.message;
     if (loginWithPassword.status === 200) {
-      nav("/members/dashboard/");
+      if (params.get("redirectedFrom")) nav(params.get("redirectedFrom")!);
+      else nav("/members/dashboard/");
     }
     isLoggingIn.value = false;
   });
@@ -136,10 +138,10 @@ export default component$(() => {
           </div>
 
           <div class="flex items-center justify-evenly">
-            <Link class="p-4 pt-0" aria-label="Login With Google" href="/login/google/">
+            <Link class="p-4 pt-0" aria-label="Login With Google" href={"/login/google/" + search}>
               <img src={GoogleIcon} alt="Login With Google" width={55} height={55} />
             </Link>
-            <Link class="p-4 pt-0" aria-label="Login With Github" href="/login/github/">
+            <Link class="p-4 pt-0" aria-label="Login With Github" href={"/login/github/" + search}>
               <img src={GithubIcon} alt="Login With Github" width={50} height={50} />
             </Link>
           </div>

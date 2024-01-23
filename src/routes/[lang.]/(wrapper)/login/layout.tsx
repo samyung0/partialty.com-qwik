@@ -28,7 +28,7 @@ export const useUserLoader = routeLoader$(async (event) => {
   return session;
 });
 
-export const onRequest: RequestHandler = async ({ env, url }) => {
+export const onRequest: RequestHandler = async ({ env }) => {
   await initTursoIfNeeded(env);
-  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env, url.origin)]);
+  await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(env)]);
 };

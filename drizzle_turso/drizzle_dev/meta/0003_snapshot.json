@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d21c0e9c-7fb1-45b7-a67c-889aa7c6b21b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "9ed7a4a2-826c-4891-a6a3-0dcaf42f5331",
+  "prevId": "d5865bf2-0234-4aca-ba53-255843695d4a",
   "tables": {
     "email_verification_token": {
       "name": "email_verification_token",
@@ -180,7 +180,7 @@
         },
         "cloudinary_images": {
           "name": "cloudinary_images",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

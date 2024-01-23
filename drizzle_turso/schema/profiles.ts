@@ -1,6 +1,6 @@
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { DEFAULTROLE } from "~/const";
+import { DEFAULTROLE } from "~/const/defaultRole";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),

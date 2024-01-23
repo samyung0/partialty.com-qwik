@@ -11,7 +11,7 @@ let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
 let _google: ReturnType<typeof _googleAuth> | null = null;
 
-const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], _origin: string) =>
+const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"]) =>
   google(lucia, {
     clientId: env.get("GOOGLE_ID")!,
     clientSecret: env.get("GOOGLE_SECRET")!,
@@ -22,7 +22,7 @@ const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"],
         : "http://localhost:5173/login/google/callback/",
   });
 
-const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"], _origin: string) =>
+const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"]) =>
   github(lucia, {
     clientId: env.get("GITHUB_ID")!,
     clientSecret: env.get("GITHUB_SECRET")!,
@@ -83,12 +83,12 @@ const _lucia = () =>
     },
   });
 
-export const initLuciaIfNeeded = async (env: RequestEvent["env"], origin: string) => {
+export const initLuciaIfNeeded = async (env: RequestEvent["env"]) => {
   if (!_auth) {
     _auth = _lucia();
   }
-  if (!_github) _github = _githubAuth(_auth, env, origin);
-  if (!_google) _google = _googleAuth(_auth, env, origin);
+  if (!_github) _github = _githubAuth(_auth, env);
+  if (!_google) _google = _googleAuth(_auth, env);
 };
 
 export const auth = () => {

@@ -6,6 +6,7 @@ import { helmet } from "elysia-helmet";
 // import { ip } from "elysia-ip";
 import { rateLimit } from "elysia-rate-limit";
 import AuthRoute from "./auth/route";
+import CloudinaryRoute from "./cloudinary/route";
 import EmailRoute from "./email/route";
 import HealthRoute from "./health/route";
 
@@ -43,6 +44,7 @@ const app = new Elysia()
   .use(HealthRoute)
   .use(AuthRoute)
   .use(EmailRoute)
+  .use(CloudinaryRoute)
   .post("/idk", ({ body }) => {
     console.log(body);
   })

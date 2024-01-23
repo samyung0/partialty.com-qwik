@@ -11,6 +11,7 @@ import {
   Heading2,
   Heading3,
   Heading4,
+  Image,
   Italic,
   Link2,
   List,
@@ -23,14 +24,23 @@ import {
   Superscript,
   Underline,
 } from "lucide-react";
-import { BlockButton, EmbedButton, LinkButton } from "~/components/ContentEditor/blockFn";
+import {
+  BlockButton,
+  EmbedButton,
+  ImageButton,
+  LinkButton,
+} from "~/components/ContentEditor/blockFn";
 import {
   BackgroundMarkButton,
   ColorMarkButton,
   MarkButton,
 } from "~/components/ContentEditor/markFn";
 
-const Toolbar = () => {
+const Toolbar = ({
+  setShowImageChooser,
+}: {
+  setShowImageChooser: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <div className="flex flex-wrap gap-2 pb-12">
       <MarkButton format="bold" children={<Bold size={20} />} />
@@ -54,6 +64,11 @@ const Toolbar = () => {
       <BlockButton format="left" children={<AlignLeft size={20} />} />
       <BlockButton format="center" children={<AlignCenter size={20} />} />
       <BlockButton format="right" children={<AlignRight size={20} />} />
+      <ImageButton
+        setShowImageChooser={setShowImageChooser}
+        format="image"
+        children={<Image size={20} />}
+      />
       <EmbedButton format="embed" children={<Film size={20} />} />
     </div>
   );

@@ -6,7 +6,7 @@ import recaptcha from "~/components/_Signup/recaptcha";
 
 import GithubIcon from "~/assets/svg/logo-github.svg";
 import GoogleIcon from "~/assets/svg/logo-google.svg";
-import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const";
+import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
 import type { CloudinaryDefaultPic } from "~/types/Cloudinary";
 
 import RandomAvatar from "~/assets/svg/shuffle-outline.svg";
@@ -101,7 +101,7 @@ export default component$(
         bioError.wrongInfo = setBio.value?.message || "";
       }
       if (setBio.status === 200) {
-        nav("/members/dashboard/");
+        (window as any).location = "/members/dashboard/";
       }
     });
 

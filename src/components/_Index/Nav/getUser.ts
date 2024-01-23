@@ -6,7 +6,7 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 export default server$(async function () {
   try {
     await initTursoIfNeeded(this.env);
-    await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(this.env, this.url.origin)]);
+    await Promise.all([initDrizzleIfNeeded(), initLuciaIfNeeded(this.env)]);
     const authRequest = auth().handleRequest(this);
     const session = await authRequest.validate();
     return session;
