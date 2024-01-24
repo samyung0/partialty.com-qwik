@@ -34,7 +34,6 @@ export const HoveringToolbar = () => {
 
     const domSelection = window.getSelection();
     if (!domSelection) return;
-    console.log(editor.selection);
     const domRange = domSelection.getRangeAt(0);
     const rect = domRange.getBoundingClientRect();
     el.style.opacity = "1";

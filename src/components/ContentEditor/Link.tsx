@@ -264,6 +264,7 @@ export const HoveringLink = ({
     const { selection } = editor;
 
     if (!el || !selection) {
+      if (el && !selection) el.style.display = "none";
       setLinkOpen(false);
       return;
     }
@@ -273,6 +274,7 @@ export const HoveringLink = ({
       match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
     });
     if (!node) {
+      el.style.display = "none";
       setLinkOpen(false);
       return;
     }

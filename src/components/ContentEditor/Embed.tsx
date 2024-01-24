@@ -181,12 +181,15 @@ const removeEmbed = (editor: Editor) => {
 export const EmbedElement = ({ attributes, children, element }: RenderElementProps) => {
   const editor = useSlateStatic();
   const { url, caption } = element;
-  let embedType = "blank";
+  let embedType = url ? (url.trim() === "" ? "Blank" : "Embed") : "Blank";
   const parse = urlParser.parse(url || "");
   let parsedUrl = url;
 
   if (parse && parse.provider && parse.id) {
-    embedType = parse.provider;
+    embedType = parse.provider
+      .split(" ")
+      .map((seg) => seg.slice(0, 1).toUpperCase() + seg.slice(1))
+      .join(" ");
     switch (parse.provider) {
       case "youtube":
         parsedUrl = YOUTUBE_PREFIX + parse.id;
@@ -210,11 +213,17 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   const shouldDisplay = isUrl(parsedUrl);
 
   const [value, setValue] = useState(caption || "");
+  const ref = useRef<HTMLTextAreaElement>(null);
   return (
     <div {...attributes}>
-      <div contentEditable={false}>
-        <div className="mb-2 rounded-lg border-2 border-gray-500">
-          <div className="bg-gray-500 text-white">{embedType}</div>
+      <div
+        className="flex w-full flex-col items-center justify-center gap-2"
+        contentEditable={false}
+      >
+        <div className="w-full border-2 border-sea object-contain">
+          <div className="bg-light-sea p-2 font-mosk text-sm font-bold tracking-wide">
+            {embedType}
+          </div>
           <div className="aspect-video w-full">
             {shouldDisplay && (
               <iframe
@@ -226,10 +235,9 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
           </div>
         </div>
 
-        <input
-          className={"border-2 border-black"}
-          value={value}
-          placeholder={"Enter embed caption..."}
+        <textarea
+          ref={ref}
+          rows={1}
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => {
             const caption = e.target.value;
@@ -241,7 +249,15 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
             Transforms.setNodes<SlateElement>(editor, newProperties, {
               at: path,
             });
+
+            if (ref.current) {
+              ref.current.style.height = "auto";
+              ref.current.style.height = `${e.target.scrollHeight}px`;
+            }
           }}
+          value={value}
+          className="w-full resize-none p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          placeholder={"Enter some captions..."}
         />
       </div>
       {children}

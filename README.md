@@ -5,7 +5,15 @@
 Run
 
 ```html
-bun i cd bun && bun i bun run dev
+bun i
+```
+
+```html
+cd bun && bun i
+```
+
+```html
+cs .. && bun run dev
 ```
 
 ### Switching Theme
@@ -240,6 +248,11 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
   Since we are using typesafe api calls via edenTreaty in Bun, we need to install the dependencies used by ElysiaJS in our root folder for the typescript to pickup. However, when we are deploying the bun app, only the files inside of `bun` will be deployed (to save space since we don't need to install so many dependencies). This creates a problem where we need to install any dependency used by ElysiaJS twice: once in the root folder, and once inside of `bun` folder.
 
+- **Cloudinary uploads and assets are all public**
+
+  The app id of cloudinary is visible publicly but the upload present is not. Technically even unsigned requests to the api endpoints require an upload present id, it is still better to assume that anyone can upload to cloudinary at the moment. And all images that are uploaded this way can also be fetched anywhere. Signed uploads require backend Sdk which mean we need to configure both Lucia auth and Cloudinary Sdk on Bun api server.
+  (https://support.cloudinary.com/hc/en-us/articles/202519742-Can-I-allow-access-to-uploaded-images-only-to-authenticated-users-[https://support.cloudinary.com/hc/en-us/articles/202519742-Can-I-allow-access-to-uploaded-images-only-to-authenticated-users-])
+
 - **Good Practice: Do not prefetch routes that require auth**
 
   An issue is that if the user prefetches a route while authed, and then logouts while staying on the same page and clicks into the prefetched page, the user can visit the site as authed since Qwik already stores a version of the authed site in serialized data and it will not fetch the site data again since it is cached already.
@@ -268,9 +281,9 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## TODO
 
-- **(maybe) Complete the oauth linking**
+- **Configure cloudinary to store private images**
 
-  Currently, only when the user signs up with password, then verify email, THEN the oauth accounts that are signed in after will be linked and only one user profile will exist, so we (maybe) need to handle the other case: the user signs up with oauth first then email, and whether the email is verified later
+- **Responsive Design**
 
 - **Add search to dashboard 'my courses'**
 

@@ -2,63 +2,181 @@
 /** @jsxImportSource react */
 import imageExtensions from "image-extensions";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import type { RenderElementProps } from "slate-react";
-import { ReactEditor, useFocused, useSelected, useSlateStatic } from "slate-react";
+import { ReactEditor, useSlateStatic } from "slate-react";
 import uploadToCloudinary from "~/components/ContentEditor/uploadToCloudinaryContentEditor";
 import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import { isUrl } from "~/utils/isUrl";
 
-// export const withImages = (editor: Editor) => {
-//   const { insertData, isVoid } = editor;
+import { ExternalLink, Trash } from "lucide-react";
+import type { BaseRange } from "slate";
+import { Range } from "slate";
+import { useFocused, useSlate } from "slate-react";
 
-//   editor.isVoid = (element) => {
-//     return element.type === "image" ? true : isVoid(element);
-//   };
+import { isBlockActive } from "~/components/ContentEditor/blockFn";
+import type { ImageElement } from "~/components/ContentEditor/types";
 
-//   editor.insertData = (data) => {
-//     const text = data.getData("text/plain");
-//     const { files } = data;
+export const withImages = (editor: Editor) => {
+  const { insertData, isVoid } = editor;
 
-//     if (files && files.length > 0) {
-//       for (const file of files) {
-//         const reader = new FileReader();
-//         const [mime] = file.type.split("/");
+  editor.isVoid = (element) => {
+    return element.type === "image" ? true : isVoid(element);
+  };
 
-//         if (mime === "image") {
-//           reader.addEventListener("load", () => {
-//             const url = reader.result;
-//             if (!url) return;
-//             insertImage(editor, url.toString());
-//           });
+  return editor;
+};
 
-//           reader.readAsDataURL(file);
-//         }
-//       }
-//     } else if (isImageUrl(text)) {
-//       insertImage(editor, text);
-//     } else {
-//       insertData(data);
-//     }
-//   };
+export const HoveringImage = ({
+  setShowImageChooser,
+  setReplaceCurrentImage,
+  offsetX = 0,
+  offsetY = 10,
+}: {
+  setShowImageChooser: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplaceCurrentImage: React.Dispatch<React.SetStateAction<boolean>>;
+  offsetX?: number;
+  offsetY?: number;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const editor = useSlate();
+  const inFocus = useFocused();
 
-//   return editor;
-// };
+  const initialUrl = useRef("");
+  const prevSelection = useRef<BaseRange | null>();
+
+  useEffect(() => {
+    const node = Editor.above(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "image",
+    });
+    if (node) {
+      initialUrl.current = (node[0] as ImageElement).url || "";
+    }
+  }, [isBlockActive(editor, "image", "type")]);
+
+  useEffect(() => {
+    const el = ref.current;
+    const { selection } = editor;
+
+    if (!el || !selection) {
+      if (el && !selection) el.style.display = "none";
+      return;
+    }
+
+    prevSelection.current = selection;
+    const node = Editor.above(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "image",
+    });
+    if (!node) {
+      el.style.display = "none";
+      return;
+    }
+    const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
+
+    const {
+      x: nodeX,
+      height: nodeHeight,
+      y: _nodeY,
+      width: nodeWidth,
+    } = linkDOMNode.getBoundingClientRect();
+
+    const nodeY = _nodeY + document.documentElement.scrollTop;
+
+    if (
+      (!inFocus &&
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        (prevSelection.current === undefined || prevSelection.current === null)) ||
+      !Range.isCollapsed(selection)
+    ) {
+      setLinkOpen(false);
+      el.style.display = "none";
+      return;
+    }
+
+    el.style.display = "flex";
+    el.style.top = `${nodeY + nodeHeight + offsetY}px`;
+    el.style.left = `${nodeX + nodeWidth / 2 + offsetX}px`;
+    el.style.transform = "translateX(-50%)";
+  });
+
+  return (
+    <>
+      {isBlockActive(editor, "image", "type") && (
+        <div ref={ref} className="absolute z-10 bg-white shadow-xl" role="group">
+          <div className="inline-flex rounded-md" role="group">
+            <button
+              onClick={() => {
+                setReplaceCurrentImage(true);
+                setShowImageChooser(true);
+              }}
+              type="button"
+              className="rounded-s-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+            >
+              Edit Image
+            </button>
+            <button
+              onClick={() => window.open(initialUrl.current)}
+              type="button"
+              className="border-b border-t border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+            >
+              <ExternalLink strokeWidth={1.5} size={20} />
+            </button>
+            <button
+              onClick={() => toggleImageAtSelection(editor)}
+              type="button"
+              className="rounded-e-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+            >
+              <Trash strokeWidth={1.5} size={20} />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export function toggleImageAtSelection(editor: Editor) {
+  Transforms.removeNodes(editor, {
+    match: (n) => SlateElement.isElement(n) && n.type === "image",
+  });
+}
 
 export const ImageBlock = ({ attributes, children, element }: RenderElementProps) => {
   const editor = useSlateStatic();
-  const path = ReactEditor.findPath(editor, element);
-
-  const selected = useSelected();
-  const focused = useFocused();
+  const [value, setValue] = useState(element.caption || "");
+  const ref = useRef<HTMLTextAreaElement>(null);
   return (
     <div {...attributes}>
       {children}
-      <div contentEditable={false}>
-        <img src={element.url} />
-      </div>
+      <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
+        <img src={element.url} className="max-h-[400px] border-2 border-mint object-contain" />
+        <textarea
+          ref={ref}
+          rows={1}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const caption = e.target.value;
+            setValue(caption);
+            const path = ReactEditor.findPath(editor, element);
+            const newProperties: Partial<SlateElement> = {
+              caption,
+            };
+            Transforms.setNodes<SlateElement>(editor, newProperties, {
+              at: path,
+            });
+
+            if (ref.current) {
+              ref.current.style.height = "auto";
+              ref.current.style.height = `${e.target.scrollHeight}px`;
+            }
+          }}
+          value={value}
+          className="w-full resize-none p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          placeholder={"Enter some captions..."}
+        />
+      </figure>
     </div>
   );
 };
@@ -75,11 +193,15 @@ export const CenterImageChooser = ({
   userImages,
   userId,
   setShowImageChooser,
+  replaceCurrentImage,
+  setReplaceCurrentImage,
 }: {
   editor: Editor;
   userImages: [Promise<string>, CloudinaryPublicPic][];
   userId: string;
   setShowImageChooser: React.Dispatch<React.SetStateAction<boolean>>;
+  replaceCurrentImage: boolean;
+  setReplaceCurrentImage: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [resolvedUserImages, setResolvedUserImages] = useState<[string, CloudinaryPublicPic][]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -120,28 +242,45 @@ export const CenterImageChooser = ({
               onClick={() => {
                 ReactEditor.focus(editor);
                 if (!editor.selection) return;
-                const block = Editor.above(editor, {
-                  match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-                });
-                const path = block ? block[1] : [];
-                const start = Editor.start(editor, path);
-                const end = Editor.end(editor, path);
-                const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
-                const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
-                if (w1 === "" && w2 === "") {
-                  Transforms.unwrapNodes(editor);
-                }
-                editor.insertNode(
-                  {
-                    type: "image",
-                    url: blobUrl,
-                    public_id: imgData.public_id,
-                    children: [{ text: "" }],
-                  },
-                  {
-                    at: editor.selection,
+                if (replaceCurrentImage) {
+                  editor.setNodes(
+                    { url: blobUrl, public_id: imgData.public_id },
+                    {
+                      match: (n) =>
+                        SlateElement.isElement(n) &&
+                        Editor.isBlock(editor, n) &&
+                        n.type === "image",
+                    }
+                  );
+                  ReactEditor.deselect(editor);
+                } else {
+                  const block = Editor.above(editor, {
+                    match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
+                  });
+                  const path = block ? block[1] : [];
+                  const start = Editor.start(editor, path);
+                  const end = Editor.end(editor, path);
+                  const w1 = Editor.string(editor, {
+                    anchor: editor.selection.anchor,
+                    focus: start,
+                  });
+                  const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
+                  if (w1 === "" && w2 === "") {
+                    Transforms.unwrapNodes(editor);
                   }
-                );
+                  editor.insertNode(
+                    {
+                      type: "image",
+                      url: blobUrl,
+                      public_id: imgData.public_id,
+                      children: [{ text: "" }],
+                    },
+                    {
+                      at: editor.selection,
+                    }
+                  );
+                }
+                setReplaceCurrentImage(false);
                 setShowImageChooser(false);
                 // ReactEditor.deselect(editor);
               }}

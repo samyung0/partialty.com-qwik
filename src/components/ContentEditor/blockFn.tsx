@@ -88,7 +88,7 @@ export const EmbedButton = ({
         editor.insertNode(
           {
             type: "embed",
-            url: "about:blank",
+            url: "",
             children: [{ text: "" }],
           },
           {
@@ -99,12 +99,10 @@ export const EmbedButton = ({
           // delete above blank lines
           {
             const cursor = Editor.before(editor, editor.selection!, { unit: "block", distance: 2 });
-            console.log(cursor);
             const block = Editor.above(editor, {
               match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
               at: cursor,
             });
-            console.log(block);
             const path = block ? block[1] : [];
             const start = Editor.start(editor, path);
             const end = Editor.end(editor, path);
@@ -141,27 +139,6 @@ export const ImageButton = ({
       onClick={(event) => {
         event.preventDefault();
         setShowImageChooser(true);
-        // const url = window.prompt("Enter the URL of the image:");
-        // if (url && !isImageUrl(url)) {
-        //   alert("URL is not an image");
-        //   return;
-        // }
-        // if(!url) return;
-        // if (!editor.selection) return;
-        // const block = Editor.above(editor, {
-        //   match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-        // });
-        // const path = block ? block[1] : [];
-        // const start = Editor.start(editor, path);
-        // const end = Editor.end(editor, path);
-        // const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
-        // const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
-        // if (w1 === "" && w2 === "") {
-        //   Transforms.removeNodes(editor);
-        // }
-        // const text = { text: "" };
-        // const image: ImageElement = { type: "image", url, children: [text] };
-        // Transforms.insertNodes(editor, image);
       }}
     >
       {children}

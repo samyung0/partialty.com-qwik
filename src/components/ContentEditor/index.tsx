@@ -12,12 +12,11 @@ import { Editable, Slate, withReact } from "slate-react";
 import { Element } from "~/components/ContentEditor/Element";
 import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
 import { HoveringToolbar } from "~/components/ContentEditor/HoveringToolbar";
-import { CenterImageChooser } from "~/components/ContentEditor/Images";
+import { CenterImageChooser, HoveringImage, withImages } from "~/components/ContentEditor/Images";
 import { Leaf } from "~/components/ContentEditor/Leaf";
 import { HoveringLink, withLink } from "~/components/ContentEditor/Link";
 import Toolbar from "~/components/ContentEditor/Toolbar";
 import onKeyDown from "~/components/ContentEditor/hotkey";
-import { withShortcuts } from "~/components/ContentEditor/shortcut";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
 import Prose from "~/components/Prose";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
@@ -90,7 +89,7 @@ const ContentEditorReact = ({
 }) => {
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
-    withShortcuts(withLink(withEmbeds(withReact(withHistory(createEditor())))))
+    withImages(withLink(withEmbeds(withReact(withHistory(createEditor())))))
   );
 
   const userImages = useRef<[Promise<string>, CloudinaryPublicPic][]>([]);
@@ -119,12 +118,15 @@ const ContentEditorReact = ({
   }, []);
 
   const [showImageChooser, setShowImageChooser] = useState(false);
+  const [replaceCurrentImage, setReplaceCurrentImage] = useState(false);
 
   return (
     <div className="flex flex-col items-center justify-center p-10">
       <Slate editor={editor} initialValue={initialValue}>
         {showImageChooser && (
           <CenterImageChooser
+            replaceCurrentImage={replaceCurrentImage}
+            setReplaceCurrentImage={setReplaceCurrentImage}
             setShowImageChooser={setShowImageChooser}
             userId={user.userId}
             userImages={userImages.current}
@@ -132,6 +134,10 @@ const ContentEditorReact = ({
           />
         )}
         <Toolbar setShowImageChooser={setShowImageChooser} />
+        <HoveringImage
+          setReplaceCurrentImage={setReplaceCurrentImage}
+          setShowImageChooser={setShowImageChooser}
+        />
         <HoveringEmbed />
         <HoveringLink />
         <HoveringToolbar />

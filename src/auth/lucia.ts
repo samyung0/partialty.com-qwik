@@ -81,6 +81,10 @@ const _lucia = () =>
         created_at: session.created_at,
       };
     },
+    sessionExpiresIn: {
+      activePeriod: 2 * 60 * 1000,
+      idlePeriod: 1209600000,
+    },
   });
 
 export const initLuciaIfNeeded = async (env: RequestEvent["env"]) => {
