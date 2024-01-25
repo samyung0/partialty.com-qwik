@@ -250,8 +250,10 @@ export const HoveringLink = ({
   const prevSelection = useRef<BaseRange | null>();
 
   useEffect(() => {
+    if (!editor.selection) return;
     const node = Editor.above(editor, {
       match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
+      at: { anchor: editor.selection.anchor, focus: editor.selection.anchor },
     });
     if (node) {
       setUrl((node[0] as UrlLink).url || "");
@@ -399,8 +401,7 @@ export function toggleLinkAtSelection(editor: Editor) {
       const pNode = Editor.above(editor);
       let url: string = "#";
       if (pNode) {
-        const above = Editor.above(editor);
-        if (above) url = Node.string(above[0]);
+        url = Editor.string(editor, editor.selection);
       }
       Transforms.wrapNodes(
         editor,
@@ -419,13 +420,8 @@ export function toggleLinkAtSelection(editor: Editor) {
 }
 
 export const LinkElement = ({ attributes, children, element }: RenderElementProps) => {
-  const { url } = element;
   return (
-    <a
-      {...attributes}
-      href={element.url}
-      className="relative border-b-2 border-dotted border-black"
-    >
+    <a {...attributes} href={element.url} className="border-b-2 border-primary-dark-gray">
       <InlineChromiumBugfix />
       {children}
       <InlineChromiumBugfix />

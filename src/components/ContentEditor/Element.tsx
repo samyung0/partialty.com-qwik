@@ -3,6 +3,7 @@ import type { RenderElementProps } from "slate-react";
 import { EmbedElement } from "~/components/ContentEditor/Embed";
 import { ImageBlock } from "~/components/ContentEditor/Images";
 import { LinkElement } from "~/components/ContentEditor/Link";
+import { CodeBlock, CodeLine } from "~/components/ContentEditor/codeBlock";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
   const style = { textAlign: element.align || "left" } as const;
@@ -67,6 +68,10 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       return <LinkElement attributes={attributes} element={element} children={children} />;
     case "image":
       return <ImageBlock attributes={attributes} element={element} children={children} />;
+    case "codeBlock":
+      return <CodeBlock attributes={attributes} element={element} children={children} />;
+    case "codeLine":
+      return <CodeLine attributes={attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

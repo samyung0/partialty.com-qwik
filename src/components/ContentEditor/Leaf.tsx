@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 import type { RenderLeafProps } from "slate-react";
 export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+  const { text, ...rest } = leaf;
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
@@ -38,7 +39,12 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   return (
-    <span className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : null}`} {...attributes}>
+    <span
+      className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : ""} ${Object.keys(rest).join(
+        " "
+      )}`}
+      {...attributes}
+    >
       {children}
     </span>
   );

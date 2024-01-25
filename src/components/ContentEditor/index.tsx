@@ -2,7 +2,7 @@
 import { qwikify$ } from "@builder.io/qwik-react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { BaseEditor, Descendant } from "slate";
+import type { BaseEditor, BaseRange, Descendant } from "slate";
 import { createEditor } from "slate";
 import type { HistoryEditor } from "slate-history";
 import { withHistory } from "slate-history";
@@ -11,12 +11,19 @@ import { Editable, Slate, withReact } from "slate-react";
 
 import { Element } from "~/components/ContentEditor/Element";
 import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
-import { HoveringToolbar } from "~/components/ContentEditor/HoveringToolbar";
 import { CenterImageChooser, HoveringImage, withImages } from "~/components/ContentEditor/Images";
 import { Leaf } from "~/components/ContentEditor/Leaf";
 import { HoveringLink, withLink } from "~/components/ContentEditor/Link";
 import Toolbar from "~/components/ContentEditor/Toolbar";
+import {
+  CenterCodeBlockSettings,
+  HoveringCodeBlock,
+  SetNodeToDecorations,
+  toCodeLines,
+  useDecorate,
+} from "~/components/ContentEditor/codeBlock";
 import onKeyDown from "~/components/ContentEditor/hotkey";
+import { withTrailingNewLine } from "~/components/ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
 import Prose from "~/components/Prose";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
@@ -24,7 +31,11 @@ import type { LuciaSession } from "~/types/LuciaSession";
 
 declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor;
+    Editor: BaseEditor &
+      ReactEditor &
+      HistoryEditor & {
+        nodeToDecorations?: Map<CustomElement, BaseRange[]>;
+      };
     Element: CustomElement;
     Text: CustomText;
   }
@@ -44,6 +55,25 @@ const initialValue: Descendant[] = [
       },
       { text: "" },
     ],
+  },
+  {
+    type: "codeBlock",
+    language: "tsx",
+    filename: "text.tsx",
+    children: toCodeLines(`/* eslint-disable qwik/jsx-img */
+    /** @jsxImportSource react */
+    
+    // Empty lines need to contain a single empty token, denoted with { empty: true }
+    const normalizeEmptyLines = (line: Token[]) => {
+      if (line.length === 0) {
+        line.push({
+          types: ["plain"],
+          empty: true,
+        });
+      } else if (line.length === 1 && line[0].content === "") {
+        line[0].empty = true;
+      }
+    };`),
   },
   {
     type: "paragraph",
@@ -89,7 +119,7 @@ const ContentEditorReact = ({
 }) => {
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
-    withImages(withLink(withEmbeds(withReact(withHistory(createEditor())))))
+    withTrailingNewLine(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
   );
 
   const userImages = useRef<[Promise<string>, CloudinaryPublicPic][]>([]);
@@ -117,12 +147,16 @@ const ContentEditorReact = ({
     return <Leaf {...props} />;
   }, []);
 
+  const decorate = useDecorate(editor);
+
   const [showImageChooser, setShowImageChooser] = useState(false);
   const [replaceCurrentImage, setReplaceCurrentImage] = useState(false);
+  const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
 
   return (
     <div className="flex flex-col items-center justify-center p-10">
       <Slate editor={editor} initialValue={initialValue}>
+        <SetNodeToDecorations />
         {showImageChooser && (
           <CenterImageChooser
             replaceCurrentImage={replaceCurrentImage}
@@ -133,6 +167,12 @@ const ContentEditorReact = ({
             editor={editor}
           />
         )}
+        {showCodeBlockSettings && (
+          <CenterCodeBlockSettings
+            setShowCodeBlockSettings={setShowCodeBlockSettings}
+            editor={editor}
+          />
+        )}
         <Toolbar setShowImageChooser={setShowImageChooser} />
         <HoveringImage
           setReplaceCurrentImage={setReplaceCurrentImage}
@@ -140,7 +180,8 @@ const ContentEditorReact = ({
         />
         <HoveringEmbed />
         <HoveringLink />
-        <HoveringToolbar />
+        <HoveringCodeBlock setShowCodeBlockSettings={setShowCodeBlockSettings} />
+        {/* <HoveringToolbar /> */}
         <Prose>
           <Editable
             className="border-2 border-black p-2 text-lg outline-none"
@@ -161,6 +202,7 @@ const ContentEditorReact = ({
             //       return toggleMark(editor, "underline");
             //   }
             // }
+            decorate={decorate}
             onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
             renderElement={renderElement}
             renderLeaf={renderLeaf}

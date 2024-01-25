@@ -6,6 +6,7 @@ import {
   Baseline,
   Bold,
   Code,
+  FileCode,
   Film,
   Heading1,
   Heading2,
@@ -26,6 +27,7 @@ import {
 } from "lucide-react";
 import {
   BlockButton,
+  CodeBlockButton,
   EmbedButton,
   ImageButton,
   LinkButton,
@@ -70,6 +72,7 @@ const Toolbar = ({
         children={<Image size={20} />}
       />
       <EmbedButton format="embed" children={<Film size={20} />} />
+      <CodeBlockButton format="codeBlock" children={<FileCode size={20} />} />
     </div>
   );
 };

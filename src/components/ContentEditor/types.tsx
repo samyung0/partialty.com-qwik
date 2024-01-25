@@ -10,6 +10,9 @@ export type ParagraphElement = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 
@@ -19,14 +22,45 @@ export type CodeElement = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
+
+export type CodeBlockElement = {
+  type: "codeBlock";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type CodeLineElement = {
+  type: "codeLine";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
 export type BlockQuote = {
   type: "block-quote";
   align?: Align;
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type HeadingOne = {
@@ -35,6 +69,9 @@ export type HeadingOne = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type HeadingTwo = {
@@ -43,6 +80,9 @@ export type HeadingTwo = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type HeadingThree = {
@@ -51,6 +91,9 @@ export type HeadingThree = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type HeadingFour = {
@@ -59,6 +102,9 @@ export type HeadingFour = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type ListItem = {
@@ -67,6 +113,9 @@ export type ListItem = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type NumberedList = {
@@ -75,6 +124,9 @@ export type NumberedList = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 export type BulletedList = {
@@ -83,6 +135,9 @@ export type BulletedList = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 
@@ -92,6 +147,9 @@ export type VideoEmbed = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 
@@ -101,6 +159,9 @@ export type UrlLink = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 
@@ -110,6 +171,9 @@ export type ImageElement = {
   url?: string;
   caption?: string;
   public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
   children: (CustomText | CustomElement)[];
 };
 
@@ -127,6 +191,8 @@ export type CustomText = {
 };
 export type CustomElement =
   | ParagraphElement
+  | CodeBlockElement
+  | CodeLineElement
   | CodeElement
   | BlockQuote
   | BulletedList

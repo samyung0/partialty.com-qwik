@@ -82,8 +82,8 @@ const _lucia = () =>
       };
     },
     sessionExpiresIn: {
-      activePeriod: 2 * 60 * 1000,
-      idlePeriod: 1209600000,
+      activePeriod: 60 * 60 * 1000, // 1 hour
+      idlePeriod: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
   });
 
