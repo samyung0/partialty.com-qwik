@@ -214,6 +214,14 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
 
   const [value, setValue] = useState(caption || "");
   const ref = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.style.height = "auto";
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
+    }
+  }, []);
+
   return (
     <div {...attributes}>
       <div

@@ -210,7 +210,7 @@ const ContentEditorReact = ({
         </Prose>
       </Slate>
       <button
-        className="mt-10"
+        className="mt-10 self-center"
         onClick={() => {
           console.log(editor.children);
         }}

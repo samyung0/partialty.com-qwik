@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 import { Editor, Element as SlateElement, Transforms } from "slate";
-import { ReactEditor, useSlate } from "slate-react";
+import { useSlate } from "slate-react";
 import { toggleLinkAtSelection } from "~/components/ContentEditor/Link";
 import type { Align, BlockFormat, CustomElementType, List } from "~/components/ContentEditor/types";
 import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/ContentEditor/types";
@@ -72,19 +72,8 @@ export const EmbedButton = ({
       onClick={(event) => {
         // event.stopPropagation();
         // event.preventDefault();
-        ReactEditor.focus(editor);
+        // ReactEditor.focus(editor);
         if (!editor.selection) return;
-        const block = Editor.above(editor, {
-          match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-        });
-        const path = block ? block[1] : [];
-        const start = Editor.start(editor, path);
-        const end = Editor.end(editor, path);
-        const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
-        const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
-        if (w1 === "" && w2 === "") {
-          Transforms.unwrapNodes(editor);
-        }
         editor.insertNode(
           {
             type: "embed",
@@ -95,24 +84,6 @@ export const EmbedButton = ({
             at: editor.selection,
           }
         );
-        Promise.resolve().then(() => {
-          // delete above blank lines
-          {
-            const cursor = Editor.before(editor, editor.selection!, { unit: "block", distance: 2 });
-            const block = Editor.above(editor, {
-              match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-              at: cursor,
-            });
-            const path = block ? block[1] : [];
-            const start = Editor.start(editor, path);
-            const end = Editor.end(editor, path);
-            const w1 = Editor.string(editor, { anchor: editor.selection!.anchor, focus: start });
-            const w2 = Editor.string(editor, { anchor: editor.selection!.anchor, focus: end });
-            if (w1 === "" && w2 === "") {
-              Transforms.unwrapNodes(editor, { at: cursor });
-            }
-          }
-        });
       }}
     >
       {children}
@@ -163,17 +134,6 @@ export const CodeBlockButton = ({
         event.preventDefault();
         // ReactEditor.focus(editor);
         if (!editor.selection) return;
-        const block = Editor.above(editor, {
-          match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-        });
-        const path = block ? block[1] : [];
-        const start = Editor.start(editor, path);
-        const end = Editor.end(editor, path);
-        const w1 = Editor.string(editor, { anchor: editor.selection.anchor, focus: start });
-        const w2 = Editor.string(editor, { anchor: editor.selection.anchor, focus: end });
-        if (w1 === "" && w2 === "") {
-          Transforms.unwrapNodes(editor);
-        }
         editor.insertNode(
           {
             type: "embed",
@@ -184,24 +144,6 @@ export const CodeBlockButton = ({
             at: editor.selection,
           }
         );
-        Promise.resolve().then(() => {
-          // delete above blank lines
-          {
-            const cursor = Editor.before(editor, editor.selection!, { unit: "block", distance: 2 });
-            const block = Editor.above(editor, {
-              match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-              at: cursor,
-            });
-            const path = block ? block[1] : [];
-            const start = Editor.start(editor, path);
-            const end = Editor.end(editor, path);
-            const w1 = Editor.string(editor, { anchor: editor.selection!.anchor, focus: start });
-            const w2 = Editor.string(editor, { anchor: editor.selection!.anchor, focus: end });
-            if (w1 === "" && w2 === "") {
-              Transforms.unwrapNodes(editor, { at: cursor });
-            }
-          }
-        });
       }}
     >
       {children}

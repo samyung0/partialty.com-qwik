@@ -274,10 +274,10 @@ export const CodeBlock = ({ attributes, children, element }: RenderElementProps)
     <div className={"prismOneDark"}>
       <pre className="font-bold" {...attributes} spellCheck={false}>
         {filename && (
-          <>
+          <div contentEditable={false}>
             <p className="m-0">{filename}</p>
             <hr className="m-2  border-gray-400" />
-          </>
+          </div>
         )}
         <code>{children}</code>
       </pre>

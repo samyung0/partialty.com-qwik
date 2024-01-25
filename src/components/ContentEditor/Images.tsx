@@ -20,7 +20,7 @@ import { isBlockActive } from "~/components/ContentEditor/blockFn";
 import type { ImageElement } from "~/components/ContentEditor/types";
 
 export const withImages = (editor: Editor) => {
-  const { insertData, isVoid } = editor;
+  const { isVoid } = editor;
 
   editor.isVoid = (element) => {
     return element.type === "image" ? true : isVoid(element);
@@ -146,6 +146,12 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   const editor = useSlateStatic();
   const [value, setValue] = useState(element.caption || "");
   const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.style.height = "auto";
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
+    }
+  }, []);
   return (
     <div {...attributes}>
       {children}
@@ -254,23 +260,6 @@ export const CenterImageChooser = ({
                     );
                     ReactEditor.deselect(editor);
                   } else {
-                    const block = Editor.above(editor, {
-                      match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-                    });
-                    const path = block ? block[1] : [];
-                    const start = Editor.start(editor, path);
-                    const end = Editor.end(editor, path);
-                    const w1 = Editor.string(editor, {
-                      anchor: editor.selection.anchor,
-                      focus: start,
-                    });
-                    const w2 = Editor.string(editor, {
-                      anchor: editor.selection.anchor,
-                      focus: end,
-                    });
-                    if (w1 === "" && w2 === "") {
-                      Transforms.unwrapNodes(editor);
-                    }
                     editor.insertNode(
                       {
                         type: "image",
