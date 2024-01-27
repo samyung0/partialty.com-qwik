@@ -111,7 +111,7 @@ const app = new Elysia()
           await insertMuxAssetDB(id, userId, filename);
           wsArr.get(userId).send(
             JSON.stringify({
-              type: "assetSuccess",
+              type: "assetReady",
               message: "OK",
             })
           );
