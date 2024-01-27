@@ -68,6 +68,30 @@ const app = new Elysia()
           const url = (body as any).data.url;
           if (url) uploadIdMapUploadUrl.set(id, url);
         }
+        if (type === "video.upload.asset_created") {
+          const upload_id = (body as any).object.id;
+          if (!upload_id) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          const url = uploadIdMapUploadUrl.get(upload_id);
+          if (!url) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          const { userId, filename } = uploadUrlMapUserId.get(url);
+          if (!userId || !filename) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          await insertMuxAssetDB(id, userId, filename);
+          wsArr.get(userId).send(
+            JSON.stringify({
+              type: "assetSuccess",
+              message: "OK",
+            })
+          );
+        }
         if (type === "video.asset.ready") {
           const upload_id = (body as any).data.upload_id;
           if (!upload_id) {
@@ -127,16 +151,17 @@ const app = new Elysia()
         }
         if (msg.type === "initCreate") {
           const url = msg.url,
-            userId = msg.userId;
-          if (!url || !userId) {
+            userId = msg.userId,
+            filename = msg.filename;
+          if (!url || !userId || !filename) {
             return ws.send(
               JSON.stringify({
                 type: "error",
-                message: "Upload Url or userId is empty!",
+                message: "Upload Url or userId or filename is empty!",
               })
             );
           }
-          uploadUrlMapUserId.set(url, userId);
+          uploadUrlMapUserId.set(url, { userId, filename });
           return ws.send(
             JSON.stringify({
               type: "createSuccess",
@@ -168,17 +193,6 @@ const app = new Elysia()
       } catch (e) {
         console.error(e);
       }
-    },
-    close(ws) {
-      wsArr.forEach((val, key) => {
-        console.log("should close:", key);
-        if (val == ws) {
-          console.log("close");
-          wsArrClear.delete(key);
-          wsArr.delete(key);
-          return;
-        }
-      });
     },
   });
 export default app;

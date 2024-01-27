@@ -222,21 +222,17 @@ const ContentEditorReact = ({
     });
 
     window.onbeforeunload = () => {
-      if (muxWS) {
-        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-        muxWS.close();
-        setMuxWS(undefined);
-        clearInterval(muxWSHeartBeat.current);
-      }
+      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+      ws.close();
+      setMuxWS(undefined);
+      clearInterval(muxWSHeartBeat.current);
       return true;
     };
     window.onunload = () => {
-      if (muxWS) {
-        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-        muxWS.close();
-        setMuxWS(undefined);
-        clearInterval(muxWSHeartBeat.current);
-      }
+      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+      ws.close();
+      setMuxWS(undefined);
+      clearInterval(muxWSHeartBeat.current);
       return true;
     };
   }, []);
