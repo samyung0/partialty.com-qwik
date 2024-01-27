@@ -52,10 +52,10 @@ const app = new Elysia()
         console.log(body);
         const type = (body as any).type;
         const id = (body as any).object.id;
+        console.log(type, id);
         if (!type || !id) {
           throw new Error("Unknown asset from Mux!");
         }
-        console.log(type, id);
         if (type === "video.upload.created") {
           console.log("init create");
           const url = (body as any).data.url;
