@@ -62,8 +62,8 @@ const app = new Elysia()
             uploadIdMapUploadUrl.set(id, url);
           }
         }
-        if (type === "video.upload.asset_created") {
-          const upload_id = (body as any).object.id;
+        if (type === "video.asset.created") {
+          const upload_id = (body as any).data.upload_id;
           if (!upload_id) {
             console.log("no upload id");
             deleteMuxAssetDB(id);
