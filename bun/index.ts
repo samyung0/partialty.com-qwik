@@ -9,6 +9,7 @@ import AuthRoute from "./auth/route";
 import CloudinaryRoute from "./cloudinary/route";
 import EmailRoute from "./email/route";
 import HealthRoute from "./health/route";
+import MuxRoute from "./mux/route";
 
 const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];
@@ -45,6 +46,7 @@ const app = new Elysia()
   .use(AuthRoute)
   .use(EmailRoute)
   .use(CloudinaryRoute)
+  .use(MuxRoute)
   .post("/idk", ({ body }) => {
     console.log(body);
   })
