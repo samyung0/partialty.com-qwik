@@ -8,8 +8,7 @@ const app = new Elysia().group("/mux", (app) => {
       if (!headers["mux-signature"]) {
         throw new Error("Invalid signature!");
       }
-      console.log(headers, body);
-      const [_t, _v1] = headers["mux-signature"];
+      const [_t, _v1] = headers["mux-signature"].split(",");
       const t = _t.slice(2);
       const expected_signature = _v1.slice(3);
       const payload = t + "." + body;
