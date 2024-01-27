@@ -169,10 +169,13 @@ const app = new Elysia()
           }
           wsArrClear.set(
             userId,
-            setTimeout(() => {
-              console.error("deleting" + userId);
-              wsArr.delete(userId), 2 * 60 * 1000;
-            })
+            setTimeout(
+              () => {
+                console.error("deleting" + userId);
+                wsArr.delete(userId);
+              },
+              2 * 60 * 1000
+            )
           );
           return wsArr.set(userId, ws);
         }
