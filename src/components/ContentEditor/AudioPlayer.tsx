@@ -3,21 +3,62 @@
 import { server$ } from "@builder.io/qwik-city";
 import * as UpChunk from "@mux/upchunk";
 import { Play, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { MUX_AUDIO_MAX_SIZE } from "~/const/mux";
 import type Mux from "~/types/Mux";
 
 export const CenterAudioChooser = ({
+  ws,
   userId,
   setShowAudioChooser,
   userAudiosWithName,
 }: {
+  ws: WebSocket;
   userId: string;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
   userAudiosWithName: [Mux["data"][0], string][];
 }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const fileRef = useRef<File>();
+  const urlRef = useRef<string>();
+
+  useEffect(() => {
+    ws.addEventListener("message", ({ data }) => {
+      try {
+        const d = JSON.parse(data);
+        if (d.type === "error") return alert("WS ERROR: " + d.message);
+        if (d.type === "createSuccess") {
+          if (!urlRef.current || !fileRef.current) return;
+          const upload = UpChunk.createUpload({
+            endpoint: urlRef.current,
+            file: fileRef.current,
+            chunkSize: 5120,
+          });
+          urlRef.current = undefined;
+          fileRef.current = undefined;
+          console.log(upload);
+          upload.on("error", (err) => {
+            console.error("💥 🙀", err.detail);
+          });
+          upload.on("progress", (progress) => {
+            console.log("Uploaded", progress.detail, "percent of this file.");
+          });
+          // subscribe to events
+          upload.on("success", async (details) => {
+            console.log("Wrap it up, we're done here. 👋");
+          });
+          return;
+        }
+        if (d.type === "assetSuccess") {
+          console.log("asset ready");
+        }
+      } catch (_) {
+        /* empty */
+      }
+    });
+  }, []);
+
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
@@ -62,6 +103,7 @@ export const CenterAudioChooser = ({
               onChange={async (e) => {
                 if (!e.target.files || e.target.files.length === 0) return;
                 const file = e.target.files[0];
+                fileRef.current = file;
 
                 if (file.size > MUX_AUDIO_MAX_SIZE) {
                   alert("Audio file cannot be larger than 100 MiB!");
@@ -96,25 +138,16 @@ export const CenterAudioChooser = ({
                   alert("Cannot upload audio file to Mux!");
                   return;
                 }
-                const upload = UpChunk.createUpload({
-                  // getUploadUrl is a function that resolves with the upload URL generated
-                  // on the server-side
-                  endpoint: url,
-                  // picker here is a file picker HTML element
-                  file: file,
-                  chunkSize: 5120, // Uploads the file in ~5mb chunks
-                });
-                console.log(upload);
-                upload.on("error", (err) => {
-                  console.error("💥 🙀", err.detail);
-                });
-                upload.on("progress", (progress) => {
-                  console.log("Uploaded", progress.detail, "percent of this file.");
-                });
-                // subscribe to events
-                upload.on("success", async (details) => {
-                  console.log("Wrap it up, we're done here. 👋");
-                });
+
+                urlRef.current = url;
+
+                ws.send(
+                  JSON.stringify({
+                    type: "initCreate",
+                    url,
+                    userId,
+                  })
+                );
               }}
               type="file"
               className="hidden"

@@ -30,9 +30,9 @@ const insertMuxAssetDB = (id: string, userId: string, filename: string) =>
 
 const deleteMuxAssetDB = (id: string) => turso.execute(`DELETE FROM mux_assets where id='${id}'`);
 
-const app = new Elysia().group("/mux", (app) => {
-  return app
-    .post(
+const app = new Elysia()
+  .group("/mux", (app) => {
+    return app.post(
       "/",
       async ({ body, headers }) => {
         if (!headers["mux-signature"]) {
@@ -100,44 +100,45 @@ const app = new Elysia().group("/mux", (app) => {
         },
         body: t.Not(t.Undefined()),
       }
-    )
-    .ws("/ws", {
-      message(ws, message: any) {
-        try {
-          const msg = JSON.parse(message);
-          if (msg.type === "init") {
-            const userId = msg.userId;
-            if (!userId || Object.prototype.hasOwnProperty.call(wsArr, userId)) {
-              return ws.send(
-                JSON.stringify({
-                  type: "error",
-                  message: "User ID is empty or a connection has already been made!",
-                })
-              );
-            }
-            return wsArr.set(userId, ws);
-          }
-          if (msg.type === "initCreate") {
-            const url = msg.url,
-              userId = msg.userId;
-            if (!url || !userId) {
-              return ws.send(
-                JSON.stringify({
-                  type: "error",
-                  message: "Upload Url or userId is empty!",
-                })
-              );
-            }
-            uploadUrlMapUserId.set(url, userId);
+    );
+  })
+  .ws("/mux/ws", {
+    message(ws, message: any) {
+      console.log(message);
+      try {
+        const msg = JSON.parse(message);
+        if (msg.type === "init") {
+          const userId = msg.userId;
+          if (!userId || Object.prototype.hasOwnProperty.call(wsArr, userId)) {
             return ws.send(
               JSON.stringify({
-                type: "createSuccess",
-                message: "OK",
+                type: "error",
+                message: "User ID is empty or a connection has already been made!",
               })
             );
           }
-        } catch (_) {}
-      },
-    });
-});
+          return wsArr.set(userId, ws);
+        }
+        if (msg.type === "initCreate") {
+          const url = msg.url,
+            userId = msg.userId;
+          if (!url || !userId) {
+            return ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "Upload Url or userId is empty!",
+              })
+            );
+          }
+          uploadUrlMapUserId.set(url, userId);
+          return ws.send(
+            JSON.stringify({
+              type: "createSuccess",
+              message: "OK",
+            })
+          );
+        }
+      } catch (_) {}
+    },
+  });
 export default app;
