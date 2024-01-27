@@ -63,6 +63,7 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
     audioFile.value.data,
     userMuxAssets.find((asset) => asset.id === audioFile.value.data.id)!.name,
   ]) as [Mux["data"][0], string][];
+  muxAudiosWithNames.sort((a, b) => Number(b[0].created_at) - Number(a[0].created_at));
   ret.muxAudiosWithNames = muxAudiosWithNames;
 
   if (!res || !res.resources) return ret;

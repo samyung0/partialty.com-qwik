@@ -50,6 +50,7 @@ const app = new Elysia()
           throw new Error("Invalid signature!");
         }
         try {
+          console.log(body);
           const data = JSON.parse(body as any);
           const type = data.type;
           if (!type) {
@@ -61,28 +62,29 @@ const app = new Elysia()
             if (url && id) {
               uploadIdMapUploadUrl.set(id, url);
             }
+            return;
           }
           if (type === "video.asset.created") {
             const upload_id = data.data.upload_id;
             const id = data.object.id;
             if (!upload_id) {
               console.error("Upload Id not found in video.asset.created!");
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
               console.error("Url not found in uploadIdMapUploadUrl!");
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url);
             if (!userId || !filename) {
               console.error("UserId or Filename not found in uploadUrlMapUserId!");
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
-            wsArr.get(userId).send(
+            return wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetSuccess",
                 message: {
@@ -98,24 +100,24 @@ const app = new Elysia()
             const id = data.object.id;
             const upload_id = data.data.upload_id;
             if (!upload_id) {
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url);
             if (!userId || !filename) {
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
               return;
             }
             try {
               await insertMuxAssetDB(id, userId, filename);
             } catch (e) {
               console.error(e);
-              deleteMuxAssetDB(id);
+              deleteMuxAsset(id);
             }
             wsArr.get(userId).send(
               JSON.stringify({
@@ -125,6 +127,7 @@ const app = new Elysia()
             );
             uploadIdMapUploadUrl.delete(upload_id);
             uploadUrlMapUserId.delete(url);
+            return;
           }
           if (type === "video.asset.deleted") {
             const id = data.object.id;

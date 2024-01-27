@@ -66,7 +66,7 @@ export const CenterAudioChooser = ({
           const duration = d.message.duration as number;
           const id = d.message.id as string;
           const created_at = d.message.created_at as string;
-          if (!filename || !duration || !id) {
+          if (!filename || !duration || !id || !created_at) {
             console.log("error from server, missing values");
             setStatus("Errored");
             setTimeout(() => {
