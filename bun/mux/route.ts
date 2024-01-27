@@ -85,7 +85,11 @@ const app = new Elysia()
             wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetSuccess",
-                message: "OK",
+                message: {
+                  id: id,
+                  filename: filename,
+                  duration: data.data.duration,
+                },
               })
             );
           }
