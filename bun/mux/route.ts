@@ -169,7 +169,7 @@ const app = new Elysia()
           }
           wsArrClear.set(
             userId,
-            setTimeout(() => wsArr.delete(userId), 60 * 1000)
+            setTimeout(() => wsArr.delete(userId), 2 * 60 * 1000)
           );
           return wsArr.set(userId, ws);
         }
@@ -196,6 +196,7 @@ const app = new Elysia()
         if (msg.type === "heartBeat") {
           const userId = msg.userId;
           if (!userId || !wsArrClear.get(userId)) {
+            console.error("Hearbeat Error! unknown id!");
             return ws.send(
               JSON.stringify({
                 type: "error",
@@ -206,7 +207,7 @@ const app = new Elysia()
           clearTimeout(wsArrClear.get(userId));
           wsArrClear.set(
             userId,
-            setTimeout(() => wsArr.delete(userId), 60 * 1000)
+            setTimeout(() => wsArr.delete(userId), 2 * 60 * 1000)
           );
         }
         if (msg.type === "terminate") {

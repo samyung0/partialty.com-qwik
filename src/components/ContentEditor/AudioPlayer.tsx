@@ -99,52 +99,49 @@ export const CenterAudioChooser = ({
             Uh Oh. It seems like you haven't uploaded any audio tracks yet.
           </div>
         )}
-        {newAudio.length > 0 && (
-          <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
-            {newAudio.map(([audioTrack, name]) => (
-              <li
-                key={`AudioChooser${audioTrack.id}`}
-                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
-              >
-                <div className="flex cursor-pointer flex-col items-start justify-center">
-                  <h3 className="text-lg tracking-wide">{name}</h3>
-                  <p className="text-xs tracking-wide text-gray-400">
-                    {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+        {newAudio.length > 0 ||
+          (userAudiosWithName.length > 0 && (
+            <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
+              {newAudio.map(([audioTrack, name]) => (
+                <li
+                  key={`AudioChooser${audioTrack.id}`}
+                  className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+                >
+                  <div className="flex cursor-pointer flex-col items-start justify-center">
+                    <h3 className="text-lg tracking-wide">{name}</h3>
+                    <p className="text-xs tracking-wide text-gray-400">
+                      {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+                    </p>
+                  </div>
+                  <p className="flex items-center gap-1">
+                    {Math.floor(audioTrack.duration / 60)}:
+                    {Math.floor(audioTrack.duration % 60)
+                      .toString()
+                      .padStart(2, "0")}
                   </p>
-                </div>
-                <p className="flex items-center gap-1">
-                  {Math.floor(audioTrack.duration / 60)}:
-                  {Math.floor(audioTrack.duration % 60)
-                    .toString()
-                    .padStart(2, "0")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-        {userAudiosWithName.length > 0 && (
-          <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
-            {userAudiosWithName.map(([audioTrack, name]) => (
-              <li
-                key={`AudioChooser${audioTrack.id}`}
-                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
-              >
-                <div className="flex cursor-pointer flex-col items-start justify-center">
-                  <h3 className="text-lg tracking-wide">{name}</h3>
-                  <p className="text-xs tracking-wide text-gray-400">
-                    {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+                </li>
+              ))}
+              {userAudiosWithName.map(([audioTrack, name]) => (
+                <li
+                  key={`AudioChooser${audioTrack.id}`}
+                  className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+                >
+                  <div className="flex cursor-pointer flex-col items-start justify-center">
+                    <h3 className="text-lg tracking-wide">{name}</h3>
+                    <p className="text-xs tracking-wide text-gray-400">
+                      {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+                    </p>
+                  </div>
+                  <p className="flex items-center gap-1">
+                    {Math.floor(audioTrack.duration / 60)}:
+                    {Math.floor(audioTrack.duration % 60)
+                      .toString()
+                      .padStart(2, "0")}
                   </p>
-                </div>
-                <p className="flex items-center gap-1">
-                  {Math.floor(audioTrack.duration / 60)}:
-                  {Math.floor(audioTrack.duration % 60)
-                    .toString()
-                    .padStart(2, "0")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
+                </li>
+              ))}
+            </ul>
+          ))}
         <div className="flex w-full items-center justify-center pt-8">
           {!isUploading ? (
             <label htmlFor="uploadImage">
