@@ -105,12 +105,12 @@ const app = new Elysia()
   })
   .ws("/mux/ws", {
     message(ws, message: any) {
-      console.log(message);
+      console.log(message, typeof message);
       try {
         const msg = JSON.parse(message);
         if (msg.type === "init") {
           const userId = msg.userId;
-          console.log(Array.from(wsArr.keys()));
+          console.log(userId, Array.from(wsArr.keys()));
           if (!userId || wsArr.get(userId)) {
             ws.send(
               JSON.stringify({
@@ -165,7 +165,9 @@ const app = new Elysia()
           const userId = msg.userId;
           return wsArr.delete(userId);
         }
-      } catch (_) {}
+      } catch (e) {
+        console.error(e);
+      }
     },
   });
 export default app;

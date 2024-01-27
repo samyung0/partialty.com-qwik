@@ -223,6 +223,15 @@ const ContentEditorReact = ({
       if (muxWS) {
         muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
+        setMuxWS(undefined);
+      }
+      return true;
+    };
+    window.onunload = () => {
+      if (muxWS) {
+        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+        muxWS.close();
+        setMuxWS(undefined);
       }
       return true;
     };
