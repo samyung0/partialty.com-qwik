@@ -104,10 +104,9 @@ const app = new Elysia()
     );
   })
   .ws("/mux/ws", {
-    message(ws, message: any) {
-      console.log(message, typeof message);
+    message(ws, msg: any) {
+      console.log(msg);
       try {
-        const msg = JSON.parse(message);
         if (msg.type === "init") {
           const userId = msg.userId;
           console.log(userId, Array.from(wsArr.keys()));
