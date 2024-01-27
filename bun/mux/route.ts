@@ -1,8 +1,6 @@
 import { createHmac } from "crypto";
 import Elysia, { t } from "elysia";
 
-if (!Bun.env.MUX_SIGNING_SECRET) throw new Error("Server MUX env var Error!");
-
 const app = new Elysia().group("/mux", (app) => {
   return app.post(
     "/",
