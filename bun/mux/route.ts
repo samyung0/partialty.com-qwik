@@ -109,7 +109,7 @@ const app = new Elysia()
       try {
         if (msg.type === "init") {
           const userId = msg.userId;
-          console.log(userId, Array.from(wsArr.keys()));
+          console.log("init", userId, Array.from(wsArr.keys()));
           if (!userId || wsArr.get(userId)) {
             ws.send(
               JSON.stringify({
@@ -170,6 +170,7 @@ const app = new Elysia()
     },
     close(ws) {
       wsArr.forEach((val, key) => {
+        console.log("close", val, key);
         if (val === ws) {
           wsArrClear.delete(key);
           wsArr.delete(key);
