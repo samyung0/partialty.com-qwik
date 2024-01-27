@@ -110,7 +110,7 @@ const app = new Elysia()
         const msg = JSON.parse(message);
         if (msg.type === "init") {
           const userId = msg.userId;
-          console.log(wsArr.entries());
+          console.log(Array.from(wsArr.keys()));
           if (!userId || wsArr.get(userId)) {
             ws.send(
               JSON.stringify({
