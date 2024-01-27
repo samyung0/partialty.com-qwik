@@ -112,12 +112,13 @@ const app = new Elysia()
           const userId = msg.userId;
           console.log(wsArr.entries());
           if (!userId || wsArr.get(userId)) {
-            return ws.send(
+            ws.send(
               JSON.stringify({
                 type: "error",
                 message: "User ID is empty or a connection has already been made!",
               })
             );
+            return ws.close();
           }
           wsArrClear.set(
             userId,

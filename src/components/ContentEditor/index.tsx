@@ -219,11 +219,12 @@ const ContentEditorReact = ({
       setMuxWS(undefined);
     });
 
-    window.onbeforeunload = (e) => {
+    window.onbeforeunload = () => {
       if (muxWS) {
         muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
       }
+      return true;
     };
   }, []);
 
