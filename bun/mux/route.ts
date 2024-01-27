@@ -1,8 +1,11 @@
 import { createHmac } from "crypto";
 import Elysia, { t } from "elysia";
+import { turso } from "../turso";
 
 // const;
-const wsArr = [];
+const wsArr = new Map();
+const uploadUrlMapUserId = new Map();
+const uploadIdMapUploadUrl = new Map();
 
 if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET)
   throw new Error("Server Mux env var Error!");
@@ -17,7 +20,15 @@ const deleteMuxAsset = (id: string) => {
       "Content-Type": "application/json",
     },
   });
+  deleteMuxAssetDB(id);
 };
+
+const insertMuxAssetDB = (id: string, userId: string, filename: string) =>
+  turso.execute(
+    `INSERT INTO mux_assets (id, user_id, name) values ('${id}', '${userId}', '${filename}')`
+  );
+
+const deleteMuxAssetDB = (id: string) => turso.execute(`DELETE FROM mux_assets where id='${id}'`);
 
 const app = new Elysia().group("/mux", (app) => {
   return app
@@ -48,6 +59,40 @@ const app = new Elysia().group("/mux", (app) => {
           deleteMuxAsset(id);
           return;
         }
+        if (type === "video.asset.deleted") {
+          deleteMuxAssetDB(id);
+          return;
+        }
+        if (type === "video.upload.created") {
+          const url = (body as any).data.url;
+          if (url) uploadIdMapUploadUrl.set(id, url);
+        }
+        if (type === "video.asset.ready") {
+          const upload_id = (body as any).data.upload_id;
+          if (!upload_id) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          const url = uploadIdMapUploadUrl.get(upload_id);
+          if (!url) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          const { userId, filename } = uploadUrlMapUserId.get(url);
+          if (!userId || !filename) {
+            deleteMuxAssetDB(id);
+            return;
+          }
+          await insertMuxAssetDB(id, userId, filename);
+          wsArr.get(userId).send(
+            JSON.stringify({
+              type: "assetSuccess",
+              message: "OK",
+            })
+          );
+          uploadIdMapUploadUrl.delete(upload_id);
+          uploadUrlMapUserId.delete(url);
+        }
       },
       {
         async parse(ctx) {
@@ -57,8 +102,41 @@ const app = new Elysia().group("/mux", (app) => {
       }
     )
     .ws("/ws", {
-      open(ws) {
-        wsArr.push(ws);
+      message(ws, message: any) {
+        try {
+          const msg = JSON.parse(message);
+          if (msg.type === "init") {
+            const userId = msg.userId;
+            if (!userId || Object.prototype.hasOwnProperty.call(wsArr, userId)) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "User ID is empty or a connection has already been made!",
+                })
+              );
+            }
+            return wsArr.set(userId, ws);
+          }
+          if (msg.type === "initCreate") {
+            const url = msg.url,
+              userId = msg.userId;
+            if (!url || !userId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "Upload Url or userId is empty!",
+                })
+              );
+            }
+            uploadUrlMapUserId.set(url, userId);
+            return ws.send(
+              JSON.stringify({
+                type: "createSuccess",
+                message: "OK",
+              })
+            );
+          }
+        } catch (_) {}
       },
     });
 });
