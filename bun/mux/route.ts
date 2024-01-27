@@ -49,7 +49,7 @@ const app = new Elysia()
         if (hmac !== expected_signature) {
           throw new Error("Invalid signature!");
         }
-        console.log(body);
+        console.log(body, Object.keys(body as any));
         const type = (body as any).type;
         // const id = (body as any).object.id;
         console.log("WTF", type);
