@@ -212,11 +212,13 @@ const ContentEditorReact = ({
     ws.addEventListener("error", () => {
       console.error("connection error!");
       setMuxWS(undefined);
+      clearInterval(muxWSHeartBeat.current);
     });
 
     ws.addEventListener("close", () => {
       console.error("connection closed!");
       setMuxWS(undefined);
+      clearInterval(muxWSHeartBeat.current);
     });
 
     window.onbeforeunload = () => {
@@ -224,6 +226,7 @@ const ContentEditorReact = ({
         // muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
         setMuxWS(undefined);
+        clearInterval(muxWSHeartBeat.current);
       }
       return true;
     };
@@ -232,6 +235,7 @@ const ContentEditorReact = ({
         // muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
         setMuxWS(undefined);
+        clearInterval(muxWSHeartBeat.current);
       }
       return true;
     };

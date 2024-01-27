@@ -170,6 +170,7 @@ const app = new Elysia()
     },
     close(ws) {
       wsArr.forEach((val, key) => {
+        console.log("should close:", key);
         if (val === ws) {
           console.log("close");
           wsArrClear.delete(key);
