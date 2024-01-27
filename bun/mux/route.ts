@@ -51,43 +51,37 @@ const app = new Elysia()
         }
         try {
           const data = JSON.parse(body as any);
-          console.log(data, Object.keys(data as any));
-          const type = (data as any).type;
-          // const id = (data as any).object.id;
-          console.log("WTF", type);
+          const type = data.type;
           if (!type) {
             throw new Error("Unknown asset from Mux!");
           }
           if (type === "video.upload.created") {
-            console.log("init create");
-            const url = (data as any).data.url;
-            const id = (data as any).object.id;
+            const url = data.data.url;
+            const id = data.object.id;
             if (url && id) {
-              console.log("set url");
               uploadIdMapUploadUrl.set(id, url);
             }
           }
           if (type === "video.asset.created") {
-            const upload_id = (data as any).data.upload_id;
-            const id = (data as any).object.id;
+            const upload_id = data.data.upload_id;
+            const id = data.object.id;
             if (!upload_id) {
-              console.log("no upload id");
+              console.error("Upload Id not found in video.asset.created!");
               deleteMuxAssetDB(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
-              console.log("no url");
+              console.error("Url not found in uploadIdMapUploadUrl!");
               deleteMuxAssetDB(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url);
             if (!userId || !filename) {
-              console.log("no userId or filename");
+              console.error("UserId or Filename not found in uploadUrlMapUserId!");
               deleteMuxAssetDB(id);
               return;
             }
-            await insertMuxAssetDB(id, userId, filename);
             wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetSuccess",
@@ -96,8 +90,8 @@ const app = new Elysia()
             );
           }
           if (type === "video.asset.ready") {
-            const id = (data as any).object.id;
-            const upload_id = (data as any).data.upload_id;
+            const id = data.object.id;
+            const upload_id = data.data.upload_id;
             if (!upload_id) {
               deleteMuxAssetDB(id);
               return;
@@ -112,7 +106,12 @@ const app = new Elysia()
               deleteMuxAssetDB(id);
               return;
             }
-            await insertMuxAssetDB(id, userId, filename);
+            try {
+              await insertMuxAssetDB(id, userId, filename);
+            } catch (e) {
+              console.error(e);
+              deleteMuxAssetDB(id);
+            }
             wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetReady",
@@ -123,7 +122,7 @@ const app = new Elysia()
             uploadUrlMapUserId.delete(url);
           }
           if (type === "video.asset.deleted") {
-            const id = (data as any).object.id;
+            const id = data.object.id;
             deleteMuxAssetDB(id);
             return;
           }
