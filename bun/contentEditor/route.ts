@@ -2,11 +2,15 @@ import { createHmac } from "crypto";
 import Elysia, { t } from "elysia";
 import { turso } from "../turso";
 
-// const;
 const wsArr = new Map();
 const wsArrClear = new Map();
 const uploadUrlMapUserId = new Map();
 const uploadIdMapUploadUrl = new Map();
+
+const wsContentArr = new Map();
+const wsContentArrClear = new Map();
+const courseIdToUserId = new Map();
+const userIdToCourseId = new Map();
 
 if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET)
   throw new Error("Server Mux env var Error!");
@@ -128,7 +132,7 @@ const app = new Elysia()
                   filename: filename,
                   duration: data.data.duration,
                   created_at: data.data.created_at,
-                  playbackId: data.playback_ids[0].id,
+                  playbackId: data.data.playback_ids[0].id,
                 },
               })
             );
@@ -175,7 +179,7 @@ const app = new Elysia()
                 console.error("deleting" + userId);
                 wsArr.delete(userId);
               },
-              2 * 60 * 1000
+              5 * 60 * 1000
             )
           );
           return wsArr.set(userId, ws);
@@ -219,7 +223,7 @@ const app = new Elysia()
                 console.error("deleting" + userId);
                 wsArr.delete(userId);
               },
-              2 * 60 * 1000
+              5 * 60 * 1000
             )
           );
         }
@@ -231,6 +235,117 @@ const app = new Elysia()
       } catch (e) {
         console.error(e);
       }
+    },
+  })
+  .ws("/content/ws", {
+    message(ws, msg: any) {
+      console.log(msg);
+      try {
+        if (msg.type === "init") {
+          const userId = msg.userId;
+          if (!userId || wsContentArr.get(userId)) {
+            ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "User ID is empty or a connection has already been made!",
+              })
+            );
+            return ws.close();
+          }
+          wsContentArrClear.set(
+            userId,
+            setTimeout(
+              () => {
+                console.error("deleting" + userId);
+                wsContentArr.delete(userId);
+                if (userIdToCourseId.get(userId)) {
+                  courseIdToUserId.delete(userIdToCourseId.get(userId));
+                  userIdToCourseId.delete(userId);
+                }
+              },
+              5 * 60 * 1000
+            )
+          );
+          return wsContentArr.set(userId, ws);
+        }
+        if (msg.type === "openContent") {
+          const userId = msg.userId;
+          const contentId = msg.contentId;
+          if (!userId || !contentId) {
+            return ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "User ID or Content ID is empty!",
+              })
+            );
+          }
+          if (courseIdToUserId.get(contentId)) {
+            if (courseIdToUserId.get(contentId) === userId) return;
+            return ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "Another Person is already editing the content!",
+              })
+            );
+          }
+          courseIdToUserId.set(contentId, userId);
+          userIdToCourseId.set(userId, contentId);
+          return ws.send(
+            JSON.stringify({
+              type: "openSuccess",
+              message: "OK",
+            })
+          );
+        }
+        if (msg.type === "heartBeat") {
+          const userId = msg.userId;
+          if (!userId || !wsContentArrClear.get(userId)) {
+            console.error("Hearbeat Error! unknown id!");
+            return ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "User ID is empty or User ID not found in connection map!",
+              })
+            );
+          }
+          clearTimeout(wsContentArrClear.get(userId));
+          wsContentArrClear.set(
+            userId,
+            setTimeout(
+              () => {
+                console.error("deleting" + userId);
+                wsContentArr.delete(userId);
+                if (userIdToCourseId.get(userId)) {
+                  courseIdToUserId.delete(userIdToCourseId.get(userId));
+                  userIdToCourseId.delete(userId);
+                }
+              },
+              5 * 60 * 1000
+            )
+          );
+        }
+        if (msg.type === "terminate") {
+          const userId = msg.userId;
+          wsContentArrClear.delete(userId);
+          if (userIdToCourseId.get(userId)) {
+            courseIdToUserId.delete(userIdToCourseId.get(userId));
+            userIdToCourseId.delete(userId);
+          }
+          return wsContentArr.delete(userId);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    open(ws) {
+      const entries: any = {};
+      courseIdToUserId.forEach((val, key) => (entries[key] = val));
+      ws.send(
+        JSON.stringify({
+          type: "open",
+          message: entries,
+        })
+      );
     },
   });
 export default app;

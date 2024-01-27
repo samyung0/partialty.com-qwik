@@ -190,7 +190,9 @@ const ContentEditorReact = ({
     id: string;
     duration: number;
     filename: string;
+    playback_ids: { id: string }[];
   }>();
+  const audioTimeStamp = useRef(0);
   const muxWSHeartBeat = useRef<any>();
 
   useEffect(() => {
@@ -274,7 +276,7 @@ const ContentEditorReact = ({
                 editor={editor}
               />
             )}
-            <Toolbar setShowImageChooser={setShowImageChooser} />
+            <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
             <HoveringImage
               setReplaceCurrentImage={setReplaceCurrentImage}
               setShowImageChooser={setShowImageChooser}
@@ -297,6 +299,7 @@ const ContentEditorReact = ({
             </Prose>
           </Slate>
           <AudioPlayer
+            audioTimeStamp={audioTimeStamp}
             setAudioTrack={setAudioTrack}
             setShowAudioChooser={setShowAudioChooser}
             audioTrack={audioTrack}

@@ -7,9 +7,9 @@ import { helmet } from "elysia-helmet";
 import { rateLimit } from "elysia-rate-limit";
 import AuthRoute from "./auth/route";
 import CloudinaryRoute from "./cloudinary/route";
+import MuxRoute from "./contentEditor/route";
 import EmailRoute from "./email/route";
 import HealthRoute from "./health/route";
-import MuxRoute from "./mux/route";
 
 const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];

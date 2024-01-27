@@ -3,7 +3,7 @@
 import { server$ } from "@builder.io/qwik-city";
 import MuxPlayer from "@mux/mux-player-react";
 import * as UpChunk from "@mux/upchunk";
-import { Play, Trash2, X } from "lucide-react";
+import { Pause, Play, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { MUX_AUDIO_MAX_SIZE } from "~/const/mux";
 
@@ -26,6 +26,7 @@ export const CenterAudioChooser = ({
           id: string;
           duration: number;
           filename: string;
+          playback_ids: { id: string }[];
         }
       | undefined
     >
@@ -35,7 +36,7 @@ export const CenterAudioChooser = ({
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("idle");
   const [newAudio, setNewAudio] = useState<
-    [{ id: string; duration: number; created_at: string }, string][]
+    [{ id: string; duration: number; created_at: string; playback_ids: { id: string }[] }, string][]
   >([]);
   const fileRef = useRef<File>();
   const urlRef = useRef<string>();
@@ -78,8 +79,8 @@ export const CenterAudioChooser = ({
           const duration = d.message.duration as number;
           const id = d.message.id as string;
           const created_at = d.message.created_at as string;
-          !filename || !duration || !id || !created_at;
-          if (!filename || !duration || !id || !created_at) {
+          const playbackId = d.playbackId as string;
+          if (!filename || !duration || !id || !created_at || !playbackId) {
             setStatus("Errored");
             setTimeout(() => {
               setIsUploading(false);
@@ -90,7 +91,10 @@ export const CenterAudioChooser = ({
           setStatus("Finished");
           setTimeout(() => {
             setIsUploading(false);
-            setNewAudio([[{ id, duration, created_at }, filename], ...newAudio]);
+            setNewAudio([
+              [{ id, duration, created_at, playback_ids: [{ id: playbackId }] }, filename],
+              ...newAudio,
+            ]);
           }, 1000);
         }
       } catch (_) {
@@ -120,6 +124,7 @@ export const CenterAudioChooser = ({
                     id: audioTrack.id,
                     filename: name,
                     duration: audioTrack.duration,
+                    playback_ids: [{ id: audioTrack.playback_ids[0].id }],
                   });
                   setShowAudioChooser(false);
                 }}
@@ -147,6 +152,7 @@ export const CenterAudioChooser = ({
                     id: audioTrack.id,
                     filename: name,
                     duration: audioTrack.duration,
+                    playback_ids: [{ id: audioTrack.playback_ids[0].id }],
                   });
                   setShowAudioChooser(false);
                 }}
@@ -252,8 +258,11 @@ export default ({
   audioTrack,
   setShowAudioChooser,
   setAudioTrack,
+  audioTimeStamp,
 }: {
-  audioTrack: { id: string; duration: number; filename: string } | undefined;
+  audioTrack:
+    | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
+    | undefined;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
   setAudioTrack: React.Dispatch<
     React.SetStateAction<
@@ -261,23 +270,33 @@ export default ({
           id: string;
           duration: number;
           filename: string;
+          playback_ids: { id: string }[];
         }
       | undefined
     >
   >;
+  audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const [timeStamp, setTimeStamp] = useState(0);
+  const [paused, setPaused] = useState(true);
+  const muxRef = useRef<any>();
   return (
     <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t border-sea bg-light-sea px-8">
+      <MuxPlayer
+        ref={muxRef}
+        className="hidden"
+        streamType="on-demand"
+        playbackId={audioTrack && audioTrack.playback_ids[0].id}
+        // crossOrigin="*"
+        paused={paused}
+        onTimeUpdate={(e) => {
+          if (!e.target) return;
+          setTimeStamp((e.target as HTMLVideoElement).currentTime);
+          audioTimeStamp.current = (e.target as HTMLVideoElement).currentTime;
+        }}
+      />
       {audioTrack ? (
         <>
-          <MuxPlayer
-            className="hidden"
-            streamType="on-demand"
-            playbackId="Ej4WvGO6jIW2AuYFMjKv82l8HxEieUfRpBfM7Ezek48"
-            crossOrigin="*"
-            autoPlay
-          />
           <div className="mx-auto flex w-[80%] items-center">
             <div className="w-full">
               <div className="mx-auto mb-1 flex items-center justify-between">
@@ -288,8 +307,13 @@ export default ({
                   data-tooltip-target="tooltip-pause"
                   type="button"
                   className="group mx-2 inline-flex items-center justify-center rounded-full bg-sea p-2.5 font-medium focus:outline-none"
+                  onClick={() => setPaused(!paused)}
                 >
-                  <Play color="white" size={20} className="translate-x-[2px]" />
+                  {paused ? (
+                    <Play color="white" size={20} className="translate-x-[2px]" />
+                  ) : (
+                    <Pause color="white" size={20} />
+                  )}
                 </button>
                 <div className="w-[300px]"></div>
               </div>
@@ -310,6 +334,8 @@ export default ({
                     value={timeStamp}
                     onChange={(e) => {
                       setTimeStamp(Number(e.target.value));
+                      audioTimeStamp.current = Number(e.target.value);
+                      if (muxRef.current) muxRef.current.currentTime = e.target.value;
                     }}
                     min="0"
                     max={audioTrack.duration}

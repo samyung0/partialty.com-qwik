@@ -30,11 +30,14 @@ export const MarkButton = ({
 export const BackgroundMarkButton = ({
   format,
   children,
+  audioTimeStamp,
 }: {
   format: CustomMarkFormat;
   children: React.ReactNode;
+  audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
+  const mark = Editor.marks(editor) || {};
   return (
     <div
       className={
@@ -45,7 +48,29 @@ export const BackgroundMarkButton = ({
     >
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
-        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+        <ColorChooser
+          mark={mark}
+          getTime={() => audioTimeStamp.current}
+          setSync={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
+            Editor.addMark(editor, "sync", true);
+          }}
+          setTimeStamp={(timestamp: number) => {
+            Editor.addMark(editor, "timeStamp", timestamp);
+          }}
+          setAnimate={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
+            Editor.addMark(editor, "animate", true);
+          }}
+          setColor={(color: string) => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark[format] && currentMark[format] === color)
+              return Editor.removeMark(editor, format);
+            Editor.addMark(editor, format, color);
+          }}
+        />
       </div>
     </div>
   );
@@ -54,11 +79,14 @@ export const BackgroundMarkButton = ({
 export const UnderlineMarkButton = ({
   format,
   children,
+  audioTimeStamp,
 }: {
   format: CustomMarkFormat;
   children: React.ReactNode;
+  audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
+  const mark = Editor.marks(editor) || {};
   return (
     <div
       className={
@@ -69,7 +97,29 @@ export const UnderlineMarkButton = ({
     >
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
-        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+        <ColorChooser
+          mark={mark}
+          getTime={() => audioTimeStamp.current}
+          setSync={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
+            Editor.addMark(editor, "sync", true);
+          }}
+          setTimeStamp={(timestamp: number) => {
+            Editor.addMark(editor, "timeStamp", timestamp);
+          }}
+          setAnimate={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
+            Editor.addMark(editor, "animate", true);
+          }}
+          setColor={(color: string) => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark[format] && currentMark[format] === color)
+              return Editor.removeMark(editor, format);
+            Editor.addMark(editor, format, color);
+          }}
+        />
       </div>
     </div>
   );
@@ -78,11 +128,14 @@ export const UnderlineMarkButton = ({
 export const ColorMarkButton = ({
   format,
   children,
+  audioTimeStamp,
 }: {
   format: CustomMarkFormat;
   children: React.ReactNode;
+  audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
+  const mark = Editor.marks(editor) || {};
   return (
     <div
       className={
@@ -93,7 +146,29 @@ export const ColorMarkButton = ({
     >
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
-        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+        <ColorChooser
+          mark={mark}
+          getTime={() => audioTimeStamp.current}
+          setSync={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
+            Editor.addMark(editor, "sync", true);
+          }}
+          setTimeStamp={(timestamp: number) => {
+            Editor.addMark(editor, "timeStamp", timestamp);
+          }}
+          setAnimate={() => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
+            Editor.addMark(editor, "animate", true);
+          }}
+          setColor={(color: string) => {
+            const currentMark = Editor.marks(editor);
+            if (currentMark && currentMark[format] && currentMark[format] === color)
+              return Editor.removeMark(editor, format);
+            Editor.addMark(editor, format, color);
+          }}
+        />
       </div>
     </div>
   );

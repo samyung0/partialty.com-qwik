@@ -199,6 +199,9 @@ export type CustomText = {
   subscript?: true;
   background?: string;
   color?: string;
+  timeStamp?: number;
+  sync?: true;
+  animate?: true;
 };
 export type CustomElement =
   | ParagraphElement
