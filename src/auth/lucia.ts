@@ -33,7 +33,7 @@ const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"])
         : "http://localhost:5173/login/github/callback/",
   });
 
-const _lucia = () =>
+const _lucia = (prodInDev: boolean = false) =>
   lucia({
     env: import.meta.env.MODE === "production" ? "PROD" : "DEV",
     passwordHash: {
@@ -87,9 +87,9 @@ const _lucia = () =>
     },
   });
 
-export const initLuciaIfNeeded = async (env: RequestEvent["env"]) => {
+export const initLuciaIfNeeded = async (env: RequestEvent["env"], prodInDev: boolean = false) => {
   if (!_auth) {
-    _auth = _lucia();
+    _auth = _lucia(prodInDev);
   }
   if (!_github) _github = _githubAuth(_auth, env);
   if (!_google) _google = _googleAuth(_auth, env);

@@ -197,13 +197,18 @@ const ContentEditorReact = ({
           userId: user.userId,
         })
       );
+      setMuxWS(ws);
     });
 
     ws.addEventListener("error", () => {
       console.error("connection error!");
+      setMuxWS(undefined);
     });
 
-    setMuxWS(ws);
+    ws.addEventListener("close", () => {
+      console.error("connection error!");
+      setMuxWS(undefined);
+    });
   }, []);
 
   return (

@@ -15,6 +15,13 @@
       "when": 1705576140595,
       "tag": "0001_huge_madame_web",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1706338679923,
+      "tag": "0002_skinny_moira_mactaggert",
+      "breakpoints": true
     }
   ]
 }
