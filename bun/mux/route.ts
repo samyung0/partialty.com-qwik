@@ -4,6 +4,7 @@ import { turso } from "../turso";
 
 // const;
 const wsArr = new Map();
+const wsArrClear = new Map();
 const uploadUrlMapUserId = new Map();
 const uploadIdMapUploadUrl = new Map();
 
@@ -118,6 +119,10 @@ const app = new Elysia()
               })
             );
           }
+          wsArrClear.set(
+            userId,
+            setTimeout(() => wsArr.delete(userId), 60 * 1000)
+          );
           return wsArr.set(userId, ws);
         }
         if (msg.type === "initCreate") {
@@ -137,6 +142,22 @@ const app = new Elysia()
               type: "createSuccess",
               message: "OK",
             })
+          );
+        }
+        if (msg.type === "heartBeat") {
+          const userId = msg.userId;
+          if (!userId || !wsArrClear.get(userId)) {
+            return ws.send(
+              JSON.stringify({
+                type: "error",
+                message: "User ID is empty or User ID not found in connection map!",
+              })
+            );
+          }
+          clearTimeout(wsArrClear.get(userId));
+          wsArrClear.set(
+            userId,
+            setTimeout(() => wsArr.delete(userId), 60 * 1000)
           );
         }
         if (msg.type === "terminate") {

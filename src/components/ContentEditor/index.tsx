@@ -186,6 +186,7 @@ const ContentEditorReact = ({
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
 
   const [muxWS, setMuxWS] = useState<WebSocket>();
+  const muxWSHeartBeat = useRef<any>();
 
   useEffect(() => {
     const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/mux/ws");
@@ -198,6 +199,14 @@ const ContentEditorReact = ({
         })
       );
       setMuxWS(ws);
+      muxWSHeartBeat.current = setInterval(() => {
+        ws.send(
+          JSON.stringify({
+            type: "heartBeat",
+            userId: user.userId,
+          })
+        );
+      }, 30 * 1000);
     });
 
     ws.addEventListener("error", () => {
@@ -211,7 +220,10 @@ const ContentEditorReact = ({
     });
 
     window.onbeforeunload = (e) => {
-      return "SUre?";
+      if (muxWS) {
+        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+        muxWS.close();
+      }
     };
   }, []);
 
