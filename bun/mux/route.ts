@@ -51,21 +51,23 @@ const app = new Elysia()
         }
         console.log(body);
         const type = (body as any).type;
-        const id = (body as any).object.id;
-        console.log(type, id);
-        if (!type || !id) {
+        // const id = (body as any).object.id;
+        console.log("WTF", type);
+        if (!type) {
           throw new Error("Unknown asset from Mux!");
         }
         if (type === "video.upload.created") {
           console.log("init create");
           const url = (body as any).data.url;
-          if (url) {
+          const id = (body as any).object.id;
+          if (url && id) {
             console.log("set url");
             uploadIdMapUploadUrl.set(id, url);
           }
         }
         if (type === "video.asset.created") {
           const upload_id = (body as any).data.upload_id;
+          const id = (body as any).object.id;
           if (!upload_id) {
             console.log("no upload id");
             deleteMuxAssetDB(id);
@@ -92,6 +94,7 @@ const app = new Elysia()
           );
         }
         if (type === "video.asset.ready") {
+          const id = (body as any).object.id;
           const upload_id = (body as any).data.upload_id;
           if (!upload_id) {
             deleteMuxAssetDB(id);
@@ -118,6 +121,7 @@ const app = new Elysia()
           uploadUrlMapUserId.delete(url);
         }
         if (type === "video.asset.deleted") {
+          const id = (body as any).object.id;
           deleteMuxAssetDB(id);
           return;
         }
@@ -136,7 +140,6 @@ const app = new Elysia()
       try {
         if (msg.type === "init") {
           const userId = msg.userId;
-          console.log("init", userId, Array.from(wsArr.keys()));
           if (!userId || wsArr.get(userId)) {
             ws.send(
               JSON.stringify({
