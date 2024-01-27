@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://api.partialty.com/mux/ws");
+const socket = new WebSocket("wss://api.partialty.com/mux/ws");
 
 socket.addEventListener("open", () => {
   console.log("Connected to the server");

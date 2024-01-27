@@ -206,7 +206,7 @@ const ContentEditorReact = ({
     });
 
     ws.addEventListener("close", () => {
-      console.error("connection error!");
+      console.error("connection closed!");
       setMuxWS(undefined);
     });
   }, []);
