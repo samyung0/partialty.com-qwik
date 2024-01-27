@@ -57,21 +57,27 @@ const app = new Elysia()
         }
         if (type === "video.upload.created") {
           const url = (body as any).data.url;
-          if (url) uploadIdMapUploadUrl.set(id, url);
+          if (url) {
+            console.log("set url");
+            uploadIdMapUploadUrl.set(id, url);
+          }
         }
         if (type === "video.upload.asset_created") {
           const upload_id = (body as any).object.id;
           if (!upload_id) {
+            console.log("no upload id");
             deleteMuxAssetDB(id);
             return;
           }
           const url = uploadIdMapUploadUrl.get(upload_id);
           if (!url) {
+            console.log("no url");
             deleteMuxAssetDB(id);
             return;
           }
           const { userId, filename } = uploadUrlMapUserId.get(url);
           if (!userId || !filename) {
+            console.log("no userId or filename");
             deleteMuxAssetDB(id);
             return;
           }
