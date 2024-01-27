@@ -21,6 +21,10 @@ export const CenterAudioChooser = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("idle");
+  const [newAudio, setNewAudio] = useState<
+    [{ id: string; duration: number; created_at: string }, string][]
+  >([]);
   const fileRef = useRef<File>();
   const urlRef = useRef<string>();
 
@@ -46,18 +50,36 @@ export const CenterAudioChooser = ({
             setProgress(progress.detail as number);
             console.log("Uploaded", progress.detail, "percent of this file.");
           });
-          // subscribe to events
           upload.on("success", async (details) => {
             console.log("Wrap it up, we're done here. 👋");
           });
           setIsUploading(true);
+          setStatus("Uploading...");
           return;
         }
         if (d.type === "assetSuccess") {
           console.log("asset uploaded");
+          setStatus("Uploaded. Preparing...");
         }
         if (d.type === "assetReady") {
+          const filename = d.message.filename as string;
+          const duration = d.message.duration as number;
+          const id = d.message.id as string;
+          const created_at = d.message.created_at as string;
+          if (!filename || !duration || !id) {
+            console.log("error from server, missing values");
+            setStatus("Errored");
+            setTimeout(() => {
+              setIsUploading(false);
+            }, 1000);
+            return;
+          }
           console.log("asset ready");
+          setStatus("Finished");
+          setTimeout(() => {
+            setIsUploading(false);
+            setNewAudio([[{ id, duration, created_at }, filename], ...newAudio]);
+          }, 1000);
         }
       } catch (_) {
         /* empty */
@@ -76,6 +98,46 @@ export const CenterAudioChooser = ({
           <div className="text-lg tracking-wide">
             Uh Oh. It seems like you haven't uploaded any audio tracks yet.
           </div>
+        )}
+        {newAudio.length > 0 && (
+          <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
+            {newAudio.map(([audioTrack, name]) => (
+              <li
+                key={`AudioChooser${audioTrack.id}`}
+                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+              >
+                <div className="flex cursor-pointer flex-col items-start justify-center">
+                  <h3 className="text-lg tracking-wide">{name}</h3>
+                  <p className="text-xs tracking-wide text-gray-400">
+                    {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+                  </p>
+                </div>
+                <p className="flex items-center gap-1">
+                  {Math.floor(audioTrack.duration / 60)}:{Math.floor(audioTrack.duration % 60)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        {userAudiosWithName.length > 0 && (
+          <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
+            {userAudiosWithName.map(([audioTrack, name]) => (
+              <li
+                key={`AudioChooser${audioTrack.id}`}
+                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+              >
+                <div className="flex cursor-pointer flex-col items-start justify-center">
+                  <h3 className="text-lg tracking-wide">{name}</h3>
+                  <p className="text-xs tracking-wide text-gray-400">
+                    {new Date(Number(audioTrack.created_at) * 1000).toDateString()}
+                  </p>
+                </div>
+                <p className="flex items-center gap-1">
+                  {Math.floor(audioTrack.duration / 60)}:{Math.floor(audioTrack.duration % 60)}
+                </p>
+              </li>
+            ))}
+          </ul>
         )}
         <div className="flex w-full items-center justify-center pt-8">
           {!isUploading ? (
@@ -144,7 +206,7 @@ export const CenterAudioChooser = ({
             </label>
           ) : (
             <div className="flex flex-1 flex-col">
-              <div className="mb-1 ml-[10%] text-base font-medium">Uploading...</div>
+              <div className="mb-1 ml-[10%] text-base font-medium">{status}</div>
               <div className="mx-auto mb-4 h-1.5 w-[80%] rounded-full bg-gray-200">
                 <div className="h-1.5 rounded-full bg-sea" style={{ width: `${progress}%` }}></div>
               </div>

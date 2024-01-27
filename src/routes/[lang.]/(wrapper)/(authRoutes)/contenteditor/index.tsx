@@ -53,15 +53,15 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
           },
         })
           .then((res) => res.json())
-          .catch((e) => console.error(e)) as Promise<Mux["data"][0]>
+          .catch((e) => console.error(e)) as Promise<{ data: Mux["data"][0] }>
     )
   );
   const muxAudios = _muxAudios.filter(
-    (res) => res.status === "fulfilled" && res.value.resolution_tier === "audio-only"
-  ) as PromiseFulfilledResult<Mux["data"][0]>[];
+    (res) => res.status === "fulfilled" && res.value.data.resolution_tier === "audio-only"
+  ) as PromiseFulfilledResult<{ data: Mux["data"][0] }>[];
   const muxAudiosWithNames = muxAudios.map((audioFile) => [
-    audioFile.value,
-    userMuxAssets.find((asset) => asset.id === audioFile.value.id)!.name,
+    audioFile.value.data,
+    userMuxAssets.find((asset) => asset.id === audioFile.value.data.id)!.name,
   ]) as [Mux["data"][0], string][];
   ret.muxAudiosWithNames = muxAudiosWithNames;
 

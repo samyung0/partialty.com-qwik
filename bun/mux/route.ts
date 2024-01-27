@@ -89,6 +89,7 @@ const app = new Elysia()
                   id: id,
                   filename: filename,
                   duration: data.data.duration,
+                  created_at: data.data.created_at,
                 },
               })
             );
