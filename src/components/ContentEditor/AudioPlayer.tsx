@@ -66,8 +66,8 @@ export const CenterAudioChooser = ({
           const duration = d.message.duration as number;
           const id = d.message.id as string;
           const created_at = d.message.created_at as string;
+          !filename || !duration || !id || !created_at;
           if (!filename || !duration || !id || !created_at) {
-            console.log("error from server, missing values");
             setStatus("Errored");
             setTimeout(() => {
               setIsUploading(false);
@@ -113,7 +113,10 @@ export const CenterAudioChooser = ({
                   </p>
                 </div>
                 <p className="flex items-center gap-1">
-                  {Math.floor(audioTrack.duration / 60)}:{Math.floor(audioTrack.duration % 60)}
+                  {Math.floor(audioTrack.duration / 60)}:
+                  {Math.floor(audioTrack.duration % 60)
+                    .toString()
+                    .padStart(2, "0")}
                 </p>
               </li>
             ))}
@@ -133,7 +136,10 @@ export const CenterAudioChooser = ({
                   </p>
                 </div>
                 <p className="flex items-center gap-1">
-                  {Math.floor(audioTrack.duration / 60)}:{Math.floor(audioTrack.duration % 60)}
+                  {Math.floor(audioTrack.duration / 60)}:
+                  {Math.floor(audioTrack.duration % 60)
+                    .toString()
+                    .padStart(2, "0")}
                 </p>
               </li>
             ))}

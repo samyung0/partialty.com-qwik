@@ -74,12 +74,18 @@ const app = new Elysia()
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
+              uploadIdMapUploadUrl.forEach((value, key) => {
+                console.log(key, value);
+              });
               console.error("Url not found in uploadIdMapUploadUrl!");
               deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url);
             if (!userId || !filename) {
+              uploadUrlMapUserId.forEach((value, key) => {
+                console.log(key, value);
+              });
               console.error("UserId or Filename not found in uploadUrlMapUserId!");
               deleteMuxAsset(id);
               return;
