@@ -200,6 +200,7 @@ const ContentEditorReact = ({
       );
       setMuxWS(ws);
       muxWSHeartBeat.current = setInterval(() => {
+        console.log("heartbeat sent");
         ws.send(
           JSON.stringify({
             type: "heartBeat",

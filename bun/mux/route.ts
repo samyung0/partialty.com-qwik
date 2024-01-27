@@ -169,7 +169,10 @@ const app = new Elysia()
           }
           wsArrClear.set(
             userId,
-            setTimeout(() => wsArr.delete(userId), 2 * 60 * 1000)
+            setTimeout(() => {
+              console.error("deleting" + userId);
+              wsArr.delete(userId), 2 * 60 * 1000;
+            })
           );
           return wsArr.set(userId, ws);
         }
@@ -207,7 +210,13 @@ const app = new Elysia()
           clearTimeout(wsArrClear.get(userId));
           wsArrClear.set(
             userId,
-            setTimeout(() => wsArr.delete(userId), 2 * 60 * 1000)
+            setTimeout(
+              () => {
+                console.error("deleting" + userId);
+                wsArr.delete(userId);
+              },
+              2 * 60 * 1000
+            )
           );
         }
         if (msg.type === "terminate") {
