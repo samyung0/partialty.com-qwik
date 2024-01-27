@@ -107,6 +107,7 @@
     "@libsql/client": "^0.3.6",
     "@lucia-auth/adapter-sqlite": "^2.0.1",
     "@lucia-auth/oauth": "^3.5.0",
+    "@mux/mux-player-react": "^2.3.2",
     "@mux/upchunk": "^3.3.1",
     "@prezly/slate-lists": "^0.101.0",
     "@react-email/components": "0.0.12",

@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 
 import { server$ } from "@builder.io/qwik-city";
+import MuxPlayer from "@mux/mux-player-react";
 import * as UpChunk from "@mux/upchunk";
 import { Play, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -13,11 +14,22 @@ export const CenterAudioChooser = ({
   userId,
   setShowAudioChooser,
   userAudiosWithName,
+  setAudioTrack,
 }: {
   ws: WebSocket;
   userId: string;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
   userAudiosWithName: [Mux["data"][0], string][];
+  setAudioTrack: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: string;
+          duration: number;
+          filename: string;
+        }
+      | undefined
+    >
+  >;
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -103,6 +115,14 @@ export const CenterAudioChooser = ({
           <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
             {newAudio.map(([audioTrack, name]) => (
               <li
+                onClick={() => {
+                  setAudioTrack({
+                    id: audioTrack.id,
+                    filename: name,
+                    duration: audioTrack.duration,
+                  });
+                  setShowAudioChooser(false);
+                }}
                 key={`AudioChooser${audioTrack.id}`}
                 className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
               >
@@ -122,6 +142,14 @@ export const CenterAudioChooser = ({
             ))}
             {userAudiosWithName.map(([audioTrack, name]) => (
               <li
+                onClick={() => {
+                  setAudioTrack({
+                    id: audioTrack.id,
+                    filename: name,
+                    duration: audioTrack.duration,
+                  });
+                  setShowAudioChooser(false);
+                }}
                 key={`AudioChooser${audioTrack.id}`}
                 className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
               >
@@ -145,7 +173,7 @@ export const CenterAudioChooser = ({
           {!isUploading ? (
             <label htmlFor="uploadImage">
               <p className="cursor-pointer text-lg underline decoration-wavy underline-offset-8">
-                {userAudiosWithName.length === 0
+                {userAudiosWithName.length === 0 && newAudio.length === 0
                   ? "start by uploading an audio track"
                   : "or upload a new audio track"}
               </p>
@@ -220,17 +248,42 @@ export const CenterAudioChooser = ({
   );
 };
 
-export default () => {
-  const duration = 189; // seconds
+export default ({
+  audioTrack,
+  setShowAudioChooser,
+  setAudioTrack,
+}: {
+  audioTrack: { id: string; duration: number; filename: string } | undefined;
+  setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
+  setAudioTrack: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: string;
+          duration: number;
+          filename: string;
+        }
+      | undefined
+    >
+  >;
+}) => {
   const [timeStamp, setTimeStamp] = useState(0);
-  const [hasAudio, setHasAudio] = useState(false);
   return (
     <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t border-sea bg-light-sea px-8">
-      {hasAudio ? (
+      {audioTrack ? (
         <>
-          <div className="mx-auto flex w-[70%] items-center">
+          <MuxPlayer
+            className="hidden"
+            streamType="on-demand"
+            playbackId="Ej4WvGO6jIW2AuYFMjKv82l8HxEieUfRpBfM7Ezek48"
+            crossOrigin="*"
+            autoPlay
+          />
+          <div className="mx-auto flex w-[80%] items-center">
             <div className="w-full">
-              <div className="mx-auto mb-1 flex items-center justify-center">
+              <div className="mx-auto mb-1 flex items-center justify-between">
+                <p className="block w-[300px] overflow-auto truncate text-base tracking-wide ">
+                  {audioTrack.filename}
+                </p>
                 <button
                   data-tooltip-target="tooltip-pause"
                   type="button"
@@ -238,10 +291,14 @@ export default () => {
                 >
                   <Play color="white" size={20} className="translate-x-[2px]" />
                 </button>
+                <div className="w-[300px]"></div>
               </div>
               <div className="flex items-center justify-between space-x-2 rtl:space-x-reverse">
                 <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">
-                  {Math.floor(timeStamp / 60)}:{(timeStamp % 60).toString().padStart(2, "0")}
+                  {Math.floor(timeStamp / 60)}:
+                  {Math.floor(timeStamp % 60)
+                    .toString()
+                    .padStart(2, "0")}
                 </span>
                 <label
                   htmlFor="audioRange"
@@ -255,32 +312,40 @@ export default () => {
                       setTimeStamp(Number(e.target.value));
                     }}
                     min="0"
-                    max={duration}
+                    max={audioTrack.duration}
                     style={{
                       background: `linear-gradient(90deg,rgb(114,202,218) ${
-                        (timeStamp / duration) * 100
-                      }%,rgb(229,231,235) ${(timeStamp / duration) * 100}%)`,
+                        (timeStamp / audioTrack.duration) * 100
+                      }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
                     }}
                     className={`m-0 h-1.5 w-full cursor-pointer appearance-none rounded-full
                bg-background-light-gray p-0 accent-sea`}
                   />
                 </label>
-                {/* <div className="h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-800">
-            <div className="h-1.5 rounded-full bg-sea" style={{ width: "65%" }}></div>
-          </div> */}
                 <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">
-                  {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, "0")}
+                  {Math.floor(audioTrack.duration / 60)}:
+                  {Math.floor(audioTrack.duration % 60)
+                    .toString()
+                    .padStart(2, "0")}
                 </span>
               </div>
             </div>
           </div>
-          <button className="absolute right-8 top-[50%] -translate-y-[50%] rounded-md bg-tomato p-2">
+          <button
+            className="absolute right-8 top-[50%] -translate-y-[50%] rounded-md bg-tomato p-2"
+            onClick={() => {
+              setAudioTrack(undefined);
+            }}
+          >
             <Trash2 className="text-background-light-gray" size={20} />
           </button>
         </>
       ) : (
         <div className="flex items-center justify-center">
-          <button className="rounded-lg bg-lilac px-6 py-3 text-background-light-gray shadow-lg">
+          <button
+            onClick={() => setShowAudioChooser(true)}
+            className="rounded-lg bg-sea px-6 py-3 text-background-light-gray shadow-lg"
+          >
             Choose Audio File
           </button>
         </div>

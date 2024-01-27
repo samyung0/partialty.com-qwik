@@ -128,6 +128,7 @@ const app = new Elysia()
                   filename: filename,
                   duration: data.data.duration,
                   created_at: data.data.created_at,
+                  playbackId: data.playback_ids[0].id,
                 },
               })
             );

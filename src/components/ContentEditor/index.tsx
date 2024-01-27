@@ -186,6 +186,11 @@ const ContentEditorReact = ({
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
 
   const [muxWS, setMuxWS] = useState<WebSocket>();
+  const [audioTrack, setAudioTrack] = useState<{
+    id: string;
+    duration: number;
+    filename: string;
+  }>();
   const muxWSHeartBeat = useRef<any>();
 
   useEffect(() => {
@@ -244,12 +249,15 @@ const ContentEditorReact = ({
         <>
           <Slate editor={editor} initialValue={initialValue}>
             <SetNodeToDecorations />
-            <CenterAudioChooser
-              ws={muxWS}
-              userId={user.userId}
-              setShowAudioChooser={setShowAudioChooser}
-              userAudiosWithName={userAudiosWithName.current}
-            />
+            {showAudioChooser && (
+              <CenterAudioChooser
+                setAudioTrack={setAudioTrack}
+                ws={muxWS}
+                userId={user.userId}
+                setShowAudioChooser={setShowAudioChooser}
+                userAudiosWithName={userAudiosWithName.current}
+              />
+            )}
             {showImageChooser && (
               <CenterImageChooser
                 replaceCurrentImage={replaceCurrentImage}
@@ -288,7 +296,11 @@ const ContentEditorReact = ({
               />
             </Prose>
           </Slate>
-          <AudioPlayer />
+          <AudioPlayer
+            setAudioTrack={setAudioTrack}
+            setShowAudioChooser={setShowAudioChooser}
+            audioTrack={audioTrack}
+          />
         </>
       ) : (
         <span>
