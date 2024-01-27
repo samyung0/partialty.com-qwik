@@ -87,12 +87,7 @@ const app = new Elysia()
             return wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetSuccess",
-                message: {
-                  id: id,
-                  filename: filename,
-                  duration: data.data.duration,
-                  created_at: data.data.created_at,
-                },
+                message: "OK",
               })
             );
           }
@@ -122,7 +117,12 @@ const app = new Elysia()
             wsArr.get(userId).send(
               JSON.stringify({
                 type: "assetReady",
-                message: "OK",
+                message: {
+                  id: id,
+                  filename: filename,
+                  duration: data.data.duration,
+                  created_at: data.data.created_at,
+                },
               })
             );
             uploadIdMapUploadUrl.delete(upload_id);
