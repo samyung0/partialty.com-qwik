@@ -52,6 +52,9 @@ export const CenterAudioChooser = ({
           return;
         }
         if (d.type === "assetSuccess") {
+          console.log("asset uploaded");
+        }
+        if (d.type === "assetReady") {
           console.log("asset ready");
         }
       } catch (_) {
@@ -105,6 +108,7 @@ export const CenterAudioChooser = ({
                 if (!e.target.files || e.target.files.length === 0) return;
                 const file = e.target.files[0];
                 fileRef.current = file;
+                console.log(file);
 
                 if (file.size > MUX_AUDIO_MAX_SIZE) {
                   alert("Audio file cannot be larger than 100 MiB!");
@@ -147,6 +151,7 @@ export const CenterAudioChooser = ({
                     type: "initCreate",
                     url,
                     userId,
+                    filename: file.name,
                   })
                 );
               }}

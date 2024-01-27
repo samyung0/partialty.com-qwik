@@ -52,17 +52,8 @@ const app = new Elysia()
         console.log(body);
         const type = (body as any).type;
         const id = (body as any).object.id;
-        const upload_id = (body as any).data.upload_id;
         if (!type || !id) {
           throw new Error("Unknown asset from Mux!");
-        }
-        if (!upload_id) {
-          deleteMuxAsset(id);
-          return;
-        }
-        if (type === "video.asset.deleted") {
-          deleteMuxAssetDB(id);
-          return;
         }
         if (type === "video.upload.created") {
           const url = (body as any).data.url;
@@ -117,6 +108,10 @@ const app = new Elysia()
           );
           uploadIdMapUploadUrl.delete(upload_id);
           uploadUrlMapUserId.delete(url);
+        }
+        if (type === "video.asset.deleted") {
+          deleteMuxAssetDB(id);
+          return;
         }
       },
       {
