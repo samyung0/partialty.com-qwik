@@ -168,5 +168,14 @@ const app = new Elysia()
         console.error(e);
       }
     },
+    close(ws) {
+      wsArr.forEach((val, key) => {
+        if (val === ws) {
+          wsArrClear.delete(key);
+          wsArr.delete(key);
+          return;
+        }
+      });
+    },
   });
 export default app;
