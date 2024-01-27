@@ -12,9 +12,7 @@ const app = new Elysia().group("/mux", (app) => {
       const t = _t.slice(2);
       const expected_signature = _v1.slice(3);
       const payload = t + "." + body;
-      const hmac = createHmac("sha256", Bun.env.MUX_SIGNING_SECRET!)
-        .update(payload)
-        .digest("base64");
+      const hmac = createHmac("sha256", Bun.env.MUX_SIGNING_SECRET!).update(payload).digest("hex");
       console.log(hmac, expected_signature, hmac === expected_signature);
     },
     {
