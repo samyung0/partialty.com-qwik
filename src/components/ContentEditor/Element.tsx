@@ -50,15 +50,21 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
           {children}
         </li>
       );
+    case "list-item-text":
+      return (
+        <span style={style} {...attributes}>
+          {children}
+        </span>
+      );
     case "numbered-list":
       return (
-        <ol className="list-inside list-decimal" style={style} {...attributes}>
+        <ol className="list-inside" style={style} {...attributes}>
           {children}
         </ol>
       );
     case "bulleted-list":
       return (
-        <ul className="list-inside list-disc" style={style} {...attributes}>
+        <ul className="list-inside" style={style} {...attributes}>
           {children}
         </ul>
       );

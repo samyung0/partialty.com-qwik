@@ -2,6 +2,7 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import { useSlate } from "slate-react";
 import { toggleLinkAtSelection } from "~/components/ContentEditor/Link";
+import { toCodeLines } from "~/components/ContentEditor/codeBlock";
 import type { Align, BlockFormat, CustomElementType, List } from "~/components/ContentEditor/types";
 import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/ContentEditor/types";
 
@@ -136,9 +137,9 @@ export const CodeBlockButton = ({
         if (!editor.selection) return;
         editor.insertNode(
           {
-            type: "embed",
-            url: "",
-            children: [{ text: "" }],
+            type: "codeBlock",
+            language: "tsx",
+            children: toCodeLines("// default language: TSX"),
           },
           {
             at: editor.selection,
@@ -180,7 +181,11 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
   Transforms.setNodes<SlateElement>(editor, newProperties);
 
   if (!isActive && isList) {
-    const block = { type: format as List, children: [] };
+    const block = {
+      type: format as List,
+      children: [],
+      listStyle: format === "bulleted-list" ? "disc" : "decimal",
+    };
     Transforms.wrapNodes(editor, block);
   }
 };

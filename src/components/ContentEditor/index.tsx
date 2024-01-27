@@ -1,13 +1,16 @@
 /** @jsxImportSource react */
 import { qwikify$ } from "@builder.io/qwik-react";
 
+import type { ListsSchema } from "@prezly/slate-lists";
+import { ListType, withLists } from "@prezly/slate-lists";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { BaseEditor, BaseRange, Descendant } from "slate";
-import { createEditor } from "slate";
+import type { BaseEditor, BaseRange, Descendant, Node } from "slate";
+import { Element as SlateElement, createEditor } from "slate";
 import type { HistoryEditor } from "slate-history";
 import { withHistory } from "slate-history";
 import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, withReact } from "slate-react";
+import AudioPlayer, { CenterAudioChooser } from "~/components/ContentEditor/AudioPlayer";
 
 import { Element } from "~/components/ContentEditor/Element";
 import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
@@ -19,7 +22,6 @@ import {
   CenterCodeBlockSettings,
   HoveringCodeBlock,
   SetNodeToDecorations,
-  toCodeLines,
   useDecorate,
 } from "~/components/ContentEditor/codeBlock";
 import onKeyDown from "~/components/ContentEditor/hotkey";
@@ -28,6 +30,7 @@ import type { CustomElement, CustomText } from "~/components/ContentEditor/types
 import Prose from "~/components/Prose";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
+import type Mux from "~/types/Mux";
 
 declare module "slate" {
   interface CustomTypes {
@@ -40,6 +43,45 @@ declare module "slate" {
     Text: CustomText;
   }
 }
+const schema: ListsSchema = {
+  isConvertibleToListTextNode(node: Node) {
+    return SlateElement.isElementType(node, "paragraph");
+  },
+  isDefaultTextNode(node: Node) {
+    return SlateElement.isElementType(node, "paragraph");
+  },
+  isListNode(node: Node, type?: ListType) {
+    if (type === ListType.ORDERED) {
+      return SlateElement.isElementType(node, "numbered-list");
+    }
+    if (type === ListType.UNORDERED) {
+      return SlateElement.isElementType(node, "bulleted-list");
+    }
+    return (
+      SlateElement.isElementType(node, "numbered-list") ||
+      SlateElement.isElementType(node, "bulleted-list")
+    );
+  },
+  isListItemNode(node: Node) {
+    return SlateElement.isElementType(node, "list-item");
+  },
+  isListItemTextNode(node: Node) {
+    return SlateElement.isElementType(node, "list-item-text");
+  },
+  createDefaultTextNode(props = {}) {
+    return { children: [{ text: "" }], ...props, type: "paragraph" };
+  },
+  createListNode(type: ListType = ListType.UNORDERED, props = {}) {
+    const nodeType = type === ListType.ORDERED ? "numbered-list" : "bulleted-list";
+    return { children: [{ text: "" }], ...props, type: nodeType };
+  },
+  createListItemNode(props = {}) {
+    return { children: [{ text: "" }], ...props, type: "list-item" };
+  },
+  createListItemTextNode(props = {}) {
+    return { children: [{ text: "" }], ...props, type: "list-item-text" };
+  },
+};
 
 const initialValue: Descendant[] = [
   {
@@ -55,25 +97,6 @@ const initialValue: Descendant[] = [
       },
       { text: "" },
     ],
-  },
-  {
-    type: "codeBlock",
-    language: "tsx",
-    filename: "text.tsx",
-    children: toCodeLines(`/* eslint-disable qwik/jsx-img */
-    /** @jsxImportSource react */
-    
-    // Empty lines need to contain a single empty token, denoted with { empty: true }
-    const normalizeEmptyLines = (line: Token[]) => {
-      if (line.length === 0) {
-        line.push({
-          types: ["plain"],
-          empty: true,
-        });
-      } else if (line.length === 1 && line[0].content === "") {
-        line[0].empty = true;
-      }
-    };`),
   },
   {
     type: "paragraph",
@@ -114,15 +137,21 @@ const ContentEditorReact = ({
   initialUserAssets,
   user,
 }: {
-  initialUserAssets: { cloudinaryImages: CloudinaryPublicPic[] };
+  initialUserAssets: {
+    cloudinaryImages: CloudinaryPublicPic[];
+    muxAudiosWithNames: [Mux["data"][0], string][];
+  };
   user: LuciaSession["user"];
 }) => {
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
-    withTrailingNewLine(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+    withLists(schema)(
+      withTrailingNewLine(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+    )
   );
 
   const userImages = useRef<[Promise<string>, CloudinaryPublicPic][]>([]);
+  const userAudiosWithName = useRef<[Mux["data"][0], string][]>([]);
 
   useEffect(() => {
     const images: [Promise<string>, CloudinaryPublicPic][] = [];
@@ -139,6 +168,7 @@ const ContentEditorReact = ({
       ]);
     }
     userImages.current = images;
+    userAudiosWithName.current = initialUserAssets.muxAudiosWithNames;
   }, []);
 
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, []);
@@ -150,13 +180,19 @@ const ContentEditorReact = ({
   const decorate = useDecorate(editor);
 
   const [showImageChooser, setShowImageChooser] = useState(false);
+  const [showAudioChooser, setShowAudioChooser] = useState(false);
   const [replaceCurrentImage, setReplaceCurrentImage] = useState(false);
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
 
   return (
-    <div className="flex flex-col items-center justify-center p-10">
+    <div className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10">
       <Slate editor={editor} initialValue={initialValue}>
         <SetNodeToDecorations />
+        <CenterAudioChooser
+          userId={user.userId}
+          setShowAudioChooser={setShowAudioChooser}
+          userAudiosWithName={userAudiosWithName.current}
+        />
         {showImageChooser && (
           <CenterImageChooser
             replaceCurrentImage={replaceCurrentImage}
@@ -184,24 +220,10 @@ const ContentEditorReact = ({
         {/* <HoveringToolbar /> */}
         <Prose>
           <Editable
-            className="border-2 border-black p-2 text-lg outline-none"
+            className="text-lg outline-none"
             placeholder="Enter some rich text…"
             spellCheck
             autoFocus
-            // onDOMBeforeInput={(event: InputEvent) => {
-            //   console.log("wtf")
-            //   switch (event.inputType) {
-            //     case "formatBold":
-            //       event.preventDefault();
-            //       return toggleMark(editor, "bold");
-            //     case "formatItalic":
-            //       event.preventDefault();
-            //       return toggleMark(editor, "italic");
-            //     case "formatUnderline":
-            //       event.preventDefault();
-            //       return toggleMark(editor, "underline");
-            //   }
-            // }
             decorate={decorate}
             onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
             renderElement={renderElement}
@@ -209,14 +231,8 @@ const ContentEditorReact = ({
           />
         </Prose>
       </Slate>
-      <button
-        className="mt-10 self-center"
-        onClick={() => {
-          console.log(editor.children);
-        }}
-      >
-        Serialize
-      </button>
+
+      <AudioPlayer />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 import { Editor } from "slate";
 import { useSlate } from "slate-react";
+import ColorChooser from "~/components/ContentEditor/ColorChooser";
 import type { CustomMarkFormat } from "~/components/ContentEditor/types";
 
 export const MarkButton = ({
@@ -35,17 +36,42 @@ export const BackgroundMarkButton = ({
 }) => {
   const editor = useSlate();
   return (
-    <button
-      className={isMarkActive(editor, format) ? `border-b-2 border-black` : ""}
+    <div
+      className={
+        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
+        "relative cursor-pointer [&:hover>div]:block"
+      }
       onMouseDown={(event) => event.preventDefault()}
-      onClick={(event) => {
-        event.stopPropagation();
-        event.preventDefault();
-        toggleMark(editor, format, "tomato");
-      }}
     >
       {children}
-    </button>
+      <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
+        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+      </div>
+    </div>
+  );
+};
+
+export const UnderlineMarkButton = ({
+  format,
+  children,
+}: {
+  format: CustomMarkFormat;
+  children: React.ReactNode;
+}) => {
+  const editor = useSlate();
+  return (
+    <div
+      className={
+        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
+        "relative cursor-pointer [&:hover>div]:block"
+      }
+      onMouseDown={(event) => event.preventDefault()}
+    >
+      {children}
+      <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
+        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+      </div>
+    </div>
   );
 };
 
@@ -58,16 +84,18 @@ export const ColorMarkButton = ({
 }) => {
   const editor = useSlate();
   return (
-    <button
-      className={isMarkActive(editor, format) ? `border-b-2 border-black` : ""}
+    <div
+      className={
+        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
+        "relative cursor-pointer [&:hover>div]:block"
+      }
       onMouseDown={(event) => event.preventDefault()}
-      onClick={(event) => {
-        event.preventDefault();
-        toggleMark(editor, format, "white");
-      }}
     >
       {children}
-    </button>
+      <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
+        <ColorChooser setColor={(color: string) => Editor.addMark(editor, format, color)} />
+      </div>
+    </div>
   );
 };
 

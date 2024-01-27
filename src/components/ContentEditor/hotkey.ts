@@ -6,7 +6,9 @@ import { toggleMark } from "~/components/ContentEditor/markFn";
 import { HistoryEditor } from "slate-history";
 import { isBlockActive } from "~/components/ContentEditor/blockFn";
 
-const onKeyDown = (editor: Editor, event: React.KeyboardEvent) => {
+import { onKeyDown } from "@prezly/slate-lists";
+
+const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
   // event.preventDefault();
   if (isHotkey("mod+b", event)) {
     toggleMark(editor, "bold");
@@ -71,6 +73,16 @@ const onKeyDown = (editor: Editor, event: React.KeyboardEvent) => {
       Editor.insertText(editor, "  ");
     }
   }
+
+  if (isHotkey("shift+enter", event)) {
+    const isBlockQuote = isBlockActive(editor, "block-quote", "type");
+    if (isBlockQuote) {
+      event.preventDefault();
+      Editor.insertText(editor, "\n");
+    }
+  }
+
+  onKeyDown(editor, event);
 };
 
-export default onKeyDown;
+export default onKeyDownFn;

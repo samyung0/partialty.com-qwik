@@ -1,5 +1,7 @@
+/* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
 import type { RenderLeafProps } from "slate-react";
+import HighlightSVG from "~/components/ContentEditor/HighlightSVG";
 export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   const { text, ...rest } = leaf;
   if (leaf.bold) {
@@ -15,7 +17,11 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = (
+      <span className={`border-b-[6px]`} style={{ borderColor: leaf.underline }}>
+        {children}
+      </span>
+    );
   }
 
   if (leaf.strikethrough) {
@@ -31,7 +37,17 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   if (leaf.background) {
-    children = <span style={{ background: leaf.background }}>{children}</span>;
+    children = (
+      <span className="relative px-[4px]">
+        <span
+          className={`absolute left-[-4px] top-[-2px] -z-10 h-[calc(100%+4px)] w-[calc(100%+8px)]`}
+          style={{ fill: leaf.background }}
+        >
+          <HighlightSVG />
+        </span>
+        {children}
+      </span>
+    );
   }
 
   if (leaf.color) {
@@ -40,9 +56,9 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 
   return (
     <span
-      className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : ""} ${Object.keys(rest).join(
-        " "
-      )}`}
+      className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : ""} ${Object.keys(rest)
+        .filter((key) => key !== "underline")
+        .join(" ")}`}
       {...attributes}
     >
       {children}

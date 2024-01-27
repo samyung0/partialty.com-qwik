@@ -118,6 +118,17 @@ export type ListItem = {
   language?: string;
   children: (CustomText | CustomElement)[];
 };
+export type ListItemText = {
+  type: "list-item-text";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
 export type NumberedList = {
   type: "numbered-list";
   align?: Align;
@@ -182,7 +193,7 @@ export type CustomText = {
   bold?: true;
   code?: true;
   italic?: true;
-  underline?: true;
+  underline?: string;
   strikethrough?: true;
   superscript?: true;
   subscript?: true;
@@ -201,6 +212,7 @@ export type CustomElement =
   | HeadingThree
   | HeadingFour
   | ListItem
+  | ListItemText
   | NumberedList
   | VideoEmbed
   | UrlLink

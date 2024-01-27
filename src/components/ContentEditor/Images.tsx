@@ -363,6 +363,7 @@ export const CenterImageChooser = ({
               type="file"
               className="hidden"
               id="uploadImage"
+              accept="images/*"
             ></input>
           </label>
         </div>

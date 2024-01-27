@@ -36,6 +36,7 @@ import {
   BackgroundMarkButton,
   ColorMarkButton,
   MarkButton,
+  UnderlineMarkButton,
 } from "~/components/ContentEditor/markFn";
 
 const Toolbar = ({
@@ -44,17 +45,16 @@ const Toolbar = ({
   setShowImageChooser: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
-    <div className="flex flex-wrap gap-2 pb-12">
+    <div className="absolute left-0 top-0 z-[100] flex w-full flex-wrap items-center justify-center gap-4 rounded-lg border-2 border-mint bg-light-mint p-4">
       <MarkButton format="bold" children={<Bold size={20} />} />
       <MarkButton format="italic" children={<Italic size={20} />} />
-      <MarkButton format="underline" children={<Underline size={20} />} />
       <MarkButton format="strikethrough" children={<Strikethrough size={20} />} />
+      <UnderlineMarkButton format="underline" children={<Underline size={20} />} />
       <BackgroundMarkButton format="background" children={<PaintBucket size={20} />} />
       <ColorMarkButton format="color" children={<Baseline size={20} />} />
       <MarkButton format="code" children={<Code size={20} />} />
       <MarkButton format="superscript" children={<Superscript size={20} />} />
       <MarkButton format="subscript" children={<Subscript size={20} />} />
-      <LinkButton format="link" children={<Link2 size={20} />} />
       <BlockButton format="paragraph" children={<Pilcrow size={20} />} />
       <BlockButton format="heading-one" children={<Heading1 size={20} />} />
       <BlockButton format="heading-two" children={<Heading2 size={20} />} />
@@ -66,6 +66,7 @@ const Toolbar = ({
       <BlockButton format="left" children={<AlignLeft size={20} />} />
       <BlockButton format="center" children={<AlignCenter size={20} />} />
       <BlockButton format="right" children={<AlignRight size={20} />} />
+      <LinkButton format="link" children={<Link2 size={20} />} />
       <ImageButton
         setShowImageChooser={setShowImageChooser}
         format="image"
