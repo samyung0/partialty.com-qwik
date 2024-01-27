@@ -209,6 +209,10 @@ const ContentEditorReact = ({
       console.error("connection closed!");
       setMuxWS(undefined);
     });
+
+    window.onbeforeunload = (e) => {
+      return "SUre?";
+    };
   }, []);
 
   return (

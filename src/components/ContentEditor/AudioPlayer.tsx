@@ -25,6 +25,7 @@ export const CenterAudioChooser = ({
 
   useEffect(() => {
     ws.addEventListener("message", ({ data }) => {
+      console.log(data);
       try {
         const d = JSON.parse(data);
         if (d.type === "error") return alert("WS ERROR: " + d.message);

@@ -109,7 +109,8 @@ const app = new Elysia()
         const msg = JSON.parse(message);
         if (msg.type === "init") {
           const userId = msg.userId;
-          if (!userId || Object.prototype.hasOwnProperty.call(wsArr, userId)) {
+          console.log(wsArr.entries());
+          if (!userId || wsArr.get(userId)) {
             return ws.send(
               JSON.stringify({
                 type: "error",
@@ -137,6 +138,10 @@ const app = new Elysia()
               message: "OK",
             })
           );
+        }
+        if (msg.type === "terminate") {
+          const userId = msg.userId;
+          return wsArr.delete(userId);
         }
       } catch (_) {}
     },
