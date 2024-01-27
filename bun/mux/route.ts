@@ -162,6 +162,7 @@ const app = new Elysia()
         }
         if (msg.type === "terminate") {
           const userId = msg.userId;
+          wsArrClear.delete(userId);
           return wsArr.delete(userId);
         }
       } catch (e) {
@@ -171,7 +172,7 @@ const app = new Elysia()
     close(ws) {
       wsArr.forEach((val, key) => {
         console.log("should close:", key);
-        if (val === ws) {
+        if (val == ws) {
           console.log("close");
           wsArrClear.delete(key);
           wsArr.delete(key);

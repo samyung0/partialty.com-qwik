@@ -223,7 +223,7 @@ const ContentEditorReact = ({
 
     window.onbeforeunload = () => {
       if (muxWS) {
-        // muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
         setMuxWS(undefined);
         clearInterval(muxWSHeartBeat.current);
@@ -232,7 +232,7 @@ const ContentEditorReact = ({
     };
     window.onunload = () => {
       if (muxWS) {
-        // muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+        muxWS.send(JSON.stringify({ type: "terminate", userId: user.userId }));
         muxWS.close();
         setMuxWS(undefined);
         clearInterval(muxWSHeartBeat.current);
