@@ -352,9 +352,14 @@ const ContentEditorReact = ({
     Transforms.removeNodes(editor, { at: Editor.end(editor, []) });
   }, [chapterId]);
 
+  const parentRef = useRef<any>();
+
   return (
     isEditing && (
-      <div className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10">
+      <div
+        ref={parentRef}
+        className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10"
+      >
         {muxWS ? (
           <>
             <Slate
@@ -393,12 +398,16 @@ const ContentEditorReact = ({
               )}
               <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
               <HoveringImage
+                parentRef={parentRef}
                 setReplaceCurrentImage={setReplaceCurrentImage}
                 setShowImageChooser={setShowImageChooser}
               />
-              <HoveringEmbed />
-              <HoveringLink />
-              <HoveringCodeBlock setShowCodeBlockSettings={setShowCodeBlockSettings} />
+              <HoveringEmbed parentRef={parentRef} />
+              <HoveringLink parentRef={parentRef} />
+              <HoveringCodeBlock
+                parentRef={parentRef}
+                setShowCodeBlockSettings={setShowCodeBlockSettings}
+              />
               {/* <HoveringToolbar /> */}
               <Prose>
                 <Editable

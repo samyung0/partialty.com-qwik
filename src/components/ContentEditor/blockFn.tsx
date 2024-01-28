@@ -19,7 +19,7 @@ export const BlockButton = ({
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
           ? `border-b-2 border-black`
-          : ""
+          : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -45,7 +45,7 @@ export const LinkButton = ({
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
           ? `border-b-2 border-black`
-          : ""
+          : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -68,7 +68,11 @@ export const EmbedButton = ({
   const editor = useSlate();
   return (
     <button
-      className={isBlockActive(editor, format, "type") ? `border-b-2 border-black` : ""}
+      className={
+        isBlockActive(editor, format, "type")
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint"
+      }
       // onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
         // event.stopPropagation();
@@ -104,7 +108,11 @@ export const ImageButton = ({
   const editor = useSlate();
   return (
     <button
-      className={isBlockActive(editor, format, "type") ? `border-b-2 border-black` : ""}
+      className={
+        isBlockActive(editor, format, "type")
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint"
+      }
       onMouseDown={(event) => {
         event.preventDefault();
       }}
@@ -128,7 +136,11 @@ export const CodeBlockButton = ({
   const editor = useSlate();
   return (
     <button
-      className={isBlockActive(editor, format, "type") ? `border-b-2 border-black` : ""}
+      className={
+        isBlockActive(editor, format, "type")
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint"
+      }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
         event.stopPropagation();

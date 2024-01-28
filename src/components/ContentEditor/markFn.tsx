@@ -14,7 +14,9 @@ export const MarkButton = ({
   const editor = useSlate();
   return (
     <button
-      className={isMarkActive(editor, format) ? `border-b-2 border-black` : ""}
+      className={
+        isMarkActive(editor, format) ? `border-b-2 border-black` : "border-b-2 border-light-mint"
+      }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
         event.stopPropagation();
@@ -41,8 +43,9 @@ export const BackgroundMarkButton = ({
   return (
     <div
       className={
-        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
-        "relative cursor-pointer [&:hover>div]:block"
+        (isMarkActive(editor, format)
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -90,8 +93,9 @@ export const UnderlineMarkButton = ({
   return (
     <div
       className={
-        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
-        "relative cursor-pointer [&:hover>div]:block"
+        (isMarkActive(editor, format)
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -139,8 +143,9 @@ export const ColorMarkButton = ({
   return (
     <div
       className={
-        (isMarkActive(editor, format) ? `border-b-2 border-black ` : "") +
-        "relative cursor-pointer [&:hover>div]:block"
+        (isMarkActive(editor, format)
+          ? `border-b-2 border-black`
+          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >

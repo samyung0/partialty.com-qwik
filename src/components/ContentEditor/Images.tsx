@@ -30,11 +30,13 @@ export const withImages = (editor: Editor) => {
 };
 
 export const HoveringImage = ({
+  parentRef,
   setShowImageChooser,
   setReplaceCurrentImage,
   offsetX = 0,
   offsetY = 10,
 }: {
+  parentRef: React.MutableRefObject<any>;
   setShowImageChooser: React.Dispatch<React.SetStateAction<boolean>>;
   setReplaceCurrentImage: React.Dispatch<React.SetStateAction<boolean>>;
   offsetX?: number;
@@ -75,6 +77,9 @@ export const HoveringImage = ({
     }
     const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
 
+    let parentNodeX: number = 0;
+    if (parentRef.current) parentNodeX = parentRef.current.getBoundingClientRect().x;
+
     const {
       x: nodeX,
       height: nodeHeight,
@@ -96,14 +101,14 @@ export const HoveringImage = ({
 
     el.style.display = "flex";
     el.style.top = `${nodeY + nodeHeight + offsetY}px`;
-    el.style.left = `${nodeX + nodeWidth / 2 + offsetX}px`;
+    el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });
 
   return (
     <>
       {isBlockActive(editor, "image", "type") && (
-        <div ref={ref} className="absolute z-10 bg-white shadow-xl" role="group">
+        <div ref={ref} className="absolute z-[60] bg-white shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => {
@@ -178,7 +183,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
             }
           }}
           value={value}
-          className="w-full resize-none p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
           placeholder={"Enter some captions..."}
         />
       </figure>
@@ -363,7 +368,7 @@ export const CenterImageChooser = ({
               type="file"
               className="hidden"
               id="uploadImage"
-              accept="images/*"
+              accept="image/*"
             ></input>
           </label>
         </div>

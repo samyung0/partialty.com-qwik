@@ -7,7 +7,7 @@ const Prose = ({ children }: { children: React.ReactNode }) => (
   prose-blockquote:border-lilac prose-blockquote:bg-light-lilac prose-blockquote:py-1 prose-blockquote:not-italic
   prose-strong:tracking-wider
   prose-code:text-[unset]
-  prose-pre:bg-code-editor-one-dark-pro prose-pre:text-base
+  prose-pre:bg-code-editor-one-dark-pro prose-pre:text-base prose-pre:font-bold
   prose-img:m-0
   "
   >

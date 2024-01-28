@@ -28,9 +28,11 @@ export const withEmbeds = (editor: Editor) => {
 };
 
 export const HoveringEmbed = ({
+  parentRef,
   offsetX = 0,
   offsetY = 10,
 }: {
+  parentRef: React.MutableRefObject<any>;
   offsetX?: number;
   offsetY?: number;
 }) => {
@@ -80,6 +82,9 @@ export const HoveringEmbed = ({
     } = linkDOMNode.getBoundingClientRect();
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
+    let parentNodeX: number = 0;
+    if (parentRef.current) parentNodeX = parentRef.current.getBoundingClientRect().x;
+
     if (
       (!inFocus &&
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -93,20 +98,20 @@ export const HoveringEmbed = ({
 
     el.style.display = "flex";
     el.style.top = `${nodeY + nodeHeight + offsetY}px`;
-    el.style.left = `${nodeX + nodeWidth / 2 + offsetX}px`;
+    el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });
 
   return (
     <>
       {isBlockActive(editor, "embed", "type") && (
-        <div ref={ref} className="absolute z-10 bg-white shadow-xl" role="group">
+        <div ref={ref} className="absolute z-[60] bg-light-yellow/50 shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
-              <div className="flex gap-4 border-t border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900">
+              <div className="flex gap-4 border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900">
                 <Link2 className="invert-[0.8]" strokeWidth={1.5} size={20} />
                 <input
-                  className="outline-none"
+                  className="bg-light-yellow/50 outline-none"
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -130,21 +135,21 @@ export const HoveringEmbed = ({
                     ReactEditor.deselect(editor);
                   }}
                   type="button"
-                  className="flex flex-1 justify-center border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
                 >
                   <Check strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setUrl(initialUrl.current)}
                   type="button"
-                  className="flex flex-1 justify-center border-b border-t border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+                  className="flex flex-1 justify-center border-b border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
                 >
                   <RotateCcw strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setLinkOpen(false)}
                   type="button"
-                  className="flex flex-1 justify-center border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
                 >
                   <ArrowLeft strokeWidth={2} size={15} />
                 </button>
@@ -155,14 +160,14 @@ export const HoveringEmbed = ({
               <button
                 onClick={() => setLinkOpen(true)}
                 type="button"
-                className="rounded-s-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+                className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
               >
                 Edit Link
               </button>
               <button
                 onClick={() => removeEmbed(editor)}
                 type="button"
-                className="rounded-e-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+                className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
               >
                 <Trash strokeWidth={1.5} size={20} />
               </button>
@@ -264,7 +269,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
             }
           }}
           value={value}
-          className="w-full resize-none p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
           placeholder={"Enter some captions..."}
         />
       </div>

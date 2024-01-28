@@ -13,6 +13,7 @@ const YOUKU_PREFIX = "https://player.youku.com/embed/";
 const COUB_PREFIX = "https://coub.com/embed/";
 
 import highlightSVGString from "~/components/ContentEditor/highlightSVGString";
+import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
 
 const plainTextSerialize = (nodes: any) => {
@@ -135,7 +136,7 @@ const serialize = async (node: any): Promise<string> => {
         width:calc(100% + 8px);
         display:block;
         z-index: 0;
-        fill:${node.underline};
+        fill:${node.background};
       }
       #${uuid}upper {
       position: absolute;
@@ -150,10 +151,10 @@ const serialize = async (node: any): Promise<string> => {
       }
        </style>
        `;
-        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px">
+        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
           <span style="position:relative;z-index:2">${string}</span>
-          <span id="${uuid}lower"></span>
-          <span id="${uuid}upper">${highlightSVGString}</span>
+          <span id="${uuid}lower">${highlightSVGString}</span>
+          <span id="${uuid}upper"></span>
          </span>
          </span>`;
       } else {
@@ -167,14 +168,24 @@ const serialize = async (node: any): Promise<string> => {
          width:calc(100% + 8px);
          display:block;
          z-index: 0;
-         fill:${node.underline};
+         fill:${node.background};
        }
+       #${uuid}upper {
+        position: absolute;
+        display: block;
+        top:0;
+        right:0;
+        height: 100%;
+        width: 100%;
+        background: inherit;
+        z-index: 1;
+        }
         </style>
         `;
-        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px">
+        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
           <span style="position:relative;z-index:2">${string}</span>
-          <span id="${uuid}lower"></span>
-          <span id="${uuid}upper">{highlightSVGString}</span>
+          <span id="${uuid}lower">${highlightSVGString}</span>
+          <span id="${uuid}upper"></span>
           </span>
           </span>`;
       }
@@ -187,9 +198,11 @@ const serialize = async (node: any): Promise<string> => {
     return string;
   }
 
-  const children = node.children
+  let children = node.children
     ? (await Promise.all(node.children.map((n: any) => serialize(n)))).join("")
     : ("" as string);
+
+  if (children.trim() === "") children = "&nbsp;";
 
   const style = `textAlign: ${node.align || "left"};` as const;
   switch (node.type) {
@@ -285,7 +298,7 @@ const serialize = async (node: any): Promise<string> => {
           <div style="
           background-color: rgb(227 244 248);
           padding: 0.5rem;
-          font-family: mosk, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+          font-family: mosk, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
           font-size: 0.875rem;
           line-height: 1.25rem;
           font-weight: 700;
@@ -304,9 +317,9 @@ const serialize = async (node: any): Promise<string> => {
               aspect-ratio: 16 / 9;
               width: 100%;
               "
-                src={"${parsedUrl}?title=0&byline=0&portrait=0"}
+                src="${parsedUrl}?title=0&byline=0&portrait=0"
                 frameBorder="0"
-              />
+              ></iframe>
             `
             }
           </div>
@@ -321,11 +334,12 @@ const serialize = async (node: any): Promise<string> => {
             text-align: center;
             font-size: 0.875rem;
             line-height: 1.25rem;
+            white-space: pre-line;
         "
         >${escapeHtml(caption)}</div>`
         }
       </div>
-      {children}
+      ${children}
     </div>`;
     }
     case "link": {
@@ -353,7 +367,7 @@ const serialize = async (node: any): Promise<string> => {
         justify-content: center;
         gap: 0.5rem
       ">
-        <img src={${node.url}} style="
+        <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
         max-height: 400px;
         border-width: 2px;
         border-color: rgb(111 220 191);
@@ -366,6 +380,7 @@ const serialize = async (node: any): Promise<string> => {
             text-align: center;
             font-size: 0.875rem;
             line-height: 1.25rem;
+            white-space: pre-line;
           "
         >${escapeHtml(caption)}</p>
       </figure>
@@ -381,16 +396,13 @@ const serialize = async (node: any): Promise<string> => {
         const endoftag = highlighted.indexOf(">") + 1;
         highlighted =
           highlighted.slice(0, endoftag) +
-          `<div>
-        <p style="margin: 0px;">${escapeHtml(node.filename)}</p>
-        <hr style="margin: 0.5rem;border-color: rgb(156 163 175);"/>
-      </div>` +
+          `<div><p style="margin: 0px;">${escapeHtml(
+            node.filename
+          )}</p><hr style="margin: 0.5rem;border-color: rgb(156 163 175);"/></div>` +
           highlighted.slice(endoftag);
       }
       return `<div>
-    <div style="font-weight: 700;">
     ${highlighted}
-    </div>
   </div>`;
     }
     default:

@@ -40,12 +40,12 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     children = (
       <span className="relative px-[4px]">
         <span
-          className={`absolute left-[-4px] top-[-2px] -z-10 h-[calc(100%+4px)] w-[calc(100%+8px)]`}
+          className={`absolute left-[-4px] top-[-2px] z-0 h-[calc(100%+4px)] w-[calc(100%+8px)]`}
           style={{ fill: leaf.background }}
         >
           <HighlightSVG />
         </span>
-        {children}
+        <span className="relative z-10">{children}</span>
       </span>
     );
   }

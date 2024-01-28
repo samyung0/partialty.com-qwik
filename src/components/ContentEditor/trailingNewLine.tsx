@@ -18,7 +18,7 @@ export const withTrailingNewLine = (editor: Editor) => {
       if (!endElement) {
         editor.insertNode(
           { type: "paragraph", children: [{ text: "" }] },
-          { at: Editor.end(editor, []) }
+          { at: Editor.end(editor, []), mode: "highest" }
         );
       }
     }

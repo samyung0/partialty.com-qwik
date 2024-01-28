@@ -69,7 +69,9 @@ const FormatButton = ({
   const editor = useSlate();
   return (
     <button
-      className={isMarkActive(editor, format) ? `border-b-2 border-black` : ""}
+      className={
+        isMarkActive(editor, format) ? `border-b-2 border-black` : "border-b-2 border-light-mint"
+      }
       onClick={() => toggleMark(editor, format)}
     >
       {children}

@@ -23,7 +23,7 @@ import "prismjs/components/prism-typescript";
 
 export const languageList = [
   "plainText",
-  "markup",
+  "html",
   "css",
   "tsx",
   "jsx",
@@ -44,7 +44,7 @@ export const languageList = [
 ] as const;
 
 export const languageListDisplayNames = {
-  markup: "HTML",
+  html: "HTML",
   css: "CSS",
   c: "C",
   cpp: "C++",
@@ -166,10 +166,12 @@ export const CenterCodeBlockSettings = ({
 };
 
 export const HoveringCodeBlock = ({
+  parentRef,
   setShowCodeBlockSettings,
   offsetX = 0,
   offsetY = 10,
 }: {
+  parentRef: React.MutableRefObject<any>;
   setShowCodeBlockSettings: React.Dispatch<React.SetStateAction<boolean>>;
   offsetX?: number;
   offsetY?: number;
@@ -218,6 +220,9 @@ export const HoveringCodeBlock = ({
 
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
+    let parentNodeX: number = 0;
+    if (parentRef.current) parentNodeX = parentRef.current.getBoundingClientRect().x;
+
     if (
       (!inFocus &&
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -230,7 +235,7 @@ export const HoveringCodeBlock = ({
 
     el.style.display = "flex";
     el.style.top = `${nodeY + nodeHeight + offsetY}px`;
-    el.style.left = `${nodeX + nodeWidth / 2 + offsetX}px`;
+    el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });
 
@@ -239,21 +244,21 @@ export const HoveringCodeBlock = ({
       {isBlockActive(editor, "codeBlock", "type") && (
         <div
           ref={ref}
-          className="absolute z-10 flex flex-col items-center justify-start bg-light-mint shadow-xl"
+          className="absolute z-[60] flex flex-col items-center justify-start bg-light-mint shadow-xl"
           role="group"
         >
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => setShowCodeBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
             >
               Settings
             </button>
             <button
               onClick={() => toggleCodeBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>
@@ -278,7 +283,7 @@ export const CodeBlock = ({ attributes, children, element }: RenderElementProps)
   const filename = element.filename;
   return (
     <div className={"prismOneDark"}>
-      <pre className="font-bold" {...attributes} spellCheck={false}>
+      <pre {...attributes} spellCheck={false}>
         {filename && (
           <div contentEditable={false}>
             <p className="m-0">{filename}</p>
