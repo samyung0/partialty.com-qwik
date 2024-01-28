@@ -1,15 +1,17 @@
 import type { NoSerialize } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { $, component$, noSerialize, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
 import { eq } from "drizzle-orm";
 import ContentEditor from "~/components/ContentEditor";
 import SideNav from "~/components/ContentEditor/SideNav";
+import { BUN_API_ENDPOINT_WS } from "~/const";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type Mux from "~/types/Mux";
 import drizzleClient from "~/utils/drizzleClient";
+import { content } from "../../../../../../drizzle_turso/schema/content";
 import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
 
 export const useUserAssets = routeLoader$(async (requestEvent) => {
@@ -73,6 +75,11 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   return ret;
 });
 
+export const useContent = routeLoader$(async (requestEvent) => {
+  const ret = await drizzleClient().select().from(content);
+  return ret;
+});
+
 export default component$(() => {
   const user = useUserLoader().value;
   const userAssets = useUserAssets().value;
@@ -80,72 +87,122 @@ export default component$(() => {
   const contentWS = useSignal<NoSerialize<WebSocket>>();
   const muxWSHeartBeat = useSignal<any>();
 
+  const closeWS = $(() => {
+    console.log("closing content websocket");
+    contentWS.value?.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+    contentWS.value?.close();
+    contentWS.value = undefined;
+    clearInterval(muxWSHeartBeat.value);
+    return true;
+  });
+
   // eslint-disable-next-line qwik/no-use-visible-task
-  // useVisibleTask$(() => {
-  //   const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
-  //   ws.addEventListener("open", () => {
-  //     ws.send(
-  //       JSON.stringify({
-  //         type: "init",
-  //         userId: user.userId,
-  //       })
-  //     );
-  //     muxWSHeartBeat.value = setInterval(() => {
-  //       console.log("heartbeat sent");
-  //       ws.send(
-  //         JSON.stringify({
-  //           type: "heartBeat",
-  //           userId: user.userId,
-  //         })
-  //       );
-  //     }, 30 * 1000);
-  //   });
+  useVisibleTask$(() => {
+    const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
+    ws.addEventListener("open", () => {
+      ws.send(
+        JSON.stringify({
+          type: "init",
+          userId: user.userId,
+        })
+      );
+      muxWSHeartBeat.value = setInterval(() => {
+        console.log("heartbeat sent");
+        ws.send(
+          JSON.stringify({
+            type: "heartBeat",
+            userId: user.userId,
+          })
+        );
+      }, 30 * 1000);
+    });
 
-  //   ws.addEventListener("message", ({ data }) => {
-  //     try {
-  //       const d = JSON.parse(data);
-  //       if (d.type === "open") {
-  //         console.log(d.message);
-  //       }
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   });
+    ws.addEventListener("message", ({ data }) => {
+      try {
+        const d = JSON.parse(data);
+        console.log(d);
+        // if (d.type === "open") {
+        // }
+      } catch (e) {
+        console.error(e);
+      }
+    });
 
-  //   ws.addEventListener("error", () => {
-  //     console.error("content connection error!");
-  //     contentWS.value = undefined;
-  //     clearInterval(muxWSHeartBeat.value);
-  //   });
+    ws.addEventListener("error", () => {
+      console.error("content connection error!");
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+    });
 
-  //   ws.addEventListener("close", () => {
-  //     console.error("content connection closed!");
-  //     contentWS.value = undefined;
-  //     clearInterval(muxWSHeartBeat.value);
-  //   });
-  //   window.addEventListener("onbeforeunload", () => {
-  //     ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-  //     ws.close();
-  //     contentWS.value = undefined;
-  //     clearInterval(muxWSHeartBeat.value);
-  //     return true;
-  //   });
-  //   window.addEventListener("onunload", () => {
-  //     ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-  //     ws.close();
-  //     contentWS.value = undefined;
-  //     clearInterval(muxWSHeartBeat.value);
-  //     return true;
-  //   });
+    ws.addEventListener("close", () => {
+      console.error("content connection closed!");
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+    });
+    window.addEventListener("onbeforeunload", () => {
+      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+      ws.close();
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+      return true;
+    });
+    window.addEventListener("onunload", () => {
+      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+      ws.close();
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+      return true;
+    });
 
-  //   contentWS.value = noSerialize(ws);
-  // });
+    contentWS.value = noSerialize(ws);
+  });
+
+  const contentEditorValue = useSignal<any>();
+  const renderedHTML = useSignal<string>();
+  const isEditing = useSignal(false);
+  const chapterId = useSignal("");
+
+  const hasChanged = useSignal(false);
+
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
-      <SideNav />
-      {/* {contentWS.value && ( */}
-      <ContentEditor user={user} initialUserAssets={userAssets}></ContentEditor>
-      {/* )} */}
+      <SideNav
+        contentEditorValue={contentEditorValue}
+        renderedHTML={renderedHTML}
+        contentWS={contentWS}
+        userId={user.userId}
+        userAvatar={user.avatar_url}
+        isEditing={isEditing}
+        chapterId={chapterId}
+      />
+      {contentWS.value && (
+        <ContentEditor
+          isEditing={isEditing.value}
+          initialValue={contentEditorValue.value}
+          renderedHTML={renderedHTML.value}
+          closeWS={closeWS}
+          user={user}
+          initialUserAssets={userAssets}
+          chapterId={chapterId.value}
+          hasChanged={hasChanged.value}
+          setHasChanged={$(() => (hasChanged.value = true))}
+          saveChanges={$(async (contentEditorValue: any, renderedHTML: string) => {
+            const ret = (await server$(async () => {
+              try {
+                return await drizzleClient()
+                  .update(content)
+                  .set({ content_slate: contentEditorValue, renderedHTML })
+                  .returning();
+              } catch (e) {
+                return [false, e];
+              }
+            })()) as any[];
+            if (ret.length > 0 && ret[0] === false)
+              return alert("Save failed! " + ret[1].toString());
+            hasChanged.value = false;
+          })}
+        ></ContentEditor>
+      )}
     </main>
   );
 });

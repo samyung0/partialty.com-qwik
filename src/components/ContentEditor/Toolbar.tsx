@@ -47,7 +47,7 @@ const Toolbar = ({
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   return (
-    <div className="absolute left-0 top-0 z-[100] flex w-full flex-wrap items-center justify-center gap-4 rounded-lg border-2 border-mint bg-light-mint p-4">
+    <div className="absolute left-0 top-0 z-[100] flex max-h-[10vh] w-full flex-wrap items-center justify-center gap-4 rounded-lg border-2 border-mint bg-light-mint p-4">
       <MarkButton format="bold" children={<Bold size={20} />} />
       <MarkButton format="italic" children={<Italic size={20} />} />
       <MarkButton format="strikethrough" children={<Strikethrough size={20} />} />

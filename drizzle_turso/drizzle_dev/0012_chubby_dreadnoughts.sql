@@ -1,0 +1,1 @@
+ALTER TABLE content ADD `content_slate` blob;

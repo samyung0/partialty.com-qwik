@@ -1,5 +1,5 @@
 import { addClassToHast } from "shikiji";
-import OneDarkPro from "~/utils/shikiji/OneDarkPro";
+import OneDarkPro, { getContentEditorHighlighter } from "~/utils/shikiji/OneDarkPro";
 
 export default async ({ code }: { code: string }) => {
   const highlighter = await OneDarkPro();
@@ -16,6 +16,15 @@ export default async ({ code }: { code: string }) => {
         },
       },
     ],
+  });
+  return html;
+};
+
+export const highlightShikiji = async ({ code, lang }: { code: string; lang: string }) => {
+  const highlighter = await getContentEditorHighlighter();
+  const html = highlighter.codeToHtml(code, {
+    lang: lang,
+    theme: "one-dark-pro",
   });
   return html;
 };
