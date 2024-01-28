@@ -218,31 +218,30 @@ const ContentEditorReact = ({
     });
 
     ws.addEventListener("error", () => {
-      console.error("connection error!");
+      console.error("mux connection error!");
       setMuxWS(undefined);
       clearInterval(muxWSHeartBeat.current);
     });
 
     ws.addEventListener("close", () => {
-      console.error("connection closed!");
+      console.error("mux connection closed!");
       setMuxWS(undefined);
       clearInterval(muxWSHeartBeat.current);
     });
-
-    window.onbeforeunload = () => {
+    window.addEventListener("onbeforeunload", () => {
       ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
       ws.close();
       setMuxWS(undefined);
       clearInterval(muxWSHeartBeat.current);
       return true;
-    };
-    window.onunload = () => {
+    });
+    window.addEventListener("onunload", () => {
       ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
       ws.close();
       setMuxWS(undefined);
       clearInterval(muxWSHeartBeat.current);
       return true;
-    };
+    });
   }, []);
 
   return (

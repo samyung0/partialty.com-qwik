@@ -244,6 +244,7 @@ const app = new Elysia()
         if (msg.type === "init") {
           const userId = msg.userId;
           if (!userId || wsContentArr.get(userId)) {
+            console.error("User ID is empty or a connection has already been made!");
             ws.send(
               JSON.stringify({
                 type: "error",
@@ -272,6 +273,7 @@ const app = new Elysia()
           const userId = msg.userId;
           const contentId = msg.contentId;
           if (!userId || !contentId) {
+            console.error("User ID or Content ID is empty!");
             return ws.send(
               JSON.stringify({
                 type: "error",
@@ -281,6 +283,7 @@ const app = new Elysia()
           }
           if (courseIdToUserId.get(contentId)) {
             if (courseIdToUserId.get(contentId) === userId) return;
+            console.error("Another Person is already editing the content!");
             return ws.send(
               JSON.stringify({
                 type: "error",

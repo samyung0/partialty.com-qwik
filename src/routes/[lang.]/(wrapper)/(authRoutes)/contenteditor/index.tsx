@@ -1,4 +1,5 @@
-import { component$ } from "@builder.io/qwik";
+import type { NoSerialize } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 
 import { eq } from "drizzle-orm";
@@ -75,15 +76,76 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
 export default component$(() => {
   const user = useUserLoader().value;
   const userAssets = useUserAssets().value;
-  // const userAssets = useStore({
-  //   cloudinaryImages: _userAssets.cloudinary_images
-  //     ? JSON.parse(_userAssets.cloudinary_images)
-  //     : [],
+
+  const contentWS = useSignal<NoSerialize<WebSocket>>();
+  const muxWSHeartBeat = useSignal<any>();
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  // useVisibleTask$(() => {
+  //   const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
+  //   ws.addEventListener("open", () => {
+  //     ws.send(
+  //       JSON.stringify({
+  //         type: "init",
+  //         userId: user.userId,
+  //       })
+  //     );
+  //     muxWSHeartBeat.value = setInterval(() => {
+  //       console.log("heartbeat sent");
+  //       ws.send(
+  //         JSON.stringify({
+  //           type: "heartBeat",
+  //           userId: user.userId,
+  //         })
+  //       );
+  //     }, 30 * 1000);
+  //   });
+
+  //   ws.addEventListener("message", ({ data }) => {
+  //     try {
+  //       const d = JSON.parse(data);
+  //       if (d.type === "open") {
+  //         console.log(d.message);
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   });
+
+  //   ws.addEventListener("error", () => {
+  //     console.error("content connection error!");
+  //     contentWS.value = undefined;
+  //     clearInterval(muxWSHeartBeat.value);
+  //   });
+
+  //   ws.addEventListener("close", () => {
+  //     console.error("content connection closed!");
+  //     contentWS.value = undefined;
+  //     clearInterval(muxWSHeartBeat.value);
+  //   });
+  //   window.addEventListener("onbeforeunload", () => {
+  //     ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+  //     ws.close();
+  //     contentWS.value = undefined;
+  //     clearInterval(muxWSHeartBeat.value);
+  //     return true;
+  //   });
+  //   window.addEventListener("onunload", () => {
+  //     ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
+  //     ws.close();
+  //     contentWS.value = undefined;
+  //     clearInterval(muxWSHeartBeat.value);
+  //     return true;
+  //   });
+
+  //   contentWS.value = noSerialize(ws);
   // });
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
       <SideNav />
+      {/* {contentWS.value && ( */}
       <ContentEditor user={user} initialUserAssets={userAssets}></ContentEditor>
+      {/* )} */}
     </main>
   );
 });
