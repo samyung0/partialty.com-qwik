@@ -164,6 +164,7 @@ const app = new Elysia()
         if (msg.type === "init") {
           const userId = msg.userId;
           if (!userId || wsArr.get(userId)) {
+            console.error("User ID is empty or a connection has already been made!");
             ws.send(
               JSON.stringify({
                 type: "error",
