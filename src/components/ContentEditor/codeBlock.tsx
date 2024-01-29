@@ -1,25 +1,25 @@
 /* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
 import { Trash, X } from "lucide-react";
-import Prism from "prismjs";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-csharp";
-import "prismjs/components/prism-css";
-import "prismjs/components/prism-go-module";
-import "prismjs/components/prism-java";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-markup";
-import "prismjs/components/prism-php";
-import "prismjs/components/prism-python";
-import "prismjs/components/prism-ruby";
-import "prismjs/components/prism-rust";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-tsx";
-import "prismjs/components/prism-typescript";
+// import Prism from "prismjs";
+// import "prismjs/components/prism-c";
+// import "prismjs/components/prism-cpp";
+// import "prismjs/components/prism-csharp";
+// import "prismjs/components/prism-css";
+// import "prismjs/components/prism-go-module";
+// import "prismjs/components/prism-java";
+// import "prismjs/components/prism-javascript";
+// import "prismjs/components/prism-json";
+// import "prismjs/components/prism-jsx";
+// import "prismjs/components/prism-markdown";
+// import "prismjs/components/prism-markup";
+// import "prismjs/components/prism-php";
+// import "prismjs/components/prism-python";
+// import "prismjs/components/prism-ruby";
+// import "prismjs/components/prism-rust";
+// import "prismjs/components/prism-sql";
+// import "prismjs/components/prism-tsx";
+// import "prismjs/components/prism-typescript";
 
 export const languageList = [
   "plainText",
@@ -78,6 +78,7 @@ import type { ImageElement } from "~/components/ContentEditor/types";
 import { useCallback } from "react";
 import { Element, Node } from "slate";
 
+import type { HighlighterCore } from "shikiji/core";
 import type { CodeBlockElement } from "~/components/ContentEditor/types";
 
 const CodeBlockType = "codeBlock";
@@ -310,7 +311,7 @@ export const useDecorate = (editor: Editor) => {
   );
 };
 
-export const SetNodeToDecorations = () => {
+export const SetNodeToDecorations = ({ shikiji }: { shikiji: HighlighterCore }) => {
   const editor = useSlate();
 
   const blockEntries = Array.from(
@@ -321,20 +322,41 @@ export const SetNodeToDecorations = () => {
     })
   ) as NodeEntry<CodeBlockElement>[];
 
-  const nodeToDecorations = mergeMaps(...blockEntries.map(getChildNodeToDecorations));
+  const nodeToDecorations = mergeMaps(
+    ...blockEntries.map(getChildNodeToDecorations.bind(null, shikiji))
+  );
 
   editor.nodeToDecorations = nodeToDecorations;
 
   return null;
 };
 
-const getChildNodeToDecorations = ([block, blockPath]: NodeEntry<CodeBlockElement>) => {
+const fontStyleMap = {
+  0: {
+    fontStyle: "normal",
+  },
+  1: {
+    fontStyle: "italic",
+  },
+  2: {
+    fontWeight: "bold",
+  },
+  4: {
+    textDecoration: "underline",
+  },
+};
+
+const getChildNodeToDecorations = (
+  shikiji: HighlighterCore,
+  [block, blockPath]: NodeEntry<CodeBlockElement>
+) => {
   const nodeToDecorations = new Map<Element, Range[]>();
 
   const text = block.children.map((line) => Node.string(line)).join("\n");
   const language = block.language;
-  const tokens = Prism.tokenize(text, Prism.languages[language || "tsx"]);
-  const normalizedTokens = normalizeTokens(tokens);
+  // const tokens = Prism.tokenize(text, Prism.languages[language || "tsx"]);
+  // const normalizedTokens = normalizeTokens(tokens);
+  const normalizedTokens = shikiji.codeToThemedTokens(text, { lang: language || "tsx" });
   const blockChildren = block.children as Element[];
 
   for (let index = 0; index < normalizedTokens.length; index++) {
@@ -355,11 +377,20 @@ const getChildNodeToDecorations = ([block, blockPath]: NodeEntry<CodeBlockElemen
       const end = start + length;
 
       const path = [...blockPath, index, 0];
+      let newObj: any = {};
+      for (const i in token) {
+        if (i !== "content") {
+          if (i === "fontStyle")
+            newObj = { ...newObj, ...((fontStyleMap as any)[token[i] as any] || {}) };
+          else newObj[i] = (token as any)[i];
+        }
+      }
+
       const range = {
         anchor: { path, offset: start },
         focus: { path, offset: end },
         token: true,
-        ...Object.fromEntries(token.types.map((type) => [type, true])),
+        style: newObj,
       };
 
       nodeToDecorations.get(element)!.push(range);
@@ -386,103 +417,103 @@ const toChildren = (content: string) => [{ text: content }];
 export const toCodeLines = (content: string): Element[] =>
   content.split("\n").map((line) => ({ type: CodeLineType, children: toChildren(line) }));
 
-export const normalizeTokens = (tokens: Array<PrismToken | string>): Token[][] => {
-  const typeArrStack: string[][] = [[]];
-  const tokenArrStack: any = [tokens];
-  const tokenArrIndexStack = [0];
-  const tokenArrSizeStack = [tokens.length];
+// export const normalizeTokens = (tokens: Array<PrismToken | string>): Token[][] => {
+//   const typeArrStack: string[][] = [[]];
+//   const tokenArrStack: any = [tokens];
+//   const tokenArrIndexStack = [0];
+//   const tokenArrSizeStack = [tokens.length];
 
-  let i = 0;
-  let stackIndex = 0;
-  let currentLine: any = [];
+//   let i = 0;
+//   let stackIndex = 0;
+//   let currentLine: any = [];
 
-  const acc = [currentLine];
+//   const acc = [currentLine];
 
-  while (stackIndex > -1) {
-    while ((i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]) {
-      let content;
-      let types = typeArrStack[stackIndex];
+//   while (stackIndex > -1) {
+//     while ((i = tokenArrIndexStack[stackIndex]++) < tokenArrSizeStack[stackIndex]) {
+//       let content;
+//       let types = typeArrStack[stackIndex];
 
-      const tokenArr = tokenArrStack[stackIndex];
-      const token = tokenArr[i];
+//       const tokenArr = tokenArrStack[stackIndex];
+//       const token = tokenArr[i];
 
-      // Determine content and append type to types if necessary
-      if (typeof token === "string") {
-        types = stackIndex > 0 ? types : ["plain"];
-        content = token;
-      } else {
-        types = appendTypes(types, token.type);
-        if (token.alias) {
-          types = appendTypes(types, token.alias);
-        }
+//       // Determine content and append type to types if necessary
+//       if (typeof token === "string") {
+//         types = stackIndex > 0 ? types : ["plain"];
+//         content = token;
+//       } else {
+//         types = appendTypes(types, token.type);
+//         if (token.alias) {
+//           types = appendTypes(types, token.alias);
+//         }
 
-        content = token.content;
-      }
+//         content = token.content;
+//       }
 
-      // If token.content is an array, increase the stack depth and repeat this while-loop
-      if (typeof content !== "string") {
-        stackIndex++;
-        typeArrStack.push(types);
-        tokenArrStack.push(content);
-        tokenArrIndexStack.push(0);
-        tokenArrSizeStack.push(content.length);
-        continue;
-      }
+//       // If token.content is an array, increase the stack depth and repeat this while-loop
+//       if (typeof content !== "string") {
+//         stackIndex++;
+//         typeArrStack.push(types);
+//         tokenArrStack.push(content);
+//         tokenArrIndexStack.push(0);
+//         tokenArrSizeStack.push(content.length);
+//         continue;
+//       }
 
-      // Split by newlines
-      const splitByNewlines = content.split(newlineRe);
-      const newlineCount = splitByNewlines.length;
+//       // Split by newlines
+//       const splitByNewlines = content.split(newlineRe);
+//       const newlineCount = splitByNewlines.length;
 
-      currentLine.push({ types, content: splitByNewlines[0] });
+//       currentLine.push({ types, content: splitByNewlines[0] });
 
-      // Create a new line for each string on a new line
-      for (let i = 1; i < newlineCount; i++) {
-        normalizeEmptyLines(currentLine);
-        acc.push((currentLine = []));
-        currentLine.push({ types, content: splitByNewlines[i] });
-      }
-    }
+//       // Create a new line for each string on a new line
+//       for (let i = 1; i < newlineCount; i++) {
+//         normalizeEmptyLines(currentLine);
+//         acc.push((currentLine = []));
+//         currentLine.push({ types, content: splitByNewlines[i] });
+//       }
+//     }
 
-    // Decreate the stack depth
-    stackIndex--;
-    typeArrStack.pop();
-    tokenArrStack.pop();
-    tokenArrIndexStack.pop();
-    tokenArrSizeStack.pop();
-  }
+//     // Decreate the stack depth
+//     stackIndex--;
+//     typeArrStack.pop();
+//     tokenArrStack.pop();
+//     tokenArrIndexStack.pop();
+//     tokenArrSizeStack.pop();
+//   }
 
-  normalizeEmptyLines(currentLine);
-  return acc;
-};
+//   normalizeEmptyLines(currentLine);
+//   return acc;
+// };
 
-type PrismToken = Prism.Token;
-type Token = {
-  types: string[];
-  content: string;
-  empty?: boolean;
-};
+// type PrismToken = Prism.Token;
+// type Token = {
+//   types: string[];
+//   content: string;
+//   empty?: boolean;
+// };
 
-const newlineRe = /\r\n|\r|\n/;
+// const newlineRe = /\r\n|\r|\n/;
 
 // Empty lines need to contain a single empty token, denoted with { empty: true }
-const normalizeEmptyLines = (line: Token[]) => {
-  if (line.length === 0) {
-    line.push({
-      types: ["plain"],
-      content: "\n",
-      empty: true,
-    });
-  } else if (line.length === 1 && line[0].content === "") {
-    line[0].content = "\n";
-    line[0].empty = true;
-  }
-};
+// const normalizeEmptyLines = (line: Token[]) => {
+//   if (line.length === 0) {
+//     line.push({
+//       types: ["plain"],
+//       content: "\n",
+//       empty: true,
+//     });
+//   } else if (line.length === 1 && line[0].content === "") {
+//     line[0].content = "\n";
+//     line[0].empty = true;
+//   }
+// };
 
-const appendTypes = (types: string[], add: string[] | string): string[] => {
-  const typesSize = types.length;
-  if (typesSize > 0 && types[typesSize - 1] === add) {
-    return types;
-  }
+// const appendTypes = (types: string[], add: string[] | string): string[] => {
+//   const typesSize = types.length;
+//   if (typesSize > 0 && types[typesSize - 1] === add) {
+//     return types;
+//   }
 
-  return types.concat(add);
-};
+//   return types.concat(add);
+// };

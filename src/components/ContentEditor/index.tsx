@@ -4,6 +4,7 @@ import { qwikify$ } from "@builder.io/qwik-react";
 import type { ListsSchema } from "@prezly/slate-lists";
 import { ListType, withLists } from "@prezly/slate-lists";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { HighlighterCore } from "shikiji/core";
 import type { BaseEditor, BaseRange, Node } from "slate";
 import { Editor, Element as SlateElement, Transforms, createEditor } from "slate";
 import type { HistoryEditor } from "slate-history";
@@ -33,6 +34,7 @@ import { BUN_API_ENDPOINT_WS } from "~/const";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
+import { getContentEditorHighlighter } from "~/utils/shikiji/OneDarkPro";
 
 declare module "slate" {
   interface CustomTypes {
@@ -353,6 +355,11 @@ const ContentEditorReact = ({
   }, [chapterId]);
 
   const parentRef = useRef<any>();
+  const [shikiji, setShikiji] = useState<HighlighterCore | undefined>();
+
+  useEffect(() => {
+    (async () => setShikiji(await getContentEditorHighlighter()))();
+  }, []);
 
   return (
     isEditing && (
@@ -370,7 +377,7 @@ const ContentEditorReact = ({
               initialValue={normalizedInitialValue}
             >
               <SaveContent hasChanged={hasChanged} saveChanges={saveChanges} />
-              <SetNodeToDecorations />
+              {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
               {showAudioChooser && (
                 <CenterAudioChooser
                   setAudioTrack={setAudioTrack}

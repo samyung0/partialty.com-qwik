@@ -60,6 +60,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
         .filter((key) => key !== "underline")
         .join(" ")}`}
       {...attributes}
+      style={(leaf as any).style || {}}
     >
       {children}
     </span>
