@@ -13,8 +13,14 @@ const YOUKU_PREFIX = "https://player.youku.com/embed/";
 const COUB_PREFIX = "https://coub.com/embed/";
 
 import highlightSVGString from "~/components/ContentEditor/highlightSVGString";
+import highlightSVGString2 from "~/components/ContentEditor/highlightSVGString2";
+import highlightSVGString3 from "~/components/ContentEditor/highlightSVGString3";
+import highlightSVGString4 from "~/components/ContentEditor/highlightSVGString4";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
+
+const combinedHighlightSVGString =
+  highlightSVGString + highlightSVGString2 + highlightSVGString3 + highlightSVGString4;
 
 const plainTextSerialize = (nodes: any) => {
   return nodes.map((n: any) => Node.string(n)).join("\n");
@@ -70,7 +76,7 @@ const serialize = async (node: any): Promise<string> => {
           width: 100%;
           background: inherit;
           z-index: -1;
-          ${node.sync && `animation: anim 0.5s ease-in forwards;`}
+          ${node.sync && `animation: anim 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;`}
       }
        </style>
        `;
@@ -147,13 +153,13 @@ const serialize = async (node: any): Promise<string> => {
       width: 100%;
       background: inherit;
       z-index: 1;
-        ${node.sync && `animation: anim 0.5s ease-in forwards;`}
+        ${node.sync && `animation: anim 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;`}
       }
        </style>
        `;
         str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
           <span style="position:relative;z-index:2">${string}</span>
-          <span id="${uuid}lower">${highlightSVGString}</span>
+          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           <span id="${uuid}upper"></span>
          </span>
          </span>`;
@@ -184,7 +190,7 @@ const serialize = async (node: any): Promise<string> => {
         `;
         str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
           <span style="position:relative;z-index:2">${string}</span>
-          <span id="${uuid}lower">${highlightSVGString}</span>
+          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           <span id="${uuid}upper"></span>
           </span>
           </span>`;

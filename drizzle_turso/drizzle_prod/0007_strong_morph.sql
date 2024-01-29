@@ -1,1 +1,0 @@
-ALTER TABLE content ADD `updated_at` text DEFAULT CURRENT_TIMESTAMP;

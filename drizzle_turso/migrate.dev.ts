@@ -18,4 +18,5 @@ const drizzleClient = drizzle(turso, { schema: schemaExport });
   await migrate(drizzleClient, {
     migrationsFolder: path.resolve(import.meta.dir, "./drizzle_dev"),
   });
+  console.log("Successfully migrated dev db.");
 })();

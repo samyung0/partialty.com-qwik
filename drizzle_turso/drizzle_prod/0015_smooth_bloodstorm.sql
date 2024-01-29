@@ -1,1 +1,0 @@
-ALTER TABLE content ADD `chapter_order` blob NOT NULL;

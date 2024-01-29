@@ -161,8 +161,36 @@ export default component$(() => {
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
   const chapterId = useSignal("");
-
+  const audioAssetId = useSignal<string | undefined>(undefined);
   const hasChanged = useSignal(false);
+
+  const fetchAudio = $(
+    async (id: string) =>
+      await server$(async function (id: string) {
+        const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
+          method: "GET",
+          headers: {
+            Authorization: `Basic ${btoa(
+              this.env.get("MUX_PRODUCTION_ID")! + ":" + this.env.get("MUX_PRODUCTION_SECRET")!
+            )}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .catch((e) => console.error(e))) as any;
+        const filename = (
+          await drizzleClient()
+            .select({ filename: mux_assets.name })
+            .from(mux_assets)
+            .where(eq(mux_assets.id, id))
+        )[0].filename;
+        audio.filename = filename;
+        return audio as {
+          data: Mux["data"][0];
+          filename: string;
+        };
+      })(id)
+  );
 
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
@@ -174,6 +202,7 @@ export default component$(() => {
         userAvatar={user.avatar_url}
         isEditing={isEditing}
         chapterId={chapterId}
+        audioAssetId={audioAssetId}
       />
       {contentWS.value && (
         <ContentEditor
@@ -185,22 +214,40 @@ export default component$(() => {
           initialUserAssets={userAssets}
           chapterId={chapterId.value}
           hasChanged={hasChanged.value}
+          audioAssetId={audioAssetId.value}
           setHasChanged={$(() => (hasChanged.value = true))}
-          saveChanges={$(async (contentEditorValue: any, renderedHTML: string) => {
-            const ret = (await server$(async () => {
-              try {
-                return await drizzleClient()
-                  .update(content)
-                  .set({ content_slate: contentEditorValue, renderedHTML })
-                  .returning();
-              } catch (e) {
-                return [false, e];
+          fetchAudio={fetchAudio}
+          saveChanges={$(
+            async (
+              contentEditorValue: string,
+              renderedHTML: string,
+              audio_track_playback_id: string | undefined,
+              audio_track_asset_id: string | undefined
+            ) => {
+              const ret = (await server$(async () => {
+                try {
+                  const contentVal: any = {
+                    content_slate: contentEditorValue,
+                    renderedHTML,
+                  };
+                  // if (audio_track_playback_id && audio_track_asset_id) {
+                  contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
+                  contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
+                  // }
+
+                  return await drizzleClient().update(content).set(contentVal).returning();
+                } catch (e) {
+                  return [false, e];
+                }
+              })()) as any[];
+              if (ret.length > 0 && ret[0] === false) {
+                alert("Save failed! " + ret[1].toString());
+                return "";
               }
-            })()) as any[];
-            if (ret.length > 0 && ret[0] === false)
-              return alert("Save failed! " + ret[1].toString());
-            hasChanged.value = false;
-          })}
+              hasChanged.value = false;
+              return "";
+            }
+          )}
         ></ContentEditor>
       )}
     </main>

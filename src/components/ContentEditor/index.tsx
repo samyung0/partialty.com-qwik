@@ -1,4 +1,5 @@
 /** @jsxImportSource react */
+import type { QRL } from "@builder.io/qwik";
 import { qwikify$ } from "@builder.io/qwik-react";
 
 import type { ListsSchema } from "@prezly/slate-lists";
@@ -148,6 +149,8 @@ const ContentEditorReact = ({
   hasChanged,
   setHasChanged,
   saveChanges,
+  audioAssetId,
+  fetchAudio,
 }: {
   initialUserAssets: {
     cloudinaryImages: CloudinaryPublicPic[];
@@ -161,7 +164,19 @@ const ContentEditorReact = ({
   chapterId: string;
   hasChanged: boolean;
   setHasChanged: () => void;
-  saveChanges: (contentEditorValue: any, renderedHTML: string) => void;
+  saveChanges: (
+    contentEditorValue: string,
+    renderedHTML: string,
+    audio_track_playback_id: string | undefined,
+    audio_track_asset_id: string | undefined
+  ) => Promise<string>;
+  audioAssetId: string | undefined;
+  fetchAudio: QRL<
+    (id: string) => Promise<{
+      data: Mux["data"][0];
+      filename: string;
+    }>
+  >;
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
@@ -273,12 +288,22 @@ const ContentEditorReact = ({
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
 
   const [muxWS, setMuxWS] = useState<WebSocket>();
-  const [audioTrack, setAudioTrack] = useState<{
+  const [audioTrack, _setAudioTrack] = useState<{
     id: string;
     duration: number;
     filename: string;
     playback_ids: { id: string }[];
   }>();
+  const setAudioTrack = (props: {
+    id: string;
+    duration: number;
+    filename: string;
+    playback_ids: { id: string }[];
+  }) => {
+    console.log("Setting audio track");
+    _setAudioTrack(props);
+    setHasChanged();
+  };
   const audioTimeStamp = useRef(0);
   const muxWSHeartBeat = useRef<any>();
 
@@ -336,7 +361,7 @@ const ContentEditorReact = ({
   }, []);
 
   useEffect(() => {
-    console.log(chapterId);
+    console.log("Chapter ID:", chapterId);
 
     // leave an empty paragraph at bottom (auto added)
     if (!editor.selection || editor.children.length === 0) return;
@@ -361,6 +386,25 @@ const ContentEditorReact = ({
     (async () => setShikiji(await getContentEditorHighlighter()))();
   }, []);
 
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+
+  useEffect(() => {
+    if (audioAssetId) {
+      setIsLoadingAudio(true);
+      console.log("Loading audio: " + audioAssetId);
+      (async () => {
+        const res = await fetchAudio(audioAssetId);
+        _setAudioTrack({
+          id: res.data.id,
+          duration: res.data.duration,
+          filename: res.filename,
+          playback_ids: res.data.playback_ids,
+        });
+        setIsLoadingAudio(false);
+      })();
+    }
+  }, [audioAssetId]);
+
   return (
     isEditing && (
       <div
@@ -376,7 +420,11 @@ const ContentEditorReact = ({
               editor={editor}
               initialValue={normalizedInitialValue}
             >
-              <SaveContent hasChanged={hasChanged} saveChanges={saveChanges} />
+              <SaveContent
+                audioTrack={audioTrack}
+                hasChanged={hasChanged}
+                saveChanges={saveChanges}
+              />
               {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
               {showAudioChooser && (
                 <CenterAudioChooser
@@ -430,6 +478,7 @@ const ContentEditorReact = ({
               </Prose>
             </Slate>
             <AudioPlayer
+              isLoadingAudio={isLoadingAudio}
               audioTimeStamp={audioTimeStamp}
               setAudioTrack={setAudioTrack}
               setShowAudioChooser={setShowAudioChooser}

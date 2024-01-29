@@ -1,3 +1,5 @@
+import { content } from "./schema/content";
+import { content_index } from "./schema/content_index";
 import { email_verification_token } from "./schema/email_verification_token";
 import { profiles } from "./schema/profiles";
 import { user_key } from "./schema/user_key";
@@ -8,4 +10,6 @@ export default {
   profiles,
   user_key,
   user_session,
+  content,
+  content_index,
 };

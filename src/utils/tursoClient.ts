@@ -9,6 +9,7 @@ export const initTursoIfNeeded = async (
 ) => {
   if (!client) {
     if (prodInDev) {
+      console.log("USING PROD DB!");
       if (!env.get("TURSO_PROD_URL") || !env.get("TURSO_PROD_TOKEN")) {
         console.error("TURSO ENV VARIABLE ERROR SERVER");
         return null;

@@ -19,6 +19,7 @@ export default component$(
     userAvatar,
     isEditing,
     chapterId,
+    audioAssetId,
   }: {
     contentWS: Signal<NoSerialize<WebSocket>>;
     contentEditorValue: Signal<any>;
@@ -27,6 +28,7 @@ export default component$(
     userAvatar: string;
     isEditing: Signal<boolean>;
     chapterId: Signal<string>;
+    audioAssetId: Signal<string | undefined>;
   }) => {
     const contentDB = useStore(useContent().value);
     const topics = useStore<Content[]>(
@@ -410,11 +412,15 @@ export default component$(
                                   delete chapterMapUser[oldChapter.value];
                                   oldChapter.value = chapterObj.id;
                                 }
-                                contentEditorValue.value = chapterObj.content_slate;
+                                contentEditorValue.value = chapterObj.content_slate
+                                  ? JSON.parse(chapterObj.content_slate)
+                                  : undefined;
                                 renderedHTML.value = chapterObj.renderedHTML || undefined;
                                 chapterMapUser[chapterObj.id] = userAvatar;
                                 oldChapter.value = chapterObj.id;
                                 chapterId.value = chapterObj.id;
+                                if (chapterObj.audio_track_asset_id)
+                                  audioAssetId.value = chapterObj.audio_track_asset_id;
                                 contentWS.value.send(
                                   JSON.stringify({
                                     type: "openContent",
