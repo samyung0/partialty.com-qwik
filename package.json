@@ -23,6 +23,7 @@
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && cd compile && ncc build ./chokidarEntry.js -o ../src/assets/chokidar -m && cd .. && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.dev.config.ts",
+    "db:dev:push": "drizzle-kit push:sqlite --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:check": "drizzle-kit check:sqlite --config drizzle_turso/drizzle.dev.config.ts",
     "db:dev:migrate": "cd ./drizzle_turso && bun migrate.dev.ts",

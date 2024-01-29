@@ -8,6 +8,13 @@
       "when": 1706534293556,
       "tag": "0000_fixed_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1706550066680,
+      "tag": "0001_grey_leper_queen",
+      "breakpoints": true
     }
   ]
 }

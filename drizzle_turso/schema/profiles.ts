@@ -1,5 +1,5 @@
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const/defaultRole";
 
 export const profiles = sqliteTable("profiles", {
@@ -20,6 +20,7 @@ export const profiles = sqliteTable("profiles", {
   email_verified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
   github_username: text("github_username"),
   membership_plan: integer("membership_plan"),
+  accessible_courses: blob("accessible_courses").$type<string[]>(),
 });
 
 export type Profiles = InferSelectModel<typeof profiles>;
