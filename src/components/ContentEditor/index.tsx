@@ -219,10 +219,6 @@ const ContentEditorReact = ({
       ],
     },
     {
-      type: "block-quote",
-      children: [{ text: "A wise quote." }],
-    },
-    {
       type: "paragraph",
       align: "center",
       children: [{ text: "Try it out for yourself!" }],

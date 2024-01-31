@@ -14,12 +14,6 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
           {children}
         </p>
       );
-    case "block-quote":
-      return (
-        <blockquote style={style} {...attributes}>
-          {children}
-        </blockquote>
-      );
     case "heading-one":
       return (
         <h1 style={style} {...attributes}>
