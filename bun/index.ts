@@ -40,6 +40,15 @@ const app = new Elysia()
       },
     })
   )
+  .use(
+    cron({
+      name: "heartbeat2",
+      pattern: "* */15 * * * *", // avoid cold start in vercel for root
+      run() {
+        fetch("http://www.partialty.com");
+      },
+    })
+  )
   .use(compression())
   .use(helmet())
   .use(HealthRoute)
