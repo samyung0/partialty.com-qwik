@@ -44,7 +44,6 @@ export const CenterAudioChooser = ({
 
   useEffect(() => {
     contentWS.addEventListener("message", ({ data }) => {
-      console.log(data);
       try {
         const d = JSON.parse(data);
         if (d.type === "error") return alert("WS ERROR: " + d.message);
@@ -80,7 +79,8 @@ export const CenterAudioChooser = ({
           const duration = d.message.duration as number;
           const id = d.message.id as string;
           const created_at = d.message.created_at as string;
-          const playbackId = d.playbackId as string;
+          const playbackId = d.message.playbackId as string;
+          console.log(filename, duration, id, created_at, playbackId);
           if (!filename || !duration || !id || !created_at || !playbackId) {
             setStatus("Errored");
             setTimeout(() => {

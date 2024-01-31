@@ -119,109 +119,7 @@ export default component$(() => {
   const timeStamp = useSignal<string>("");
   const muxWSHeartBeat = useSignal<any>();
 
-  const startWSConnection = $(() => {
-    timeStamp.value = Date.now() + "";
-    const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
-    ws.addEventListener("open", () => {
-      ws.send(
-        JSON.stringify({
-          type: "init",
-          userId: user.userId + "###" + timeStamp.value,
-        })
-      );
-      muxWSHeartBeat.value = setInterval(() => {
-        console.log("heartbeat sent");
-        ws.send(
-          JSON.stringify({
-            type: "heartBeat",
-            userId: user.userId + "###" + timeStamp.value,
-          })
-        );
-      }, 30 * 1000);
-    });
-
-    ws.addEventListener("message", ({ data }) => {
-      try {
-        const d = JSON.parse(data);
-        console.log(d);
-        if (d.type === "addUserEditing") {
-          for (const i of d.message) courseIdToEditingUser[i] = d.message[i];
-          return;
-        }
-        if (d.type === "removeUserEditing") {
-          for (const i of d.message) delete courseIdToEditingUser[i];
-          return;
-        }
-        if (d.type === "openContentSuccess") {
-          if (!isRequestingChapterCallback.value) return;
-          isRequestingChapterCallback.value();
-          isRequestingChapterCallback.value = undefined;
-          clearTimeout(isRequestingChapterTimeout.value);
-          return;
-        }
-        if (d.type === "openContentError") {
-          alert(d.message);
-          isRequestingChapter.value = false;
-          isRequestingChapterCallback.value = undefined;
-          clearTimeout(isRequestingChapterTimeout.value);
-          return;
-        }
-        if (d.type === "error") {
-          alert(d.message);
-          return;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
-
-    ws.addEventListener("error", () => {
-      alert("Webcoket connection error! Retrying connection...");
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
-
-      startWSConnection();
-    });
-
-    ws.addEventListener("close", () => {
-      console.error("content connection closed!");
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
-    });
-
-    contentWS.value = noSerialize(ws);
-  });
-
-  const closeWSConnection = $(() => {
-    console.log("closing content websocket");
-    if (contentWS.value) {
-      contentWS.value.send(
-        JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp })
-      );
-      contentWS.value.close();
-    }
-    contentWS.value = undefined;
-    clearInterval(muxWSHeartBeat.value);
-  });
-
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async () => {
-    await closeWSConnection(); // preload and cache the function
-
-    await startWSConnection();
-    window.addEventListener("onbeforeunload", () => {
-      closeWSConnection();
-      return true;
-    });
-    window.addEventListener("onunload", () => {
-      closeWSConnection();
-      return true;
-    });
-  });
-
-  const courseIdToEditingUser = useStore<Record<string, { userId: string; avatar_url: string }>>(
-    {}
-  );
+  const courseIdToEditingUser = useStore<Record<string, [string, string]>>({});
   const contentEditorValue = useSignal<any>();
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
@@ -259,6 +157,109 @@ export default component$(() => {
         };
       })(id)
   );
+
+  const _startWSConnection: { startWSConnection: QRL<() => any> } = {
+    startWSConnection: $(() => {}),
+  };
+  _startWSConnection.startWSConnection = $(() => {
+    timeStamp.value = Date.now() + "";
+    const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
+    ws.addEventListener("open", () => {
+      ws.send(
+        JSON.stringify({
+          type: "init",
+          userId: user.userId + "###" + timeStamp.value,
+        })
+      );
+      muxWSHeartBeat.value = setInterval(() => {
+        console.log("heartbeat sent");
+        ws.send(
+          JSON.stringify({
+            type: "heartBeat",
+            userId: user.userId + "###" + timeStamp.value,
+          })
+        );
+      }, 30 * 1000);
+    });
+
+    ws.addEventListener("message", ({ data }) => {
+      try {
+        const d = JSON.parse(data);
+        console.log(d);
+        if (d.type === "addUserEditing") {
+          for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+          return;
+        }
+        if (d.type === "removeUserEditing") {
+          for (const i in d.message) delete courseIdToEditingUser[i];
+          return;
+        }
+        if (d.type === "openContentSuccess") {
+          if (!isRequestingChapterCallback.value) return;
+          isRequestingChapterCallback.value();
+          isRequestingChapterCallback.value = undefined;
+          clearTimeout(isRequestingChapterTimeout.value);
+          return;
+        }
+        if (d.type === "openContentError") {
+          alert(d.message);
+          isRequestingChapter.value = false;
+          isRequestingChapterCallback.value = undefined;
+          clearTimeout(isRequestingChapterTimeout.value);
+          return;
+        }
+        if (d.type === "error") {
+          alert(d.message);
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    ws.addEventListener("error", () => {
+      alert("Webcoket connection error! Retrying connection...");
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+
+      _startWSConnection.startWSConnection();
+    });
+
+    ws.addEventListener("close", () => {
+      console.error("content connection closed!");
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+    });
+
+    contentWS.value = noSerialize(ws);
+  });
+  const startWSConnection = _startWSConnection.startWSConnection;
+  const closeWSConnection = $(() => {
+    console.log("closing content websocket");
+    if (contentWS.value) {
+      contentWS.value.send(
+        JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp.value })
+      );
+      contentWS.value.close();
+    }
+    contentWS.value = undefined;
+    clearInterval(muxWSHeartBeat.value);
+  });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    await closeWSConnection(); // preload and cache the function
+
+    startWSConnection();
+    window.onbeforeunload = () => {
+      closeWSConnection();
+      return true;
+    };
+    window.onunload = () => {
+      closeWSConnection();
+      return true;
+    };
+  });
 
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">

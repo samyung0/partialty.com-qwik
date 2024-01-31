@@ -75,9 +75,6 @@ const app = new Elysia()
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
-              uploadIdMapUploadUrl.forEach((value, key) => {
-                console.log(key, value);
-              });
               console.error("Url not found in uploadIdMapUploadUrl!");
               deleteMuxAsset(id);
               return;
@@ -99,21 +96,24 @@ const app = new Elysia()
             const id = data.object.id;
             const upload_id = data.data.upload_id;
             if (!upload_id) {
+              console.error("Upload Id not found in video.asset.created!");
               deleteMuxAsset(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
+              console.error("Url not found in uploadIdMapUploadUrl!");
               deleteMuxAsset(id);
               return;
             }
             if (!uploadUrlMapUserId.get(url)) {
+              console.error("UserId or Filename not found in uploadUrlMapUserId!");
               deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url)!;
             try {
-              await insertMuxAssetDB(id, userId, filename);
+              await insertMuxAssetDB(id, userId.split("###")[0], filename);
             } catch (e) {
               console.error(e);
               deleteMuxAsset(id);

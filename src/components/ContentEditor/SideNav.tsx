@@ -40,13 +40,14 @@ export default component$(
     isEditing: Signal<boolean>;
     chapterId: Signal<string>;
     audioAssetId: Signal<string | undefined>;
-    courseIdToEditingUser: Record<string, { userId: string; avatar_url: string }>;
+    courseIdToEditingUser: Record<string, [string, string]>;
     isRequestingChapterCallback: Signal<QRL<() => any> | undefined>;
     isRequestingChapterTimeout: Signal<any>;
     isRequestingChapter: Signal<boolean>;
     avatar_url: string;
     timeStamp: Signal<string>;
   }) => {
+    console.log(courseIdToEditingUser);
     const contentDB = useContent().value;
     const topics = useStore<ContentIndex[]>(
       contentDB[0].toSorted((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1))
@@ -505,6 +506,7 @@ export default component$(
                                   if (chapterObj.audio_track_asset_id)
                                     audioAssetId.value = chapterObj.audio_track_asset_id;
                                   isEditing.value = true;
+                                  isRequestingChapter.value = false;
                                 });
 
                                 contentWS.value.send(
@@ -551,7 +553,7 @@ export default component$(
                               )}
                               {courseIdToEditingUser[chapterObj.id] && (
                                 <img
-                                  src={courseIdToEditingUser[chapterObj.id].avatar_url}
+                                  src={courseIdToEditingUser[chapterObj.id][1]}
                                   alt=""
                                   width="30"
                                   height="30"
