@@ -233,6 +233,7 @@ export default component$(() => {
           contentWS.value = undefined;
           clearInterval(muxWSHeartBeat.value);
 
+          clearInterval(retry);
           _startWSConnection.startWSConnection();
         });
 
