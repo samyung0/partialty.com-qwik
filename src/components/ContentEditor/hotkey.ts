@@ -74,13 +74,13 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
     }
   }
 
-  // if (isHotkey("shift+enter", event)) {
-  //   const isBlockQuote = isBlockActive(editor, "block-quote", "type");
-  //   if (isBlockQuote) {
-  //     event.preventDefault();
-  //     Editor.insertText(editor, "\n");
-  //   }
-  // }
+  if (isHotkey("shift+enter", event)) {
+    const isBlockQuote = isBlockActive(editor, "block-quote", "type");
+    if (isBlockQuote) {
+      event.preventDefault();
+      Editor.insertText(editor, "\n");
+    }
+  }
 
   onKeyDown(editor, event);
 };

@@ -213,6 +213,10 @@ const serialize = async (node: any): Promise<string> => {
       return `<p style="${style}">
           ${children}
         </p>`;
+    case "block-quote":
+      return `<blockquote style="${style}">
+          ${children}
+        </blockquote>`;
     case "heading-one":
       return `<h1 style="${style}">
           ${children}
