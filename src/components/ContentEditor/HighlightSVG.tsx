@@ -4,8 +4,8 @@ export default () => (
   <svg
     version="1.0"
     xmlns="http://www.w3.org/2000/svg"
-    width="945.000000pt"
-    height="358.000000pt"
+    width="100%"
+    height="100%"
     viewBox="0 0 945.000000 358.000000"
     preserveAspectRatio="xMidYMid meet"
   >

@@ -4,3 +4,4 @@
     env: docker
     repo: https://github.com/samyung0/qwik-project
     plan: starter
+    region: oregon

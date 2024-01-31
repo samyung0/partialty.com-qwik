@@ -52,17 +52,6 @@ export type CodeLineElement = {
   children: (CustomText | CustomElement)[];
 };
 
-export type BlockQuote = {
-  type: "block-quote";
-  align?: Align;
-  url?: string;
-  caption?: string;
-  public_id?: string;
-  content?: string;
-  filename?: string;
-  language?: string;
-  children: (CustomText | CustomElement)[];
-};
 export type HeadingOne = {
   type: "heading-one";
   align?: Align;
@@ -208,7 +197,6 @@ export type CustomElement =
   | CodeBlockElement
   | CodeLineElement
   | CodeElement
-  | BlockQuote
   | BulletedList
   | HeadingOne
   | HeadingTwo

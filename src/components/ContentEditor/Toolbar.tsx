@@ -19,7 +19,6 @@ import {
   ListOrdered,
   PaintBucket,
   Pilcrow,
-  Quote,
   Strikethrough,
   Subscript,
   Superscript,
@@ -74,7 +73,6 @@ const Toolbar = ({
       <BlockButton format="heading-two" children={<Heading2 size={20} />} />
       <BlockButton format="heading-three" children={<Heading3 size={20} />} />
       <BlockButton format="heading-four" children={<Heading4 size={20} />} />
-      <BlockButton format="block-quote" children={<Quote size={18} />} />
       <BlockButton format="numbered-list" children={<ListOrdered size={20} />} />
       <BlockButton format="bulleted-list" children={<List size={20} />} />
       <BlockButton format="left" children={<AlignLeft size={20} />} />

@@ -405,6 +405,7 @@ export default component$(() => {
               audio_track_playback_id: string | undefined,
               audio_track_asset_id: string | undefined
             ) => {
+              console.log(renderedHTML);
               const ret = (await server$(async () => {
                 try {
                   const contentVal: any = {
