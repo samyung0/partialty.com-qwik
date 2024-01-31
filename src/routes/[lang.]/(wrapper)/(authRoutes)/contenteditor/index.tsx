@@ -81,21 +81,27 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
 
 export const useContent = routeLoader$<[ContentIndex[], Content[]]>(async (requestEvent) => {
   const user = await requestEvent.resolveValue(useUserLoader);
-  const accessible_courses =
-    (
-      await drizzleClient()
-        .select({ accessible_courses: profiles.accessible_courses })
-        .from(profiles)
-        .where(eq(profiles.id, user.userId))
-    )[0].accessible_courses || [];
-  const contentCourses =
-    accessible_courses.length > 0
-      ? await drizzleClient()
-          .select()
-          .from(content_index)
-          .where(or(...accessible_courses.map((id) => eq(content_index.id, id))))
-      : [];
-  const contentChapters =
+  let contentCourses: ContentIndex[] = [],
+    contentChapters: Content[] = [];
+  if (user.role === "admin") {
+    contentCourses = await drizzleClient().select().from(content_index);
+  } else {
+    const accessible_courses =
+      (
+        await drizzleClient()
+          .select({ accessible_courses: profiles.accessible_courses })
+          .from(profiles)
+          .where(eq(profiles.id, user.userId))
+      )[0].accessible_courses || [];
+    contentCourses =
+      accessible_courses.length > 0
+        ? await drizzleClient()
+            .select()
+            .from(content_index)
+            .where(or(...accessible_courses.map((id) => eq(content_index.id, id))))
+        : [];
+  }
+  contentChapters =
     contentCourses.length > 0
       ? await drizzleClient()
           .select()
@@ -118,6 +124,7 @@ export default component$(() => {
   const contentWS = useSignal<NoSerialize<WebSocket> | undefined>();
   const timeStamp = useSignal<string>("");
   const muxWSHeartBeat = useSignal<any>();
+  const isClosingPage = useSignal(false);
 
   const courseIdToEditingUser = useStore<Record<string, [string, string]>>({});
   const contentEditorValue = useSignal<any>();
@@ -162,80 +169,177 @@ export default component$(() => {
     startWSConnection: $(() => {}),
   };
   _startWSConnection.startWSConnection = $(() => {
-    timeStamp.value = Date.now() + "";
-    const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
-    ws.addEventListener("open", () => {
-      ws.send(
-        JSON.stringify({
-          type: "init",
-          userId: user.userId + "###" + timeStamp.value,
-        })
-      );
-      muxWSHeartBeat.value = setInterval(() => {
-        console.log("heartbeat sent");
+    const retry = setInterval((): any => {
+      try {
+        console.log("Starting Websocket connection");
+        timeStamp.value = Date.now() + "";
+        const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
+        ws.addEventListener("open", () => {
+          clearInterval(retry);
+          ws.send(
+            JSON.stringify({
+              type: "init",
+              userId: user.userId + "###" + timeStamp.value,
+            })
+          );
+          muxWSHeartBeat.value = setInterval(() => {
+            console.log("heartbeat sent");
+            ws.send(
+              JSON.stringify({
+                type: "heartBeat",
+                userId: user.userId + "###" + timeStamp.value,
+              })
+            );
+          }, 30 * 1000);
+        });
+
+        ws.addEventListener("message", ({ data }) => {
+          try {
+            const d = JSON.parse(data);
+            console.log(d);
+            if (d.type === "addUserEditing") {
+              for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+              return;
+            }
+            if (d.type === "removeUserEditing") {
+              for (const i in d.message) delete courseIdToEditingUser[i];
+              return;
+            }
+            if (d.type === "openContentSuccess") {
+              if (!isRequestingChapterCallback.value) return;
+              isRequestingChapterCallback.value();
+              isRequestingChapterCallback.value = undefined;
+              clearTimeout(isRequestingChapterTimeout.value);
+              return;
+            }
+            if (d.type === "openContentError") {
+              alert(d.message);
+              isRequestingChapter.value = false;
+              isRequestingChapterCallback.value = undefined;
+              clearTimeout(isRequestingChapterTimeout.value);
+              return;
+            }
+            if (d.type === "error") {
+              alert(d.message);
+              return;
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        });
+
+        ws.addEventListener("error", () => {
+          alert("Websocket connection error! Retrying connection...");
+          contentWS.value = undefined;
+          clearInterval(muxWSHeartBeat.value);
+
+          _startWSConnection.startWSConnection();
+        });
+
+        ws.addEventListener("close", () => {
+          if (isClosingPage.value) {
+            return console.log("Websocket connection closed!");
+          }
+          console.error("Websocket connection closed!");
+          contentWS.value = undefined;
+          clearInterval(muxWSHeartBeat.value);
+
+          _startWSConnection.startWSConnection();
+        });
+
+        contentWS.value = noSerialize(ws);
+      } catch (e) {
+        console.error(e);
+        console.log("retrying connection in 10 seconds...");
+      }
+    }, 10 * 1000);
+    try {
+      console.log("Starting Websocket connection");
+      timeStamp.value = Date.now() + "";
+      const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
+      ws.addEventListener("open", () => {
+        clearInterval(retry);
         ws.send(
           JSON.stringify({
-            type: "heartBeat",
+            type: "init",
             userId: user.userId + "###" + timeStamp.value,
           })
         );
-      }, 30 * 1000);
-    });
+        muxWSHeartBeat.value = setInterval(() => {
+          console.log("heartbeat sent");
+          ws.send(
+            JSON.stringify({
+              type: "heartBeat",
+              userId: user.userId + "###" + timeStamp.value,
+            })
+          );
+        }, 30 * 1000);
+      });
 
-    ws.addEventListener("message", ({ data }) => {
-      try {
-        const d = JSON.parse(data);
-        console.log(d);
-        if (d.type === "addUserEditing") {
-          for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
-          return;
+      ws.addEventListener("message", ({ data }) => {
+        try {
+          const d = JSON.parse(data);
+          console.log(d);
+          if (d.type === "addUserEditing") {
+            for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+            return;
+          }
+          if (d.type === "removeUserEditing") {
+            for (const i in d.message) delete courseIdToEditingUser[i];
+            return;
+          }
+          if (d.type === "openContentSuccess") {
+            if (!isRequestingChapterCallback.value) return;
+            isRequestingChapterCallback.value();
+            isRequestingChapterCallback.value = undefined;
+            clearTimeout(isRequestingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "openContentError") {
+            alert(d.message);
+            isRequestingChapter.value = false;
+            isRequestingChapterCallback.value = undefined;
+            clearTimeout(isRequestingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "error") {
+            alert(d.message);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
         }
-        if (d.type === "removeUserEditing") {
-          for (const i in d.message) delete courseIdToEditingUser[i];
-          return;
-        }
-        if (d.type === "openContentSuccess") {
-          if (!isRequestingChapterCallback.value) return;
-          isRequestingChapterCallback.value();
-          isRequestingChapterCallback.value = undefined;
-          clearTimeout(isRequestingChapterTimeout.value);
-          return;
-        }
-        if (d.type === "openContentError") {
-          alert(d.message);
-          isRequestingChapter.value = false;
-          isRequestingChapterCallback.value = undefined;
-          clearTimeout(isRequestingChapterTimeout.value);
-          return;
-        }
-        if (d.type === "error") {
-          alert(d.message);
-          return;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+      });
 
-    ws.addEventListener("error", () => {
-      alert("Webcoket connection error! Retrying connection...");
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
+      ws.addEventListener("error", () => {
+        alert("Websocket connection error! Retrying connection...");
+        contentWS.value = undefined;
+        clearInterval(muxWSHeartBeat.value);
 
-      _startWSConnection.startWSConnection();
-    });
+        _startWSConnection.startWSConnection();
+      });
 
-    ws.addEventListener("close", () => {
-      console.error("content connection closed!");
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
-    });
+      ws.addEventListener("close", () => {
+        if (isClosingPage.value) {
+          return console.log("Websocket connection closed!");
+        }
+        console.error("Websocket connection closed!");
+        contentWS.value = undefined;
+        clearInterval(muxWSHeartBeat.value);
 
-    contentWS.value = noSerialize(ws);
+        _startWSConnection.startWSConnection();
+      });
+
+      contentWS.value = noSerialize(ws);
+    } catch (e) {
+      console.error(e);
+      console.log("retrying connection in 10 seconds...");
+    }
   });
   const startWSConnection = _startWSConnection.startWSConnection;
   const closeWSConnection = $(() => {
     console.log("closing content websocket");
+    isClosingPage.value = true;
     if (contentWS.value) {
       contentWS.value.send(
         JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp.value })
@@ -278,6 +382,7 @@ export default component$(() => {
         audioAssetId={audioAssetId}
         userRole={user.role}
         avatar_url={user.avatar_url}
+        hasChanged={hasChanged}
       />
       {contentWS.value && (
         <ContentEditor

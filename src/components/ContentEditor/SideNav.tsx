@@ -31,6 +31,7 @@ export default component$(
     isRequestingChapter,
     avatar_url,
     timeStamp,
+    hasChanged,
   }: {
     contentWS: Signal<NoSerialize<WebSocket>>;
     contentEditorValue: Signal<any>;
@@ -46,8 +47,8 @@ export default component$(
     isRequestingChapter: Signal<boolean>;
     avatar_url: string;
     timeStamp: Signal<string>;
+    hasChanged: Signal<boolean>;
   }) => {
-    console.log(courseIdToEditingUser);
     const contentDB = useContent().value;
     const topics = useStore<ContentIndex[]>(
       contentDB[0].toSorted((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1))
@@ -140,36 +141,19 @@ export default component$(
                     newCourse = await server$(
                       async () =>
                         await drizzleClient().transaction(async (tx) => {
-                          const admins = await tx
-                            .select({
-                              accessible_courses: profiles.accessible_courses,
-                              id: profiles.id,
+                          const currentAccessibleCourses =
+                            (
+                              await tx
+                                .select({ accessible_courses: profiles.accessible_courses })
+                                .from(profiles)
+                                .where(eq(profiles.id, uId))
+                            )[0].accessible_courses || [];
+                          await tx
+                            .update(profiles)
+                            .set({
+                              accessible_courses: [...currentAccessibleCourses, courseId],
                             })
-                            .from(profiles)
-                            .where(eq(profiles.role, "admin"));
-                          admins.forEach(async (admin) => {
-                            await tx
-                              .update(profiles)
-                              .set({
-                                accessible_courses: [...(admin.accessible_courses || []), courseId],
-                              })
-                              .where(eq(profiles.id, admin.id));
-                          });
-                          if (role !== "admin") {
-                            const currentAccessibleCourses =
-                              (
-                                await tx
-                                  .select({ accessible_courses: profiles.accessible_courses })
-                                  .from(profiles)
-                                  .where(eq(profiles.id, uId))
-                              )[0].accessible_courses || [];
-                            await tx
-                              .update(profiles)
-                              .set({
-                                accessible_courses: [...currentAccessibleCourses, courseId],
-                              })
-                              .where(eq(profiles.id, uId));
-                          }
+                            .where(eq(profiles.id, uId));
                           return (await tx.insert(content_index).values(values).returning())[0];
                         })
                     )();
@@ -487,7 +471,25 @@ export default component$(
                             onClick$={() => {
                               if (contentWS.value) {
                                 if (oldChapter.value) {
-                                  if (oldChapter.value === chapterObj.id) return;
+                                  if (
+                                    hasChanged.value &&
+                                    !window.confirm(
+                                      "You have unsaved changes. Are you sure you want to leave/switch editing?"
+                                    )
+                                  )
+                                    return;
+                                  if (oldChapter.value === chapterObj.id) {
+                                    isEditing.value = false;
+                                    contentWS.value.send(
+                                      JSON.stringify({
+                                        type: "closeContent",
+                                        userId: userId + "###" + timeStamp.value,
+                                        contentId: oldChapter.value,
+                                      })
+                                    );
+                                    oldChapter.value = "";
+                                    return;
+                                  }
                                   contentWS.value.send(
                                     JSON.stringify({
                                       type: "closeContent",
