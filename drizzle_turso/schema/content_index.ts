@@ -3,7 +3,7 @@ import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const content_index = sqliteTable("content_index", {
   id: text("id").notNull().primaryKey(),
-  slug: text("slug").notNull(),
+  slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   chapter_order: blob("chapter_order", { mode: "json" }).$type<string[]>().notNull(),
   link: text("link"),

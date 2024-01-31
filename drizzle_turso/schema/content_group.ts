@@ -14,4 +14,4 @@ export const content_group = sqliteTable("content_group", {
 });
 
 export type ContentGroup = InferSelectModel<typeof content_group>;
-export type NewContentIndex = InferInsertModel<typeof content_group>;
+export type NewContentGroup = InferInsertModel<typeof content_group>;

@@ -1,3 +1,15 @@
+CREATE TABLE `content_group` (
+	`id` text PRIMARY KEY NOT NULL,
+	`slug` text NOT NULL,
+	`name` text NOT NULL,
+	`chapter_index` blob NOT NULL,
+	`link` text,
+	`is_locked` integer DEFAULT false NOT NULL,
+	`is_premium` integer DEFAULT false NOT NULL,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+);
+--> statement-breakpoint
 CREATE TABLE `content_index` (
 	`id` text PRIMARY KEY NOT NULL,
 	`slug` text NOT NULL,
@@ -57,7 +69,8 @@ CREATE TABLE `profiles` (
 	`nickname` text NOT NULL,
 	`email_verified` integer DEFAULT false NOT NULL,
 	`github_username` text,
-	`membership_plan` integer
+	`membership_plan` integer,
+	`accessible_courses` blob
 );
 --> statement-breakpoint
 CREATE TABLE `user_key` (
@@ -77,4 +90,5 @@ CREATE TABLE `user_session` (
 	FOREIGN KEY (`user_id`) REFERENCES `profiles`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE UNIQUE INDEX `content_index_slug_unique` ON `content_index` (`slug`);--> statement-breakpoint
 CREATE UNIQUE INDEX `profiles_email_unique` ON `profiles` (`email`);

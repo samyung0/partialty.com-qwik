@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "1d42ea45-86df-4e78-b76f-65137b6c8de8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2f9ff92d-71cd-4d88-8699-51b1d636b12e",
+  "prevId": "52cf10e2-5d30-4ffd-933e-4a5a310cafa5",
   "tables": {
     "content_group": {
       "name": "content_group",

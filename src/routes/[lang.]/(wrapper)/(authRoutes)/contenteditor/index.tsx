@@ -1,8 +1,8 @@
-import type { NoSerialize } from "@builder.io/qwik";
-import { $, component$, noSerialize, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import type { NoSerialize, QRL } from "@builder.io/qwik";
+import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import ContentEditor from "~/components/ContentEditor";
 import SideNav from "~/components/ContentEditor/SideNav";
 import { BUN_API_ENDPOINT_WS } from "~/const";
@@ -11,8 +11,12 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type Mux from "~/types/Mux";
 import drizzleClient from "~/utils/drizzleClient";
+import type { Content } from "../../../../../../drizzle_turso/schema/content";
 import { content } from "../../../../../../drizzle_turso/schema/content";
+import type { ContentIndex } from "../../../../../../drizzle_turso/schema/content_index";
+import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
 import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
+import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
 
 export const useUserAssets = routeLoader$(async (requestEvent) => {
   const ret: {
@@ -75,35 +79,54 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   return ret;
 });
 
-export const useContent = routeLoader$(async (requestEvent) => {
-  const ret = await drizzleClient().select().from(content);
-  return ret;
+export const useContent = routeLoader$<[ContentIndex[], Content[]]>(async (requestEvent) => {
+  const user = await requestEvent.resolveValue(useUserLoader);
+  const accessible_courses =
+    (
+      await drizzleClient()
+        .select({ accessible_courses: profiles.accessible_courses })
+        .from(profiles)
+        .where(eq(profiles.id, user.userId))
+    )[0].accessible_courses || [];
+  const contentCourses =
+    accessible_courses.length > 0
+      ? await drizzleClient()
+          .select()
+          .from(content_index)
+          .where(or(...accessible_courses.map((id) => eq(content_index.id, id))))
+      : [];
+  const contentChapters =
+    contentCourses.length > 0
+      ? await drizzleClient()
+          .select()
+          .from(content)
+          .where(
+            or(
+              ...contentCourses
+                .map((course) => course.chapter_order.map((chapterId) => eq(content.id, chapterId)))
+                .flat()
+            )
+          )
+      : [];
+  return [contentCourses, contentChapters];
 });
 
 export default component$(() => {
   const user = useUserLoader().value;
   const userAssets = useUserAssets().value;
 
-  const contentWS = useSignal<NoSerialize<WebSocket>>();
+  const contentWS = useSignal<NoSerialize<WebSocket> | undefined>();
+  const timeStamp = useSignal<string>("");
   const muxWSHeartBeat = useSignal<any>();
 
-  const closeWS = $(() => {
-    console.log("closing content websocket");
-    contentWS.value?.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-    contentWS.value?.close();
-    contentWS.value = undefined;
-    clearInterval(muxWSHeartBeat.value);
-    return true;
-  });
-
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
+  const startWSConnection = $(() => {
+    timeStamp.value = Date.now() + "";
     const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
     ws.addEventListener("open", () => {
       ws.send(
         JSON.stringify({
           type: "init",
-          userId: user.userId,
+          userId: user.userId + "###" + timeStamp.value,
         })
       );
       muxWSHeartBeat.value = setInterval(() => {
@@ -111,7 +134,7 @@ export default component$(() => {
         ws.send(
           JSON.stringify({
             type: "heartBeat",
-            userId: user.userId,
+            userId: user.userId + "###" + timeStamp.value,
           })
         );
       }, 30 * 1000);
@@ -121,17 +144,43 @@ export default component$(() => {
       try {
         const d = JSON.parse(data);
         console.log(d);
-        // if (d.type === "open") {
-        // }
+        if (d.type === "addUserEditing") {
+          for (const i of d.message) courseIdToEditingUser[i] = d.message[i];
+          return;
+        }
+        if (d.type === "removeUserEditing") {
+          for (const i of d.message) delete courseIdToEditingUser[i];
+          return;
+        }
+        if (d.type === "openContentSuccess") {
+          if (!isRequestingChapterCallback.value) return;
+          isRequestingChapterCallback.value();
+          isRequestingChapterCallback.value = undefined;
+          clearTimeout(isRequestingChapterTimeout.value);
+          return;
+        }
+        if (d.type === "openContentError") {
+          alert(d.message);
+          isRequestingChapter.value = false;
+          isRequestingChapterCallback.value = undefined;
+          clearTimeout(isRequestingChapterTimeout.value);
+          return;
+        }
+        if (d.type === "error") {
+          alert(d.message);
+          return;
+        }
       } catch (e) {
         console.error(e);
       }
     });
 
     ws.addEventListener("error", () => {
-      console.error("content connection error!");
+      alert("Webcoket connection error! Retrying connection...");
       contentWS.value = undefined;
       clearInterval(muxWSHeartBeat.value);
+
+      startWSConnection();
     });
 
     ws.addEventListener("close", () => {
@@ -139,30 +188,49 @@ export default component$(() => {
       contentWS.value = undefined;
       clearInterval(muxWSHeartBeat.value);
     });
-    window.addEventListener("onbeforeunload", () => {
-      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-      ws.close();
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
-      return true;
-    });
-    window.addEventListener("onunload", () => {
-      ws.send(JSON.stringify({ type: "terminate", userId: user.userId }));
-      ws.close();
-      contentWS.value = undefined;
-      clearInterval(muxWSHeartBeat.value);
-      return true;
-    });
 
     contentWS.value = noSerialize(ws);
   });
 
+  const closeWSConnection = $(() => {
+    console.log("closing content websocket");
+    if (contentWS.value) {
+      contentWS.value.send(
+        JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp })
+      );
+      contentWS.value.close();
+    }
+    contentWS.value = undefined;
+    clearInterval(muxWSHeartBeat.value);
+  });
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    await closeWSConnection(); // preload and cache the function
+
+    await startWSConnection();
+    window.addEventListener("onbeforeunload", () => {
+      closeWSConnection();
+      return true;
+    });
+    window.addEventListener("onunload", () => {
+      closeWSConnection();
+      return true;
+    });
+  });
+
+  const courseIdToEditingUser = useStore<Record<string, { userId: string; avatar_url: string }>>(
+    {}
+  );
   const contentEditorValue = useSignal<any>();
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
   const chapterId = useSignal("");
   const audioAssetId = useSignal<string | undefined>(undefined);
   const hasChanged = useSignal(false);
+  const isRequestingChapter = useSignal(false);
+  const isRequestingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
+  const isRequestingChapterTimeout = useSignal<any>();
 
   const fetchAudio = $(
     async (id: string) =>
@@ -195,21 +263,28 @@ export default component$(() => {
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
       <SideNav
+        timeStamp={timeStamp}
+        isRequestingChapter={isRequestingChapter}
+        isRequestingChapterCallback={isRequestingChapterCallback}
+        isRequestingChapterTimeout={isRequestingChapterTimeout}
+        courseIdToEditingUser={courseIdToEditingUser}
         contentEditorValue={contentEditorValue}
         renderedHTML={renderedHTML}
         contentWS={contentWS}
         userId={user.userId}
-        userAvatar={user.avatar_url}
         isEditing={isEditing}
         chapterId={chapterId}
         audioAssetId={audioAssetId}
+        userRole={user.role}
+        avatar_url={user.avatar_url}
       />
       {contentWS.value && (
         <ContentEditor
+          timeStamp={timeStamp.value}
           isEditing={isEditing.value}
           initialValue={contentEditorValue.value}
           renderedHTML={renderedHTML.value}
-          closeWS={closeWS}
+          contentWS={contentWS.value}
           user={user}
           initialUserAssets={userAssets}
           chapterId={chapterId.value}
@@ -230,12 +305,13 @@ export default component$(() => {
                     content_slate: contentEditorValue,
                     renderedHTML,
                   };
-                  // if (audio_track_playback_id && audio_track_asset_id) {
                   contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
                   contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
-                  // }
-
-                  return await drizzleClient().update(content).set(contentVal).returning();
+                  return await drizzleClient()
+                    .update(content)
+                    .set(contentVal)
+                    .where(eq(content.id, chapterId.value))
+                    .returning();
                 } catch (e) {
                   return [false, e];
                 }

@@ -56,6 +56,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 width={40}
                 height={40}
                 class="rounded-full object-contain"
+                referrerPolicy="no-referrer"
               />
             </span>
             <img

@@ -15,6 +15,41 @@
       "when": 1706550066680,
       "tag": "0001_grey_leper_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1706581061675,
+      "tag": "0002_oval_maggott",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1706595785473,
+      "tag": "0003_large_saracen",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1706595975854,
+      "tag": "0004_certain_nighthawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1706597002867,
+      "tag": "0005_parched_violations",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1706597023627,
+      "tag": "0006_flawless_starhawk",
+      "breakpoints": true
     }
   ]
 }

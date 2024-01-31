@@ -10,18 +10,20 @@ import { MUX_AUDIO_MAX_SIZE } from "~/const/mux";
 import type Mux from "~/types/Mux";
 
 export const CenterAudioChooser = ({
-  ws,
+  timeStamp,
+  contentWS,
   userId,
   setShowAudioChooser,
   userAudiosWithName,
   setAudioTrack,
 }: {
-  ws: WebSocket;
+  timeStamp: string;
+  contentWS: WebSocket;
   userId: string;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
   userAudiosWithName: [Mux["data"][0], string][];
-  setAudioTrack: React.Dispatch<
-    React.SetStateAction<
+  setAudioTrack: (
+    props:
       | {
           id: string;
           duration: number;
@@ -29,8 +31,7 @@ export const CenterAudioChooser = ({
           playback_ids: { id: string }[];
         }
       | undefined
-    >
-  >;
+  ) => any;
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -42,12 +43,12 @@ export const CenterAudioChooser = ({
   const urlRef = useRef<string>();
 
   useEffect(() => {
-    ws.addEventListener("message", ({ data }) => {
+    contentWS.addEventListener("message", ({ data }) => {
       console.log(data);
       try {
         const d = JSON.parse(data);
         if (d.type === "error") return alert("WS ERROR: " + d.message);
-        if (d.type === "createSuccess") {
+        if (d.type === "initCreateSuccess") {
           if (!urlRef.current || !fileRef.current) return;
           const upload = UpChunk.createUpload({
             endpoint: urlRef.current,
@@ -225,11 +226,11 @@ export const CenterAudioChooser = ({
 
                   urlRef.current = url;
 
-                  ws.send(
+                  contentWS.send(
                     JSON.stringify({
                       type: "initCreate",
                       url,
-                      userId,
+                      userId: userId + "###" + timeStamp,
                       filename: file.name,
                     })
                   );
@@ -265,8 +266,8 @@ export default ({
     | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
     | undefined;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
-  setAudioTrack: React.Dispatch<
-    React.SetStateAction<
+  setAudioTrack: (
+    props:
       | {
           id: string;
           duration: number;
@@ -274,8 +275,7 @@ export default ({
           playback_ids: { id: string }[];
         }
       | undefined
-    >
-  >;
+  ) => any;
   audioTimeStamp: React.MutableRefObject<number>;
   isLoadingAudio: boolean;
 }) => {

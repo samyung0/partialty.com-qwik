@@ -14,13 +14,10 @@ const COUB_PREFIX = "https://coub.com/embed/";
 
 import highlightSVGString from "~/components/ContentEditor/highlightSVGString";
 import highlightSVGString2 from "~/components/ContentEditor/highlightSVGString2";
-import highlightSVGString3 from "~/components/ContentEditor/highlightSVGString3";
-import highlightSVGString4 from "~/components/ContentEditor/highlightSVGString4";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
 
-const combinedHighlightSVGString =
-  highlightSVGString + highlightSVGString2 + highlightSVGString3 + highlightSVGString4;
+const combinedHighlightSVGString = highlightSVGString + highlightSVGString2;
 
 const plainTextSerialize = (nodes: any) => {
   return nodes.map((n: any) => Node.string(n)).join("\n");

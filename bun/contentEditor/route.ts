@@ -2,15 +2,12 @@ import { createHmac } from "crypto";
 import Elysia, { t } from "elysia";
 import { turso } from "../turso";
 
-const wsArr = new Map();
-const wsArrClear = new Map();
-const uploadUrlMapUserId = new Map();
-const uploadIdMapUploadUrl = new Map();
-
-const wsContentArr = new Map();
-const wsContentArrClear = new Map();
-const courseIdToUserId = new Map();
-const userIdToCourseId = new Map();
+const wsContentArr = new Map<string, any>();
+const wsContentArrClear = new Map<string, NodeJS.Timeout>();
+const uploadUrlMapUserId = new Map<string, { userId: string; filename: string }>();
+const uploadIdMapUploadUrl = new Map<string, string>();
+const courseIdToUserId = new Map<string, [string, string]>();
+const userIdToCourseId = new Map<string, string>();
 
 if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET)
   throw new Error("Server Mux env var Error!");
@@ -85,16 +82,13 @@ const app = new Elysia()
               deleteMuxAsset(id);
               return;
             }
-            const { userId, filename } = uploadUrlMapUserId.get(url);
-            if (!userId || !filename) {
-              uploadUrlMapUserId.forEach((value, key) => {
-                console.log(key, value);
-              });
+            if (!uploadUrlMapUserId.get(url)) {
               console.error("UserId or Filename not found in uploadUrlMapUserId!");
               deleteMuxAsset(id);
               return;
             }
-            return wsArr.get(userId).send(
+            const { userId, filename } = uploadUrlMapUserId.get(url)!;
+            return wsContentArr.get(userId).send(
               JSON.stringify({
                 type: "assetSuccess",
                 message: "OK",
@@ -113,18 +107,18 @@ const app = new Elysia()
               deleteMuxAsset(id);
               return;
             }
-            const { userId, filename } = uploadUrlMapUserId.get(url);
-            if (!userId || !filename) {
+            if (!uploadUrlMapUserId.get(url)) {
               deleteMuxAsset(id);
               return;
             }
+            const { userId, filename } = uploadUrlMapUserId.get(url)!;
             try {
               await insertMuxAssetDB(id, userId, filename);
             } catch (e) {
               console.error(e);
               deleteMuxAsset(id);
             }
-            wsArr.get(userId).send(
+            wsContentArr.get(userId).send(
               JSON.stringify({
                 type: "assetReady",
                 message: {
@@ -157,103 +151,12 @@ const app = new Elysia()
       }
     );
   })
-  .ws("/mux/ws", {
-    message(ws, msg: any) {
-      console.log(msg);
-      try {
-        if (msg.type === "init") {
-          const userId = msg.userId;
-          if (!userId || wsArr.get(userId)) {
-            console.error("User ID is empty or a connection has already been made!");
-            ws.send(
-              JSON.stringify({
-                type: "error",
-                message: "User ID is empty or a connection has already been made!",
-              })
-            );
-            return ws.close();
-          }
-          wsArrClear.set(
-            userId,
-            setTimeout(
-              () => {
-                console.error("deleting" + userId);
-                wsArr.delete(userId);
-              },
-              5 * 60 * 1000
-            )
-          );
-          return wsArr.set(userId, ws);
-        }
-        if (msg.type === "initCreate") {
-          const url = msg.url,
-            userId = msg.userId,
-            filename = msg.filename;
-          if (!url || !userId || !filename) {
-            return ws.send(
-              JSON.stringify({
-                type: "error",
-                message: "Upload Url or userId or filename is empty!",
-              })
-            );
-          }
-          uploadUrlMapUserId.set(url, { userId, filename });
-          return ws.send(
-            JSON.stringify({
-              type: "createSuccess",
-              message: "OK",
-            })
-          );
-        }
-        if (msg.type === "heartBeat") {
-          const userId = msg.userId;
-          if (!userId || !wsArrClear.get(userId)) {
-            console.error("Hearbeat Error! unknown id!");
-            return ws.send(
-              JSON.stringify({
-                type: "error",
-                message: "User ID is empty or User ID not found in connection map!",
-              })
-            );
-          }
-          clearTimeout(wsArrClear.get(userId));
-          wsArrClear.set(
-            userId,
-            setTimeout(
-              () => {
-                console.error("deleting" + userId);
-                wsArr.delete(userId);
-              },
-              5 * 60 * 1000
-            )
-          );
-        }
-        if (msg.type === "terminate") {
-          const userId = msg.userId;
-          wsArrClear.delete(userId);
-          return wsArr.delete(userId);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  })
   .ws("/content/ws", {
     message(ws, msg: any) {
       console.log(msg);
       try {
         if (msg.type === "init") {
           const userId = msg.userId;
-          if (!userId || wsContentArr.get(userId)) {
-            console.error("User ID is empty or a connection has already been made!");
-            ws.send(
-              JSON.stringify({
-                type: "error",
-                message: "User ID is empty or a connection has already been made!",
-              })
-            );
-            return ws.close();
-          }
           wsContentArrClear.set(
             userId,
             setTimeout(
@@ -261,24 +164,34 @@ const app = new Elysia()
                 console.error("deleting" + userId);
                 wsContentArr.delete(userId);
                 if (userIdToCourseId.get(userId)) {
-                  courseIdToUserId.delete(userIdToCourseId.get(userId));
+                  courseIdToUserId.delete(userIdToCourseId.get(userId)!);
                   userIdToCourseId.delete(userId);
                 }
               },
               5 * 60 * 1000
             )
           );
-          return wsContentArr.set(userId, ws);
+          wsContentArr.set(userId, ws);
+          const entries: Record<string, [string, string]> = {};
+          courseIdToUserId.forEach((val, key) => (entries[key] = [val[0].split("###")[0], val[1]]));
+          ws.send(
+            JSON.stringify({
+              type: "addUserEditing",
+              message: entries,
+            })
+          );
+          return;
         }
         if (msg.type === "openContent") {
           const userId = msg.userId;
           const contentId = msg.contentId;
-          if (!userId || !contentId) {
-            console.error("User ID or Content ID is empty!");
+          const avatar_url = msg.avatar_url;
+          if (!userId || !contentId || !avatar_url) {
+            console.error("User ID, Content ID or Avatar url is empty!");
             return ws.send(
               JSON.stringify({
-                type: "error",
-                message: "User ID or Content ID is empty!",
+                type: "openContentError",
+                message: "User ID, Content ID or Avatar url is empty!",
               })
             );
           }
@@ -287,18 +200,53 @@ const app = new Elysia()
             console.error("Another Person is already editing the content!");
             return ws.send(
               JSON.stringify({
-                type: "error",
+                type: "openContentError",
                 message: "Another Person is already editing the content!",
               })
             );
           }
-          courseIdToUserId.set(contentId, userId);
+          courseIdToUserId.set(contentId, [userId, avatar_url]);
           userIdToCourseId.set(userId, contentId);
+          const message: any = {};
+          message[contentId] = [userId, avatar_url];
+          wsContentArr.forEach((val, key) =>
+            val.send(
+              JSON.stringify({
+                type: "addUserEditing",
+                message,
+              })
+            )
+          );
           return ws.send(
             JSON.stringify({
-              type: "openSuccess",
+              type: "openContentSuccess",
               message: "OK",
             })
+          );
+        }
+        if (msg.type === "closeContent") {
+          const userId = msg.userId;
+          const contentId = msg.contentId;
+          if (!userId || !contentId) {
+            return;
+          }
+          const serverContentId = userIdToCourseId.get(userId);
+          if (userIdToCourseId.get(userId) !== contentId) {
+            console.error("Client and Server Sync Error!");
+          }
+          const message: any = {};
+          if (serverContentId) {
+            courseIdToUserId.delete(serverContentId!);
+            userIdToCourseId.delete(userId);
+            message[serverContentId] = true;
+          }
+          wsContentArr.forEach((val, key) =>
+            val.send(
+              JSON.stringify({
+                type: "removeUserEditing",
+                message,
+              })
+            )
           );
         }
         if (msg.type === "heartBeat") {
@@ -320,7 +268,7 @@ const app = new Elysia()
                 console.error("deleting" + userId);
                 wsContentArr.delete(userId);
                 if (userIdToCourseId.get(userId)) {
-                  courseIdToUserId.delete(userIdToCourseId.get(userId));
+                  courseIdToUserId.delete(userIdToCourseId.get(userId)!);
                   userIdToCourseId.delete(userId);
                 }
               },
@@ -328,11 +276,31 @@ const app = new Elysia()
             )
           );
         }
+        if (msg.type === "initCreate") {
+          const url = msg.url,
+            userId = msg.userId,
+            filename = msg.filename;
+          if (!url || !userId || !filename) {
+            return ws.send(
+              JSON.stringify({
+                type: "initCreateError",
+                message: "Upload Url or userId or filename is empty!",
+              })
+            );
+          }
+          uploadUrlMapUserId.set(url, { userId, filename });
+          return ws.send(
+            JSON.stringify({
+              type: "initCreateSuccess",
+              message: "OK",
+            })
+          );
+        }
         if (msg.type === "terminate") {
           const userId = msg.userId;
           wsContentArrClear.delete(userId);
           if (userIdToCourseId.get(userId)) {
-            courseIdToUserId.delete(userIdToCourseId.get(userId));
+            courseIdToUserId.delete(userIdToCourseId.get(userId)!);
             userIdToCourseId.delete(userId);
           }
           return wsContentArr.delete(userId);
@@ -340,16 +308,6 @@ const app = new Elysia()
       } catch (e) {
         console.error(e);
       }
-    },
-    open(ws) {
-      const entries: any = {};
-      courseIdToUserId.forEach((val, key) => (entries[key] = val));
-      ws.send(
-        JSON.stringify({
-          type: "open",
-          message: entries,
-        })
-      );
     },
   });
 export default app;

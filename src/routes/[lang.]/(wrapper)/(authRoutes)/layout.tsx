@@ -51,7 +51,7 @@ export const useUserLoader = routeLoader$(async (event) => {
   // this is for type safety
 
   if (!session) throw event.redirect(302, "/");
-  return session.user;
+  return session.user as LuciaSession["user"];
 });
 
 export default component$(() => {

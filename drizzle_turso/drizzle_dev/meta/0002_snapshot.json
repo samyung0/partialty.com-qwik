@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "1d42ea45-86df-4e78-b76f-65137b6c8de8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "bc5228a3-5e2d-4825-8db7-8edb55bc2b84",
+  "prevId": "b09f0ce1-db9a-425b-8e6e-6d42dd26a19f",
   "tables": {
     "content_group": {
       "name": "content_group",
@@ -477,7 +477,7 @@
         },
         "accessible_courses": {
           "name": "accessible_courses",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

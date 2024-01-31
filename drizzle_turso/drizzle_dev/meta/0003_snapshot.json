@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "1d42ea45-86df-4e78-b76f-65137b6c8de8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "52cf10e2-5d30-4ffd-933e-4a5a310cafa5",
+  "prevId": "bc5228a3-5e2d-4825-8db7-8edb55bc2b84",
   "tables": {
     "content_group": {
       "name": "content_group",
@@ -471,13 +471,6 @@
         "membership_plan": {
           "name": "membership_plan",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "accessible_courses": {
-          "name": "accessible_courses",
-          "type": "blob",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
