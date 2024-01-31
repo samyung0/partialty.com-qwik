@@ -340,9 +340,9 @@ export default component$(() => {
     }
   });
   const startWSConnection = _startWSConnection.startWSConnection;
-  const closeWSConnection = $((initial: boolean = false) => {
+  const closeWSConnection = $(() => {
     console.log("closing content websocket");
-    if (!initial) isClosingPage.value = true;
+    isClosingPage.value = true;
     if (contentWS.value) {
       contentWS.value.send(
         JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp.value })
@@ -355,7 +355,6 @@ export default component$(() => {
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    await closeWSConnection(true); // preload and cache the function
 
     startWSConnection();
     window.onbeforeunload = () => {
