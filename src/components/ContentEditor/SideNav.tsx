@@ -32,6 +32,7 @@ export default component$(
     avatar_url,
     timeStamp,
     hasChanged,
+    chapterName,
   }: {
     contentWS: Signal<NoSerialize<WebSocket>>;
     contentEditorValue: Signal<any>;
@@ -48,6 +49,7 @@ export default component$(
     avatar_url: string;
     timeStamp: Signal<string>;
     hasChanged: Signal<boolean>;
+    chapterName: Signal<string>;
   }) => {
     const contentDB = useContent().value;
     const topics = useStore<ContentIndex[]>(
@@ -509,6 +511,7 @@ export default component$(
                                     audioAssetId.value = chapterObj.audio_track_asset_id;
                                   isEditing.value = true;
                                   isRequestingChapter.value = false;
+                                  chapterName.value = chapterObj.name;
                                 });
 
                                 contentWS.value.send(

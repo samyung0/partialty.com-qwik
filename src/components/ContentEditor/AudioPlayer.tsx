@@ -111,7 +111,7 @@ export const CenterAudioChooser = ({
         <button onClick={() => setShowAudioChooser(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
         </button>
-        {userAudiosWithName.length === 0 && (
+        {userAudiosWithName.length === 0 && newAudio.length === 0 && (
           <div className="text-lg tracking-wide">
             Uh Oh. It seems like you haven't uploaded any audio tracks yet.
           </div>

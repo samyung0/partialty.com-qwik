@@ -63,6 +63,39 @@ export type BlockQuote = {
   language?: string;
   children: (CustomText | CustomElement)[];
 };
+export type InfoBlock = {
+  type: "infoBlock";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+export type CautionBlock = {
+  type: "cautionBlock";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+export type WarningBlock = {
+  type: "warningBlock";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
 export type HeadingOne = {
   type: "heading-one";
   align?: Align;
@@ -209,6 +242,9 @@ export type CustomElement =
   | CodeLineElement
   | CodeElement
   | BlockQuote
+  | InfoBlock
+  | CautionBlock
+  | WarningBlock
   | BulletedList
   | HeadingOne
   | HeadingTwo

@@ -1,5 +1,5 @@
 /** @jsxImportSource react */
-import { Editor } from "slate";
+import { Editor, Range } from "slate";
 import { useSlate } from "slate-react";
 import ColorChooser from "~/components/ContentEditor/ColorChooser";
 import type { CustomMarkFormat } from "~/components/ContentEditor/types";
@@ -45,7 +45,7 @@ export const BackgroundMarkButton = ({
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
+          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -55,19 +55,23 @@ export const BackgroundMarkButton = ({
           mark={mark}
           getTime={() => audioTimeStamp.current}
           setSync={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
             Editor.addMark(editor, "sync", true);
           }}
           setTimeStamp={(timestamp: number) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.addMark(editor, "timeStamp", timestamp);
           }}
           setAnimate={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
             Editor.addMark(editor, "animate", true);
           }}
           setColor={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark[format] && currentMark[format] === color)
               return Editor.removeMark(editor, format);
@@ -95,7 +99,7 @@ export const UnderlineMarkButton = ({
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
+          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -105,19 +109,23 @@ export const UnderlineMarkButton = ({
           mark={mark}
           getTime={() => audioTimeStamp.current}
           setSync={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
             Editor.addMark(editor, "sync", true);
           }}
           setTimeStamp={(timestamp: number) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.addMark(editor, "timeStamp", timestamp);
           }}
           setAnimate={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
             Editor.addMark(editor, "animate", true);
           }}
           setColor={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark[format] && currentMark[format] === color)
               return Editor.removeMark(editor, format);
@@ -145,29 +153,35 @@ export const ColorMarkButton = ({
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + "relative cursor-pointer [&:hover>div]:block"
+          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
         <ColorChooser
+          canSync={false}
+          canAnimate={false}
           mark={mark}
           getTime={() => audioTimeStamp.current}
           setSync={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
             Editor.addMark(editor, "sync", true);
           }}
           setTimeStamp={(timestamp: number) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.addMark(editor, "timeStamp", timestamp);
           }}
           setAnimate={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
             Editor.addMark(editor, "animate", true);
           }}
           setColor={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
             if (currentMark && currentMark[format] && currentMark[format] === color)
               return Editor.removeMark(editor, format);

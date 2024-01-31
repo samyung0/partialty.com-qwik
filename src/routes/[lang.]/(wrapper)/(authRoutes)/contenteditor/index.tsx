@@ -41,10 +41,10 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   })
     .then((res) => res.json())
     .catch((e) => console.error(e));
-  const userMuxAssets = await drizzleClient()
-    .select()
-    .from(mux_assets)
-    .where(eq(mux_assets.user_id, user.userId));
+  const userMuxAssets =
+    user.role === "admin"
+      ? await drizzleClient().select().from(mux_assets)
+      : await drizzleClient().select().from(mux_assets).where(eq(mux_assets.user_id, user.userId));
   const _muxAudios = await Promise.allSettled(
     userMuxAssets.map(
       (asset) =>
@@ -136,6 +136,8 @@ export default component$(() => {
   const isRequestingChapter = useSignal(false);
   const isRequestingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
   const isRequestingChapterTimeout = useSignal<any>();
+  const isPreviewing = useSignal(false);
+  const chapterName = useSignal("");
 
   const fetchAudio = $(
     async (id: string) =>
@@ -338,9 +340,9 @@ export default component$(() => {
     }
   });
   const startWSConnection = _startWSConnection.startWSConnection;
-  const closeWSConnection = $(() => {
+  const closeWSConnection = $((initial: boolean = false) => {
     console.log("closing content websocket");
-    isClosingPage.value = true;
+    if (!initial) isClosingPage.value = true;
     if (contentWS.value) {
       contentWS.value.send(
         JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp.value })
@@ -353,7 +355,7 @@ export default component$(() => {
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
-    await closeWSConnection(); // preload and cache the function
+    await closeWSConnection(true); // preload and cache the function
 
     startWSConnection();
     window.onbeforeunload = () => {
@@ -384,9 +386,13 @@ export default component$(() => {
         userRole={user.role}
         avatar_url={user.avatar_url}
         hasChanged={hasChanged}
+        chapterName={chapterName}
       />
       {contentWS.value && (
         <ContentEditor
+          chapterName={chapterName.value}
+          isPreviewing={isPreviewing.value}
+          setIsPreviewing={$((t: boolean) => (isPreviewing.value = t))}
           timeStamp={timeStamp.value}
           isEditing={isEditing.value}
           initialValue={contentEditorValue.value}
@@ -402,16 +408,17 @@ export default component$(() => {
           saveChanges={$(
             async (
               contentEditorValue: string,
-              renderedHTML: string,
+              renderedHTML2: string,
               audio_track_playback_id: string | undefined,
               audio_track_asset_id: string | undefined
             ) => {
-              console.log(renderedHTML);
+              console.log(renderedHTML2);
+              renderedHTML.value = renderedHTML2;
               const ret = (await server$(async () => {
                 try {
                   const contentVal: any = {
                     content_slate: contentEditorValue,
-                    renderedHTML,
+                    renderedHTML: renderedHTML2,
                   };
                   contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
                   contentVal["audio_track_asset_id"] = audio_track_asset_id || null;

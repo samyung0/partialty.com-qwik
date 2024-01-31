@@ -5,19 +5,29 @@ import { useEffect, useRef, useState } from "react";
 
 export const PredefinedColorList = {
   yellow: "#fcd34d",
+  "middle-yellow": "#FDE594",
   "light-yellow": "#fef6db",
   mint: "#6fdcbf",
+  "middle-mint": "#A9EAD9",
   "light-mint": "#e2f8f2",
   lilac: "#ae8fdb",
+  "middle-lilac": "#CFBCEA",
   "light-lilac": "#efe9f8",
   sea: "#72cada",
+  "middle-sea": "#ABDFE9",
   "light-sea": "#e3f4f8",
   sherbet: "#fef8b4",
+  "mddle-sherbet": "#FFFACB",
   "light-sherbet": "#fffce1",
   pink: "#f7b8c2",
+  "middle-pink": "#F7B8C2",
   "light-pink": "#fdf1f3",
   rose: "#dc849b",
+  "middle-rose": "#EAB5C3",
+  "light-rose": "#f8e6eb",
   tomato: "#ff6347",
+  "middle-tomato": "#FFA291",
+  "light-tomato": "#ffe0da",
   "bright-yellow": "#ffff43",
   "primary-dark-gray": "#1f2937",
   "background-light-gray": "#f7f7f7",
@@ -30,6 +40,8 @@ const ColorChooser = ({
   setTimeStamp,
   setAnimate,
   mark,
+  canSync = true,
+  canAnimate = true,
 }: {
   mark: any;
   setColor: (color: string) => any;
@@ -37,6 +49,8 @@ const ColorChooser = ({
   setSync: () => void;
   setTimeStamp: (timeStamp: number) => void;
   setAnimate: () => void;
+  canSync?: boolean;
+  canAnimate?: boolean;
 }) => {
   const [showCustomize, setShowCustomize] = useState(false);
   const [syncTime, setSyncTime] = useState(!!mark.sync);
@@ -65,120 +79,124 @@ const ColorChooser = ({
           </li>
         ))}
       </ul>
-      <div className="mb-4 flex flex-col items-center justify-center gap-2">
-        <div className="flex items-center justify-center gap-2 p-2">
-          <input
-            ref={refSync}
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
-            id="ColorChooserSync"
-            checked={syncTime}
-            onChange={(e) => {
-              setSyncTime(e.target.checked);
-              setTimeStamp(Math.round(getTime()));
-              setTimeStampState(Math.round(getTime()));
-              setSync();
-            }}
-          />
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              if (refSync.current) {
-                setSyncTime(!refSync.current.checked);
+      {canSync && (
+        <div className="mb-4 flex flex-col items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 p-2">
+            <input
+              ref={refSync}
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
+              id="ColorChooserSync"
+              checked={syncTime}
+              onChange={(e) => {
+                setSyncTime(e.target.checked);
                 setTimeStamp(Math.round(getTime()));
                 setTimeStampState(Math.round(getTime()));
                 setSync();
-                refSync.current.checked = !refSync.current.checked;
-              }
-            }}
-          >
-            Sync with Time
-          </p>
-        </div>
-        {syncTime && (
-          <>
-            <div className="flex gap-3">
-              <div className="flex cursor-pointer items-center justify-center gap-2 p-2">
-                <p>Time: </p>
-
-                <input
-                  onClick={() => ref.current && ref.current.focus()}
-                  ref={ref}
-                  type="number"
-                  step="1"
-                  min="0"
-                  className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
-                  id="ColorChooserTimeStamp"
-                  value={timeStamp}
-                  onChange={(e) => {
-                    setTimeStampState(Number(e.target.value));
-                    setTimeStamp(Number(e.target.value));
-                  }}
-                />
-              </div>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => {
-                    if (ref.current) {
-                      setTimeStampState(Number(ref.current.value) + 1);
-                      setTimeStamp(Number(ref.current.value) + 1);
-                    }
-                  }}
-                  className="p-1"
-                >
-                  <ArrowUp size={15} />
-                </button>
-                <button
-                  onClick={() => {
-                    if (ref.current && Number(ref.current.value) > 0) {
-                      setTimeStampState(Number(ref.current.value) - 1);
-                      setTimeStamp(Number(ref.current.value) - 1);
-                    }
-                  }}
-                  className="p-1"
-                >
-                  <ArrowDown size={15} />
-                </button>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                setTimeStampState(Math.round(getTime()));
-                setTimeStamp(Math.round(getTime()));
               }}
-              className="ml-4 p-1 text-sm tracking-wide underline decoration-wavy underline-offset-4"
+            />
+            <p
+              className="cursor-pointer"
+              onClick={() => {
+                if (refSync.current) {
+                  setSyncTime(!refSync.current.checked);
+                  setTimeStamp(Math.round(getTime()));
+                  setTimeStampState(Math.round(getTime()));
+                  setSync();
+                  refSync.current.checked = !refSync.current.checked;
+                }
+              }}
             >
-              Current Time
-            </button>
-          </>
-        )}
-      </div>
-      <div className="mb-4 flex items-center justify-center">
-        <div className="flex items-center justify-center gap-2 p-2">
-          <input
-            ref={refAnimate}
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
-            id="ColorChooserAnimate"
-            checked={animate}
-            onChange={(e) => {
-              setAnimate();
-              setAnimateState(e.target.checked);
-            }}
-          />
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              if (refAnimate.current) {
-                refAnimate.current.checked = !refAnimate.current.checked;
-                setAnimate();
-              }
-            }}
-          >
-            Animate
-          </p>
+              Sync with Time
+            </p>
+          </div>
+          {syncTime && (
+            <>
+              <div className="flex gap-3">
+                <div className="flex cursor-pointer items-center justify-center gap-2 p-2">
+                  <p>Time: </p>
+
+                  <input
+                    onClick={() => ref.current && ref.current.focus()}
+                    ref={ref}
+                    type="number"
+                    step="1"
+                    min="0"
+                    className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
+                    id="ColorChooserTimeStamp"
+                    value={timeStamp}
+                    onChange={(e) => {
+                      setTimeStampState(Number(e.target.value));
+                      setTimeStamp(Number(e.target.value));
+                    }}
+                  />
+                </div>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => {
+                      if (ref.current) {
+                        setTimeStampState(Number(ref.current.value) + 1);
+                        setTimeStamp(Number(ref.current.value) + 1);
+                      }
+                    }}
+                    className="p-1"
+                  >
+                    <ArrowUp size={15} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (ref.current && Number(ref.current.value) > 0) {
+                        setTimeStampState(Number(ref.current.value) - 1);
+                        setTimeStamp(Number(ref.current.value) - 1);
+                      }
+                    }}
+                    className="p-1"
+                  >
+                    <ArrowDown size={15} />
+                  </button>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setTimeStampState(Math.round(getTime()));
+                  setTimeStamp(Math.round(getTime()));
+                }}
+                className="ml-4 p-1 text-sm tracking-wide underline decoration-wavy underline-offset-4"
+              >
+                Current Time
+              </button>
+            </>
+          )}
         </div>
-      </div>
+      )}
+      {canAnimate && (
+        <div className="mb-4 flex items-center justify-center">
+          <div className="flex items-center justify-center gap-2 p-2">
+            <input
+              ref={refAnimate}
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
+              id="ColorChooserAnimate"
+              checked={animate}
+              onChange={(e) => {
+                setAnimate();
+                setAnimateState(e.target.checked);
+              }}
+            />
+            <p
+              className="cursor-pointer"
+              onClick={() => {
+                if (refAnimate.current) {
+                  refAnimate.current.checked = !refAnimate.current.checked;
+                  setAnimate();
+                }
+              }}
+            >
+              Animate
+            </p>
+          </div>
+        </div>
+      )}
       <div className="relative flex items-center px-4">
         <span className="inline-block h-[2px] flex-1 bg-black/10"></span>
         <span className="px-4 tracking-wide">or</span>

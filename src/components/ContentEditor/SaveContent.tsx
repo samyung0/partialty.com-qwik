@@ -8,6 +8,7 @@ export default ({
   hasChanged,
   saveChanges,
   audioTrack,
+  chapterName,
 }: {
   hasChanged: boolean;
   saveChanges: (
@@ -26,6 +27,7 @@ export default ({
         }[];
       }
     | undefined;
+  chapterName: string;
 }) => {
   const editor = useSlateStatic();
   const [isSaving, setIsSaving] = useState(false);
@@ -35,7 +37,8 @@ export default ({
       onClick={async () => {
         setIsSaving(true);
         const editorContent = editor.children;
-        const renderedHTML = await serialize({ children: editor.children });
+        const heading = `<h1>${chapterName}</h1>`;
+        const renderedHTML = heading + (await serialize(editor.children, true));
         const audio_track_playback_id = audioTrack?.playback_ids[0].id;
         const audio_track_asset_id = audioTrack?.id;
         await saveChanges(
@@ -46,7 +49,7 @@ export default ({
         );
         setIsSaving(false);
       }}
-      className="absolute bottom-[calc(10vh+16px)] right-4 z-[50] flex items-center justify-center rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl disabled:bg-gray-300"
+      className="absolute bottom-[calc(10vh+16px)] right-4 z-[50] flex h-[40px] items-center justify-center rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl disabled:bg-gray-300"
     >
       {!isSaving ? (
         <span>Save</span>

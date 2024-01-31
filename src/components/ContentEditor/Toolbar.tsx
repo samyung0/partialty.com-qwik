@@ -13,7 +13,9 @@ import {
   Heading3,
   Heading4,
   Image,
+  Info,
   Italic,
+  Lightbulb,
   Link2,
   List,
   ListOrdered,
@@ -23,6 +25,7 @@ import {
   Subscript,
   Superscript,
   Underline,
+  XCircle,
 } from "lucide-react";
 import {
   BlockButton,
@@ -86,6 +89,10 @@ const Toolbar = ({
       />
       <EmbedButton format="embed" children={<Film size={20} />} />
       <CodeBlockButton format="codeBlock" children={<FileCode size={20} />} />
+      <br />
+      <BlockButton format="infoBlock" children={<Lightbulb size={20} />} />
+      <BlockButton format="cautionBlock" children={<Info size={20} />} />
+      <BlockButton format="warningBlock" children={<XCircle size={20} />} />
     </div>
   );
 };

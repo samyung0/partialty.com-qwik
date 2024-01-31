@@ -162,6 +162,21 @@ const app = new Elysia()
             setTimeout(
               () => {
                 console.error("deleting" + userId);
+                const serverContentId = userIdToCourseId.get(userId);
+                const message: any = {};
+                if (serverContentId) {
+                  courseIdToUserId.delete(serverContentId!);
+                  userIdToCourseId.delete(userId);
+                  message[serverContentId] = true;
+                  wsContentArr.forEach((val, key) =>
+                    val.send(
+                      JSON.stringify({
+                        type: "removeUserEditing",
+                        message,
+                      })
+                    )
+                  );
+                }
                 wsContentArr.delete(userId);
                 if (userIdToCourseId.get(userId)) {
                   courseIdToUserId.delete(userIdToCourseId.get(userId)!);
@@ -239,15 +254,15 @@ const app = new Elysia()
             courseIdToUserId.delete(serverContentId!);
             userIdToCourseId.delete(userId);
             message[serverContentId] = true;
+            wsContentArr.forEach((val, key) =>
+              val.send(
+                JSON.stringify({
+                  type: "removeUserEditing",
+                  message,
+                })
+              )
+            );
           }
-          wsContentArr.forEach((val, key) =>
-            val.send(
-              JSON.stringify({
-                type: "removeUserEditing",
-                message,
-              })
-            )
-          );
         }
         if (msg.type === "heartBeat") {
           const userId = msg.userId;
@@ -266,6 +281,21 @@ const app = new Elysia()
             setTimeout(
               () => {
                 console.error("deleting" + userId);
+                const serverContentId = userIdToCourseId.get(userId);
+                const message: any = {};
+                if (serverContentId) {
+                  courseIdToUserId.delete(serverContentId!);
+                  userIdToCourseId.delete(userId);
+                  message[serverContentId] = true;
+                  wsContentArr.forEach((val, key) =>
+                    val.send(
+                      JSON.stringify({
+                        type: "removeUserEditing",
+                        message,
+                      })
+                    )
+                  );
+                }
                 wsContentArr.delete(userId);
                 if (userIdToCourseId.get(userId)) {
                   courseIdToUserId.delete(userIdToCourseId.get(userId)!);

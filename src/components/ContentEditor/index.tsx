@@ -19,6 +19,7 @@ import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
 import { CenterImageChooser, HoveringImage, withImages } from "~/components/ContentEditor/Images";
 import { Leaf } from "~/components/ContentEditor/Leaf";
 import { HoveringLink, withLink } from "~/components/ContentEditor/Link";
+import Preview from "~/components/ContentEditor/Preview";
 import SaveContent from "~/components/ContentEditor/SaveContent";
 import Toolbar from "~/components/ContentEditor/Toolbar";
 import {
@@ -30,7 +31,8 @@ import {
 import onKeyDown from "~/components/ContentEditor/hotkey";
 import { withTrailingNewLine } from "~/components/ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
-import Prose from "~/components/Prose";
+import Prose from "~/components/Prose/react-prose";
+import SyncAudio from "~/components/Prose/react-syncAudio";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
@@ -138,6 +140,8 @@ const schema: ListsSchema = {
 // ];
 
 const ContentEditorReact = ({
+  isPreviewing,
+  setIsPreviewing,
   timeStamp,
   initialUserAssets,
   user,
@@ -151,7 +155,10 @@ const ContentEditorReact = ({
   saveChanges,
   audioAssetId,
   fetchAudio,
+  chapterName,
 }: {
+  isPreviewing: boolean;
+  setIsPreviewing: (t: boolean) => any;
   timeStamp: string;
   initialUserAssets: {
     cloudinaryImages: CloudinaryPublicPic[];
@@ -178,6 +185,7 @@ const ContentEditorReact = ({
       filename: string;
     }>
   >;
+  chapterName: string;
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
@@ -305,7 +313,6 @@ const ContentEditorReact = ({
     setHasChanged();
   };
   const audioTimeStamp = useRef(0);
-  const muxWSHeartBeat = useRef<any>();
 
   useEffect(() => {
     console.log("Chapter ID:", chapterId);
@@ -354,79 +361,95 @@ const ContentEditorReact = ({
 
   return (
     isEditing && (
-      <div
-        ref={parentRef}
-        className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10"
-      >
-        <Slate
-          onValueChange={() => {
-            setHasChanged();
-          }}
-          editor={editor}
-          initialValue={normalizedInitialValue}
-        >
-          <SaveContent audioTrack={audioTrack} hasChanged={hasChanged} saveChanges={saveChanges} />
-          {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
-          {showAudioChooser && (
-            <CenterAudioChooser
+      <>
+        <Preview setIsPreviewing={setIsPreviewing} isPreviewing={isPreviewing} />
+        {!isPreviewing && (
+          <div
+            ref={parentRef}
+            className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10"
+          >
+            <Slate
+              onValueChange={() => {
+                setHasChanged();
+              }}
+              editor={editor}
+              initialValue={normalizedInitialValue}
+            >
+              <SaveContent
+                audioTrack={audioTrack}
+                hasChanged={hasChanged}
+                saveChanges={saveChanges}
+                chapterName={chapterName}
+              />
+              {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
+              {showAudioChooser && (
+                <CenterAudioChooser
+                  setAudioTrack={setAudioTrack}
+                  timeStamp={timeStamp}
+                  contentWS={contentWS}
+                  userId={user.userId}
+                  setShowAudioChooser={setShowAudioChooser}
+                  userAudiosWithName={userAudiosWithName.current}
+                />
+              )}
+              {showImageChooser && (
+                <CenterImageChooser
+                  replaceCurrentImage={replaceCurrentImage}
+                  setReplaceCurrentImage={setReplaceCurrentImage}
+                  setShowImageChooser={setShowImageChooser}
+                  userId={user.userId}
+                  userImages={userImages.current}
+                  editor={editor}
+                />
+              )}
+              {showCodeBlockSettings && (
+                <CenterCodeBlockSettings
+                  setShowCodeBlockSettings={setShowCodeBlockSettings}
+                  editor={editor}
+                />
+              )}
+              <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
+              <HoveringImage
+                parentRef={parentRef}
+                setReplaceCurrentImage={setReplaceCurrentImage}
+                setShowImageChooser={setShowImageChooser}
+              />
+              <HoveringEmbed parentRef={parentRef} />
+              <HoveringLink parentRef={parentRef} />
+              <HoveringCodeBlock
+                parentRef={parentRef}
+                setShowCodeBlockSettings={setShowCodeBlockSettings}
+              />
+              {/* <HoveringToolbar /> */}
+              <Prose>
+                <Editable
+                  className="outline-none"
+                  placeholder="Enter some rich text…"
+                  spellCheck
+                  autoFocus
+                  decorate={decorate}
+                  onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
+                  renderElement={renderElement}
+                  renderLeaf={renderLeaf}
+                />
+              </Prose>
+            </Slate>
+            <AudioPlayer
+              isLoadingAudio={isLoadingAudio}
+              audioTimeStamp={audioTimeStamp}
               setAudioTrack={setAudioTrack}
-              timeStamp={timeStamp}
-              contentWS={contentWS}
-              userId={user.userId}
               setShowAudioChooser={setShowAudioChooser}
-              userAudiosWithName={userAudiosWithName.current}
+              audioTrack={audioTrack}
             />
-          )}
-          {showImageChooser && (
-            <CenterImageChooser
-              replaceCurrentImage={replaceCurrentImage}
-              setReplaceCurrentImage={setReplaceCurrentImage}
-              setShowImageChooser={setShowImageChooser}
-              userId={user.userId}
-              userImages={userImages.current}
-              editor={editor}
-            />
-          )}
-          {showCodeBlockSettings && (
-            <CenterCodeBlockSettings
-              setShowCodeBlockSettings={setShowCodeBlockSettings}
-              editor={editor}
-            />
-          )}
-          <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
-          <HoveringImage
-            parentRef={parentRef}
-            setReplaceCurrentImage={setReplaceCurrentImage}
-            setShowImageChooser={setShowImageChooser}
-          />
-          <HoveringEmbed parentRef={parentRef} />
-          <HoveringLink parentRef={parentRef} />
-          <HoveringCodeBlock
-            parentRef={parentRef}
-            setShowCodeBlockSettings={setShowCodeBlockSettings}
-          />
-          {/* <HoveringToolbar /> */}
-          <Prose>
-            <Editable
-              className="text-lg outline-none"
-              placeholder="Enter some rich text…"
-              spellCheck
-              autoFocus
-              decorate={decorate}
-              onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-            />
-          </Prose>
-        </Slate>
-        <AudioPlayer
-          isLoadingAudio={isLoadingAudio}
-          audioTimeStamp={audioTimeStamp}
-          setAudioTrack={setAudioTrack}
-          setShowAudioChooser={setShowAudioChooser}
-          audioTrack={audioTrack}
-        />
-      </div>
+          </div>
+        )}
+        {isPreviewing && (
+          <div className="flex h-full w-[80vw] flex-col">
+            <Prose children={<></>} innerHTML={renderedHTML || ""} />
+            <SyncAudio audioTrack={audioTrack} />
+          </div>
+        )}
+      </>
     )
   );
 };

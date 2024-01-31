@@ -75,8 +75,12 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
   }
 
   if (isHotkey("shift+enter", event)) {
-    const isBlockQuote = isBlockActive(editor, "block-quote", "type");
-    if (isBlockQuote) {
+    const softBreak =
+      isBlockActive(editor, "block-quote", "type") ||
+      isBlockActive(editor, "infoBlock", "type") ||
+      isBlockActive(editor, "cautionBlock", "type") ||
+      isBlockActive(editor, "warningBlock", "type");
+    if (softBreak) {
       event.preventDefault();
       Editor.insertText(editor, "\n");
     }

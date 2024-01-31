@@ -13,18 +13,19 @@ const YOUKU_PREFIX = "https://player.youku.com/embed/";
 const COUB_PREFIX = "https://coub.com/embed/";
 
 import highlightSVGString from "~/components/ContentEditor/highlightSVGString";
-import highlightSVGString2 from "~/components/ContentEditor/highlightSVGString2";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
 
-const combinedHighlightSVGString = highlightSVGString + highlightSVGString2;
+const combinedHighlightSVGString = highlightSVGString;
 
 const plainTextSerialize = (nodes: any) => {
   return nodes.map((n: any) => Node.string(n)).join("\n");
 };
 
-const serialize = async (node: any): Promise<string> => {
+const serialize = async (node: any, initial: boolean = false): Promise<string> => {
   if (!node) return "";
+  if (initial)
+    return `${node ? (await Promise.all(node.map((n: any) => serialize(n)))).join("") : "&nbsp;"}`;
 
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
@@ -54,6 +55,14 @@ const serialize = async (node: any): Promise<string> => {
           width: 0%;
         }
       }
+      @keyframes ${uuid}2 {
+        0% {
+          width: 0%;	
+        }
+        100% {
+          width: 10%;
+        }
+      }
       #${uuid}lower {
         position: absolute;
           top:100%;
@@ -73,14 +82,17 @@ const serialize = async (node: any): Promise<string> => {
           width: 100%;
           background: inherit;
           z-index: -1;
-          ${node.sync && `animation: anim 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;`}
+          ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;`}
       }
        </style>
        `;
         str += `<span style="position:relative;background:inherit;">
            ${string}
            <span id="${uuid}lower"></span>
-           <span id="${uuid}upper"></span>
+           <span ${
+             node.sync &&
+             `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+           } id="${uuid}upper"></span>
          </span>`;
       } else {
         str += `
@@ -125,10 +137,18 @@ const serialize = async (node: any): Promise<string> => {
        <style>
       @keyframes ${uuid} {
         0% {
-          width: 100%;	
+          width: calc(100% + 8px);	
         }
         100% {
           width: 0%;
+        }
+      }
+      @keyframes ${uuid}2 {
+        0% {
+          width: 0%;	
+        }
+        100% {
+          width: calc(100% + 8px);
         }
       }
       #${uuid}lower {
@@ -144,20 +164,23 @@ const serialize = async (node: any): Promise<string> => {
       #${uuid}upper {
       position: absolute;
       display: block;
-      top:0;
-      right:0;
-      height: 100%;
-      width: 100%;
+      top:-2px;
+      right:-4px;
+      height: calc(100% + 4px);
+      width: calc(100% + 8px);
       background: inherit;
       z-index: 1;
-        ${node.sync && `animation: anim 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;`}
+        ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;`}
       }
        </style>
        `;
         str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
           <span style="position:relative;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
-          <span id="${uuid}upper"></span>
+          <span ${
+            node.sync &&
+            `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+          } id="${uuid}upper"></span>
          </span>
          </span>`;
       } else {
@@ -173,22 +196,11 @@ const serialize = async (node: any): Promise<string> => {
          z-index: 0;
          fill:${node.background};
        }
-       #${uuid}upper {
-        position: absolute;
-        display: block;
-        top:0;
-        right:0;
-        height: 100%;
-        width: 100%;
-        background: inherit;
-        z-index: 1;
-        }
         </style>
         `;
         str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
           <span style="position:relative;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
-          <span id="${uuid}upper"></span>
           </span>
           </span>`;
       }
@@ -203,11 +215,11 @@ const serialize = async (node: any): Promise<string> => {
 
   let children = node.children
     ? (await Promise.all(node.children.map((n: any) => serialize(n)))).join("")
-    : ("" as string);
+    : "";
 
   if (children.trim() === "") children = "&nbsp;";
 
-  const style = `textAlign: ${node.align || "left"};` as const;
+  const style = `text-align: ${node.align || "left"};background-color:inherit;` as const;
   switch (node.type) {
     case "paragraph":
       return `<p style="${style}">
@@ -217,6 +229,60 @@ const serialize = async (node: any): Promise<string> => {
       return `<blockquote style="${style}">
           ${children}
         </blockquote>`;
+    case "infoBlock":
+      return `<blockquote
+          style="
+            ${style}
+            border-color: #72cada;
+            background-color: #e3f4f8;
+            font-style: normal;
+            padding-top: 1em;
+            padding-bottom: 1em;
+            border-radius: 6px;
+          "
+        >
+          <div style="padding-bottom: 1em;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#72cada" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+          </div>
+          ${children}
+        </blockquote>`;
+
+    case "cautionBlock":
+      return `<blockquote
+              style="
+                ${style}
+                border-color: #fcd34d;
+                background-color: #fef6db;
+                font-style: normal;
+                padding-top: 1em;
+                padding-bottom: 1em;
+                border-radius: 6px;
+              "
+            >
+              <div style="padding-bottom: 1em;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+              </div>
+              ${children}
+            </blockquote>`;
+
+    case "warningBlock":
+      return `<blockquote
+                  style="
+                    ${style}
+                    border-color: #ff6347;
+                    background-color: #ffe0da;
+                    font-style: normal;
+                    padding-top: 1em;
+                    padding-bottom: 1em;
+                    border-radius: 6px;
+                  "
+                >
+                  <div style="padding-bottom: 1em;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff6347" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                  </div>
+                  ${children}
+                </blockquote>`;
+
     case "heading-one":
       return `<h1 style="${style}">
           ${children}
@@ -346,22 +412,19 @@ const serialize = async (node: any): Promise<string> => {
     </div>`;
     }
     case "link": {
-      return `<a href=${node.url} style="
+      return `<a target="_blank" href=${node.url} style="
+      ${style}
       border-bottom-width: 2px;
       border-color: rgb(31 41 55);
-      ">
-      <span style="font-size: 0;">
+      "><span style="font-size: 0;">
     ${String.fromCodePoint(160)}
-  </span>
-      ${children}
-      <span style="font-size: 0;">
+  </span>${children}<span style="font-size: 0;">
     ${String.fromCodePoint(160)}
-  </span>
-    </a>`;
+  </span></a>`;
     }
     case "image": {
       const { caption } = node;
-      return `<div {...attributes}>
+      return `<div style="${style}">
       ${children}
       <figure style="
         display: flex;
@@ -404,7 +467,7 @@ const serialize = async (node: any): Promise<string> => {
           )}</p><hr style="margin: 0.5rem;border-color: rgb(156 163 175);"/></div>` +
           highlighted.slice(endoftag);
       }
-      return `<div>
+      return `<div">
     ${highlighted}
   </div>`;
     }
