@@ -68,24 +68,24 @@ export const withLink = (editor: Editor) => {
 
   editor.deleteBackward = (...args) => {
     const { selection } = editor;
-    if (selection && Range.isCollapsed(selection)) {
+    if (selection) {
       Promise.resolve().then(() => {
         if (!editor.selection) return;
         const match = Editor.above(editor, {
           match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
           at: Editor.unhangRange(editor, editor.selection),
         });
-        const cursorBackward = Editor.after(editor, editor.selection, { unit: "character" });
-        const matchAfter = Editor.above(editor, {
-          match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
-          at: cursorBackward,
-        });
+        // const cursorBackward = Editor.after(editor, editor.selection, { unit: "character" });
+        // const matchAfter = Editor.above(editor, {
+        //   match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
+        //   at: cursorBackward,
+        // });
 
-        const cursorForward = Editor.before(editor, editor.selection, { unit: "character" });
-        const matchBefore = Editor.above(editor, {
-          match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
-          at: cursorForward,
-        });
+        // const cursorForward = Editor.before(editor, editor.selection, { unit: "character" });
+        // const matchBefore = Editor.above(editor, {
+        //   match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "link",
+        //   at: cursorForward,
+        // });
 
         if (match) {
           // remove empty
@@ -98,32 +98,32 @@ export const withLink = (editor: Editor) => {
         }
 
         // join
-        if (matchBefore && matchAfter) {
-          const combinedUrl = Node.string(matchBefore[0]) + Node.string(matchAfter[0]);
-          Transforms.removeNodes(editor);
-          Transforms.insertNodes(
-            editor,
-            {
-              type: "paragraph",
-              children: [
-                {
-                  text: "",
-                },
-                {
-                  type: "link",
-                  url: combinedUrl,
-                  children: [{ text: combinedUrl }],
-                },
-                { text: "" },
-              ],
-            },
-            { at: editor.selection }
-          );
-          Transforms.select(editor, {
-            focus: cursorForward!,
-            anchor: cursorForward!,
-          });
-        }
+        // if (matchBefore && matchAfter) {
+        //   const combinedUrl = Node.string(matchBefore[0]) + Node.string(matchAfter[0]);
+        //   Transforms.removeNodes(editor);
+        //   Transforms.insertNodes(
+        //     editor,
+        //     {
+        //       type: "paragraph",
+        //       children: [
+        //         {
+        //           text: "",
+        //         },
+        //         {
+        //           type: "link",
+        //           url: combinedUrl,
+        //           children: [{ text: combinedUrl }],
+        //         },
+        //         { text: "" },
+        //       ],
+        //     },
+        //     { at: editor.selection }
+        //   );
+        //   Transforms.select(editor, {
+        //     focus: cursorForward!,
+        //     anchor: cursorForward!,
+        //   });
+        // }
       });
     }
     deleteBackward(...args);
