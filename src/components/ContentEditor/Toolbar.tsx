@@ -24,6 +24,7 @@ import {
   Strikethrough,
   Subscript,
   Superscript,
+  Type,
   Underline,
   XCircle,
 } from "lucide-react";
@@ -38,6 +39,7 @@ import {
   BackgroundMarkButton,
   ColorMarkButton,
   MarkButton,
+  TextMarkButton,
   UnderlineMarkButton,
 } from "~/components/ContentEditor/markFn";
 
@@ -68,6 +70,7 @@ const Toolbar = ({
         format="color"
         children={<Baseline size={20} />}
       />
+      <TextMarkButton children={<Type size={20} />} />
       <MarkButton format="code" children={<Code size={20} />} />
       <MarkButton format="superscript" children={<Superscript size={20} />} />
       <MarkButton format="subscript" children={<Subscript size={20} />} />

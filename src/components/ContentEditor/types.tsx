@@ -235,6 +235,9 @@ export type CustomText = {
   timeStamp?: number;
   sync?: true;
   animate?: true;
+  fontSize?: number;
+  fontFamily?: string;
+  fontSpacing?: number;
 };
 export type CustomElement =
   | ParagraphElement

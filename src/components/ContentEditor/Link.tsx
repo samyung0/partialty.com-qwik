@@ -319,7 +319,7 @@ export const HoveringLink = ({
         <div ref={ref} className="absolute z-[60] bg-light-yellow/50 shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
-              <div className="flex gap-4 border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900">
+              <div className="flex gap-4 border-l border-r border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900">
                 <Link2 className="invert-[0.8]" strokeWidth={1.5} size={20} />
                 <input
                   className="bg-light-yellow/50 outline-none"
@@ -426,7 +426,7 @@ export function toggleLinkAtSelection(editor: Editor) {
 
 export const LinkElement = ({ attributes, children, element }: RenderElementProps) => {
   return (
-    <a {...attributes} href={element.url} className="border-b-2 border-primary-dark-gray">
+    <a {...attributes} href={element.url}>
       <InlineChromiumBugfix />
       {children}
       <InlineChromiumBugfix />

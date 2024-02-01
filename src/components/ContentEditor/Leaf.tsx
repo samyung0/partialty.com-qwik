@@ -54,6 +54,18 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     children = <span style={{ color: leaf.color }}>{children}</span>;
   }
 
+  if (leaf.fontSize) {
+    children = <span style={{ fontSize: `${leaf.fontSize}px` }}>{children}</span>;
+  }
+
+  if (leaf.fontFamily) {
+    children = <span style={{ fontFamily: `${leaf.fontFamily}` }}>{children}</span>;
+  }
+
+  if (leaf.fontSpacing) {
+    children = <span style={{ letterSpacing: `${leaf.fontSpacing}px` }}>{children}</span>;
+  }
+
   return (
     <span
       className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : ""} ${Object.keys(rest)

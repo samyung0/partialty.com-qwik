@@ -245,7 +245,7 @@ export const HoveringCodeBlock = ({
       {isBlockActive(editor, "codeBlock", "type") && (
         <div
           ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start bg-light-mint shadow-xl"
+          className="absolute z-[60] flex flex-col items-center justify-start bg-light-yellow shadow-xl"
           role="group"
         >
           <div className="inline-flex rounded-md" role="group">

@@ -444,7 +444,7 @@ const ContentEditorReact = ({
           </div>
         )}
         {isPreviewing && (
-          <div className="flex h-full w-[80vw] flex-col">
+          <div className="flex h-full w-[80vw] flex-col overflow-auto">
             <Prose children={<></>} innerHTML={renderedHTML || ""} />
             <SyncAudio audioTrack={audioTrack} />
           </div>

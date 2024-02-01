@@ -210,6 +210,18 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     if (node.color) {
       string = `<span style="color: ${node.color};">${string}</span>`;
     }
+
+    if (node.fontSize) {
+      string = `<span style="font-size: ${node.fontSize}px;">${string}</span>`;
+    }
+
+    if (node.fontFamily) {
+      string = `<span style="font-family: ${node.fontFamily};">${string}</span>`;
+    }
+
+    if (node.fontSpacing) {
+      string = `<span style="letter-spacing: ${node.fontSpacing}px;">${string}</span>`;
+    }
     return string;
   }
 
@@ -316,7 +328,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ${children}
         </ul>`;
     case "embed": {
-      const { url, caption } = node;
+      const { url } = node;
+      const caption = node.caption || "";
       let embedType = url ? (url.trim() === "" ? "Blank" : "Embed") : "Blank";
       const parse = urlParser.parse(url || "");
       let parsedUrl = url;
@@ -414,8 +427,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "link": {
       return `<a target="_blank" href=${node.url} style="
       ${style}
-      border-bottom-width: 2px;
-      border-color: rgb(31 41 55);
       "><span style="font-size: 0;">
     ${String.fromCodePoint(160)}
   </span>${children}<span style="font-size: 0;">
@@ -423,9 +434,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   </span></a>`;
     }
     case "image": {
-      const { caption } = node;
+      const caption = node.caption || "";
       return `<div style="${style}">
-      ${children}
       <figure style="
         display: flex;
         flex-direction: column;

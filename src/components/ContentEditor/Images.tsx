@@ -7,7 +7,11 @@ import { Editor, Element as SlateElement, Transforms } from "slate";
 import type { RenderElementProps } from "slate-react";
 import { ReactEditor, useSlateStatic } from "slate-react";
 import uploadToCloudinary from "~/components/ContentEditor/uploadToCloudinaryContentEditor";
-import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
+import {
+  CLOUDINARY_MAX_IMG_SIZE,
+  CLOUDINARY_MAX_PIXEL_COUNT,
+  CLOUDINARY_NAME,
+} from "~/const/cloudinary";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import { isUrl } from "~/utils/isUrl";
 
@@ -108,7 +112,7 @@ export const HoveringImage = ({
   return (
     <>
       {isBlockActive(editor, "image", "type") && (
-        <div ref={ref} className="absolute z-[60] bg-white shadow-xl" role="group">
+        <div ref={ref} className="absolute z-[60] bg-light-yellow shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => {
@@ -116,21 +120,21 @@ export const HoveringImage = ({
                 setShowImageChooser(true);
               }}
               type="button"
-              className="rounded-s-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+              className="rounded-s-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
             >
               Edit Image
             </button>
             <button
               onClick={() => window.open(initialUrl.current)}
               type="button"
-              className="border-b border-t border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+              className="border-b border-t border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
             >
               <ExternalLink strokeWidth={1.5} size={20} />
             </button>
             <button
               onClick={() => toggleImageAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700"
+              className="rounded-e-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>
@@ -159,7 +163,6 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   }, []);
   return (
     <div {...attributes}>
-      {children}
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
         <img src={element.url} className="max-h-[400px] border-2 border-mint object-contain" />
         <textarea
@@ -255,7 +258,10 @@ export const CenterImageChooser = ({
                   if (!editor.selection) return;
                   if (replaceCurrentImage) {
                     editor.setNodes(
-                      { url: blobUrl, public_id: imgData.public_id },
+                      {
+                        url: `https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${imgData.public_id}`,
+                        public_id: imgData.public_id,
+                      },
                       {
                         match: (n) =>
                           SlateElement.isElement(n) &&
@@ -268,7 +274,7 @@ export const CenterImageChooser = ({
                     editor.insertNode(
                       {
                         type: "image",
-                        url: blobUrl,
+                        url: `https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${imgData.public_id}`,
                         public_id: imgData.public_id,
                         children: [{ text: "" }],
                       },
