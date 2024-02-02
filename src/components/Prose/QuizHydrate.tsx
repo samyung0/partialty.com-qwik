@@ -67,7 +67,7 @@ const QuizHydrate = ({
             }
           }
 
-          // if (isPreview) return;
+          if (isPreview) return;
 
           saveToDB(correctAns);
         })
