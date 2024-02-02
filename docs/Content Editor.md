@@ -2,7 +2,7 @@
 
 nah this component library is unmaintainable but I will briefly talk about how it works
 
-Firstly, slate creates the editor that stores all the state:
+Firstly, we create the editor that stores all the state:
 
 ```ts
 const [editor] = useState(() =>
@@ -14,7 +14,7 @@ const [editor] = useState(() =>
 );
 ```
 
-All the `withXXX` are plugins that taps into editor's `insertBreak`, `insertText`, `insertData` (on paste), etc. event listeners;
+All the `withXXX` are plugins that taps into editor's event listeners: `insertBreak`, `insertText`, `insertData` (on paste), etc.
 
 Then it is rendered as
 
