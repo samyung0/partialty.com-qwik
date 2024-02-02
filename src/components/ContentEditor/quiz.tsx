@@ -12,36 +12,7 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
   const optionValue = (element as QuizOptionElement).optionValue;
   const name = (element as QuizOptionElement).formName;
   return (
-    <div
-      // type="button"
-      data-formname={name}
-      // onClick={function (e) {
-      //   const name = (e.currentTarget as HTMLElement).getAttribute("data-formname");
-      //   if (!name) return;
-      //   const formInputs = Array.from(document.querySelectorAll(`input[name=${name}]`));
-      //   formInputs.forEach((el) => {
-      //     (el as HTMLInputElement).checked = false;
-      //     const quizOption = (el as HTMLInputElement).parentElement?.getElementsByClassName(
-      //       "quizOption"
-      //     )[0] as HTMLElement | undefined;
-      //     if (!quizOption) return;
-      //     quizOption.style.width = "12px";
-      //     quizOption.style.height = "12px";
-      //   });
-      //   const inputEl = (e.currentTarget as HTMLElement).getElementsByTagName("input")[0] as
-      //     | HTMLInputElement
-      //     | undefined;
-      //   if (!inputEl) return;
-      //   inputEl.checked = true;
-      //   const quizOption = (e.currentTarget as HTMLElement).getElementsByClassName(
-      //     "quizOption"
-      //   )[0] as HTMLElement | undefined;
-      //   if (!quizOption) return;
-      //   quizOption.style.width = "8px";
-      //   quizOption.style.height = "8px";
-      // }}
-      className="flex items-center gap-4"
-    >
+    <div data-formname={name} className="flex items-center gap-4">
       <input hidden className="hidden" type="radio" name={name} value={optionValue} />
       <div
         contentEditable={false}
@@ -49,7 +20,7 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
       >
         <div className="quizOption h-3 w-3 rounded-full bg-light-lilac"></div>
       </div>
-      <span>{children}</span>
+      <span className="optionText">{children}</span>
     </div>
   );
 };
@@ -65,32 +36,6 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
         data-formname={(element as QuizBlockElement).formName}
         onSubmit={(e) => {
           e.preventDefault();
-          // const val = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries());
-          // const ans = (e.target as HTMLFormElement).getAttribute("data-ans");
-          // const formname = (e.target as HTMLFormElement).getAttribute("data-formname");
-          // if (!ans || !formname) return;
-          // let correctAns = false;
-          // if (val[formname] === ans) correctAns = true;
-
-          // // save to db
-
-          // const check = (e.currentTarget as HTMLFormElement).getElementsByClassName(
-          //   "formCheck"
-          // )[0] as HTMLElement | undefined;
-          // const correct = (e.currentTarget as HTMLFormElement).getElementsByClassName(
-          //   "formCorrect"
-          // )[0] as HTMLElement | undefined;
-          // const wrong = (e.currentTarget as HTMLFormElement).getElementsByClassName(
-          //   "formWrong"
-          // )[0] as HTMLElement | undefined;
-          // if (!check || !correct || !wrong) return;
-          // check.style.display = "none";
-          // if (correctAns) correct.style.display = "block";
-          // else {
-          //   wrong.style.display = "wrong";
-          //   const correctAns = e.currentTarget as HTMLFormElement;
-          //   wrong.getElementsByTagName("p");
-          // }
         }}
         className="quizBlock flex flex-col items-start gap-3"
       >

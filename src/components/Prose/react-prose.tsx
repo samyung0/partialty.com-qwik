@@ -2,6 +2,7 @@
 
 const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?: string }) => {
   return innerHTML ? (
+    // for preview
     <section
       // SHOULD add a background
       id="sectionProse"

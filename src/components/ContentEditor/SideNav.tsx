@@ -24,6 +24,7 @@ export default component$(
     userRole,
     isEditing,
     chapterId,
+    courseId,
     audioAssetId,
     courseIdToEditingUser,
     isRequestingChapterCallback,
@@ -41,6 +42,7 @@ export default component$(
     userRole: (typeof roles)[number];
     isEditing: Signal<boolean>;
     chapterId: Signal<string>;
+    courseId: Signal<string>;
     audioAssetId: Signal<string | undefined>;
     courseIdToEditingUser: Record<string, [string, string]>;
     isRequestingChapterCallback: Signal<QRL<() => any> | undefined>;
@@ -508,6 +510,7 @@ export default component$(
                                   renderedHTML.value = chapterObj.renderedHTML || undefined;
                                   oldChapter.value = chapterObj.id;
                                   chapterId.value = chapterObj.id;
+                                  courseId.value = topic.id;
                                   if (chapterObj.audio_track_asset_id)
                                     audioAssetId.value = chapterObj.audio_track_asset_id;
                                   isEditing.value = true;

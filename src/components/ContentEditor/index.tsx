@@ -36,6 +36,7 @@ import {
 } from "~/components/ContentEditor/quiz";
 import { withTrailingNewLine } from "~/components/ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
+import QuizHydrate from "~/components/Prose/QuizHydrate";
 import Prose from "~/components/Prose/react-prose";
 import SyncAudio from "~/components/Prose/react-syncAudio";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
@@ -162,6 +163,7 @@ const ContentEditorReact = ({
   audioAssetId,
   fetchAudio,
   chapterName,
+  saveToDBQuiz,
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -193,6 +195,7 @@ const ContentEditorReact = ({
     }>
   >;
   chapterName: string;
+  saveToDBQuiz: (isCorrect: boolean) => any;
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
@@ -400,7 +403,11 @@ const ContentEditorReact = ({
   return (
     isEditing && (
       <>
-        <Preview setIsPreviewing={setIsPreviewing} isPreviewing={isPreviewing} />
+        <Preview
+          hasAudioTrack={audioTrack === undefined}
+          setIsPreviewing={setIsPreviewing}
+          isPreviewing={isPreviewing}
+        />
         {!isPreviewing && (
           <div
             ref={parentRef}
@@ -493,6 +500,7 @@ const ContentEditorReact = ({
         )}
         {isPreviewing && (
           <div className="flex h-full w-[80vw] flex-col overflow-auto">
+            <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
             <Prose children={<></>} innerHTML={renderedHTML || ""} />
             <SyncAudio audioTrack={audioTrack} />
           </div>

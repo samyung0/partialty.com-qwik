@@ -11,6 +11,7 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type Mux from "~/types/Mux";
 import drizzleClient from "~/utils/drizzleClient";
+import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";
 import type { Content } from "../../../../../../drizzle_turso/schema/content";
 import { content } from "../../../../../../drizzle_turso/schema/content";
 import type { ContentIndex } from "../../../../../../drizzle_turso/schema/content_index";
@@ -131,6 +132,7 @@ export default component$(() => {
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
   const chapterId = useSignal("");
+  const courseId = useSignal("");
   const audioAssetId = useSignal<string | undefined>(undefined);
   const hasChanged = useSignal(false);
   const isRequestingChapter = useSignal("");
@@ -380,6 +382,7 @@ export default component$(() => {
         userId={user.userId}
         isEditing={isEditing}
         chapterId={chapterId}
+        courseId={courseId}
         audioAssetId={audioAssetId}
         userRole={user.role}
         avatar_url={user.avatar_url}
@@ -388,6 +391,9 @@ export default component$(() => {
       />
       {contentWS.value && (
         <ContentEditor
+          saveToDBQuiz={$((isCorrect: boolean) =>
+            saveToDBQuiz(isCorrect, user.userId, courseId.value, chapterId.value)
+          )}
           chapterName={chapterName.value}
           isPreviewing={isPreviewing.value}
           setIsPreviewing={$((t: boolean) => (isPreviewing.value = t))}

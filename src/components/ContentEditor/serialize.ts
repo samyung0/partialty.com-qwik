@@ -504,7 +504,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         align-items: flex-start;
         gap: 0.75rem;
         "
-        className="quizBlock"
+        class="quizBlock"
       >
         ${children}
         <button
@@ -518,7 +518,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           color: rgb(239 233 248);
           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
           "
-          className="formCheck"
+          class="formCheck"
         >
           Check
         </button>
@@ -534,11 +534,11 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
           display: none;
           "
-          className="formCorrect"
+          class="formCorrect"
         >
           Correct
         </div>
-        <div style="display: none" className="formWrong">
+        <div style="display: none" class="formWrong">
           <div style="
           border-radius: 0.5rem;
           background-color: rgb(255 99 71);
@@ -574,6 +574,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       align-items: center;
       gap: 1rem;
       "
+      class="quizOptionButton"
     >
       <input hidden style="display: none;" type="radio" name="${name}" value="${optionValue}" />
       <div
@@ -587,9 +588,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         background-color: rgb(174 143 219);
         "
       >
-        <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(239 233 248);" className="quizOption"></div>
+        <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(239 233 248);" class="quizOption"></div>
       </div>
-      <span>${children}</span>
+      <span class="optionText">${children}</span>
     </button>`;
     }
     default:
