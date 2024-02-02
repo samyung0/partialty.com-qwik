@@ -13,7 +13,7 @@ cd bun && bun i
 ```
 
 ```html
-cs .. && bun run dev
+cd .. && bun run dev
 ```
 
 ### Switching Theme
