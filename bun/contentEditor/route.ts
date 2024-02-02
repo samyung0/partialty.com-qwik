@@ -4,6 +4,7 @@ import { turso } from "../turso";
 
 const wsContentArr = new Map<string, any>();
 const wsContentArrClear = new Map<string, NodeJS.Timeout>();
+const uuidToUserId = new Map<number, string>();
 const uploadUrlMapUserId = new Map<string, { userId: string; filename: string }>();
 const uploadIdMapUploadUrl = new Map<string, string>();
 const courseIdToUserId = new Map<string, [string, string]>();
@@ -187,6 +188,7 @@ const app = new Elysia()
             )
           );
           wsContentArr.set(userId, ws);
+          uuidToUserId.set(ws.id, userId);
           const entries: Record<string, [string, string]> = {};
           courseIdToUserId.forEach((val, key) => (entries[key] = [val[0].split("###")[0], val[1]]));
           ws.send(
@@ -328,6 +330,7 @@ const app = new Elysia()
         }
         if (msg.type === "terminate") {
           const userId = msg.userId;
+          clearTimeout(wsContentArrClear.get(userId));
           wsContentArrClear.delete(userId);
           if (userIdToCourseId.get(userId)) {
             courseIdToUserId.delete(userIdToCourseId.get(userId)!);
@@ -338,6 +341,23 @@ const app = new Elysia()
       } catch (e) {
         console.error(e);
       }
+    },
+    open(ws) {
+      ws.id = Date.now();
+    },
+    close(ws, code, message) {
+      console.log("ID", ws.id);
+      const userId = uuidToUserId.get(ws.id);
+      if (!userId) return;
+      console.log("detected userID closing connection");
+      clearTimeout(wsContentArrClear.get(userId));
+      wsContentArrClear.delete(userId);
+      if (userIdToCourseId.get(userId)) {
+        courseIdToUserId.delete(userIdToCourseId.get(userId)!);
+        userIdToCourseId.delete(userId);
+      }
+      wsContentArr.delete(userId);
+      uuidToUserId.delete(ws.id);
     },
   });
 export default app;
