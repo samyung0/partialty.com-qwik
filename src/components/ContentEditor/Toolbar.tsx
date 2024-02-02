@@ -21,6 +21,7 @@ import {
   ListOrdered,
   PaintBucket,
   Pilcrow,
+  Rows3,
   Strikethrough,
   Subscript,
   Superscript,
@@ -34,6 +35,7 @@ import {
   EmbedButton,
   ImageButton,
   LinkButton,
+  QuizBlockButton,
 } from "~/components/ContentEditor/blockFn";
 import {
   BackgroundMarkButton,
@@ -96,6 +98,8 @@ const Toolbar = ({
       <BlockButton format="infoBlock" children={<Lightbulb size={20} />} />
       <BlockButton format="cautionBlock" children={<Info size={20} />} />
       <BlockButton format="warningBlock" children={<XCircle size={20} />} />
+      <br />
+      <QuizBlockButton children={<Rows3 size={20} />} />
     </div>
   );
 };

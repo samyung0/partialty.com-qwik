@@ -283,7 +283,7 @@ export default ({
   const [paused, setPaused] = useState(true);
   const muxRef = useRef<any>();
   return (
-    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t border-sea bg-light-sea px-8">
+    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t-2 border-sea bg-light-sea px-8">
       <MuxPlayer
         ref={muxRef}
         className="hidden"

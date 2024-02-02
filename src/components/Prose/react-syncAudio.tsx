@@ -1,10 +1,11 @@
 /** @jsxImportSource react */
 
+import { qwikify$ } from "@builder.io/qwik-react";
 import MuxPlayer from "@mux/mux-player-react";
 import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default ({
+const audioTrack = ({
   audioTrack,
 }: {
   audioTrack:
@@ -130,3 +131,6 @@ export default ({
     )
   );
 };
+
+export default audioTrack;
+export const QwikAudioTrack = qwikify$(audioTrack, { eagerness: "load" });

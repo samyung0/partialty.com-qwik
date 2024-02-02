@@ -5,6 +5,7 @@ import { EmbedElement } from "~/components/ContentEditor/Embed";
 import { ImageBlock } from "~/components/ContentEditor/Images";
 import { LinkElement } from "~/components/ContentEditor/Link";
 import { CodeBlock, CodeLine } from "~/components/ContentEditor/codeBlock";
+import { QuizBlock, QuizOption } from "~/components/ContentEditor/quiz";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
   const style = { textAlign: element.align || "left" } as const;
@@ -139,6 +140,10 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       return <CodeBlock attributes={attributes} element={element} children={children} />;
     case "codeLine":
       return <CodeLine attributes={attributes} element={element} children={children} />;
+    case "quizBlock":
+      return <QuizBlock attributes={attributes} element={element} children={children} />;
+    case "quizOption":
+      return <QuizOption attributes={attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

@@ -221,6 +221,35 @@ export type ImageElement = {
   children: (CustomText | CustomElement)[];
 };
 
+export type QuizBlockElement = {
+  type: "quizBlock";
+  formName?: string;
+  quizTitle?: string;
+  ans?: string;
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type QuizOptionElement = {
+  type: "quizOption";
+  formName?: string;
+  optionValue?: string;
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
 export type CustomText = {
   text: string;
   bold?: true;
@@ -258,7 +287,9 @@ export type CustomElement =
   | NumberedList
   | VideoEmbed
   | UrlLink
-  | ImageElement;
+  | ImageElement
+  | QuizBlockElement
+  | QuizOptionElement;
 
 export type BlockFormat = Align | List | CustomElement["type"];
 export type CustomElementType = CustomElement["type"];

@@ -29,16 +29,17 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
 
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
+    const style = "background-color:inherit;color:inherit";
     if (node.bold) {
-      string = `<strong>${string}</strong>`;
+      string = `<strong style="${style}">${string}</strong>`;
     }
 
     if (node.code) {
-      string = `<code>${string}</code>`;
+      string = `<code style="${style}">${string}</code>`;
     }
 
     if (node.italic) {
-      string = `<em>${string}</em>`;
+      string = `<em style="${style}">${string}</em>`;
     }
 
     if (node.underline) {
@@ -86,7 +87,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       }
        </style>
        `;
-        str += `<span style="position:relative;background:inherit;">
+        str += `<span style="position:relative;background:inherit;color:inherit;">
            ${string}
            <span id="${uuid}lower"></span>
            <span ${
@@ -109,7 +110,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       }
        </style>
        `;
-        str += `<span style="position:relative;">
+        str += `<span style="position:relative;background:inherit;color:inherit;">
            ${string}
            <span id="${uuid}lower"></span>
          </span>`;
@@ -118,15 +119,15 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.strikethrough) {
-      string = `<del>${string}</del>`;
+      string = `<del style="${style}">${string}</del>`;
     }
 
     if (node.superscript) {
-      string = `<sup>${string}</sup>`;
+      string = `<sup style="${style}">${string}</sup>`;
     }
 
     if (node.subscript) {
-      string = `<sub>${string}</sub>`;
+      string = `<sub style="${style}">${string}</sub>`;
     }
 
     if (node.background) {
@@ -174,8 +175,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       }
        </style>
        `;
-        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
-          <span style="position:relative;z-index:2">${string}</span>
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
+          <span style="position:relative;background:inherit;color:inherit;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           <span ${
             node.sync &&
@@ -198,8 +199,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
        }
         </style>
         `;
-        str += `<span style="position:relative;background:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
-          <span style="position:relative;z-index:2">${string}</span>
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
+          <span style="background:inherit;color:inherit;position:relative;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           </span>
           </span>`;
@@ -208,19 +209,19 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.color) {
-      string = `<span style="color: ${node.color};">${string}</span>`;
+      string = `<span style="background:inherit;color: ${node.color};">${string}</span>`;
     }
 
     if (node.fontSize) {
-      string = `<span style="font-size: ${node.fontSize}px;">${string}</span>`;
+      string = `<span style="background:inherit;color:inherit;font-size: ${node.fontSize}px;">${string}</span>`;
     }
 
     if (node.fontFamily) {
-      string = `<span style="font-family: ${node.fontFamily};">${string}</span>`;
+      string = `<span style="background:inherit;color:inherit;font-family: ${node.fontFamily};">${string}</span>`;
     }
 
     if (node.fontSpacing) {
-      string = `<span style="letter-spacing: ${node.fontSpacing}px;">${string}</span>`;
+      string = `<span style="background:inherit;color:inherit;letter-spacing: ${node.fontSpacing}px;">${string}</span>`;
     }
     return string;
   }
@@ -231,7 +232,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
 
   if (children.trim() === "") children = "&nbsp;";
 
-  const style = `text-align: ${node.align || "left"};background-color:inherit;` as const;
+  const style = `text-align: ${
+    node.align || "left"
+  };background-color:inherit;color:inherit;` as const;
   switch (node.type) {
     case "paragraph":
       return `<p style="${style}">
@@ -480,6 +483,114 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       return `<div">
     ${highlighted}
   </div>`;
+    }
+    case "quizBlock": {
+      return `<div style="
+      border-left-width: 4px;
+      border-color: rgb(174 143 219);
+      background-color: rgb(239 233 248);
+      padding: 1rem;
+      letter-spacing: 0.025em;
+      ">
+      <h3 style="margin-bottom: 0.75rem; margin-top: 0px;">
+        ${node.quizTitle}
+      </h3>
+      <form
+        data-ans="${node.ans}"
+        data-formname="${node.formName}"
+        style="
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        "
+        className="quizBlock"
+      >
+        ${children}
+        <button
+          style="
+          border-radius: 0.5rem;
+          background-color: rgb(174 143 219);
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          color: rgb(239 233 248);
+          box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          "
+          className="formCheck"
+        >
+          Check
+        </button>
+        <div
+        style="
+          border-radius: 0.5rem;
+          background-color: rgb(85 175 150);
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          color: rgb(226 248 242);
+          box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          display: none;
+          "
+          className="formCorrect"
+        >
+          Correct
+        </div>
+        <div style="display: none" className="formWrong">
+          <div style="
+          border-radius: 0.5rem;
+          background-color: rgb(255 99 71);
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          color: rgb(255 224 218);
+          box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          display: inline-block;
+          ">
+            Wrong
+          </div>
+          <p style="
+          margin: 0;
+          padding-top: 0.25rem;
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          color: rgb(255 99 71);
+          "></p>
+        </div>
+      </form>
+    </div>`;
+    }
+    case "quizOption": {
+      const name = node.formName;
+      const optionValue = node.optionValue;
+      return `<button
+      type="button"
+      data-formname="${name}"
+      style="
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      "
+    >
+      <input hidden style="display: none;" type="radio" name="${name}" value="${optionValue}" />
+      <div
+        style="
+        display: flex;
+        height: 1rem;
+        width: 1rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background-color: rgb(174 143 219);
+        "
+      >
+        <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(239 233 248);" className="quizOption"></div>
+      </div>
+      <span>${children}</span>
+    </button>`;
     }
     default:
       return `<p style="${style}">

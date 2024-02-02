@@ -73,7 +73,6 @@ import { ReactEditor, useFocused, useSlate } from "slate-react";
 import "./prism-one-dark.css";
 
 import { isBlockActive } from "~/components/ContentEditor/blockFn";
-import type { ImageElement } from "~/components/ContentEditor/types";
 
 import { useCallback } from "react";
 import { Element, Node } from "slate";
@@ -181,17 +180,7 @@ export const HoveringCodeBlock = ({
   const editor = useSlate();
   const inFocus = useFocused();
 
-  const initialUrl = useRef("");
   const prevSelection = useRef<BaseRange | null>();
-
-  useEffect(() => {
-    const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "codeBlock",
-    });
-    if (node) {
-      initialUrl.current = (node[0] as ImageElement).url || "";
-    }
-  }, [isBlockActive(editor, "codeBlock", "type")]);
 
   useEffect(() => {
     const el = ref.current;

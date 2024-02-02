@@ -37,8 +37,10 @@ export default ({
       onClick={async () => {
         setIsSaving(true);
         const editorContent = editor.children;
-        const heading = `<h1>${chapterName}</h1>`;
-        const renderedHTML = heading + (await serialize(editor.children, true));
+        // const heading = `<h1>${chapterName}</h1>`;
+        const renderedHTML =
+          // heading +
+          await serialize(editor.children, true);
         const audio_track_playback_id = audioTrack?.playback_ids[0].id;
         const audio_track_asset_id = audioTrack?.id;
         await saveChanges(

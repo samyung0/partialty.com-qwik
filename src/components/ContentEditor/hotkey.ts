@@ -79,7 +79,8 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
       isBlockActive(editor, "block-quote", "type") ||
       isBlockActive(editor, "infoBlock", "type") ||
       isBlockActive(editor, "cautionBlock", "type") ||
-      isBlockActive(editor, "warningBlock", "type");
+      isBlockActive(editor, "warningBlock", "type") ||
+      isBlockActive(editor, "quizOption", "type");
     if (softBreak) {
       event.preventDefault();
       Editor.insertText(editor, "\n");

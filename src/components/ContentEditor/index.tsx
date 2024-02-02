@@ -29,6 +29,11 @@ import {
   useDecorate,
 } from "~/components/ContentEditor/codeBlock";
 import onKeyDown from "~/components/ContentEditor/hotkey";
+import {
+  CenterQuizBlockSettings,
+  HoveringQuizBlock,
+  withQuiz,
+} from "~/components/ContentEditor/quiz";
 import { withTrailingNewLine } from "~/components/ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
 import Prose from "~/components/Prose/react-prose";
@@ -152,6 +157,7 @@ const ContentEditorReact = ({
   chapterId,
   hasChanged,
   setHasChanged,
+  resetHasChanged,
   saveChanges,
   audioAssetId,
   fetchAudio,
@@ -172,6 +178,7 @@ const ContentEditorReact = ({
   chapterId: string;
   hasChanged: boolean;
   setHasChanged: () => void;
+  resetHasChanged: () => void;
   saveChanges: (
     contentEditorValue: string,
     renderedHTML: string,
@@ -189,6 +196,32 @@ const ContentEditorReact = ({
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
+      type: "quizBlock",
+      ans: "2",
+      formName: "test",
+      quizTitle: "Question 1",
+      children: [
+        {
+          type: "quizOption",
+          formName: "test",
+          optionValue: "1",
+          children: [{ text: "answer A" }],
+        },
+        {
+          type: "quizOption",
+          formName: "test",
+          optionValue: "2",
+          children: [{ text: "answer B" }],
+        },
+        {
+          type: "quizOption",
+          formName: "test",
+          optionValue: "3",
+          children: [{ text: "answer C" }],
+        },
+      ],
+    },
+    {
       type: "paragraph",
       children: [
         {
@@ -197,7 +230,7 @@ const ContentEditorReact = ({
         {
           type: "link",
           url: "https://google.com",
-          children: [{ text: "a" }],
+          children: [{ text: "this is a link" }],
         },
         { text: "" },
       ],
@@ -254,7 +287,9 @@ const ContentEditorReact = ({
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
     withLists(schema)(
-      withTrailingNewLine(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+      withTrailingNewLine(
+        withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+      )
     )
   );
 
@@ -291,6 +326,7 @@ const ContentEditorReact = ({
   const [showAudioChooser, setShowAudioChooser] = useState(false);
   const [replaceCurrentImage, setReplaceCurrentImage] = useState(false);
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
+  const [showQuizBlockSettings, setShowQuizBlockSettings] = useState(false);
 
   const [audioTrack, _setAudioTrack] = useState<{
     id: string;
@@ -326,11 +362,13 @@ const ContentEditorReact = ({
     Transforms.insertNodes(editor, normalizedInitialValue[0], { at: Editor.start(editor, []) });
     for (let i = 1; i < normalizedInitialValue.length; i++) {
       const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
-      Transforms.insertNodes(editor, normalizedInitialValue[i], { at: beforeEnd });
+      Transforms.insertNodes(editor, normalizedInitialValue[i], { at: beforeEnd, mode: "highest" });
     }
 
-    // Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
+    Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
     Transforms.removeNodes(editor, { at: Editor.end(editor, []) });
+
+    setTimeout(() => resetHasChanged(), 0);
   }, [chapterId]);
 
   const parentRef = useRef<any>();
@@ -408,6 +446,12 @@ const ContentEditorReact = ({
                   editor={editor}
                 />
               )}
+              {showQuizBlockSettings && (
+                <CenterQuizBlockSettings
+                  setShowQuizBlockSettings={setShowQuizBlockSettings}
+                  editor={editor}
+                />
+              )}
               <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
               <HoveringImage
                 parentRef={parentRef}
@@ -419,6 +463,10 @@ const ContentEditorReact = ({
               <HoveringCodeBlock
                 parentRef={parentRef}
                 setShowCodeBlockSettings={setShowCodeBlockSettings}
+              />
+              <HoveringQuizBlock
+                parentRef={parentRef}
+                setShowQuizBlockSettings={setShowQuizBlockSettings}
               />
               {/* <HoveringToolbar /> */}
               <Prose>

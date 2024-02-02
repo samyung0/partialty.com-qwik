@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 
-export default component$(({ children }: { children: string }) => {
+export default component$(({ innerHTML }: { innerHTML: string }) => {
   return (
     <section
       // SHOULD add a background
@@ -12,7 +12,7 @@ export default component$(({ children }: { children: string }) => {
     prose-code:text-[unset]
     prose-pre:bg-code-editor-one-dark-pro prose-pre:text-base prose-pre:font-bold
     prose-img:m-0"
-      dangerouslySetInnerHTML={children}
+      dangerouslySetInnerHTML={innerHTML}
     ></section>
   );
 });

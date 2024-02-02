@@ -336,6 +336,22 @@ const app = new Elysia()
             courseIdToUserId.delete(userIdToCourseId.get(userId)!);
             userIdToCourseId.delete(userId);
           }
+
+          const serverContentId = userIdToCourseId.get(userId);
+          const message: any = {};
+          if (serverContentId) {
+            courseIdToUserId.delete(serverContentId!);
+            userIdToCourseId.delete(userId);
+            message[serverContentId] = true;
+            wsContentArr.forEach((val, key) =>
+              val.send(
+                JSON.stringify({
+                  type: "removeUserEditing",
+                  message,
+                })
+              )
+            );
+          }
           return wsContentArr.delete(userId);
         }
       } catch (e) {
@@ -345,11 +361,9 @@ const app = new Elysia()
     open(ws) {
       ws.id = Date.now();
     },
-    close(ws, code, message) {
-      console.log("ID", ws.id);
+    close(ws) {
       const userId = uuidToUserId.get(ws.id);
       if (!userId) return;
-      console.log("detected userID closing connection");
       clearTimeout(wsContentArrClear.get(userId));
       wsContentArrClear.delete(userId);
       if (userIdToCourseId.get(userId)) {
@@ -358,6 +372,22 @@ const app = new Elysia()
       }
       wsContentArr.delete(userId);
       uuidToUserId.delete(ws.id);
+
+      const serverContentId = userIdToCourseId.get(userId);
+      const message: any = {};
+      if (serverContentId) {
+        courseIdToUserId.delete(serverContentId!);
+        userIdToCourseId.delete(userId);
+        message[serverContentId] = true;
+        wsContentArr.forEach((val, key) =>
+          val.send(
+            JSON.stringify({
+              type: "removeUserEditing",
+              message,
+            })
+          )
+        );
+      }
     },
   });
 export default app;

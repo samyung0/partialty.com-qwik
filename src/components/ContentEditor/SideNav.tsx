@@ -45,7 +45,7 @@ export default component$(
     courseIdToEditingUser: Record<string, [string, string]>;
     isRequestingChapterCallback: Signal<QRL<() => any> | undefined>;
     isRequestingChapterTimeout: Signal<any>;
-    isRequestingChapter: Signal<boolean>;
+    isRequestingChapter: Signal<string>;
     avatar_url: string;
     timeStamp: Signal<string>;
     hasChanged: Signal<boolean>;
@@ -82,6 +82,7 @@ export default component$(
         name: "",
       }))
     );
+
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
         {contentWS.value ? (
@@ -510,7 +511,7 @@ export default component$(
                                   if (chapterObj.audio_track_asset_id)
                                     audioAssetId.value = chapterObj.audio_track_asset_id;
                                   isEditing.value = true;
-                                  isRequestingChapter.value = false;
+                                  isRequestingChapter.value = "";
                                   chapterName.value = chapterObj.name;
                                 });
 
@@ -523,11 +524,11 @@ export default component$(
                                   })
                                 );
 
-                                isRequestingChapter.value = true;
+                                isRequestingChapter.value = chapterObj.id;
 
                                 isRequestingChapterTimeout.value = setTimeout(() => {
                                   alert("Server Timeout! Server might be down!");
-                                  isRequestingChapter.value = false;
+                                  isRequestingChapter.value = "";
                                   isRequestingChapterCallback.value = undefined;
                                 }, 7000);
                               }
@@ -536,7 +537,7 @@ export default component$(
                           >
                             <button class={"flex w-full items-center justify-between gap-4"}>
                               <h3 class="text-left tracking-wide">{chapterObj.name}</h3>
-                              {isRequestingChapter.value && (
+                              {isRequestingChapter.value === chapterObj.id && (
                                 <span>
                                   <svg
                                     aria-hidden="true"

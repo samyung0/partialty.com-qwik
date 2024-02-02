@@ -133,7 +133,7 @@ export default component$(() => {
   const chapterId = useSignal("");
   const audioAssetId = useSignal<string | undefined>(undefined);
   const hasChanged = useSignal(false);
-  const isRequestingChapter = useSignal(false);
+  const isRequestingChapter = useSignal("");
   const isRequestingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
   const isRequestingChapterTimeout = useSignal<any>();
   const isPreviewing = useSignal(false);
@@ -216,7 +216,7 @@ export default component$(() => {
             }
             if (d.type === "openContentError") {
               alert(d.message);
-              isRequestingChapter.value = false;
+              isRequestingChapter.value = "";
               isRequestingChapterCallback.value = undefined;
               clearTimeout(isRequestingChapterTimeout.value);
               return;
@@ -300,7 +300,7 @@ export default component$(() => {
           }
           if (d.type === "openContentError") {
             alert(d.message);
-            isRequestingChapter.value = false;
+            isRequestingChapter.value = "";
             isRequestingChapterCallback.value = undefined;
             clearTimeout(isRequestingChapterTimeout.value);
             return;
@@ -402,6 +402,7 @@ export default component$(() => {
           hasChanged={hasChanged.value}
           audioAssetId={audioAssetId.value}
           setHasChanged={$(() => (hasChanged.value = true))}
+          resetHasChanged={$(() => (hasChanged.value = false))}
           fetchAudio={fetchAudio}
           saveChanges={$(
             async (

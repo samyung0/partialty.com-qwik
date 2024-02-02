@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import { useSlate } from "slate-react";
+import { v4 as uuidv4 } from "uuid";
 import { toggleLinkAtSelection } from "~/components/ContentEditor/Link";
 import { toCodeLines } from "~/components/ContentEditor/codeBlock";
 import type { Align, BlockFormat, CustomElementType, List } from "~/components/ContentEditor/types";
@@ -18,7 +19,7 @@ export const BlockButton = ({
     <button
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
-          ? `border-b-2 border-black`
+          ? `border-b-2 border-primary-dark-gray`
           : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => event.preventDefault()}
@@ -44,7 +45,7 @@ export const LinkButton = ({
     <button
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
-          ? `border-b-2 border-black`
+          ? `border-b-2 border-primary-dark-gray`
           : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => event.preventDefault()}
@@ -70,7 +71,7 @@ export const EmbedButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-black`
+          ? `border-b-2 border-primary-dark-gray`
           : "border-b-2 border-light-mint"
       }
       // onMouseDown={(event) => event.preventDefault()}
@@ -110,7 +111,7 @@ export const ImageButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-black`
+          ? `border-b-2 border-primary-dark-gray`
           : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => {
@@ -138,7 +139,7 @@ export const CodeBlockButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-black`
+          ? `border-b-2 border-primary-dark-gray`
           : "border-b-2 border-light-mint"
       }
       onMouseDown={(event) => event.preventDefault()}
@@ -157,6 +158,49 @@ export const CodeBlockButton = ({
             at: editor.selection,
           }
         );
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => {
+  const editor = useSlate();
+  return (
+    <button
+      className={
+        isBlockActive(editor, "quizBlock", "type")
+          ? `border-b-2 border-primary-dark-gray`
+          : "border-b-2 border-light-mint"
+      }
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        // ReactEditor.focus(editor);
+        if (!editor.selection) return;
+        const formName = "a" + uuidv4();
+        editor.insertNode({
+          type: "quizBlock",
+          formName: "formName",
+          ans: "",
+          quizTitle: "Quiz Title",
+          children: [
+            {
+              type: "quizOption",
+              formName: formName,
+              optionValue: "1",
+              children: [{ text: "Option 1" }],
+            },
+            {
+              type: "quizOption",
+              formName: formName,
+              optionValue: "2",
+              children: [{ text: "Option 2" }],
+            },
+          ],
+        });
       }}
     >
       {children}
