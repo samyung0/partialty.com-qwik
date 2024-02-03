@@ -242,6 +242,7 @@ export default component$(() => {
         });
 
         ws.addEventListener("close", () => {
+          clearInterval(retry);
           if (isClosingPage.value) {
             return console.log("Websocket connection closed!");
           }
@@ -317,6 +318,7 @@ export default component$(() => {
       });
 
       ws.addEventListener("error", () => {
+        clearInterval(retry);
         alert("Websocket connection error! Retrying connection...");
         contentWS.value = undefined;
         clearInterval(muxWSHeartBeat.value);
@@ -325,6 +327,7 @@ export default component$(() => {
       });
 
       ws.addEventListener("close", () => {
+        clearInterval(retry);
         if (isClosingPage.value) {
           return console.log("Websocket connection closed!");
         }
