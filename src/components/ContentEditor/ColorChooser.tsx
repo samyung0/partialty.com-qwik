@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export const PredefinedColorList = {
@@ -42,6 +42,7 @@ const ColorChooser = ({
   mark,
   canSync = true,
   canAnimate = true,
+  removeColor,
 }: {
   mark: any;
   setColor: (color: string) => any;
@@ -51,6 +52,7 @@ const ColorChooser = ({
   setAnimate: () => void;
   canSync?: boolean;
   canAnimate?: boolean;
+  removeColor: () => void;
 }) => {
   const [showCustomize, setShowCustomize] = useState(false);
   const [syncTime, setSyncTime] = useState(!!mark.sync);
@@ -202,12 +204,17 @@ const ColorChooser = ({
         <span className="px-4 tracking-wide">or</span>
         <span className="inline-block h-[2px] flex-1 bg-black/10"></span>
       </div>
-      <div className="p-4 text-center">
+      <div className="p-4 pb-0 text-center">
         <button
           onClick={() => setShowCustomize(true)}
           className="p-1 tracking-wide underline decoration-wavy underline-offset-4"
         >
           Customize
+        </button>
+      </div>
+      <div className="p-4 text-center">
+        <button onClick={() => removeColor()} className="p-1">
+          <Trash size={20} />
         </button>
       </div>
     </div>

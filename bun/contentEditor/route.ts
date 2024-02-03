@@ -266,6 +266,27 @@ const app = new Elysia()
             );
           }
         }
+        if (msg.type === "deleteContent") {
+          const userId = msg.userId;
+          const contentId = msg.contentId;
+          if (!userId || !contentId) {
+            return;
+          }
+          if (courseIdToUserId.get(contentId)) {
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Someone is editing the content!",
+              })
+            );
+          }
+          return ws.send(
+            JSON.stringify({
+              type: "deleteContentSuccess",
+              message: "OK",
+            })
+          );
+        }
         if (msg.type === "heartBeat") {
           const userId = msg.userId;
           if (!userId || !wsContentArrClear.get(userId)) {

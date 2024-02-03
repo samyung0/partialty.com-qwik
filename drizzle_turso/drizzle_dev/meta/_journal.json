@@ -50,6 +50,13 @@
       "when": 1706891502689,
       "tag": "0006_round_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1706952318724,
+      "tag": "0007_brief_the_enforcers",
+      "breakpoints": true
     }
   ]
 }

@@ -138,6 +138,9 @@ export default component$(() => {
   const isRequestingChapter = useSignal("");
   const isRequestingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
   const isRequestingChapterTimeout = useSignal<any>();
+  const isDeletingChapter = useSignal("");
+  const isDeletingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
+  const isDeletingChapterTimeout = useSignal<any>();
   const isPreviewing = useSignal(false);
   const chapterName = useSignal("");
 
@@ -378,6 +381,9 @@ export default component$(() => {
         isRequestingChapter={isRequestingChapter}
         isRequestingChapterCallback={isRequestingChapterCallback}
         isRequestingChapterTimeout={isRequestingChapterTimeout}
+        isDeletingChapter={isDeletingChapter}
+        isDeletingChapterTimeout={isDeletingChapterTimeout}
+        isDeletingChapterCallback={isDeletingChapterCallback}
         courseIdToEditingUser={courseIdToEditingUser}
         contentEditorValue={contentEditorValue}
         renderedHTML={renderedHTML}

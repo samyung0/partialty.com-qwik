@@ -13,7 +13,6 @@ export const content = sqliteTable("content", {
   link: text("link"),
   renderedHTML: text("renderedHTML"),
   content_slate: text("content_slate"), // should be of type Descendant[] (slate JS), but for flexibility its stored as string and parsed when fetched
-  sync_audio: text("sync_audio"),
   is_locked: integer("is_locked", { mode: "boolean" }).notNull().default(false),
   is_premium: integer("is_premium", { mode: "boolean" }).notNull().default(false),
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),

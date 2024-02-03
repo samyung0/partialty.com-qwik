@@ -1,6 +1,7 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
+import { LuSettings, LuTrash } from "@qwikest/icons/lucide";
 import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import ArrowDown from "~/assets/svg/caret-down-outline.svg";
@@ -30,6 +31,9 @@ export default component$(
     isRequestingChapterCallback,
     isRequestingChapterTimeout,
     isRequestingChapter,
+    isDeletingChapterCallback,
+    isDeletingChapterTimeout,
+    isDeletingChapter,
     avatar_url,
     timeStamp,
     hasChanged,
@@ -48,6 +52,9 @@ export default component$(
     isRequestingChapterCallback: Signal<QRL<() => any> | undefined>;
     isRequestingChapterTimeout: Signal<any>;
     isRequestingChapter: Signal<string>;
+    isDeletingChapterCallback: Signal<QRL<() => any> | undefined>;
+    isDeletingChapterTimeout: Signal<any>;
+    isDeletingChapter: Signal<string>;
     avatar_url: string;
     timeStamp: Signal<string>;
     hasChanged: Signal<boolean>;
@@ -84,6 +91,45 @@ export default component$(
         name: "",
       }))
     );
+    const openEditCourse = useStore(() => Array.from(Array(topics.length)).map((_) => false));
+    const isEditingCourse = useStore(() => Array.from(Array(topics.length)).map((_) => false));
+    const settingsCourseInfo = useStore(() =>
+      Array.from(Array(topics.length)).map((_) => ({
+        name: "",
+        requireSubscription: false,
+      }))
+    );
+    const settingsCourseError = useStore(() =>
+      Array.from(Array(topics.length)).map((_) => ({
+        name: "",
+      }))
+    );
+
+    const editChapter = useStore(() => {
+      const map: Record<
+        string,
+        {
+          openEdit: boolean;
+          isEditing: boolean;
+          settingsInfo: {
+            name: string;
+            requireSubscription: boolean;
+          };
+          settingsError: { name: string };
+        }[]
+      > = {};
+      for (const i of topics)
+        map[i.id] = Array.from(Array(i.chapter_order.length)).map((_) => ({
+          openEdit: false,
+          isEditing: false,
+          settingsInfo: {
+            name: "",
+            requireSubscription: false,
+          },
+          settingsError: { name: "" },
+        }));
+      return map;
+    });
 
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
@@ -187,8 +233,27 @@ export default component$(
                         name: "",
                       }))
                     );
+                    openEditCourse.splice(0, openEditCourse.length);
+                    openEditCourse.push(...Array.from(Array(topics.length)).map((_) => false));
+                    isEditingCourse.splice(0, isEditingCourse.length);
+                    isEditingCourse.push(...Array.from(Array(topics.length)).map((_) => false));
+                    settingsCourseInfo.splice(0, settingsCourseInfo.length);
+                    settingsCourseInfo.push(
+                      ...Array.from(Array(topics.length)).map((_) => ({
+                        name: "",
+                        requireSubscription: false,
+                      }))
+                    );
+                    settingsCourseError.splice(0, settingsCourseError.length);
+                    settingsCourseError.push(
+                      ...Array.from(Array(topics.length)).map((_) => ({
+                        name: "",
+                      }))
+                    );
                     newCourseError.name = "";
                     openAddCourse.value = false;
+
+                    editChapter[newCourse.id] = [];
                   }
                   isCreatingNewCourse.value = false;
                   newCourseInfo.name = "";
@@ -282,30 +347,192 @@ export default component$(
                       class={"transition-transform " + (navOpen[index] && "rotate-180")}
                     />
                   </button>
-                  <button
-                    onClick$={() => {
-                      openAddChapter[index] = !openAddChapter[index];
-                      navOpen[index] = true;
-                    }}
-                    class="p-1"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="h-[20px] w-[20px]"
+                  <div class="ml-auto flex items-center gap-1">
+                    <button
+                      onClick$={() => {
+                        openAddChapter[index] = !openAddChapter[index];
+                        navOpen[index] = true;
+                      }}
+                      class="p-1"
                     >
-                      <path d="M5 12h14" />
-                      <path d="M12 5v14" />
-                    </svg>
-                  </button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="h-[20px] w-[20px]"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick$={() => {
+                        settingsCourseInfo[index].name = topic.name;
+                        settingsCourseInfo[index].requireSubscription = topic.is_premium;
+                        openEditCourse[index] = !openEditCourse[index];
+                      }}
+                      class="text-[20px] text-primary-dark-gray"
+                    >
+                      <LuSettings />
+                    </button>
+                  </div>
                 </div>
+                {openEditCourse[index] && (
+                  <form
+                    preventdefault:submit
+                    onSubmit$={async (e) => {
+                      if (!e.target) return;
+                      const d = Object.fromEntries(
+                        new FormData(e.target as HTMLFormElement).entries()
+                      );
+                      const schema = z.object({
+                        coursename: z
+                          .string()
+                          .trim()
+                          .min(1, "Chapter name cannot be empty!")
+                          .max(100, "Chapter name cannot be longer than 100 chars!"),
+                        sub: z.literal("on").optional(),
+                      });
+                      const parseResult = schema.safeParse(d);
+                      if (!parseResult.success) {
+                        settingsCourseError[index].name = parseResult.error.issues[0].message;
+                        return;
+                      }
+                      isEditingCourse[index] = true;
+                      const slug = parseResult.data.coursename.toLowerCase().split(" ").join("-");
+                      let courseWithSlug: ContentIndex[] | undefined;
+                      const courseId = topic.id;
+                      try {
+                        courseWithSlug = await server$(
+                          async () =>
+                            await drizzleClient()
+                              .select()
+                              .from(content_index)
+                              .where(eq(content_index.slug, slug))
+                        )();
+                      } catch (e) {
+                        isEditingCourse[index] = false;
+                        settingsCourseError[index].name = (e as any).toString();
+                        return;
+                      }
+                      if (courseWithSlug.length > 0 && courseWithSlug[0].id !== courseId) {
+                        console.log("slug already exists", settingsCourseError, index);
+                        settingsCourseError[index].name = "Chapter with this name already exist!";
+                        isEditingCourse[index] = false;
+                        return;
+                      }
+                      const values = {
+                        name: parseResult.data.coursename,
+                        slug: slug,
+                        is_premium: !!parseResult.data.sub,
+                        link: defaultChapter(topic.slug, slug),
+                      };
+                      const parentId = topic.id;
+                      let ret: ContentIndex | undefined = undefined;
+                      try {
+                        ret = await server$(async () => {
+                          return (
+                            await drizzleClient()
+                              .update(content_index)
+                              .set(values)
+                              .where(eq(content_index.id, parentId))
+                              .returning()
+                          )[0];
+                        })();
+                      } catch (e) {
+                        isEditingCourse[index] = false;
+                        settingsCourseError[index].name = (e as any).toString();
+                        return;
+                      }
+                      topics.splice(index, 1, ret);
+                      isEditingCourse[index] = false;
+                      settingsCourseInfo[index].name = "";
+                      settingsCourseInfo[index].requireSubscription = false;
+                      openEditCourse[index] = false;
+                      settingsCourseError[index].name = "";
+                    }}
+                    class="my-4 gap-2"
+                  >
+                    <div>
+                      <label for="coursename" class="cursor-pointer">
+                        Chapter Name
+                      </label>
+                      <div class="pt-1">
+                        <input
+                          id="coursename"
+                          name="coursename"
+                          type="text"
+                          value={settingsCourseInfo[index].name}
+                          onInput$={(_, el) => (settingsCourseInfo[index].name = el.value)}
+                          required
+                          class={
+                            "block w-full rounded-md border-2 px-3 py-2 " +
+                            (settingsCourseError[index].name ? "border-tomato" : "border-black/10")
+                          }
+                        />
+                      </div>
+                      <p class="w-full pt-1 text-tomato">
+                        {(() => {
+                          return settingsCourseError[index].name;
+                        })()}
+                      </p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <label for="sub" class="cursor-pointer">
+                        Subscription required
+                      </label>
+                      <div>
+                        <input
+                          id="sub"
+                          name="sub"
+                          type="checkbox"
+                          checked={settingsCourseInfo[index].requireSubscription}
+                          onChange$={(e) => {
+                            if (e.target)
+                              settingsCourseInfo[index].requireSubscription = (
+                                e.target as HTMLInputElement
+                              ).checked;
+                          }}
+                          class={"block h-4 w-4 rounded-md border-2 border-black/10"}
+                        />
+                      </div>
+                    </div>
+                    <br />
+                    <button
+                      disabled={isEditingCourse[index]}
+                      type="submit"
+                      class="rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl"
+                    >
+                      {isEditingCourse[index] && (
+                        <span>
+                          <svg
+                            aria-hidden="true"
+                            class="inline-block h-4 w-4 animate-spin fill-background-light-gray text-primary-dark-gray"
+                            viewBox="0 0 100 101"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                              fill="currentFill"
+                            />
+                          </svg>
+                        </span>
+                      )}
+                      {!isEditingCourse[index] && <span class="">Confirm Edit</span>}
+                    </button>
+                  </form>
+                )}
                 {openAddChapter[index] && (
                   <form
                     preventdefault:submit
@@ -384,6 +611,15 @@ export default component$(
                       }
                       chapters.push(ret[0]);
                       topics.splice(index, 1, ret[1]);
+                      editChapter[topic.id].push({
+                        openEdit: false,
+                        isEditing: false,
+                        settingsInfo: {
+                          name: "",
+                          requireSubscription: false,
+                        },
+                        settingsError: { name: "" },
+                      });
                       isCreatingNewChapter[index] = false;
                       newChapterInfo[index].name = "";
                       newChapterInfo[index].requireSubscription = false;
@@ -466,116 +702,411 @@ export default component$(
                     </button>
                   </form>
                 )}
-                {navOpen[index] && (
+                {navOpen[index] && topic.chapter_order.length > 0 && (
                   <ul class="flex flex-col gap-4 pt-4">
-                    {topic.chapter_order.map((chapter) => {
+                    {topic.chapter_order.map((chapter, chapterIndex) => {
                       const chapterObj = chapters.find((t) => t.id === chapter);
                       if (chapterObj)
                         return (
-                          <li
-                            onClick$={() => {
-                              if (contentWS.value) {
-                                if (oldChapter.value) {
-                                  if (
-                                    hasChanged.value &&
-                                    !window.confirm(
-                                      "You have unsaved changes. Are you sure you want to leave/switch editing?"
-                                    )
-                                  )
-                                    return;
-                                  if (oldChapter.value === chapterObj.id) {
-                                    isEditing.value = false;
+                          <li key={`ContentEditor${chapterObj.id}`}>
+                            <div class="flex items-center gap-3">
+                              <button
+                                onClick$={() => {
+                                  if (contentWS.value) {
+                                    if (oldChapter.value) {
+                                      if (isRequestingChapterCallback.value) return;
+                                      if (
+                                        hasChanged.value &&
+                                        !window.confirm(
+                                          "You have unsaved changes. Are you sure you want to leave/switch editing?"
+                                        )
+                                      )
+                                        return;
+                                      if (oldChapter.value === chapterObj.id) {
+                                        return;
+                                      }
+                                      contentWS.value.send(
+                                        JSON.stringify({
+                                          type: "closeContent",
+                                          userId: userId + "###" + timeStamp.value,
+                                          contentId: oldChapter.value,
+                                        })
+                                      );
+                                    }
+                                    isRequestingChapterCallback.value = $(() => {
+                                      contentEditorValue.value = chapterObj.content_slate
+                                        ? JSON.parse(chapterObj.content_slate)
+                                        : undefined;
+                                      renderedHTML.value = chapterObj.renderedHTML || undefined;
+                                      oldChapter.value = chapterObj.id;
+                                      chapterId.value = chapterObj.id;
+                                      courseId.value = topic.id;
+                                      if (chapterObj.audio_track_asset_id)
+                                        audioAssetId.value = chapterObj.audio_track_asset_id;
+                                      isEditing.value = true;
+                                      isRequestingChapter.value = "";
+                                      chapterName.value = chapterObj.name;
+                                    });
+
                                     contentWS.value.send(
                                       JSON.stringify({
-                                        type: "closeContent",
+                                        type: "openContent",
                                         userId: userId + "###" + timeStamp.value,
-                                        contentId: oldChapter.value,
+                                        contentId: chapterObj.id,
+                                        avatar_url: avatar_url,
                                       })
                                     );
-                                    oldChapter.value = "";
-                                    return;
+
+                                    isRequestingChapter.value = chapterObj.id;
+
+                                    isRequestingChapterTimeout.value = setTimeout(() => {
+                                      alert("Server Timeout! Server might be down!");
+                                      isRequestingChapter.value = "";
+                                      isRequestingChapterCallback.value = undefined;
+                                    }, 7000);
                                   }
-                                  contentWS.value.send(
-                                    JSON.stringify({
-                                      type: "closeContent",
-                                      userId: userId + "###" + timeStamp.value,
-                                      contentId: oldChapter.value,
-                                    })
-                                  );
-                                }
-                                isRequestingChapterCallback.value = $(() => {
-                                  contentEditorValue.value = chapterObj.content_slate
-                                    ? JSON.parse(chapterObj.content_slate)
-                                    : undefined;
-                                  renderedHTML.value = chapterObj.renderedHTML || undefined;
-                                  oldChapter.value = chapterObj.id;
-                                  chapterId.value = chapterObj.id;
-                                  courseId.value = topic.id;
-                                  if (chapterObj.audio_track_asset_id)
-                                    audioAssetId.value = chapterObj.audio_track_asset_id;
-                                  isEditing.value = true;
-                                  isRequestingChapter.value = "";
-                                  chapterName.value = chapterObj.name;
-                                });
+                                }}
+                                class={"flex w-full items-center justify-between gap-4"}
+                              >
+                                <h3 class="text-left tracking-wide">{chapterObj.name}</h3>
+                                {isRequestingChapter.value === chapterObj.id && (
+                                  <span>
+                                    <svg
+                                      aria-hidden="true"
+                                      class="inline-block h-4 w-4 animate-spin fill-background-light-gray text-primary-dark-gray"
+                                      viewBox="0 0 100 101"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="currentColor"
+                                      />
+                                      <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentFill"
+                                      />
+                                    </svg>
+                                  </span>
+                                )}
+                                {courseIdToEditingUser[chapterObj.id] && (
+                                  <img
+                                    src={courseIdToEditingUser[chapterObj.id][1]}
+                                    alt=""
+                                    width="30"
+                                    height="30"
+                                    referrerPolicy="no-referrer"
+                                    class={
+                                      "rounded-full object-contain" +
+                                      (oldChapter.value === chapterObj.id
+                                        ? " rounded-full border-2 border-tomato"
+                                        : "")
+                                    }
+                                  />
+                                )}
+                              </button>
+                              <button
+                                onClick$={() => {
+                                  editChapter[topic.id][chapterIndex].settingsInfo.name =
+                                    chapterObj.name;
+                                  editChapter[topic.id][
+                                    chapterIndex
+                                  ].settingsInfo.requireSubscription = chapterObj.is_premium;
+                                  editChapter[topic.id][chapterIndex].openEdit =
+                                    !editChapter[topic.id][chapterIndex].openEdit;
+                                }}
+                                class="text-[20px] text-primary-dark-gray"
+                              >
+                                <LuSettings />
+                              </button>
+                            </div>
+                            {editChapter[topic.id] &&
+                              editChapter[topic.id][chapterIndex] &&
+                              editChapter[topic.id][chapterIndex].openEdit && (
+                                <form
+                                  preventdefault:submit
+                                  onSubmit$={async (e) => {
+                                    if (!e.target) return;
+                                    const d = Object.fromEntries(
+                                      new FormData(e.target as HTMLFormElement).entries()
+                                    );
+                                    const schema = z.object({
+                                      coursename: z
+                                        .string()
+                                        .trim()
+                                        .min(1, "Chapter name cannot be empty!")
+                                        .max(100, "Chapter name cannot be longer than 100 chars!"),
+                                      sub: z.literal("on").optional(),
+                                    });
+                                    const parseResult = schema.safeParse(d);
+                                    if (!parseResult.success) {
+                                      editChapter[topic.id][chapterIndex].settingsError.name =
+                                        parseResult.error.issues[0].message;
+                                      return;
+                                    }
+                                    editChapter[topic.id][chapterIndex].isEditing = true;
+                                    const slug = parseResult.data.coursename
+                                      .toLowerCase()
+                                      .split(" ")
+                                      .join("-");
+                                    const courseId = topic.id;
+                                    const chapterId = chapterObj.id;
+                                    let chapterWithSlug: Content[] | undefined;
+                                    try {
+                                      chapterWithSlug = await server$(
+                                        async () =>
+                                          await drizzleClient()
+                                            .select()
+                                            .from(content)
+                                            .where(
+                                              and(
+                                                eq(content.slug, slug),
+                                                eq(content.index_id, courseId)
+                                              )
+                                            )
+                                      )();
+                                    } catch (e) {
+                                      editChapter[topic.id][chapterIndex].isEditing = false;
+                                      editChapter[topic.id][chapterIndex].settingsError.name = (
+                                        e as any
+                                      ).toString();
+                                      return;
+                                    }
+                                    if (
+                                      chapterWithSlug.length > 0 &&
+                                      chapterWithSlug[0].id !== chapterObj.id
+                                    ) {
+                                      console.log(
+                                        "slug already exists",
+                                        settingsCourseError,
+                                        index
+                                      );
+                                      editChapter[topic.id][chapterIndex].settingsError.name =
+                                        "Chapter with this name already exist!";
+                                      editChapter[topic.id][chapterIndex].isEditing = false;
+                                      return;
+                                    }
+                                    const values = {
+                                      name: parseResult.data.coursename,
+                                      slug: slug,
+                                      is_premium: !!parseResult.data.sub,
+                                      link: defaultChapter(topic.slug, slug),
+                                    };
+                                    let ret: Content | undefined = undefined;
+                                    try {
+                                      ret = await server$(async () => {
+                                        return (
+                                          await drizzleClient()
+                                            .update(content)
+                                            .set(values)
+                                            .where(eq(content.id, chapterId))
+                                            .returning()
+                                        )[0];
+                                      })();
+                                    } catch (e) {
+                                      editChapter[topic.id][chapterIndex].isEditing = false;
+                                      editChapter[topic.id][chapterIndex].settingsError.name = (
+                                        e as any
+                                      ).toString();
+                                      return;
+                                    }
+                                    const arrIndex = chapters.findIndex(
+                                      (chapterObj) => chapterObj.id === chapter
+                                    );
+                                    if (arrIndex >= 0) {
+                                      chapters.splice(arrIndex, 1, ret);
+                                    }
+                                    const r = topics[index].chapter_order.splice(
+                                      chapterIndex,
+                                      1
+                                    )[0];
+                                    setTimeout(() => {
+                                      topics[index].chapter_order.splice(chapterIndex, 0, r);
+                                    }, 0);
+                                    editChapter[topic.id][chapterIndex].isEditing = false;
+                                    editChapter[topic.id][chapterIndex].settingsInfo.name = "";
+                                    editChapter[topic.id][
+                                      chapterIndex
+                                    ].settingsInfo.requireSubscription = false;
+                                    editChapter[topic.id][chapterIndex].openEdit = false;
+                                    editChapter[topic.id][chapterIndex].settingsError.name = "";
+                                  }}
+                                  class="my-4 gap-2"
+                                >
+                                  <div>
+                                    <label for="coursename" class="cursor-pointer">
+                                      Chapter Name
+                                    </label>
+                                    <div class="pt-1">
+                                      <input
+                                        id="coursename"
+                                        name="coursename"
+                                        type="text"
+                                        value={
+                                          editChapter[topic.id][chapterIndex].settingsInfo.name
+                                        }
+                                        onInput$={(_, el) =>
+                                          (editChapter[topic.id][chapterIndex].settingsInfo.name =
+                                            el.value)
+                                        }
+                                        required
+                                        class={
+                                          "block w-full rounded-md border-2 px-3 py-2 " +
+                                          (editChapter[topic.id][chapterIndex].settingsError.name
+                                            ? "border-tomato"
+                                            : "border-black/10")
+                                        }
+                                      />
+                                    </div>
+                                    <p class="w-full pt-1 text-tomato">
+                                      {(() => {
+                                        return editChapter[topic.id][chapterIndex].settingsError
+                                          .name;
+                                      })()}
+                                    </p>
+                                  </div>
+                                  <div class="flex items-center gap-4">
+                                    <label for="sub" class="cursor-pointer">
+                                      Subscription required
+                                    </label>
+                                    <div>
+                                      <input
+                                        id="sub"
+                                        name="sub"
+                                        type="checkbox"
+                                        checked={
+                                          editChapter[topic.id][chapterIndex].settingsInfo
+                                            .requireSubscription
+                                        }
+                                        onChange$={(e) => {
+                                          if (e.target)
+                                            editChapter[topic.id][
+                                              chapterIndex
+                                            ].settingsInfo.requireSubscription = (
+                                              e.target as HTMLInputElement
+                                            ).checked;
+                                        }}
+                                        class={"block h-4 w-4 rounded-md border-2 border-black/10"}
+                                      />
+                                    </div>
+                                  </div>
+                                  <br />
+                                  <div class="flex gap-3">
+                                    <button
+                                      disabled={editChapter[topic.id][chapterIndex].isEditing}
+                                      type="submit"
+                                      class="rounded-lg bg-primary-dark-gray px-4 py-2 text-background-light-gray shadow-md"
+                                    >
+                                      {editChapter[topic.id][chapterIndex].isEditing && (
+                                        <span>
+                                          <svg
+                                            aria-hidden="true"
+                                            class="inline-block h-4 w-4 animate-spin fill-background-light-gray text-primary-dark-gray"
+                                            viewBox="0 0 100 101"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                              fill="currentColor"
+                                            />
+                                            <path
+                                              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                              fill="currentFill"
+                                            />
+                                          </svg>
+                                        </span>
+                                      )}
+                                      {!editChapter[topic.id][chapterIndex].isEditing && (
+                                        <span class="">Confirm Edit</span>
+                                      )}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="rounded-lg bg-tomato p-2 text-[20px] text-background-light-gray shadow-md"
+                                      onClick$={() => {
+                                        if (!contentWS.value) return;
+                                        if (isDeletingChapterCallback.value) return;
+                                        if (
+                                          !window.confirm(
+                                            "Are you sure you want to delete the chapter?"
+                                          )
+                                        )
+                                          return;
 
-                                contentWS.value.send(
-                                  JSON.stringify({
-                                    type: "openContent",
-                                    userId: userId + "###" + timeStamp.value,
-                                    contentId: chapterObj.id,
-                                    avatar_url: avatar_url,
-                                  })
-                                );
+                                        const courseId = topic.id;
+                                        const chapterId = chapterObj.id;
+                                        const newChapterOrder = topic.chapter_order.filter(
+                                          (id) => id !== chapterId
+                                        );
+                                        isDeletingChapterCallback.value = $(async () => {
+                                          await server$(async () => {
+                                            await drizzleClient().transaction(async (tx) => {
+                                              await tx
+                                                .update(content_index)
+                                                .set({ chapter_order: newChapterOrder })
+                                                .where(eq(content_index.id, courseId));
+                                              await tx
+                                                .delete(content)
+                                                .where(eq(content.id, chapterId));
+                                            });
+                                          })();
+                                          const i1 = topics.find((topic) => (topic.id = courseId));
+                                          if (i1 && i1.chapter_order.indexOf(chapterId) > 0)
+                                            i1.chapter_order.splice(
+                                              i1.chapter_order.indexOf(chapterId),
+                                              1
+                                            );
+                                          const i2 = chapters.findIndex(
+                                            (chapter) => (chapter.id = courseId)
+                                          );
+                                          if (i2 > 0) {
+                                            chapters.splice(i2, 1);
+                                            editChapter[courseId].splice(i2, 1);
+                                          }
+                                        });
 
-                                isRequestingChapter.value = chapterObj.id;
+                                        contentWS.value.send(
+                                          JSON.stringify({
+                                            type: "deleteContent",
+                                            userId: userId,
+                                            contentId: chapterObj.id,
+                                          })
+                                        );
 
-                                isRequestingChapterTimeout.value = setTimeout(() => {
-                                  alert("Server Timeout! Server might be down!");
-                                  isRequestingChapter.value = "";
-                                  isRequestingChapterCallback.value = undefined;
-                                }, 7000);
-                              }
-                            }}
-                            key={`ContentEditor${topic.slug}${chapter}`}
-                          >
-                            <button class={"flex w-full items-center justify-between gap-4"}>
-                              <h3 class="text-left tracking-wide">{chapterObj.name}</h3>
-                              {isRequestingChapter.value === chapterObj.id && (
-                                <span>
-                                  <svg
-                                    aria-hidden="true"
-                                    class="inline-block h-4 w-4 animate-spin fill-background-light-gray text-primary-dark-gray"
-                                    viewBox="0 0 100 101"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                                      fill="currentColor"
-                                    />
-                                    <path
-                                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                                      fill="currentFill"
-                                    />
-                                  </svg>
-                                </span>
+                                        isDeletingChapter.value = chapterObj.id;
+
+                                        isDeletingChapterTimeout.value = setTimeout(() => {
+                                          alert("Server Timeout! Server might be down!");
+                                          isDeletingChapter.value = "";
+                                          isDeletingChapterCallback.value = undefined;
+                                        }, 7000);
+                                      }}
+                                    >
+                                      {isDeletingChapter.value === chapterObj.id ? (
+                                        <svg
+                                          aria-hidden="true"
+                                          class="inline-block h-4 w-4 animate-spin fill-background-light-gray text-primary-dark-gray"
+                                          viewBox="0 0 100 101"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                            fill="currentColor"
+                                          />
+                                          <path
+                                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                            fill="currentFill"
+                                          />
+                                        </svg>
+                                      ) : (
+                                        <LuTrash />
+                                      )}
+                                    </button>
+                                  </div>
+                                </form>
                               )}
-                              {courseIdToEditingUser[chapterObj.id] && (
-                                <img
-                                  src={courseIdToEditingUser[chapterObj.id][1]}
-                                  alt=""
-                                  width="30"
-                                  height="30"
-                                  referrerPolicy="no-referrer"
-                                  class={
-                                    "rounded-full object-contain" +
-                                    (oldChapter.value === chapterObj.id
-                                      ? " rounded-full border-2 border-tomato"
-                                      : "")
-                                  }
-                                />
-                              )}
-                            </button>
                           </li>
                         );
                       else return null;

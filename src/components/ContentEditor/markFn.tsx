@@ -79,6 +79,13 @@ export const BackgroundMarkButton = ({
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
           }}
+          removeColor={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "timeStamp");
+            Editor.removeMark(editor, "sync");
+            Editor.removeMark(editor, "animate");
+          }}
         />
       </div>
     </div>
@@ -132,6 +139,13 @@ export const UnderlineMarkButton = ({
             if (currentMark && currentMark[format] && currentMark[format] === color)
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
+          }}
+          removeColor={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "timeStamp");
+            Editor.removeMark(editor, "sync");
+            Editor.removeMark(editor, "animate");
           }}
         />
       </div>
@@ -188,6 +202,13 @@ export const ColorMarkButton = ({
             if (currentMark && currentMark[format] && currentMark[format] === color)
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
+          }}
+          removeColor={() => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "timeStamp");
+            Editor.removeMark(editor, "sync");
+            Editor.removeMark(editor, "animate");
           }}
         />
       </div>
