@@ -436,17 +436,16 @@ export default component$(() => {
           fetchAudio={fetchAudio}
           saveChanges={$(
             async (
-              contentEditorValue: string,
+              contentEditorValue2: string | null,
               renderedHTML2: string,
               audio_track_playback_id: string | undefined,
               audio_track_asset_id: string | undefined
             ) => {
-              console.log(renderedHTML2);
               renderedHTML.value = renderedHTML2;
               const ret = (await server$(async () => {
                 try {
                   const contentVal: any = {
-                    content_slate: contentEditorValue,
+                    content_slate: contentEditorValue2,
                     renderedHTML: renderedHTML2,
                   };
                   contentVal["audio_track_playback_id"] = audio_track_playback_id || null;

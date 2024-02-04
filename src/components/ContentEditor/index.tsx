@@ -131,7 +131,7 @@ const ContentEditorReact = ({
   setHasChanged: () => void;
   resetHasChanged: () => void;
   saveChanges: (
-    contentEditorValue: string,
+    contentEditorValue: string | null,
     renderedHTML: string,
     audio_track_playback_id: string | undefined,
     audio_track_asset_id: string | undefined
@@ -301,27 +301,53 @@ const ContentEditorReact = ({
     setHasChanged();
   };
   const audioTimeStamp = useRef(0);
+  const [isChangingContent, setIsChangingContent] = useState(false);
 
   useEffect(() => {
     console.log("Chapter ID:", chapterId);
-
-    // leave an empty paragraph at bottom (auto added)
-    if (!editor.selection || editor.children.length === 0) return;
-    while (editor.children.length > 1) {
-      Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
-    }
-
-    Transforms.insertNodes(editor, normalizedInitialValue[0], { at: Editor.start(editor, []) });
-    for (let i = 1; i < normalizedInitialValue.length; i++) {
-      const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
-      Transforms.insertNodes(editor, normalizedInitialValue[i], { at: beforeEnd, mode: "highest" });
-    }
-
-    Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
-    Transforms.removeNodes(editor, { at: Editor.end(editor, []) });
-
-    setTimeout(() => resetHasChanged(), 0);
+    setIsChangingContent(true);
   }, [chapterId]);
+
+  useEffect(() => {
+    if (!isChangingContent) return;
+    if (editor.children.length === 0) {
+      setIsChangingContent(false);
+      return;
+    }
+    console.log(normalizedInitialValue);
+    while (editor.children.length > 1) {
+      Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" });
+    }
+
+    // const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
+    // Transforms.insertNodes(editor, normalizedInitialValue[0], {
+    //   at: beforeEnd,
+    //   mode: "highest",
+    // });
+    if (
+      normalizedInitialValue.length === 1 &&
+      normalizedInitialValue[0].type === "paragraph" &&
+      normalizedInitialValue[0].children.length === 1 &&
+      normalizedInitialValue[0].children[0].text === ""
+    ) {
+      //
+    } else {
+      for (let i = 0; i < normalizedInitialValue.length; i++) {
+        const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
+        Transforms.insertNodes(editor, normalizedInitialValue[i], {
+          at: beforeEnd,
+          mode: "highest",
+        });
+      }
+      Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
+      Transforms.removeNodes(editor, { at: Editor.end(editor, []) });
+    }
+
+    setTimeout(() => {
+      resetHasChanged();
+      setIsChangingContent(false);
+    }, 0);
+  }, [isChangingContent]);
 
   const parentRef = useRef<any>();
   const [shikiji, setShikiji] = useState<HighlighterCore | undefined>();
@@ -366,6 +392,7 @@ const ContentEditorReact = ({
           >
             <Slate
               onValueChange={() => {
+                if (isChangingContent) return;
                 setHasChanged();
                 setChangingValue(changingValue + 1);
               }}

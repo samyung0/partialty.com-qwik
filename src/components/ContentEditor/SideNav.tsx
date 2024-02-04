@@ -843,11 +843,23 @@ export default component$(
                                         })
                                       );
                                     }
-                                    isRequestingChapterCallback.value = $(() => {
-                                      contentEditorValue.value = chapterObj.content_slate
-                                        ? JSON.parse(chapterObj.content_slate)
+                                    isRequestingChapterCallback.value = $(async () => {
+                                      const val = await server$(
+                                        async () =>
+                                          (
+                                            await drizzleClient()
+                                              .select({
+                                                content_slate: content.content_slate,
+                                                renderedHTML: content.renderedHTML,
+                                              })
+                                              .from(content)
+                                              .where(eq(content.id, chapterObj.id))
+                                          )[0]
+                                      )();
+                                      contentEditorValue.value = val.content_slate
+                                        ? JSON.parse(val.content_slate)
                                         : undefined;
-                                      renderedHTML.value = chapterObj.renderedHTML || undefined;
+                                      renderedHTML.value = val.renderedHTML || undefined;
                                       oldChapter.value = chapterObj.id;
                                       chapterId.value = chapterObj.id;
                                       courseId.value = topic.id;

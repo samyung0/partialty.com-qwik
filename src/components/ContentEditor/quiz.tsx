@@ -16,9 +16,9 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
       <input hidden className="hidden" type="radio" name={name} value={optionValue} />
       <div
         contentEditable={false}
-        className="flex h-4 w-4 items-center justify-center rounded-full bg-lilac"
+        className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-dark-gray"
       >
-        <div className="quizOption h-3 w-3 rounded-full bg-light-lilac"></div>
+        <div className="quizOption h-3 w-3 rounded-full bg-background-light-gray"></div>
       </div>
       <span className="optionText">{children}</span>
     </div>
@@ -27,7 +27,7 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
 
 export const QuizBlock = ({ attributes, children, element }: RenderElementProps) => {
   return (
-    <div {...attributes} className="border-l-4 border-lilac bg-light-lilac p-4 tracking-wide">
+    <div {...attributes} className="tracking-wide">
       <h3 className="mb-3 mt-0" contentEditable={false}>
         {(element as QuizBlockElement).quizTitle}
       </h3>
@@ -42,7 +42,7 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
         {children}
         <button
           contentEditable={false}
-          className="formCheck rounded-lg bg-lilac px-6 py-2 text-light-lilac shadow-lg"
+          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg"
         >
           Check
         </button>

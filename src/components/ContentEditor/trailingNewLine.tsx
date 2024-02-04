@@ -14,6 +14,7 @@ export const withTrailingNewLine = (editor: Editor) => {
           Text.isText(n.children[0]) &&
           n.children[0].text === "",
         at: Editor.end(editor, []),
+        mode: "highest",
       });
       if (!endElement) {
         editor.insertNode(

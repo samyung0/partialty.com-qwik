@@ -486,10 +486,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
     case "quizBlock": {
       return `<div style="
-      border-left-width: 4px;
-      border-color: rgb(174 143 219);
-      background-color: rgb(239 233 248);
-      padding: 1rem;
       letter-spacing: 0.025em;
       ">
       <h3 style="margin-bottom: 0.75rem; margin-top: 0px;">
@@ -510,12 +506,12 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         <button
           style="
           border-radius: 0.5rem;
-          background-color: rgb(174 143 219);
+          background-color: rgb(31 41 55);
           padding-left: 1.5rem;
           padding-right: 1.5rem;
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
-          color: rgb(239 233 248);
+          color: rgb(247 247 247);
           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
           "
           class="formCheck"
@@ -530,7 +526,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           padding-right: 1.5rem;
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
-          color: rgb(226 248 242);
+          color: rgb(247 247 247);
           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
           display: none;
           "
@@ -546,7 +542,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           padding-right: 1.5rem;
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
-          color: rgb(255 224 218);
+          color: rgb(247 247 247);
           box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
           display: inline-block;
           ">
@@ -585,10 +581,10 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         align-items: center;
         justify-content: center;
         border-radius: 9999px;
-        background-color: rgb(174 143 219);
+        background-color: rgb(31 41 55);
         "
       >
-        <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(239 233 248);" class="quizOption"></div>
+        <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(247 247 247);" class="quizOption"></div>
       </div>
       <span class="optionText">${children}</span>
     </button>`;

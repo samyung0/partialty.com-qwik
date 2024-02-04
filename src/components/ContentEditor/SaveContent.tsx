@@ -13,7 +13,7 @@ export default ({
 }: {
   hasChanged: boolean;
   saveChanges: (
-    contentEditorValue: string,
+    contentEditorValue: string | null,
     renderedHTML: string,
     audio_track_playback_id: string | undefined,
     audio_track_asset_id: string | undefined
@@ -38,8 +38,15 @@ export default ({
     clearTimeout(autoSave.current);
     autoSave.current = setTimeout(() => save(), 2000);
   }, [changingValue]);
+  useEffect(() => {
+    clearTimeout(autoSave.current);
+    if (hasChanged) {
+      autoSave.current = setTimeout(() => save(), 2000);
+    }
+  }, [hasChanged]);
   const save = async () => {
     if (!hasChanged || isSaving) return;
+
     setIsSaving(true);
     const editorContent = editor.children;
     // const heading = `<h1>${chapterName}</h1>`;
@@ -48,18 +55,27 @@ export default ({
       await serialize(editor.children, true);
     const audio_track_playback_id = audioTrack?.playback_ids[0].id;
     const audio_track_asset_id = audioTrack?.id;
+    const isEmpty =
+      editorContent.length === 1 &&
+      (editorContent[0] as any).type === "paragraph" &&
+      (editorContent[0] as any).children.length === 1 &&
+      (editorContent[0] as any).children[0].text === "";
     await saveChanges(
-      JSON.stringify(editorContent),
+      isEmpty ? null : JSON.stringify(editorContent),
       renderedHTML,
       audio_track_playback_id,
       audio_track_asset_id
     );
     setIsSaving(false);
+    clearTimeout(autoSave.current);
   };
   return (
     <button
       disabled={!hasChanged || isSaving}
-      onClick={save}
+      onClick={async () => {
+        console.log(await serialize(editor.children, true));
+        save();
+      }}
       className="absolute bottom-[calc(10vh+16px)] right-4 z-[50] flex h-[40px] items-center justify-center rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl disabled:bg-gray-300"
     >
       {!isSaving ? (
