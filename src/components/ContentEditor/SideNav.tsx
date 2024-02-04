@@ -78,7 +78,7 @@ export default component$(
 
     const addChapterSuccessCallback = useSignal<QRL<() => any>>();
     const addChapterFailCallback = useSignal<QRL<(e: string) => any>>();
-    const addChapterTimeout = useSignal<NoSerialize<NodeJS.Timeout>>();
+    const addChapterTimeout = useSignal<any>();
     const openAddChapter = useStore(() => Array.from(Array(topics.length)).map((_) => false));
     const isCreatingNewChapter = useStore(() => Array.from(Array(topics.length)).map((_) => false));
     const newChapterInfo = useStore(() =>
@@ -153,10 +153,12 @@ export default component$(
             return;
           }
           if (d.type === "contentCreated") {
-            const ret = d.content;
+            const ret = d.message.content;
+            console.log(ret);
             if (!ret) return;
             chapters.push(ret[0]);
             const index = topics.findIndex((topic) => topic.id === ret.index_id);
+            console.log(ret, topics, index);
             topics.splice(index, 1, ret[1]);
             editChapter[ret.index_id].push({
               openEdit: false,
@@ -679,14 +681,13 @@ export default component$(
                         isCreatingNewChapter[index] = false;
                         newChapterError[index].name = "Failed to add Chapter: " + e;
                       });
-                      addChapterTimeout.value = noSerialize(
+                      addChapterTimeout.value =
                         setTimeout(() => {
                           addChapterSuccessCallback.value = undefined;
                           if (addChapterFailCallback.value)
                             addChapterFailCallback.value("Server Timeout");
                           addChapterFailCallback.value = undefined;
-                        }, 7000)
-                      );
+                        }, 7000);
                       contentWS.value.send(
                         JSON.stringify({
                           type: "createContent",

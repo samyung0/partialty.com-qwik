@@ -290,12 +290,12 @@ const app = new Elysia()
           }
         }
         if (msg.type === "createContent") {
-          const content = msg.content;
+          const content = msg.content[0];
           const courseId = content.index_id;
           if (!content || !courseId) {
             return ws.send(JSON.stringify({ type: "createContentFail", msg: "Content is empty!" }));
           }
-          const message = { content };
+          const message = { content: msg.content };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
             if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
