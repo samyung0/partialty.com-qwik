@@ -8,21 +8,18 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 // turso, drizzle and lucia are all initialized per page request
 // since edge and serverless functions are stateless
-export const onRequest: RequestHandler = async ({ env }) => {
-  await initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  await Promise.all([
-    initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1"),
-    initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1"),
-  ]);
-};
-
-export const onGet: RequestHandler = async ({ cacheControl }) => {
+export const onRequest: RequestHandler = async ({ env, cacheControl }) => {
   cacheControl({
     maxAge: 0,
     sMaxAge: 0,
     noStore: true,
     noCache: true,
   });
+  await initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
+  await Promise.all([
+    initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1"),
+    initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1"),
+  ]);
 };
 
 export const useUserLoader = routeLoader$(async (event) => {
