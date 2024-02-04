@@ -327,8 +327,8 @@ const app = new Elysia()
             );
           }
           const message: any = {};
-          message[contentId] = contentId;
-          message[courseId] = courseId;
+          message.contentId = contentId;
+          message.courseId = courseId;
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
             if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);

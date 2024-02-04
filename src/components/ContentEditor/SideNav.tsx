@@ -139,10 +139,12 @@ export default component$(
         try {
           const d = JSON.parse(data);
           if (d.type === "contentDeleted") {
-            const chapterId = d.contentId;
-            const courseId = d.courseId;
+            const chapterId = d.message.contentId;
+            const courseId = d.message.courseId;
             const i1 = topics.findIndex((topic) => topic.id === courseId);
-            if (i1 >= 0 && topics[i1].chapter_order.indexOf(chapterId) >= 0) {
+            console.log(i1, chapterId, courseId, topics, chapters, editChapter);
+            if(i1 < 0) return;
+            if (topics[i1].chapter_order.indexOf(chapterId) >= 0) {
               topics[i1].chapter_order.splice(topics[i1].chapter_order.indexOf(chapterId), 1);
             }
             const i2 = chapters.findIndex((chapter) => chapter.id === chapterId);
@@ -154,13 +156,12 @@ export default component$(
           }
           if (d.type === "contentCreated") {
             const ret = d.message.content;
-            console.log(ret);
             if (!ret) return;
+            const index = topics.findIndex((topic) => topic.id === ret[0].index_id);
+            if(index < 0) return; 
             chapters.push(ret[0]);
-            const index = topics.findIndex((topic) => topic.id === ret.index_id);
-            console.log(ret, topics, index);
             topics.splice(index, 1, ret[1]);
-            editChapter[ret.index_id].push({
+            editChapter[ret[0].index_id].push({
               openEdit: false,
               isEditing: false,
               settingsInfo: {
