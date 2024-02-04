@@ -463,7 +463,7 @@ export default component$(
                         <path d="M12 5v14" />
                       </svg>
                     </button>
-                    <button
+                    {/* <button
                       onClick$={() => {
                         settingsCourseInfo[index].name = topic.name;
                         settingsCourseInfo[index].requireSubscription = topic.is_premium;
@@ -472,10 +472,10 @@ export default component$(
                       class="text-[20px] text-primary-dark-gray"
                     >
                       <LuSettings />
-                    </button>
+                    </button> */}
                   </div>
                 </div>
-                {openEditCourse[index] && (
+                {/* {openEditCourse[index] && (
                   <form
                     preventdefault:submit
                     onSubmit$={async (e) => {
@@ -633,7 +633,7 @@ export default component$(
                       {!isEditingCourse[index] && <span class="">Confirm Edit</span>}
                     </button>
                   </form>
-                )}
+                )} */}
                 {openAddChapter[index] && (
                   <form
                     preventdefault:submit
