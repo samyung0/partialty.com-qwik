@@ -9,7 +9,7 @@ const uuidToUserId = new Map<number, string>();
 const uploadUrlMapUserId = new Map<string, { userId: string; filename: string }>();
 const uploadIdMapUploadUrl = new Map<string, string>();
 const courseIdToUserId = new Map<string, [string, string]>();
-const userIdToCourseId = new Map<string, string>();
+const userIdToCourseId = new Map<string, [string, string]>();
 
 if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET)
   throw new Error("Server Mux env var Error!");
@@ -168,12 +168,12 @@ const app = new Elysia()
                 const serverContentId = userIdToCourseId.get(userId);
                 const message: any = {};
                 if (serverContentId) {
-                  courseIdToUserId.delete(serverContentId!);
+                  courseIdToUserId.delete(serverContentId[0]);
                   userIdToCourseId.delete(userId);
-                  message[serverContentId] = true;
+                  message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+                    if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
@@ -188,8 +188,8 @@ const app = new Elysia()
                 wsContentArr.delete(userId);
                 uuidToUserId.delete(ws.id);
                 userIdToAccessibleCourses.delete(userId);
-                if (userIdToCourseId.get(userId)) {
-                  courseIdToUserId.delete(userIdToCourseId.get(userId)!);
+                if (serverContentId) {
+                  courseIdToUserId.delete(serverContentId[0]);
                   userIdToCourseId.delete(userId);
                 }
               },
@@ -213,7 +213,8 @@ const app = new Elysia()
           const userId = msg.userId;
           const contentId = msg.contentId;
           const avatar_url = msg.avatar_url;
-          if (!userId || !contentId || !avatar_url) {
+          const courseId = msg.courseId;
+          if (!userId || !contentId || !avatar_url || !courseId) {
             console.error("User ID, Content ID or Avatar url is empty!");
             return ws.send(
               JSON.stringify({
@@ -233,12 +234,12 @@ const app = new Elysia()
             );
           }
           courseIdToUserId.set(contentId, [userId, avatar_url]);
-          userIdToCourseId.set(userId, contentId);
+          userIdToCourseId.set(userId, [contentId, courseId]);
           const message: any = {};
           message[contentId] = [userId, avatar_url];
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(contentId)) userIdAccessible.push(key);
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
@@ -259,21 +260,22 @@ const app = new Elysia()
         if (msg.type === "closeContent") {
           const userId = msg.userId;
           const contentId = msg.contentId;
-          if (!userId || !contentId) {
+          const courseId = msg.courseId;
+          if (!userId || !contentId || !courseId) {
             return;
           }
           const serverContentId = userIdToCourseId.get(userId);
-          if (userIdToCourseId.get(userId) !== contentId) {
+          if (userIdToCourseId.get(userId) && userIdToCourseId.get(userId)![0] !== contentId) {
             console.error("Client and Server Sync Error!");
           }
           const message: any = {};
           if (serverContentId) {
-            courseIdToUserId.delete(serverContentId!);
+            courseIdToUserId.delete(serverContentId[0]);
             userIdToCourseId.delete(userId);
-            message[serverContentId] = true;
+            message[serverContentId[0]] = true;
             const userIdAccessible: string[] = [];
             userIdToAccessibleCourses.forEach((val, key) => {
-              if (val[0] === "*" || val.includes(contentId)) userIdAccessible.push(key);
+              if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
             });
             userIdAccessible.forEach((userId) => {
               if (wsContentArr.get(userId))
@@ -289,7 +291,8 @@ const app = new Elysia()
         if (msg.type === "deleteContent") {
           const userId = msg.userId;
           const contentId = msg.contentId;
-          if (!userId || !contentId) {
+          const courseId = msg.courseId;
+          if (!userId || !contentId || !courseId) {
             return;
           }
           if (courseIdToUserId.get(contentId)) {
@@ -300,6 +303,22 @@ const app = new Elysia()
               })
             );
           }
+          const message: any = {};
+          message[contentId] = true;
+          message[courseId] = true;
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentDeleted",
+                  message,
+                })
+              );
+          });
           return ws.send(
             JSON.stringify({
               type: "deleteContentSuccess",
@@ -327,12 +346,12 @@ const app = new Elysia()
                 const serverContentId = userIdToCourseId.get(userId);
                 const message: any = {};
                 if (serverContentId) {
-                  courseIdToUserId.delete(serverContentId!);
+                  courseIdToUserId.delete(serverContentId[0]);
                   userIdToCourseId.delete(userId);
-                  message[serverContentId] = true;
+                  message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+                    if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
@@ -347,8 +366,8 @@ const app = new Elysia()
                 wsContentArr.delete(userId);
                 uuidToUserId.delete(ws.id);
                 userIdToAccessibleCourses.delete(userId);
-                if (userIdToCourseId.get(userId)) {
-                  courseIdToUserId.delete(userIdToCourseId.get(userId)!);
+                if (serverContentId) {
+                  courseIdToUserId.delete(serverContentId[0]);
                   userIdToCourseId.delete(userId);
                 }
               },
@@ -379,23 +398,15 @@ const app = new Elysia()
         if (msg.type === "terminate") {
           const userId = msg.userId;
           clearTimeout(wsContentArrClear.get(userId));
-          wsContentArrClear.delete(userId);
-          uuidToUserId.delete(ws.id);
-          userIdToAccessibleCourses.delete(userId);
-          if (userIdToCourseId.get(userId)) {
-            courseIdToUserId.delete(userIdToCourseId.get(userId)!);
-            userIdToCourseId.delete(userId);
-          }
-
           const serverContentId = userIdToCourseId.get(userId);
           const message: any = {};
           if (serverContentId) {
-            courseIdToUserId.delete(serverContentId!);
+            courseIdToUserId.delete(serverContentId[0]);
             userIdToCourseId.delete(userId);
-            message[serverContentId] = true;
+            message[serverContentId[0]] = true;
             const userIdAccessible: string[] = [];
             userIdToAccessibleCourses.forEach((val, key) => {
-              if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+              if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
             });
             userIdAccessible.forEach((userId) => {
               if (wsContentArr.get(userId))
@@ -406,7 +417,15 @@ const app = new Elysia()
                   })
                 );
             });
+
+            courseIdToUserId.delete(serverContentId[0]);
+            userIdToCourseId.delete(userId);
           }
+
+          wsContentArrClear.delete(userId);
+          uuidToUserId.delete(ws.id);
+          userIdToAccessibleCourses.delete(userId);
+          uuidToUserId.delete(ws.id);
           return wsContentArr.delete(userId);
         }
       } catch (e) {
@@ -420,25 +439,16 @@ const app = new Elysia()
       const userId = uuidToUserId.get(ws.id);
       if (!userId) return;
       clearTimeout(wsContentArrClear.get(userId));
-      wsContentArrClear.delete(userId);
-      uuidToUserId.delete(ws.id);
-      userIdToAccessibleCourses.delete(userId);
-      if (userIdToCourseId.get(userId)) {
-        courseIdToUserId.delete(userIdToCourseId.get(userId)!);
-        userIdToCourseId.delete(userId);
-      }
-      wsContentArr.delete(userId);
-      uuidToUserId.delete(ws.id);
 
       const serverContentId = userIdToCourseId.get(userId);
       const message: any = {};
       if (serverContentId) {
-        courseIdToUserId.delete(serverContentId!);
+        courseIdToUserId.delete(serverContentId[0]);
         userIdToCourseId.delete(userId);
-        message[serverContentId] = true;
+        message[serverContentId[0]] = true;
         const userIdAccessible: string[] = [];
         userIdToAccessibleCourses.forEach((val, key) => {
-          if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+          if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
         });
         userIdAccessible.forEach((userId) => {
           if (wsContentArr.get(userId))
@@ -449,7 +459,16 @@ const app = new Elysia()
               })
             );
         });
+
+        courseIdToUserId.delete(serverContentId[0]);
+        userIdToCourseId.delete(userId);
       }
+
+      wsContentArrClear.delete(userId);
+      uuidToUserId.delete(ws.id);
+      userIdToAccessibleCourses.delete(userId);
+      wsContentArr.delete(userId);
+      uuidToUserId.delete(ws.id);
     },
   });
 export default app;

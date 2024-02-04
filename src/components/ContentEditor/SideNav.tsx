@@ -1,5 +1,5 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { LuSettings, LuTrash } from "@qwikest/icons/lucide";
 import { and, eq } from "drizzle-orm";
@@ -130,6 +130,42 @@ export default component$(
         }));
       return map;
     });
+
+    useTask$(({track}) => {
+      track(contentWS);
+      if(!contentWS.value) return;
+      contentWS.value.addEventListener("message", ({data}) => {
+        try {
+          const d = JSON.parse(data);
+          if (d.type === "contentDeleted") {
+            const chapterId = d.contentId;
+          const courseId = d.courseId;
+          const i1 = topics.findIndex(
+            (topic) => topic.id === courseId
+          );
+          if (
+            i1 >= 0 &&
+            topics[i1].chapter_order.indexOf(chapterId) >= 0
+          ) {
+            topics[i1].chapter_order.splice(
+              topics[i1].chapter_order.indexOf(chapterId),
+              1
+            );
+          }
+          const i2 = chapters.findIndex(
+            (chapter) => chapter.id === chapterId
+          );
+          if (i2 >= 0) {
+            chapters.splice(i2, 1);
+          }
+          editChapter[courseId].pop();
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      })
+    })
 
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
@@ -729,6 +765,7 @@ export default component$(
                                         JSON.stringify({
                                           type: "closeContent",
                                           userId: userId + "###" + timeStamp.value,
+                                          courseId: topic.id,
                                           contentId: oldChapter.value,
                                         })
                                       );
@@ -753,6 +790,7 @@ export default component$(
                                         type: "openContent",
                                         userId: userId + "###" + timeStamp.value,
                                         contentId: chapterObj.id,
+                                        courseId: topic.id,
                                         avatar_url: avatar_url,
                                       })
                                     );
@@ -1054,25 +1092,6 @@ export default component$(
                                               /* empty */
                                             }
                                           })();
-                                          const i1 = topics.findIndex(
-                                            (topic) => topic.id === courseId
-                                          );
-                                          if (
-                                            i1 >= 0 &&
-                                            topics[i1].chapter_order.indexOf(chapterId) >= 0
-                                          ) {
-                                            topics[i1].chapter_order.splice(
-                                              topics[i1].chapter_order.indexOf(chapterId),
-                                              1
-                                            );
-                                          }
-                                          const i2 = chapters.findIndex(
-                                            (chapter) => chapter.id === chapterId
-                                          );
-                                          if (i2 >= 0) {
-                                            chapters.splice(i2, 1);
-                                          }
-                                          editChapter[courseId].pop();
 
                                           isDeletingChapter.value = "";
                                         });
@@ -1082,6 +1101,7 @@ export default component$(
                                             type: "deleteContent",
                                             userId: userId,
                                             contentId: chapterObj.id,
+                                            courseId: topic.id
                                           })
                                         );
 
