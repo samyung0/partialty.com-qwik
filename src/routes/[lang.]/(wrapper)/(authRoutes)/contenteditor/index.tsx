@@ -19,6 +19,67 @@ import { content_index } from "../../../../../../drizzle_turso/schema/content_in
 import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
 import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
 
+const SERVER1 = server$(
+  async (userId: string) =>
+    (
+      await drizzleClient()
+        .select({ accessible_courses: profiles.accessible_courses })
+        .from(profiles)
+        .where(eq(profiles.id, userId))
+    )[0].accessible_courses || []
+);
+
+const SERVER2 = server$(async function (id: string) {
+  const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
+    method: "GET",
+    headers: {
+      Authorization: `Basic ${btoa(
+        this.env.get("MUX_PRODUCTION_ID")! + ":" + this.env.get("MUX_PRODUCTION_SECRET")!
+      )}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .catch((e) => console.error(e))) as any;
+  const filename = (
+    await drizzleClient()
+      .select({ filename: mux_assets.name })
+      .from(mux_assets)
+      .where(eq(mux_assets.id, id))
+  )[0].filename;
+  audio.filename = filename;
+  return audio as {
+    data: Mux["data"][0];
+    filename: string;
+  };
+});
+
+const SERVER3 = server$(
+  async (
+    chapterId: string,
+    contentEditorValue2: string | null,
+    renderedHTML2: string,
+    audio_track_playback_id: string | undefined,
+    audio_track_asset_id: string | undefined
+  ) => {
+    try {
+      const contentVal: any = {
+        content_slate: contentEditorValue2,
+        renderedHTML: renderedHTML2,
+      };
+      contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
+      contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
+      return await drizzleClient()
+        .update(content)
+        .set(contentVal)
+        .where(eq(content.id, chapterId))
+        .returning();
+    } catch (e) {
+      return [false, e];
+    }
+  }
+);
+
 export const useUserAssets = routeLoader$(async (requestEvent) => {
   const ret: {
     cloudinaryImages: CloudinaryPublicPic[];
@@ -79,14 +140,7 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   ret.cloudinaryImages = res.resources;
 
   if (user.role === "admin") ret.accessible_courses = ["*"];
-  else
-    ret.accessible_courses = await server$(
-      async () =>
-        (await drizzleClient()
-          .select({ accessible_courses: profiles.accessible_courses })
-          .from(profiles)
-          .where(eq(profiles.id, user.userId)))[0].accessible_courses || []
-    )();
+  else ret.accessible_courses = await SERVER1(user.userId);
 
   return ret;
 });
@@ -155,33 +209,7 @@ export default component$(() => {
   const isPreviewing = useSignal(false);
   const chapterName = useSignal("");
 
-  const fetchAudio = $(
-    async (id: string) =>
-      await server$(async function (id: string) {
-        const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
-          method: "GET",
-          headers: {
-            Authorization: `Basic ${btoa(
-              this.env.get("MUX_PRODUCTION_ID")! + ":" + this.env.get("MUX_PRODUCTION_SECRET")!
-            )}`,
-            "Content-Type": "application/json",
-          },
-        })
-          .then((res) => res.json())
-          .catch((e) => console.error(e))) as any;
-        const filename = (
-          await drizzleClient()
-            .select({ filename: mux_assets.name })
-            .from(mux_assets)
-            .where(eq(mux_assets.id, id))
-        )[0].filename;
-        audio.filename = filename;
-        return audio as {
-          data: Mux["data"][0];
-          filename: string;
-        };
-      })(id)
-  );
+  const fetchAudio = $(async (id: string) => await SERVER2(id));
 
   const _startWSConnection: { startWSConnection: QRL<() => any> } = {
     startWSConnection: $(() => {}),
@@ -235,6 +263,20 @@ export default component$(() => {
               isRequestingChapter.value = "";
               isRequestingChapterCallback.value = undefined;
               clearTimeout(isRequestingChapterTimeout.value);
+              return;
+            }
+            if (d.type === "deleteContentSuccess") {
+              if (!isDeletingChapterCallback.value) return;
+              isDeletingChapterCallback.value();
+              isDeletingChapterCallback.value = undefined;
+              clearTimeout(isDeletingChapterTimeout.value);
+              return;
+            }
+            if (d.type === "deleteContentError") {
+              alert(d.message);
+              isDeletingChapter.value = "";
+              isDeletingChapterCallback.value = undefined;
+              clearTimeout(isDeletingChapterTimeout.value);
               return;
             }
             if (d.type === "error") {
@@ -453,23 +495,13 @@ export default component$(() => {
               audio_track_asset_id: string | undefined
             ) => {
               renderedHTML.value = renderedHTML2;
-              const ret = (await server$(async () => {
-                try {
-                  const contentVal: any = {
-                    content_slate: contentEditorValue2,
-                    renderedHTML: renderedHTML2,
-                  };
-                  contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
-                  contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
-                  return await drizzleClient()
-                    .update(content)
-                    .set(contentVal)
-                    .where(eq(content.id, chapterId.value))
-                    .returning();
-                } catch (e) {
-                  return [false, e];
-                }
-              })()) as any[];
+              const ret = (await SERVER3(
+                chapterId.value,
+                contentEditorValue2,
+                renderedHTML2,
+                audio_track_playback_id,
+                audio_track_asset_id
+              )) as any[];
               if (ret.length > 0 && ret[0] === false) {
                 alert("Save failed! " + ret[1].toString());
                 return "";

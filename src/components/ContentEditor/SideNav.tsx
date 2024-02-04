@@ -223,6 +223,85 @@ export default component$(
       });
     });
 
+    const SERVER1 = server$(
+      async (slug: string, courseId: string) =>
+        await drizzleClient()
+          .select()
+          .from(content)
+          .where(and(eq(content.slug, slug), eq(content.index_id, courseId)))
+    );
+
+    const SERVER2 = server$(
+      async (values: NewContent, newChapterOrder: string[], parentId: string) => {
+        const retChapter = (await drizzleClient().insert(content).values(values).returning())[0];
+        const retCourse = (
+          await drizzleClient()
+            .update(content_index)
+            .set({ chapter_order: newChapterOrder })
+            .where(eq(content_index.id, parentId))
+            .returning()
+        )[0];
+        return [retChapter, retCourse] as [Content, ContentIndex];
+      }
+    );
+
+    const SERVER3 = server$(
+      async (id: string) =>
+        (
+          await drizzleClient()
+            .select({
+              content_slate: content.content_slate,
+              renderedHTML: content.renderedHTML,
+            })
+            .from(content)
+            .where(eq(content.id, id))
+        )[0]
+    );
+
+    const SERVER4 = server$(
+      async (slug: string, courseId: string) =>
+        await drizzleClient()
+          .select()
+          .from(content)
+          .where(and(eq(content.slug, slug), eq(content.index_id, courseId)))
+    );
+
+    const SERVER5 = server$(
+      async (
+        values: {
+          name: string;
+          slug: string;
+          is_premium: boolean;
+          link: string;
+        },
+        chapterId: string
+      ) => {
+        return (
+          await drizzleClient()
+            .update(content)
+            .set(values)
+            .where(eq(content.id, chapterId))
+            .returning()
+        )[0];
+      }
+    );
+
+    const SERVER6 = server$(
+      async (newChapterOrder: string[], courseId: string, chapterId: string) => {
+        try {
+          await drizzleClient().transaction(async (tx) => {
+            await tx
+              .update(content_index)
+              .set({ chapter_order: newChapterOrder })
+              .where(eq(content_index.id, courseId));
+            await tx.delete(content).where(eq(content.id, chapterId));
+          });
+        } catch (e) {
+          /* empty */
+        }
+      }
+    );
+
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
         {contentWS.value ? (
@@ -660,13 +739,7 @@ export default component$(
                       const courseId = topic.id;
                       let courseWithSlug: Content[] | undefined;
                       try {
-                        courseWithSlug = await server$(
-                          async () =>
-                            await drizzleClient()
-                              .select()
-                              .from(content)
-                              .where(and(eq(content.slug, slug), eq(content.index_id, courseId)))
-                        )();
+                        courseWithSlug = await SERVER1(slug, courseId);
                       } catch (e) {
                         isCreatingNewChapter[index] = false;
                         newChapterError[index].name = (e as any).toString();
@@ -693,19 +766,7 @@ export default component$(
                       const parentId = topic.id;
                       let ret: [Content, ContentIndex] | undefined;
                       try {
-                        ret = await server$(async () => {
-                          const retChapter = (
-                            await drizzleClient().insert(content).values(values).returning()
-                          )[0];
-                          const retCourse = (
-                            await drizzleClient()
-                              .update(content_index)
-                              .set({ chapter_order: newChapterOrder })
-                              .where(eq(content_index.id, parentId))
-                              .returning()
-                          )[0];
-                          return [retChapter, retCourse] as [Content, ContentIndex];
-                        })();
+                        ret = await SERVER2(values, newChapterOrder, parentId);
                       } catch (e) {
                         isCreatingNewChapter[index] = false;
                         newChapterInfo[index].name = (e as any).toString();
@@ -844,18 +905,7 @@ export default component$(
                                       );
                                     }
                                     isRequestingChapterCallback.value = $(async () => {
-                                      const val = await server$(
-                                        async () =>
-                                          (
-                                            await drizzleClient()
-                                              .select({
-                                                content_slate: content.content_slate,
-                                                renderedHTML: content.renderedHTML,
-                                              })
-                                              .from(content)
-                                              .where(eq(content.id, chapterObj.id))
-                                          )[0]
-                                      )();
+                                      const val = await SERVER3(chapterObj.id);
                                       contentEditorValue.value = val.content_slate
                                         ? JSON.parse(val.content_slate)
                                         : undefined;
@@ -976,18 +1026,7 @@ export default component$(
                                     const chapterId = chapterObj.id;
                                     let chapterWithSlug: Content[] | undefined;
                                     try {
-                                      chapterWithSlug = await server$(
-                                        async () =>
-                                          await drizzleClient()
-                                            .select()
-                                            .from(content)
-                                            .where(
-                                              and(
-                                                eq(content.slug, slug),
-                                                eq(content.index_id, courseId)
-                                              )
-                                            )
-                                      )();
+                                      chapterWithSlug = await SERVER4(slug, courseId);
                                     } catch (e) {
                                       editChapter[topic.id][chapterIndex].isEditing = false;
                                       editChapter[topic.id][chapterIndex].settingsError.name = (
@@ -1017,15 +1056,7 @@ export default component$(
                                     };
                                     let ret: Content | undefined = undefined;
                                     try {
-                                      ret = await server$(async () => {
-                                        return (
-                                          await drizzleClient()
-                                            .update(content)
-                                            .set(values)
-                                            .where(eq(content.id, chapterId))
-                                            .returning()
-                                        )[0];
-                                      })();
+                                      ret = await SERVER5(values, chapterId);
                                     } catch (e) {
                                       editChapter[topic.id][chapterIndex].isEditing = false;
                                       editChapter[topic.id][chapterIndex].settingsError.name = (
@@ -1159,21 +1190,7 @@ export default component$(
                                           (id) => id !== chapterId
                                         );
                                         isDeletingChapterCallback.value = $(async () => {
-                                          await server$(async () => {
-                                            try {
-                                              await drizzleClient().transaction(async (tx) => {
-                                                await tx
-                                                  .update(content_index)
-                                                  .set({ chapter_order: newChapterOrder })
-                                                  .where(eq(content_index.id, courseId));
-                                                await tx
-                                                  .delete(content)
-                                                  .where(eq(content.id, chapterId));
-                                              });
-                                            } catch (e) {
-                                              /* empty */
-                                            }
-                                          })();
+                                          await SERVER6(newChapterOrder, courseId, chapterId);
 
                                           isDeletingChapter.value = "";
                                         });

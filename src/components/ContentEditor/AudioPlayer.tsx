@@ -104,6 +104,29 @@ export const CenterAudioChooser = ({
     });
   }, []);
 
+  const SERVER1 = server$(async function () {
+    return await fetch("https://api.mux.com/video/v1/uploads/", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${btoa(
+          this.env.get("MUX_PRODUCTION_ID")! +
+            ":" +
+            this.env.get("MUX_PRODUCTION_SECRET")!
+        )}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cors_origin: "*",
+        new_asset_settings: {
+          playback_policy: ["public"],
+          mp4_support: "none",
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .catch((e) => console.error(e));
+  })
+
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
@@ -195,28 +218,7 @@ export const CenterAudioChooser = ({
                     return;
                   }
 
-                  const _url = await server$(async function () {
-                    return await fetch("https://api.mux.com/video/v1/uploads/", {
-                      method: "POST",
-                      headers: {
-                        Authorization: `Basic ${btoa(
-                          this.env.get("MUX_PRODUCTION_ID")! +
-                            ":" +
-                            this.env.get("MUX_PRODUCTION_SECRET")!
-                        )}`,
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        cors_origin: "*",
-                        new_asset_settings: {
-                          playback_policy: ["public"],
-                          mp4_support: "none",
-                        },
-                      }),
-                    })
-                      .then((res) => res.json())
-                      .catch((e) => console.error(e));
-                  })();
+                  const _url = await SERVER1();
 
                   const url = _url.data.url as string;
                   if (!url) {
