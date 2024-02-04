@@ -309,13 +309,13 @@ const app = new Elysia()
                 })
               );
           });
-          return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }))
+          return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }));
         }
-        if(msg.type === "editContentDetails") {
+        if (msg.type === "editContentDetails") {
           const details = msg.details;
           const courseId = msg.courseId;
           const chapterId = msg.chapterId;
-          if(!details || !courseId) return;
+          if (!details || !courseId) return;
           const message = { details, courseId, chapterId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {

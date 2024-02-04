@@ -189,23 +189,31 @@ export default component$(
             return;
           }
           if (d.type === "contentDetailsEdited") {
-            const details = d.details;
-            const courseId = d.courseId;
-            const chapterId = d.chapterId;
+            const details = d.message.details;
+            const courseId = d.message.courseId;
+            const chapterId = d.message.chapterId;
             if (chapterId) {
               const chapter = chapters.find((chapter) => chapter.id === chapterId);
-              if (!chapter) return;
-              for (const i in details)
-                if (Object.prototype.hasOwnProperty.call(chapter, i))
-                  (chapter as any)[i] = details[i];
+              const index = topics.findIndex((topic) => topic.id === courseId);
+              const chapterIndex = chapters.findIndex((chapter) => chapter.id === chapterId);
+              const index2 = topics[index].chapter_order.indexOf(chapterId);
+              if (!chapter || index < 0 || chapterIndex < 0) return;
+              chapters.splice(chapterIndex, 1, details);
+
+              if (index2) {
+                const r = topics[index].chapter_order.splice(index2, 1)[0];
+                setTimeout(() => {
+                  topics[index].chapter_order.splice(index2, 0, r);
+                }, 0);
+              }
               return;
             }
             if (courseId) {
-              const course = topics.find((topic) => topic.id === courseId);
-              if (!course) return;
-              for (const i in details)
-                if (Object.prototype.hasOwnProperty.call(course, i))
-                  (course as any)[i] = details[i];
+              const courseIndex = topics.findIndex((topic) => topic.id === courseId);
+              console.log(courseIndex);
+              if (courseIndex < 0) return;
+              topics.splice(courseIndex, 1);
+              setTimeout(() => topics.splice(courseIndex, 0, details), 0);
               return;
             }
           }
@@ -534,7 +542,16 @@ export default component$(
                         settingsCourseError[index].name = (e as any).toString();
                         return;
                       }
-                      topics.splice(index, 1, ret);
+
+                      if (contentWS.value)
+                        contentWS.value.send(
+                          JSON.stringify({
+                            type: "editContentDetails",
+                            details: ret,
+                            courseId: topic.id,
+                          })
+                        );
+
                       isEditingCourse[index] = false;
                       settingsCourseInfo[index].name = "";
                       settingsCourseInfo[index].requireSubscription = false;
@@ -1004,19 +1021,6 @@ export default component$(
                                       ).toString();
                                       return;
                                     }
-                                    const arrIndex = chapters.findIndex(
-                                      (chapterObj) => chapterObj.id === chapter
-                                    );
-                                    if (arrIndex >= 0) {
-                                      chapters.splice(arrIndex, 1, ret);
-                                    }
-                                    const r = topics[index].chapter_order.splice(
-                                      chapterIndex,
-                                      1
-                                    )[0];
-                                    setTimeout(() => {
-                                      topics[index].chapter_order.splice(chapterIndex, 0, r);
-                                    }, 0);
                                     editChapter[topic.id][chapterIndex].isEditing = false;
                                     editChapter[topic.id][chapterIndex].settingsInfo.name = "";
                                     editChapter[topic.id][
@@ -1024,6 +1028,16 @@ export default component$(
                                     ].settingsInfo.requireSubscription = false;
                                     editChapter[topic.id][chapterIndex].openEdit = false;
                                     editChapter[topic.id][chapterIndex].settingsError.name = "";
+
+                                    if (contentWS.value)
+                                      contentWS.value.send(
+                                        JSON.stringify({
+                                          type: "editContentDetails",
+                                          details: ret,
+                                          courseId: topic.id,
+                                          chapterId: chapterObj.id,
+                                        })
+                                      );
                                   }}
                                   class="my-4 gap-2"
                                 >

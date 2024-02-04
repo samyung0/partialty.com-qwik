@@ -76,7 +76,9 @@ const _lucia = (prodInDev: boolean = false) =>
         nickname: user.nickname,
         email_verified: user.email_verified,
         github_username: user.github_username,
-        accessible_courses: JSON.parse(String.fromCharCode.apply(null, accessible_courses_array)) as string[]
+        accessible_courses: JSON.parse(
+          String.fromCharCode.apply(null, accessible_courses_array)
+        ) as string[],
       };
     },
     getSessionAttributes: (session) => {

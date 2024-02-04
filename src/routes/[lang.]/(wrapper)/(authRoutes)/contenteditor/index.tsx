@@ -272,7 +272,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: user.role === "admin" ? ["*"] : user.accessible_courses 
+            accessible_courses: user.role === "admin" ? ["*"] : user.accessible_courses,
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
