@@ -311,6 +311,26 @@ const app = new Elysia()
           });
           return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }))
         }
+        if(msg.type === "editContentDetails") {
+          const details = msg.details;
+          const courseId = msg.courseId;
+          const chapterId = msg.chapterId;
+          if(!details || !courseId) return;
+          const message = { details, courseId, chapterId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentDetailsEdited",
+                  message,
+                })
+              );
+          });
+        }
         if (msg.type === "deleteContent") {
           const userId = msg.userId;
           const contentId = msg.contentId;

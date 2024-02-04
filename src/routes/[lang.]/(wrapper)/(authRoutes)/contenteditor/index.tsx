@@ -321,7 +321,7 @@ export default component$(() => {
           }
           if (d.type === "deleteContentError") {
             alert(d.message);
-            isRequestingChapter.value = "";
+            isDeletingChapter.value = "";
             isDeletingChapterCallback.value = undefined;
             clearTimeout(isDeletingChapterTimeout.value);
             return;

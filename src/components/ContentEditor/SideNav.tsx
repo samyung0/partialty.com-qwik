@@ -1,5 +1,5 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
-import { $, component$, noSerialize, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { LuSettings, LuTrash } from "@qwikest/icons/lucide";
 import { and, eq } from "drizzle-orm";
@@ -142,23 +142,23 @@ export default component$(
             const chapterId = d.message.contentId;
             const courseId = d.message.courseId;
             const i1 = topics.findIndex((topic) => topic.id === courseId);
-            console.log(i1, chapterId, courseId, topics, chapters, editChapter);
-            if(i1 < 0) return;
-            if (topics[i1].chapter_order.indexOf(chapterId) >= 0) {
-              topics[i1].chapter_order.splice(topics[i1].chapter_order.indexOf(chapterId), 1);
+            if (i1 < 0) return;
+            const i3 = topics[i1].chapter_order.indexOf(chapterId);
+            if (i3 >= 0) {
+              topics[i1].chapter_order.splice(i3, 1);
+              editChapter[courseId].splice(i3, 1);
             }
             const i2 = chapters.findIndex((chapter) => chapter.id === chapterId);
             if (i2 >= 0) {
               chapters.splice(i2, 1);
             }
-            editChapter[courseId].pop();
             return;
           }
           if (d.type === "contentCreated") {
             const ret = d.message.content;
             if (!ret) return;
             const index = topics.findIndex((topic) => topic.id === ret[0].index_id);
-            if(index < 0) return; 
+            if (index < 0) return;
             chapters.push(ret[0]);
             topics.splice(index, 1, ret[1]);
             editChapter[ret[0].index_id].push({
@@ -178,6 +178,7 @@ export default component$(
             addChapterFailCallback.value = undefined;
             clearTimeout(addChapterTimeout.value);
             addChapterTimeout.value = undefined;
+            return;
           }
           if (d.type === "createContentFail") {
             if (addChapterFailCallback.value) addChapterFailCallback.value(d.msg.toString());
@@ -185,6 +186,28 @@ export default component$(
             addChapterFailCallback.value = undefined;
             clearTimeout(addChapterTimeout.value);
             addChapterTimeout.value = undefined;
+            return;
+          }
+          if (d.type === "contentDetailsEdited") {
+            const details = d.details;
+            const courseId = d.courseId;
+            const chapterId = d.chapterId;
+            if (chapterId) {
+              const chapter = chapters.find((chapter) => chapter.id === chapterId);
+              if (!chapter) return;
+              for (const i in details)
+                if (Object.prototype.hasOwnProperty.call(chapter, i))
+                  (chapter as any)[i] = details[i];
+              return;
+            }
+            if (courseId) {
+              const course = topics.find((topic) => topic.id === courseId);
+              if (!course) return;
+              for (const i in details)
+                if (Object.prototype.hasOwnProperty.call(course, i))
+                  (course as any)[i] = details[i];
+              return;
+            }
           }
         } catch (e) {
           console.error(e);
@@ -682,13 +705,12 @@ export default component$(
                         isCreatingNewChapter[index] = false;
                         newChapterError[index].name = "Failed to add Chapter: " + e;
                       });
-                      addChapterTimeout.value =
-                        setTimeout(() => {
-                          addChapterSuccessCallback.value = undefined;
-                          if (addChapterFailCallback.value)
-                            addChapterFailCallback.value("Server Timeout");
-                          addChapterFailCallback.value = undefined;
-                        }, 7000);
+                      addChapterTimeout.value = setTimeout(() => {
+                        addChapterSuccessCallback.value = undefined;
+                        if (addChapterFailCallback.value)
+                          addChapterFailCallback.value("Server Timeout");
+                        addChapterFailCallback.value = undefined;
+                      }, 7000);
                       contentWS.value.send(
                         JSON.stringify({
                           type: "createContent",
