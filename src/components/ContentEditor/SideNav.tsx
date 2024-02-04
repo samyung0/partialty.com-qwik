@@ -1,20 +1,18 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { $, component$, noSerialize, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { LuSettings, LuTrash } from "@qwikest/icons/lucide";
 import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import ArrowDown from "~/assets/svg/caret-down-outline.svg";
 import defaultChapter from "~/const/defaultChapter";
-import defaultCourse from "~/const/defaultCourse";
 import type roles from "~/const/roles";
 import { useContent } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
 import drizzleClient from "~/utils/drizzleClient";
 import type { Content, NewContent } from "../../../drizzle_turso/schema/content";
 import { content } from "../../../drizzle_turso/schema/content";
-import type { ContentIndex, NewContentIndex } from "../../../drizzle_turso/schema/content_index";
+import type { ContentIndex } from "../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../drizzle_turso/schema/content_index";
-import { profiles } from "../../../drizzle_turso/schema/profiles";
 
 export default component$(
   ({
@@ -68,16 +66,19 @@ export default component$(
     const navOpen = useStore(() => Array.from(Array(topics.length)).map((_) => false));
     const oldChapter = useSignal("");
 
-    const openAddCourse = useSignal(false);
-    const isCreatingNewCourse = useSignal(false);
-    const newCourseInfo = useStore({
-      name: "",
-      requireSubscription: false,
-    });
-    const newCourseError = useStore({
-      name: "",
-    });
+    // const openAddCourse = useSignal(false);
+    // const isCreatingNewCourse = useSignal(false);
+    // const newCourseInfo = useStore({
+    //   name: "",
+    //   requireSubscription: false,
+    // });
+    // const newCourseError = useStore({
+    //   name: "",
+    // });
 
+    const addChapterSuccessCallback = useSignal<QRL<() => any>>();
+    const addChapterFailCallback = useSignal<QRL<(e: string) => any>>();
+    const addChapterTimeout = useSignal<NoSerialize<NodeJS.Timeout>>();
     const openAddChapter = useStore(() => Array.from(Array(topics.length)).map((_) => false));
     const isCreatingNewChapter = useStore(() => Array.from(Array(topics.length)).map((_) => false));
     const newChapterInfo = useStore(() =>
@@ -131,41 +132,62 @@ export default component$(
       return map;
     });
 
-    useTask$(({track}) => {
+    useTask$(({ track }) => {
       track(contentWS);
-      if(!contentWS.value) return;
-      contentWS.value.addEventListener("message", ({data}) => {
+      if (!contentWS.value) return;
+      contentWS.value.addEventListener("message", ({ data }) => {
         try {
           const d = JSON.parse(data);
           if (d.type === "contentDeleted") {
             const chapterId = d.contentId;
-          const courseId = d.courseId;
-          const i1 = topics.findIndex(
-            (topic) => topic.id === courseId
-          );
-          if (
-            i1 >= 0 &&
-            topics[i1].chapter_order.indexOf(chapterId) >= 0
-          ) {
-            topics[i1].chapter_order.splice(
-              topics[i1].chapter_order.indexOf(chapterId),
-              1
-            );
-          }
-          const i2 = chapters.findIndex(
-            (chapter) => chapter.id === chapterId
-          );
-          if (i2 >= 0) {
-            chapters.splice(i2, 1);
-          }
-          editChapter[courseId].pop();
+            const courseId = d.courseId;
+            const i1 = topics.findIndex((topic) => topic.id === courseId);
+            if (i1 >= 0 && topics[i1].chapter_order.indexOf(chapterId) >= 0) {
+              topics[i1].chapter_order.splice(topics[i1].chapter_order.indexOf(chapterId), 1);
+            }
+            const i2 = chapters.findIndex((chapter) => chapter.id === chapterId);
+            if (i2 >= 0) {
+              chapters.splice(i2, 1);
+            }
+            editChapter[courseId].pop();
             return;
+          }
+          if (d.type === "contentCreated") {
+            const ret = d.content;
+            if (!ret) return;
+            chapters.push(ret[0]);
+            const index = topics.findIndex((topic) => topic.id === ret.index_id);
+            topics.splice(index, 1, ret[1]);
+            editChapter[ret.index_id].push({
+              openEdit: false,
+              isEditing: false,
+              settingsInfo: {
+                name: "",
+                requireSubscription: false,
+              },
+              settingsError: { name: "" },
+            });
+            return;
+          }
+          if (d.type === "createContentSuccess") {
+            if (addChapterSuccessCallback.value) addChapterSuccessCallback.value();
+            addChapterSuccessCallback.value = undefined;
+            addChapterFailCallback.value = undefined;
+            clearTimeout(addChapterTimeout.value);
+            addChapterTimeout.value = undefined;
+          }
+          if (d.type === "createContentFail") {
+            if (addChapterFailCallback.value) addChapterFailCallback.value(d.msg.toString());
+            addChapterSuccessCallback.value = undefined;
+            addChapterFailCallback.value = undefined;
+            clearTimeout(addChapterTimeout.value);
+            addChapterTimeout.value = undefined;
           }
         } catch (e) {
           console.error(e);
         }
-      })
-    })
+      });
+    });
 
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
@@ -613,6 +635,7 @@ export default component$(
                         isCreatingNewChapter[index] = false;
                         return;
                       }
+                      if (!contentWS.value) return;
                       const newId = uuidv4();
                       const values: NewContent = {
                         id: newId,
@@ -645,22 +668,31 @@ export default component$(
                         newChapterInfo[index].name = (e as any).toString();
                         return;
                       }
-                      chapters.push(ret[0]);
-                      topics.splice(index, 1, ret[1]);
-                      editChapter[topic.id].push({
-                        openEdit: false,
-                        isEditing: false,
-                        settingsInfo: {
-                          name: "",
-                          requireSubscription: false,
-                        },
-                        settingsError: { name: "" },
+                      addChapterSuccessCallback.value = $(async () => {
+                        isCreatingNewChapter[index] = false;
+                        newChapterInfo[index].name = "";
+                        newChapterInfo[index].requireSubscription = false;
+                        openAddChapter[index] = false;
+                        newChapterError[index].name = "";
                       });
-                      isCreatingNewChapter[index] = false;
-                      newChapterInfo[index].name = "";
-                      newChapterInfo[index].requireSubscription = false;
-                      openAddChapter[index] = false;
-                      newChapterError[index].name = "";
+                      addChapterFailCallback.value = $((e: string) => {
+                        isCreatingNewChapter[index] = false;
+                        newChapterError[index].name = "Failed to add Chapter: " + e;
+                      });
+                      addChapterTimeout.value = noSerialize(
+                        setTimeout(() => {
+                          addChapterSuccessCallback.value = undefined;
+                          if (addChapterFailCallback.value)
+                            addChapterFailCallback.value("Server Timeout");
+                          addChapterFailCallback.value = undefined;
+                        }, 7000)
+                      );
+                      contentWS.value.send(
+                        JSON.stringify({
+                          type: "createContent",
+                          content: ret,
+                        })
+                      );
                     }}
                     class="my-4 gap-2"
                   >
@@ -678,7 +710,7 @@ export default component$(
                           required
                           class={
                             "block w-full rounded-md border-2 px-3 py-2 " +
-                            (newCourseError.name ? "border-tomato" : "border-black/10")
+                            (newChapterError[index].name ? "border-tomato" : "border-black/10")
                           }
                         />
                       </div>
@@ -1101,7 +1133,7 @@ export default component$(
                                             type: "deleteContent",
                                             userId: userId,
                                             contentId: chapterObj.id,
-                                            courseId: topic.id
+                                            courseId: topic.id,
                                           })
                                         );
 

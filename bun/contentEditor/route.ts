@@ -173,7 +173,8 @@ const app = new Elysia()
                   message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
+                    if (val[0] === "*" || val.includes(serverContentId[1]))
+                      userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
@@ -288,6 +289,28 @@ const app = new Elysia()
             });
           }
         }
+        if (msg.type === "createContent") {
+          const content = msg.content;
+          const courseId = content.index_id;
+          if (!content || !courseId) {
+            return ws.send(JSON.stringify({ type: "createContentFail", msg: "Content is empty!" }));
+          }
+          const message = { content };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentCreated",
+                  message,
+                })
+              );
+          });
+          return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }))
+        }
         if (msg.type === "deleteContent") {
           const userId = msg.userId;
           const contentId = msg.contentId;
@@ -304,8 +327,8 @@ const app = new Elysia()
             );
           }
           const message: any = {};
-          message[contentId] = true;
-          message[courseId] = true;
+          message[contentId] = contentId;
+          message[courseId] = courseId;
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
             if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
@@ -351,7 +374,8 @@ const app = new Elysia()
                   message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
+                    if (val[0] === "*" || val.includes(serverContentId[1]))
+                      userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
