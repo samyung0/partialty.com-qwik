@@ -135,7 +135,7 @@ export default component$(
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
         {contentWS.value ? (
           <ul class="flex flex-col gap-6 pt-4">
-            <button
+            {/* <button
               class="rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl"
               onClick$={async () => {
                 openAddCourse.value = !openAddCourse.value;
@@ -330,9 +330,9 @@ export default component$(
                   {!isCreatingNewCourse.value && <span class="">Create</span>}
                 </button>
               </form>
-            )}
+            )} */}
             {topics.map((topic, index) => (
-              <li key={`ContentEditor${topic.slug}`}>
+              <li key={`ContentEditor${topic.id}`}>
                 <div class="flex items-center gap-4">
                   <button
                     onClick$={() => (navOpen[index] = !navOpen[index])}
@@ -1033,7 +1033,6 @@ export default component$(
                                           )
                                         )
                                           return;
-
                                         const courseId = topic.id;
                                         const chapterId = chapterObj.id;
                                         const newChapterOrder = topic.chapter_order.filter(
@@ -1041,29 +1040,41 @@ export default component$(
                                         );
                                         isDeletingChapterCallback.value = $(async () => {
                                           await server$(async () => {
-                                            await drizzleClient().transaction(async (tx) => {
-                                              await tx
-                                                .update(content_index)
-                                                .set({ chapter_order: newChapterOrder })
-                                                .where(eq(content_index.id, courseId));
-                                              await tx
-                                                .delete(content)
-                                                .where(eq(content.id, chapterId));
-                                            });
+                                            try {
+                                              await drizzleClient().transaction(async (tx) => {
+                                                await tx
+                                                  .update(content_index)
+                                                  .set({ chapter_order: newChapterOrder })
+                                                  .where(eq(content_index.id, courseId));
+                                                await tx
+                                                  .delete(content)
+                                                  .where(eq(content.id, chapterId));
+                                              });
+                                            } catch (e) {
+                                              /* empty */
+                                            }
                                           })();
-                                          const i1 = topics.find((topic) => (topic.id = courseId));
-                                          if (i1 && i1.chapter_order.indexOf(chapterId) > 0)
-                                            i1.chapter_order.splice(
-                                              i1.chapter_order.indexOf(chapterId),
+                                          const i1 = topics.findIndex(
+                                            (topic) => topic.id === courseId
+                                          );
+                                          if (
+                                            i1 >= 0 &&
+                                            topics[i1].chapter_order.indexOf(chapterId) >= 0
+                                          ) {
+                                            topics[i1].chapter_order.splice(
+                                              topics[i1].chapter_order.indexOf(chapterId),
                                               1
                                             );
-                                          const i2 = chapters.findIndex(
-                                            (chapter) => (chapter.id = courseId)
-                                          );
-                                          if (i2 > 0) {
-                                            chapters.splice(i2, 1);
-                                            editChapter[courseId].splice(i2, 1);
                                           }
+                                          const i2 = chapters.findIndex(
+                                            (chapter) => chapter.id === chapterId
+                                          );
+                                          if (i2 >= 0) {
+                                            chapters.splice(i2, 1);
+                                          }
+                                          editChapter[courseId].pop();
+
+                                          isDeletingChapter.value = "";
                                         });
 
                                         contentWS.value.send(

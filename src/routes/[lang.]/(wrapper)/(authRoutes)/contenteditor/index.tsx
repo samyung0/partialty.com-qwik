@@ -272,6 +272,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
+            accessible_courses: user.role === "admin" ? ["*"] : user.accessible_courses 
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
@@ -309,6 +310,20 @@ export default component$(() => {
             isRequestingChapter.value = "";
             isRequestingChapterCallback.value = undefined;
             clearTimeout(isRequestingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "deleteContentSuccess") {
+            if (!isDeletingChapterCallback.value) return;
+            isDeletingChapterCallback.value();
+            isDeletingChapterCallback.value = undefined;
+            clearTimeout(isDeletingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "deleteContentError") {
+            alert(d.message);
+            isRequestingChapter.value = "";
+            isDeletingChapterCallback.value = undefined;
+            clearTimeout(isDeletingChapterTimeout.value);
             return;
           }
           if (d.type === "error") {

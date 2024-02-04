@@ -3,6 +3,7 @@ import Elysia, { t } from "elysia";
 import { turso } from "../turso";
 
 const wsContentArr = new Map<string, any>();
+const userIdToAccessibleCourses = new Map<string, string[]>();
 const wsContentArrClear = new Map<string, NodeJS.Timeout>();
 const uuidToUserId = new Map<number, string>();
 const uploadUrlMapUserId = new Map<string, { userId: string; filename: string }>();
@@ -158,6 +159,7 @@ const app = new Elysia()
       try {
         if (msg.type === "init") {
           const userId = msg.userId;
+          const accessible_courses = msg.accessible_courses;
           wsContentArrClear.set(
             userId,
             setTimeout(
@@ -169,16 +171,23 @@ const app = new Elysia()
                   courseIdToUserId.delete(serverContentId!);
                   userIdToCourseId.delete(userId);
                   message[serverContentId] = true;
-                  wsContentArr.forEach((val, key) =>
-                    val.send(
-                      JSON.stringify({
-                        type: "removeUserEditing",
-                        message,
-                      })
-                    )
-                  );
+                  const userIdAccessible: string[] = [];
+                  userIdToAccessibleCourses.forEach((val, key) => {
+                    if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+                  });
+                  userIdAccessible.forEach((userId) => {
+                    if (wsContentArr.get(userId))
+                      wsContentArr.get(userId).send(
+                        JSON.stringify({
+                          type: "removeUserEditing",
+                          message,
+                        })
+                      );
+                  });
                 }
                 wsContentArr.delete(userId);
+                uuidToUserId.delete(ws.id);
+                userIdToAccessibleCourses.delete(userId);
                 if (userIdToCourseId.get(userId)) {
                   courseIdToUserId.delete(userIdToCourseId.get(userId)!);
                   userIdToCourseId.delete(userId);
@@ -188,6 +197,7 @@ const app = new Elysia()
             )
           );
           wsContentArr.set(userId, ws);
+          userIdToAccessibleCourses.set(userId, accessible_courses);
           uuidToUserId.set(ws.id, userId);
           const entries: Record<string, [string, string]> = {};
           courseIdToUserId.forEach((val, key) => (entries[key] = [val[0].split("###")[0], val[1]]));
@@ -226,14 +236,19 @@ const app = new Elysia()
           userIdToCourseId.set(userId, contentId);
           const message: any = {};
           message[contentId] = [userId, avatar_url];
-          wsContentArr.forEach((val, key) =>
-            val.send(
-              JSON.stringify({
-                type: "addUserEditing",
-                message,
-              })
-            )
-          );
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(contentId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "addUserEditing",
+                  message,
+                })
+              );
+          });
           return ws.send(
             JSON.stringify({
               type: "openContentSuccess",
@@ -256,14 +271,19 @@ const app = new Elysia()
             courseIdToUserId.delete(serverContentId!);
             userIdToCourseId.delete(userId);
             message[serverContentId] = true;
-            wsContentArr.forEach((val, key) =>
-              val.send(
-                JSON.stringify({
-                  type: "removeUserEditing",
-                  message,
-                })
-              )
-            );
+            const userIdAccessible: string[] = [];
+            userIdToAccessibleCourses.forEach((val, key) => {
+              if (val[0] === "*" || val.includes(contentId)) userIdAccessible.push(key);
+            });
+            userIdAccessible.forEach((userId) => {
+              if (wsContentArr.get(userId))
+                wsContentArr.get(userId).send(
+                  JSON.stringify({
+                    type: "removeUserEditing",
+                    message,
+                  })
+                );
+            });
           }
         }
         if (msg.type === "deleteContent") {
@@ -310,16 +330,23 @@ const app = new Elysia()
                   courseIdToUserId.delete(serverContentId!);
                   userIdToCourseId.delete(userId);
                   message[serverContentId] = true;
-                  wsContentArr.forEach((val, key) =>
-                    val.send(
-                      JSON.stringify({
-                        type: "removeUserEditing",
-                        message,
-                      })
-                    )
-                  );
+                  const userIdAccessible: string[] = [];
+                  userIdToAccessibleCourses.forEach((val, key) => {
+                    if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+                  });
+                  userIdAccessible.forEach((userId) => {
+                    if (wsContentArr.get(userId))
+                      wsContentArr.get(userId).send(
+                        JSON.stringify({
+                          type: "removeUserEditing",
+                          message,
+                        })
+                      );
+                  });
                 }
                 wsContentArr.delete(userId);
+                uuidToUserId.delete(ws.id);
+                userIdToAccessibleCourses.delete(userId);
                 if (userIdToCourseId.get(userId)) {
                   courseIdToUserId.delete(userIdToCourseId.get(userId)!);
                   userIdToCourseId.delete(userId);
@@ -353,6 +380,8 @@ const app = new Elysia()
           const userId = msg.userId;
           clearTimeout(wsContentArrClear.get(userId));
           wsContentArrClear.delete(userId);
+          uuidToUserId.delete(ws.id);
+          userIdToAccessibleCourses.delete(userId);
           if (userIdToCourseId.get(userId)) {
             courseIdToUserId.delete(userIdToCourseId.get(userId)!);
             userIdToCourseId.delete(userId);
@@ -364,14 +393,19 @@ const app = new Elysia()
             courseIdToUserId.delete(serverContentId!);
             userIdToCourseId.delete(userId);
             message[serverContentId] = true;
-            wsContentArr.forEach((val, key) =>
-              val.send(
-                JSON.stringify({
-                  type: "removeUserEditing",
-                  message,
-                })
-              )
-            );
+            const userIdAccessible: string[] = [];
+            userIdToAccessibleCourses.forEach((val, key) => {
+              if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+            });
+            userIdAccessible.forEach((userId) => {
+              if (wsContentArr.get(userId))
+                wsContentArr.get(userId).send(
+                  JSON.stringify({
+                    type: "removeUserEditing",
+                    message,
+                  })
+                );
+            });
           }
           return wsContentArr.delete(userId);
         }
@@ -387,6 +421,8 @@ const app = new Elysia()
       if (!userId) return;
       clearTimeout(wsContentArrClear.get(userId));
       wsContentArrClear.delete(userId);
+      uuidToUserId.delete(ws.id);
+      userIdToAccessibleCourses.delete(userId);
       if (userIdToCourseId.get(userId)) {
         courseIdToUserId.delete(userIdToCourseId.get(userId)!);
         userIdToCourseId.delete(userId);
@@ -400,14 +436,19 @@ const app = new Elysia()
         courseIdToUserId.delete(serverContentId!);
         userIdToCourseId.delete(userId);
         message[serverContentId] = true;
-        wsContentArr.forEach((val, key) =>
-          val.send(
-            JSON.stringify({
-              type: "removeUserEditing",
-              message,
-            })
-          )
-        );
+        const userIdAccessible: string[] = [];
+        userIdToAccessibleCourses.forEach((val, key) => {
+          if (val[0] === "*" || val.includes(serverContentId)) userIdAccessible.push(key);
+        });
+        userIdAccessible.forEach((userId) => {
+          if (wsContentArr.get(userId))
+            wsContentArr.get(userId).send(
+              JSON.stringify({
+                type: "removeUserEditing",
+                message,
+              })
+            );
+        });
       }
     },
   });

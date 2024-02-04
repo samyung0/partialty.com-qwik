@@ -18,7 +18,6 @@ export const profiles = sqliteTable("profiles", {
   nickname: text("nickname").notNull(),
   email_verified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
   github_username: text("github_username"),
-  membership_plan: integer("membership_plan"),
   accessible_courses: blob("accessible_courses", { mode: "json" }).$type<string[]>(),
 });
 

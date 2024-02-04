@@ -62,6 +62,7 @@ const _lucia = (prodInDev: boolean = false) =>
       session: "user_session",
     }),
     getUserAttributes: (user) => {
+      const accessible_courses_array = new Uint8Array(user.accessible_courses) as any;
       return {
         email: user.email,
         phone: user.phone,
@@ -74,6 +75,8 @@ const _lucia = (prodInDev: boolean = false) =>
         github_id: user.github_id,
         nickname: user.nickname,
         email_verified: user.email_verified,
+        github_username: user.github_username,
+        accessible_courses: JSON.parse(String.fromCharCode.apply(null, accessible_courses_array)) as string[]
       };
     },
     getSessionAttributes: (session) => {
