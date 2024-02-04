@@ -5,10 +5,7 @@ import { lucia } from "lucia";
 import { qwik } from "lucia/middleware";
 import tursoClient from "~/utils/tursoClient";
 
-import { eq } from "drizzle-orm";
 import bunApp from "~/_api/bun/util/edenTreaty";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../drizzle_turso/schema/profiles";
 
 let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;

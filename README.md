@@ -244,6 +244,10 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
 
 ## Caution
 
+- **QWIK Bugs**
+
+  - DO NOT use `await server$()()` pattern. It only works in development mode but gives `dynamic require is not supported` error in prod.
+
 - **Installing ElysiaJS dependencies twice**
 
   Since we are using typesafe api calls via edenTreaty in Bun, we need to install the dependencies used by ElysiaJS in our root folder for the typescript to pickup. However, when we are deploying the bun app, only the files inside of `bun` will be deployed (to save space since we don't need to install so many dependencies). This creates a problem where we need to install any dependency used by ElysiaJS twice: once in the root folder, and once inside of `bun` folder.
