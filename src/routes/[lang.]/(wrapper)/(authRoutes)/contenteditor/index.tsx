@@ -23,7 +23,8 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   const ret: {
     cloudinaryImages: CloudinaryPublicPic[];
     muxAudiosWithNames: [Mux["data"][0], string][];
-  } = { cloudinaryImages: [], muxAudiosWithNames: [] };
+    accessible_courses: string[];
+  } = { cloudinaryImages: [], muxAudiosWithNames: [], accessible_courses: [] };
   const user = await requestEvent.resolveValue(useUserLoader);
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/resources/search`, {
     method: "POST",
@@ -76,6 +77,16 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
 
   if (!res || !res.resources) return ret;
   ret.cloudinaryImages = res.resources;
+
+  if (user.role === "admin") ret.accessible_courses = ["*"];
+  else
+    ret.accessible_courses = await server$(
+      async () =>
+        (await drizzleClient()
+          .select({ accessible_courses: profiles.accessible_courses })
+          .from(profiles)
+          .where(eq(profiles.id, user.userId)))[0].accessible_courses || []
+    )();
 
   return ret;
 });
@@ -272,7 +283,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: user.role === "admin" ? ["*"] : user.accessible_courses,
+            accessible_courses: userAssets.accessible_courses,
           })
         );
         muxWSHeartBeat.value = setInterval(() => {

@@ -8,7 +8,6 @@ export const profiles = sqliteTable("profiles", {
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   email: text("email").unique(),
   phone: text("phone"),
-  last_signed_in: text("last_signed_in").default(sql`CURRENT_TIMESTAMP`),
   role: text("role", { enum: roles }).notNull().default(DEFAULTROLE),
   stripe_id: text("stripe_id"),
   username: text("username"),

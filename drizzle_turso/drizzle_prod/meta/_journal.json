@@ -78,6 +78,13 @@
       "when": 1706977384629,
       "tag": "0010_silky_leo",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1707041069624,
+      "tag": "0011_glamorous_gauntlet",
+      "breakpoints": true
     }
   ]
 }

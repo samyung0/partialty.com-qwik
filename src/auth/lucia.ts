@@ -5,7 +5,10 @@ import { lucia } from "lucia";
 import { qwik } from "lucia/middleware";
 import tursoClient from "~/utils/tursoClient";
 
+import { eq } from "drizzle-orm";
 import bunApp from "~/_api/bun/util/edenTreaty";
+import drizzleClient from "~/utils/drizzleClient";
+import { profiles } from "../../drizzle_turso/schema/profiles";
 
 let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
@@ -62,11 +65,9 @@ const _lucia = (prodInDev: boolean = false) =>
       session: "user_session",
     }),
     getUserAttributes: (user) => {
-      const accessible_courses_array = new Uint8Array(user.accessible_courses) as any;
       return {
         email: user.email,
         phone: user.phone,
-        last_signed_in: user.last_signed_in,
         role: user.role,
         stripe_id: user.stripe_id,
         created_at: user.created_at,
@@ -76,9 +77,6 @@ const _lucia = (prodInDev: boolean = false) =>
         nickname: user.nickname,
         email_verified: user.email_verified,
         github_username: user.github_username,
-        accessible_courses: JSON.parse(
-          String.fromCharCode.apply(null, accessible_courses_array)
-        ) as string[],
       };
     },
     getSessionAttributes: (session) => {
