@@ -349,6 +349,8 @@ const ContentEditorReact = ({
     }
   }, [audioAssetId]);
 
+  const [changingValue, setChangingValue] = useState(0);
+
   return (
     isEditing && (
       <>
@@ -365,11 +367,13 @@ const ContentEditorReact = ({
             <Slate
               onValueChange={() => {
                 setHasChanged();
+                setChangingValue(changingValue + 1);
               }}
               editor={editor}
               initialValue={normalizedInitialValue}
             >
               <SaveContent
+                changingValue={changingValue}
                 audioTrack={audioTrack}
                 hasChanged={hasChanged}
                 saveChanges={saveChanges}
