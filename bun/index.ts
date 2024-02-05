@@ -49,6 +49,15 @@ const app = new Elysia()
       },
     })
   )
+  .use(
+    cron({
+      name: "heartbeat3",
+      pattern: "* */15 * * * *", // avoid cold start in vercel for root
+      run() {
+        fetch("http://www.partialty.com/members/dashboard/");
+      },
+    })
+  )
   .use(compression())
   .use(helmet())
   .use(HealthRoute)

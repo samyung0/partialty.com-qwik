@@ -211,110 +211,11 @@ export default component$(() => {
 
   const fetchAudio = $(async (id: string) => await SERVER2(id));
 
-  const _startWSConnection: { startWSConnection: QRL<() => any> } = {
+  const _startWSConnection: { startWSConnection: QRL<() => any>; fn: QRL<(retry: any) => any> } = {
     startWSConnection: $(() => {}),
+    fn: $((retry: any) => {}),
   };
-  _startWSConnection.startWSConnection = $(() => {
-    const retry = setInterval((): any => {
-      try {
-        console.log("Starting Websocket connection");
-        timeStamp.value = Date.now() + "";
-        const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
-        ws.addEventListener("open", () => {
-          clearInterval(retry);
-          ws.send(
-            JSON.stringify({
-              type: "init",
-              userId: user.userId + "###" + timeStamp.value,
-            })
-          );
-          muxWSHeartBeat.value = setInterval(() => {
-            console.log("heartbeat sent");
-            ws.send(
-              JSON.stringify({
-                type: "heartBeat",
-                userId: user.userId + "###" + timeStamp.value,
-              })
-            );
-          }, 30 * 1000);
-        });
-
-        ws.addEventListener("message", ({ data }) => {
-          try {
-            const d = JSON.parse(data);
-            console.log(d);
-            if (d.type === "addUserEditing") {
-              for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
-              return;
-            }
-            if (d.type === "removeUserEditing") {
-              for (const i in d.message) delete courseIdToEditingUser[i];
-              return;
-            }
-            if (d.type === "openContentSuccess") {
-              if (!isRequestingChapterCallback.value) return;
-              isRequestingChapterCallback.value();
-              isRequestingChapterCallback.value = undefined;
-              clearTimeout(isRequestingChapterTimeout.value);
-              return;
-            }
-            if (d.type === "openContentError") {
-              alert(d.message);
-              isRequestingChapter.value = "";
-              isRequestingChapterCallback.value = undefined;
-              clearTimeout(isRequestingChapterTimeout.value);
-              return;
-            }
-            if (d.type === "deleteContentSuccess") {
-              if (!isDeletingChapterCallback.value) return;
-              isDeletingChapterCallback.value();
-              isDeletingChapterCallback.value = undefined;
-              clearTimeout(isDeletingChapterTimeout.value);
-              return;
-            }
-            if (d.type === "deleteContentError") {
-              alert(d.message);
-              isDeletingChapter.value = "";
-              isDeletingChapterCallback.value = undefined;
-              clearTimeout(isDeletingChapterTimeout.value);
-              return;
-            }
-            if (d.type === "error") {
-              alert(d.message);
-              return;
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        });
-
-        ws.addEventListener("error", () => {
-          alert("Websocket connection error! Retrying connection...");
-          contentWS.value = undefined;
-          clearInterval(muxWSHeartBeat.value);
-
-          clearInterval(retry);
-          _startWSConnection.startWSConnection();
-        });
-
-        ws.addEventListener("close", () => {
-          clearInterval(retry);
-          if (isClosingPage.value) {
-            return console.log("Websocket connection closed!");
-          }
-          console.error("Websocket connection closed!");
-          contentWS.value = undefined;
-          clearInterval(muxWSHeartBeat.value);
-
-          _startWSConnection.startWSConnection();
-        });
-
-        contentWS.value = noSerialize(ws);
-      } catch (e) {
-        console.error(e);
-        console.log("retrying connection in 10 seconds...");
-      }
-    }, 10 * 1000);
+  _startWSConnection.fn = $((retry: any) => {
     try {
       console.log("Starting Websocket connection");
       timeStamp.value = Date.now() + "";
@@ -325,7 +226,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: userAssets.accessible_courses,
+            accessible_courses: userAssets.accessible_courses
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
@@ -343,6 +244,11 @@ export default component$(() => {
         try {
           const d = JSON.parse(data);
           console.log(d);
+          if (d.type === "initUserEditing") {
+            for (const i in courseIdToEditingUser) delete courseIdToEditingUser[i];
+            for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+            return;
+          }
           if (d.type === "addUserEditing") {
             for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
             return;
@@ -389,11 +295,11 @@ export default component$(() => {
       });
 
       ws.addEventListener("error", () => {
-        clearInterval(retry);
         alert("Websocket connection error! Retrying connection...");
         contentWS.value = undefined;
         clearInterval(muxWSHeartBeat.value);
 
+        clearInterval(retry);
         _startWSConnection.startWSConnection();
       });
 
@@ -414,6 +320,12 @@ export default component$(() => {
       console.error(e);
       console.log("retrying connection in 10 seconds...");
     }
+  });
+  _startWSConnection.startWSConnection = $(() => {
+    const retry = setInterval((): any => {
+      _startWSConnection.fn(retry);
+    }, 10 * 1000);
+    _startWSConnection.fn(retry);
   });
   const startWSConnection = _startWSConnection.startWSConnection;
   const closeWSConnection = $(() => {

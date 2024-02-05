@@ -485,18 +485,15 @@ const ContentEditorReact = ({
           />
         </div>
 
-        <div
-          className={
-            "flex h-full w-[80vw] flex-col overflow-hidden " +
-            (!isPreviewing ? " hidden" : " block")
-          }
-        >
-          {isPreviewing && <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />}
-          <div className="h-[90vh] overflow-auto">
-            <Prose children={<></>} innerHTML={renderedHTML || ""} />
+        {isPreviewing && (
+          <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
+            <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+            <div className="h-[90vh] overflow-auto">
+              <Prose children={<></>} innerHTML={renderedHTML || ""} />
+            </div>
+            <SyncAudio audioTrack={audioTrack} />
           </div>
-          <SyncAudio audioTrack={audioTrack} />
-        </div>
+        )}
       </>
     )
   );

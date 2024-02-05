@@ -185,14 +185,13 @@ const app = new Elysia()
                         })
                       );
                   });
+                  courseIdToUserId.delete(serverContentId[0]);
+                  userIdToCourseId.delete(userId);
                 }
                 wsContentArr.delete(userId);
                 uuidToUserId.delete(ws.id);
                 userIdToAccessibleCourses.delete(userId);
-                if (serverContentId) {
-                  courseIdToUserId.delete(serverContentId[0]);
-                  userIdToCourseId.delete(userId);
-                }
+                wsContentArrClear.delete(userId);
               },
               5 * 60 * 1000
             )
@@ -204,7 +203,7 @@ const app = new Elysia()
           courseIdToUserId.forEach((val, key) => (entries[key] = [val[0].split("###")[0], val[1]]));
           ws.send(
             JSON.stringify({
-              type: "addUserEditing",
+              type: "initUserEditing",
               message: entries,
             })
           );
@@ -265,10 +264,7 @@ const app = new Elysia()
           if (!userId || !contentId || !courseId) {
             return;
           }
-          const serverContentId = userIdToCourseId.get(userId);
-          if (userIdToCourseId.get(userId) && userIdToCourseId.get(userId)![0] !== contentId) {
-            console.error("Client and Server Sync Error!");
-          }
+          const serverContentId = contentId;
           const message: any = {};
           if (serverContentId) {
             courseIdToUserId.delete(serverContentId[0]);
@@ -406,14 +402,13 @@ const app = new Elysia()
                         })
                       );
                   });
+                  courseIdToUserId.delete(serverContentId[0]);
+                  userIdToCourseId.delete(userId);
                 }
                 wsContentArr.delete(userId);
                 uuidToUserId.delete(ws.id);
                 userIdToAccessibleCourses.delete(userId);
-                if (serverContentId) {
-                  courseIdToUserId.delete(serverContentId[0]);
-                  userIdToCourseId.delete(userId);
-                }
+                wsContentArrClear.delete(userId);
               },
               5 * 60 * 1000
             )
@@ -469,7 +464,6 @@ const app = new Elysia()
           wsContentArrClear.delete(userId);
           uuidToUserId.delete(ws.id);
           userIdToAccessibleCourses.delete(userId);
-          uuidToUserId.delete(ws.id);
           return wsContentArr.delete(userId);
         }
       } catch (e) {
@@ -512,7 +506,6 @@ const app = new Elysia()
       uuidToUserId.delete(ws.id);
       userIdToAccessibleCourses.delete(userId);
       wsContentArr.delete(userId);
-      uuidToUserId.delete(ws.id);
     },
   });
 export default app;

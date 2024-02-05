@@ -883,8 +883,10 @@ export default component$(
                               <button
                                 onClick$={() => {
                                   if (contentWS.value) {
+                                    if (isRequestingChapter.value !== "") {
+                                      return;
+                                    }
                                     if (oldChapter.value) {
-                                      if (isRequestingChapterCallback.value) return;
                                       if (
                                         hasChanged.value &&
                                         !window.confirm(
@@ -895,14 +897,6 @@ export default component$(
                                       if (oldChapter.value === chapterObj.id) {
                                         return;
                                       }
-                                      contentWS.value.send(
-                                        JSON.stringify({
-                                          type: "closeContent",
-                                          userId: userId + "###" + timeStamp.value,
-                                          courseId: topic.id,
-                                          contentId: oldChapter.value,
-                                        })
-                                      );
                                     }
                                     isRequestingChapterCallback.value = $(async () => {
                                       const val = await SERVER3(chapterObj.id);
@@ -910,7 +904,6 @@ export default component$(
                                         ? JSON.parse(val.content_slate)
                                         : undefined;
                                       renderedHTML.value = val.renderedHTML || undefined;
-                                      oldChapter.value = chapterObj.id;
                                       chapterId.value = chapterObj.id;
                                       courseId.value = topic.id;
                                       if (chapterObj.audio_track_asset_id)
@@ -918,6 +911,18 @@ export default component$(
                                       isEditing.value = true;
                                       isRequestingChapter.value = "";
                                       chapterName.value = chapterObj.name;
+
+                                      if (oldChapter.value)
+                                        contentWS.value?.send(
+                                          JSON.stringify({
+                                            type: "closeContent",
+                                            userId: userId + "###" + timeStamp.value,
+                                            courseId: topic.id,
+                                            contentId: oldChapter.value,
+                                          })
+                                        );
+                                        console.log(oldChapter.value, chapterObj.id);
+                                      oldChapter.value = chapterObj.id;
                                     });
 
                                     contentWS.value.send(
@@ -929,6 +934,14 @@ export default component$(
                                         avatar_url: avatar_url,
                                       })
                                     );
+
+                                    console.log({
+                                      type: "openContent",
+                                      userId: userId + "###" + timeStamp.value,
+                                      contentId: chapterObj.id,
+                                      courseId: topic.id,
+                                      avatar_url: avatar_url,
+                                    });
 
                                     isRequestingChapter.value = chapterObj.id;
 
