@@ -32,9 +32,9 @@ export const useUserLoader = routeLoader$(async (event) => {
   } catch (e) {
     /* empty */
   }
-  
+
   console.log("Time to validate session: ", performance.now() - time1);
-  
+
   const [shouldRedirect, redirectTo, searchParams] = checkProtectedPath(
     event.url.pathname,
     session?.user.role ?? ""

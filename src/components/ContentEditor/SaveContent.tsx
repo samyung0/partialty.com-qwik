@@ -10,6 +10,9 @@ export default ({
   audioTrack,
   chapterName,
   changingValue,
+  setIsPreviewing,
+  saveBeforePreview,
+  setSaveBeforePreview,
 }: {
   hasChanged: boolean;
   saveChanges: (
@@ -30,6 +33,9 @@ export default ({
     | undefined;
   chapterName: string;
   changingValue: number;
+  setIsPreviewing: (t: boolean) => any;
+  saveBeforePreview: boolean;
+  setSaveBeforePreview: (t: boolean) => any;
 }) => {
   const editor = useSlateStatic();
   const [isSaving, setIsSaving] = useState(false);
@@ -44,6 +50,16 @@ export default ({
       autoSave.current = setTimeout(() => save(), 2000);
     }
   }, [hasChanged]);
+  useEffect(() => {
+    clearTimeout(autoSave.current);
+    if (saveBeforePreview) {
+      (async () => {
+        await save();
+        setSaveBeforePreview(false);
+        setIsPreviewing(true);
+      })();
+    }
+  }, [saveBeforePreview]);
   const save = async () => {
     if (!hasChanged || isSaving) return;
 

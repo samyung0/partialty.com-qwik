@@ -109,9 +109,7 @@ export const CenterAudioChooser = ({
       method: "POST",
       headers: {
         Authorization: `Basic ${btoa(
-          this.env.get("MUX_PRODUCTION_ID")! +
-            ":" +
-            this.env.get("MUX_PRODUCTION_SECRET")!
+          this.env.get("MUX_PRODUCTION_ID")! + ":" + this.env.get("MUX_PRODUCTION_SECRET")!
         )}`,
         "Content-Type": "application/json",
       },
@@ -125,7 +123,7 @@ export const CenterAudioChooser = ({
     })
       .then((res) => res.json())
       .catch((e) => console.error(e));
-  })
+  });
 
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">

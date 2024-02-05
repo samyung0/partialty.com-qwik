@@ -183,8 +183,8 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
         const formName = "a" + uuidv4();
         editor.insertNode({
           type: "quizBlock",
-          formName: "formName",
-          ans: "",
+          formName: formName,
+          ans: "1",
           quizTitle: "Quiz Title",
           children: [
             {

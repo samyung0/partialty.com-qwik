@@ -799,12 +799,12 @@ export default component$(
                     class="my-4 gap-2"
                   >
                     <div>
-                      <label for="coursename" class="cursor-pointer">
+                      <label for="coursename1" class="cursor-pointer">
                         Chapter Name
                       </label>
                       <div class="pt-1">
                         <input
-                          id="coursename"
+                          id="coursename1"
                           name="coursename"
                           type="text"
                           value={newChapterInfo[index].name}
@@ -823,12 +823,12 @@ export default component$(
                       </p>
                     </div>
                     <div class="flex items-center gap-4">
-                      <label for="sub" class="cursor-pointer">
+                      <label for="sub1" class="cursor-pointer">
                         Subscription required
                       </label>
                       <div>
                         <input
-                          id="sub"
+                          id="sub1"
                           name="sub"
                           type="checkbox"
                           checked={newChapterInfo[index].requireSubscription}
@@ -1085,12 +1085,12 @@ export default component$(
                                   class="my-4 gap-2"
                                 >
                                   <div>
-                                    <label for="coursename" class="cursor-pointer">
+                                    <label for="coursename2" class="cursor-pointer">
                                       Chapter Name
                                     </label>
                                     <div class="pt-1">
                                       <input
-                                        id="coursename"
+                                        id="coursename2"
                                         name="coursename"
                                         type="text"
                                         value={
@@ -1117,12 +1117,12 @@ export default component$(
                                     </p>
                                   </div>
                                   <div class="flex items-center gap-4">
-                                    <label for="sub" class="cursor-pointer">
+                                    <label for="sub2" class="cursor-pointer">
                                       Subscription required
                                     </label>
                                     <div>
                                       <input
-                                        id="sub"
+                                        id="sub2"
                                         name="sub"
                                         type="checkbox"
                                         checked={

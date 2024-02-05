@@ -18,9 +18,11 @@ export default component$(
     };
     saveToDBQuiz: (isCorrect: boolean) => any;
   }) => (
-    <div class="flex h-full w-[80vw] flex-col overflow-auto">
+    <div class="flex h-full w-[80vw] flex-col overflow-hidden">
       <QwikQuizHydrate isPreview={false} saveToDB={saveToDBQuiz} />
-      <QwikProse innerHTML={innerHTML || ""} />
+      <div class="h-[90vh] overflow-auto">
+        <QwikProse innerHTML={innerHTML || ""} />
+      </div>
       <QwikAudioTrack audioTrack={audioTrack} />
     </div>
   )

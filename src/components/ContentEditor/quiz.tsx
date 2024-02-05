@@ -103,7 +103,6 @@ export const CenterQuizBlockSettings = ({
   const [quizTitle, setQuizTitle] = useState(quizBlock.quizTitle || "");
   const [quizAns, setQuizAns] = useState(quizBlock.ans || "");
   const noOfOptions = quizBlock.children.length;
-  console.log(noOfOptions);
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">

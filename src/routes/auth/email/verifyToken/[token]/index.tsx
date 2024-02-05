@@ -23,7 +23,12 @@ export default component$(() => {
   const verifyInfo = useLoader();
 
   return (
-    <section class={"flex h-[100vh] flex-col items-center justify-center " + (verifyInfo.value.verified ? "bg-sherbet" : "bg-light-tomato")}>
+    <section
+      class={
+        "flex h-[100vh] flex-col items-center justify-center " +
+        (verifyInfo.value.verified ? "bg-sherbet" : "bg-light-tomato")
+      }
+    >
       {verifyInfo.value.verified ? (
         <>
           <h1 class="font-mosk text-[3em] font-bold tracking-wide">Nice!</h1>

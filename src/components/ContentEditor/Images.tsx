@@ -164,7 +164,12 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   return (
     <div {...attributes}>
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
-        <img src={element.url} className="max-h-[400px] border-2 border-mint object-contain" />
+        <img
+          width={400}
+          height={400}
+          src={element.url}
+          className="max-h-[400px] border-2 border-mint object-contain"
+        />
         <textarea
           ref={ref}
           rows={1}
@@ -189,6 +194,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
           className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
           placeholder={"Enter some captions..."}
         />
+        {children}
       </figure>
     </div>
   );

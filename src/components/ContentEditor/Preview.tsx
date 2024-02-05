@@ -4,17 +4,20 @@ import { Eye, NotebookPen } from "lucide-react";
 
 export default ({
   setIsPreviewing,
+  setSaveBeforePreview,
   isPreviewing,
   hasAudioTrack,
 }: {
   setIsPreviewing: (t: boolean) => any;
+  setSaveBeforePreview: (t: boolean) => any;
   isPreviewing: boolean;
   hasAudioTrack: boolean;
 }) => {
   return (
     <button
       onClick={() => {
-        setIsPreviewing(!isPreviewing);
+        if (!isPreviewing) setSaveBeforePreview(true);
+        else setIsPreviewing(false);
       }}
       className="absolute right-4 z-[50] flex items-center justify-center rounded-lg bg-primary-dark-gray p-3 text-background-light-gray shadow-xl"
       style={{

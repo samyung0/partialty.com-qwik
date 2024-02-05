@@ -176,7 +176,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
        </style>
        `;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
-          <span style="position:relative;background:inherit;color:inherit;z-index:2">${string}</span>
+          <span style="position:relative;background:transparent;color:inherit;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           <span ${
             node.sync &&
@@ -200,7 +200,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         </style>
         `;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
-          <span style="background:inherit;color:inherit;position:relative;z-index:2">${string}</span>
+          <span style="background:transparent;color:inherit;position:relative;z-index:2">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           </span>
           </span>`;
@@ -396,8 +396,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           width: 100%;
           ">
             ${
-              shouldDisplay &&
-              `
+              shouldDisplay
+                ? `
               <iframe style="
               aspect-ratio: 16 / 9;
               width: 100%;
@@ -406,6 +406,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                 frameBorder="0"
               ></iframe>
             `
+                : ""
             }
           </div>
         </div>
@@ -446,7 +447,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         justify-content: center;
         gap: 0.5rem
       ">
-        <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
+        <img width={400} height={400} src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
         max-height: 400px;
         border-width: 2px;
         border-color: rgb(111 220 191);

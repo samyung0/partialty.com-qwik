@@ -376,115 +376,127 @@ const ContentEditorReact = ({
   }, [audioAssetId]);
 
   const [changingValue, setChangingValue] = useState(0);
+  const [saveBeforePreview, setSaveBeforePreview] = useState(false);
 
   return (
     isEditing && (
       <>
         <Preview
-          hasAudioTrack={audioTrack === undefined}
           setIsPreviewing={setIsPreviewing}
+          hasAudioTrack={audioTrack === undefined}
           isPreviewing={isPreviewing}
+          setSaveBeforePreview={setSaveBeforePreview}
         />
-        {!isPreviewing && (
-          <div
-            ref={parentRef}
-            className="relative flex h-full w-[80vw] flex-col items-center justify-center px-10"
+        <div
+          ref={parentRef}
+          className={
+            "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 " +
+            (isPreviewing ? " hidden" : " block")
+          }
+        >
+          <Slate
+            onValueChange={() => {
+              if (isChangingContent) return;
+              setHasChanged();
+              setChangingValue(changingValue + 1);
+            }}
+            editor={editor}
+            initialValue={normalizedInitialValue}
           >
-            <Slate
-              onValueChange={() => {
-                if (isChangingContent) return;
-                setHasChanged();
-                setChangingValue(changingValue + 1);
-              }}
-              editor={editor}
-              initialValue={normalizedInitialValue}
-            >
-              <SaveContent
-                changingValue={changingValue}
-                audioTrack={audioTrack}
-                hasChanged={hasChanged}
-                saveChanges={saveChanges}
-                chapterName={chapterName}
+            <SaveContent
+              setSaveBeforePreview={setSaveBeforePreview}
+              saveBeforePreview={saveBeforePreview}
+              setIsPreviewing={setIsPreviewing}
+              changingValue={changingValue}
+              audioTrack={audioTrack}
+              hasChanged={hasChanged}
+              saveChanges={saveChanges}
+              chapterName={chapterName}
+            />
+            {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
+            {showAudioChooser && (
+              <CenterAudioChooser
+                setAudioTrack={setAudioTrack}
+                timeStamp={timeStamp}
+                contentWS={contentWS}
+                userId={user.userId}
+                setShowAudioChooser={setShowAudioChooser}
+                userAudiosWithName={userAudiosWithName.current}
               />
-              {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
-              {showAudioChooser && (
-                <CenterAudioChooser
-                  setAudioTrack={setAudioTrack}
-                  timeStamp={timeStamp}
-                  contentWS={contentWS}
-                  userId={user.userId}
-                  setShowAudioChooser={setShowAudioChooser}
-                  userAudiosWithName={userAudiosWithName.current}
-                />
-              )}
-              {showImageChooser && (
-                <CenterImageChooser
-                  replaceCurrentImage={replaceCurrentImage}
-                  setReplaceCurrentImage={setReplaceCurrentImage}
-                  setShowImageChooser={setShowImageChooser}
-                  userId={user.userId}
-                  userImages={userImages.current}
-                  editor={editor}
-                />
-              )}
-              {showCodeBlockSettings && (
-                <CenterCodeBlockSettings
-                  setShowCodeBlockSettings={setShowCodeBlockSettings}
-                  editor={editor}
-                />
-              )}
-              {showQuizBlockSettings && (
-                <CenterQuizBlockSettings
-                  setShowQuizBlockSettings={setShowQuizBlockSettings}
-                  editor={editor}
-                />
-              )}
-              <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
-              <HoveringImage
-                parentRef={parentRef}
+            )}
+            {showImageChooser && (
+              <CenterImageChooser
+                replaceCurrentImage={replaceCurrentImage}
                 setReplaceCurrentImage={setReplaceCurrentImage}
                 setShowImageChooser={setShowImageChooser}
+                userId={user.userId}
+                userImages={userImages.current}
+                editor={editor}
               />
-              <HoveringEmbed parentRef={parentRef} />
-              <HoveringLink parentRef={parentRef} />
-              <HoveringCodeBlock
-                parentRef={parentRef}
+            )}
+            {showCodeBlockSettings && (
+              <CenterCodeBlockSettings
                 setShowCodeBlockSettings={setShowCodeBlockSettings}
+                editor={editor}
               />
-              <HoveringQuizBlock
-                parentRef={parentRef}
+            )}
+            {showQuizBlockSettings && (
+              <CenterQuizBlockSettings
                 setShowQuizBlockSettings={setShowQuizBlockSettings}
+                editor={editor}
               />
-              {/* <HoveringToolbar /> */}
-              <Prose>
-                <Editable
-                  className="outline-none"
-                  placeholder="Enter some rich text…"
-                  spellCheck
-                  autoFocus
-                  decorate={decorate}
-                  onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
-                  renderElement={renderElement}
-                  renderLeaf={renderLeaf}
-                />
-              </Prose>
-            </Slate>
-            <AudioPlayer
-              isLoadingAudio={isLoadingAudio}
-              audioTimeStamp={audioTimeStamp}
-              setAudioTrack={setAudioTrack}
-              setShowAudioChooser={setShowAudioChooser}
-              audioTrack={audioTrack}
+            )}
+            <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
+            <HoveringImage
+              parentRef={parentRef}
+              setReplaceCurrentImage={setReplaceCurrentImage}
+              setShowImageChooser={setShowImageChooser}
             />
-          </div>
-        )}
-        {isPreviewing && (
-          <div className="flex h-full w-[80vw] flex-col overflow-auto">
-            <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+            <HoveringEmbed parentRef={parentRef} />
+            <HoveringLink parentRef={parentRef} />
+            <HoveringCodeBlock
+              parentRef={parentRef}
+              setShowCodeBlockSettings={setShowCodeBlockSettings}
+            />
+            <HoveringQuizBlock
+              parentRef={parentRef}
+              setShowQuizBlockSettings={setShowQuizBlockSettings}
+            />
+            {/* <HoveringToolbar /> */}
+            <Prose>
+              <Editable
+                className="outline-none"
+                placeholder="Enter some rich text…"
+                spellCheck
+                autoFocus
+                decorate={decorate}
+                onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
+                renderElement={renderElement}
+                renderLeaf={renderLeaf}
+              />
+            </Prose>
+          </Slate>
+          <AudioPlayer
+            isLoadingAudio={isLoadingAudio}
+            audioTimeStamp={audioTimeStamp}
+            setAudioTrack={setAudioTrack}
+            setShowAudioChooser={setShowAudioChooser}
+            audioTrack={audioTrack}
+          />
+        </div>
+
+        <div
+          className={
+            "flex h-full w-[80vw] flex-col overflow-hidden " +
+            (!isPreviewing ? " hidden" : " block")
+          }
+        >
+          {isPreviewing && <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />}
+          <div className="h-[90vh] overflow-auto">
             <Prose children={<></>} innerHTML={renderedHTML || ""} />
-            <SyncAudio audioTrack={audioTrack} />
           </div>
-        )}
+          <SyncAudio audioTrack={audioTrack} />
+        </div>
       </>
     )
   );
