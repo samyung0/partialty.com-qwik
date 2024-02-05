@@ -267,7 +267,7 @@ const app = new Elysia()
           const serverContentId = contentId;
           const message: any = {};
           if (serverContentId) {
-            courseIdToUserId.delete(serverContentId[0]);
+            courseIdToUserId.delete(serverContentId);
             userIdToCourseId.delete(userId);
             message[serverContentId] = true;
             const userIdAccessible: string[] = [];
