@@ -26,11 +26,7 @@ const app = new Elysia()
       },
     })
   )
-  // .use(
-  //   rateLimit({
-  //     duration: 10000,
-  //   })
-  // )
+  .use(rateLimit())
   .use(
     cron({
       name: "heartbeat",
