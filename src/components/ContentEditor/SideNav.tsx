@@ -305,7 +305,7 @@ export default component$(
     return (
       <nav class="h-full max-h-[100vh] w-[20vw] overflow-auto border-r-2 border-yellow bg-light-yellow/50 p-4">
         {contentWS.value ? (
-          <ul class="flex flex-col gap-6 pt-4">
+          <ul class="flex list-inside list-disc flex-col gap-6 pt-4">
             {/* <button
               class="rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl"
               onClick$={async () => {
@@ -504,7 +504,7 @@ export default component$(
             )} */}
             {topics.map((topic, index) => (
               <li key={`ContentEditor${topic.id}`}>
-                <div class="flex items-center gap-4">
+                <div class="inline-flex items-center gap-4">
                   <button
                     onClick$={() => (navOpen[index] = !navOpen[index])}
                     class={"flex items-center gap-2"}
@@ -921,7 +921,6 @@ export default component$(
                                             contentId: oldChapter.value,
                                           })
                                         );
-                                        console.log(oldChapter.value, chapterObj.id);
                                       oldChapter.value = chapterObj.id;
                                     });
 
@@ -934,14 +933,6 @@ export default component$(
                                         avatar_url: avatar_url,
                                       })
                                     );
-
-                                    console.log({
-                                      type: "openContent",
-                                      userId: userId + "###" + timeStamp.value,
-                                      contentId: chapterObj.id,
-                                      courseId: topic.id,
-                                      avatar_url: avatar_url,
-                                    });
 
                                     isRequestingChapter.value = chapterObj.id;
 

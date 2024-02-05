@@ -466,6 +466,9 @@ const app = new Elysia()
           userIdToAccessibleCourses.delete(userId);
           return wsContentArr.delete(userId);
         }
+        if(msg.type === "echo") {
+          return ws.send(JSON.stringify(msg));
+        }
       } catch (e) {
         console.error(e);
       }
