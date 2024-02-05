@@ -1,0 +1,13 @@
+config:
+  target: "wss://api.partialty.com/content/ws"
+  phases:
+    - duration: 20
+      arrivalRate: 10
+  ws:
+    maxRedirects: 25
+scenarios:
+  - engine: ws
+    name: Echo a string
+    flow:
+      - connect: "{{ target }}"
+      - send: "{\"type\": \"echo\"}"

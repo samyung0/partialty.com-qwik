@@ -1,0 +1,13 @@
+config:
+  target: "wss://echo.websocket.org"
+  phases:
+    - duration: 20
+      arrivalRate: 10
+  ws:
+    maxRedirects: 25
+scenarios:
+  - engine: ws
+    name: Echo a string
+    flow:
+      - connect: "{{ target }}/?token={{ token }}"
+      - send: "Hello from Artillery"

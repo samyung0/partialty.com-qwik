@@ -1,0 +1,172 @@
+{
+  "aggregate": {
+    "counters": {
+      "vusers.created_by_name.Echo a string": 200,
+      "vusers.created": 200,
+      "websocket.messages_sent": 30,
+      "vusers.failed": 170,
+      "vusers.completed": 30,
+      "errors.Unexpected server response: 429": 170
+    },
+    "rates": {
+      "websocket.send_rate": 9
+    },
+    "firstCounterAt": 1707138355583,
+    "firstHistogramAt": 1707138356150,
+    "lastCounterAt": 1707138375641,
+    "lastHistogramAt": 1707138368200,
+    "firstMetricAt": 1707138355583,
+    "lastMetricAt": 1707138375641,
+    "period": 1707138370000,
+    "summaries": {
+      "vusers.session_length": {
+        "min": 217.8,
+        "max": 673.4,
+        "count": 30,
+        "mean": 432.1,
+        "p50": 278.7,
+        "median": 278.7,
+        "p75": 620.3,
+        "p90": 645.6,
+        "p95": 658.6,
+        "p99": 658.6,
+        "p999": 658.6
+      }
+    },
+    "histograms": {
+      "vusers.session_length": {
+        "min": 217.8,
+        "max": 673.4,
+        "count": 30,
+        "mean": 432.1,
+        "p50": 278.7,
+        "median": 278.7,
+        "p75": 620.3,
+        "p90": 645.6,
+        "p95": 658.6,
+        "p99": 658.6,
+        "p999": 658.6
+      }
+    }
+  },
+  "intermediate": [
+    {
+      "counters": {
+        "vusers.created_by_name.Echo a string": 49,
+        "vusers.created": 49,
+        "websocket.messages_sent": 20,
+        "vusers.failed": 22,
+        "vusers.completed": 20,
+        "errors.Unexpected server response: 429": 22
+      },
+      "rates": {
+        "websocket.send_rate": 16
+      },
+      "websocket.send_rate": null,
+      "firstCounterAt": 1707138355583,
+      "firstHistogramAt": 1707138356150,
+      "lastCounterAt": 1707138359988,
+      "lastHistogramAt": 1707138358031,
+      "firstMetricAt": 1707138355583,
+      "lastMetricAt": 1707138359988,
+      "period": "1707138350000",
+      "summaries": {
+        "vusers.session_length": {
+          "min": 217.8,
+          "max": 673.4,
+          "count": 20,
+          "mean": 469.9,
+          "p50": 561.2,
+          "median": 561.2,
+          "p75": 632.8,
+          "p90": 658.6,
+          "p95": 658.6,
+          "p99": 658.6,
+          "p999": 658.6
+        }
+      },
+      "histograms": {
+        "vusers.session_length": {
+          "min": 217.8,
+          "max": 673.4,
+          "count": 20,
+          "mean": 469.9,
+          "p50": 561.2,
+          "median": 561.2,
+          "p75": 632.8,
+          "p90": 658.6,
+          "p95": 658.6,
+          "p99": 658.6,
+          "p999": 658.6
+        }
+      }
+    },
+    {
+      "counters": {
+        "errors.Unexpected server response: 429": 89,
+        "vusers.failed": 89,
+        "vusers.created_by_name.Echo a string": 100,
+        "vusers.created": 100,
+        "websocket.messages_sent": 10,
+        "vusers.completed": 10
+      },
+      "rates": {
+        "websocket.send_rate": 10
+      },
+      "websocket.send_rate": null,
+      "firstCounterAt": 1707138360037,
+      "firstHistogramAt": 1707138367040,
+      "lastCounterAt": 1707138369988,
+      "lastHistogramAt": 1707138368200,
+      "firstMetricAt": 1707138360037,
+      "lastMetricAt": 1707138369988,
+      "period": "1707138360000",
+      "summaries": {
+        "vusers.session_length": {
+          "min": 222.3,
+          "max": 626.3,
+          "count": 10,
+          "mean": 356.4,
+          "p50": 247.2,
+          "median": 247.2,
+          "p75": 273.2,
+          "p90": 620.3,
+          "p95": 620.3,
+          "p99": 620.3,
+          "p999": 620.3
+        }
+      },
+      "histograms": {
+        "vusers.session_length": {
+          "min": 222.3,
+          "max": 626.3,
+          "count": 10,
+          "mean": 356.4,
+          "p50": 247.2,
+          "median": 247.2,
+          "p75": 273.2,
+          "p90": 620.3,
+          "p95": 620.3,
+          "p99": 620.3,
+          "p999": 620.3
+        }
+      }
+    },
+    {
+      "counters": {
+        "errors.Unexpected server response: 429": 59,
+        "vusers.failed": 59,
+        "vusers.created_by_name.Echo a string": 51,
+        "vusers.created": 51
+      },
+      "rates": {},
+      "firstCounterAt": 1707138370037,
+      "lastCounterAt": 1707138375641,
+      "firstMetricAt": 1707138370037,
+      "lastMetricAt": 1707138375641,
+      "period": "1707138370000",
+      "summaries": {},
+      "histograms": {}
+    }
+  ]
+}
