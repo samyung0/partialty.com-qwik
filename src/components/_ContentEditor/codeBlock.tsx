@@ -72,13 +72,13 @@ import type { RenderElementProps } from "slate-react";
 import { ReactEditor, useFocused, useSlate } from "slate-react";
 // import "./prism-one-dark.css";
 
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
 
 import { useCallback } from "react";
 import { Element, Node } from "slate";
 
 import type { HighlighterCore } from "shikiji/core";
-import type { CodeBlockElement } from "~/components/ContentEditor/types";
+import type { CodeBlockElement } from "~/components/_ContentEditor/types";
 
 const CodeBlockType = "codeBlock";
 const CodeLineType = "codeLine";

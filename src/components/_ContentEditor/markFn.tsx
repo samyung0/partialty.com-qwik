@@ -3,8 +3,8 @@ import { ArrowDown, ArrowUp, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Editor, Range } from "slate";
 import { useSlate } from "slate-react";
-import ColorChooser from "~/components/ContentEditor/ColorChooser";
-import type { CustomMarkFormat } from "~/components/ContentEditor/types";
+import ColorChooser from "~/components/_ContentEditor/ColorChooser";
+import type { CustomMarkFormat } from "~/components/_ContentEditor/types";
 
 export const MarkButton = ({
   format,

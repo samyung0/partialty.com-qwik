@@ -36,14 +36,14 @@ import {
   ImageButton,
   LinkButton,
   QuizBlockButton,
-} from "~/components/ContentEditor/blockFn";
+} from "~/components/_ContentEditor/blockFn";
 import {
   BackgroundMarkButton,
   ColorMarkButton,
   MarkButton,
   TextMarkButton,
   UnderlineMarkButton,
-} from "~/components/ContentEditor/markFn";
+} from "~/components/_ContentEditor/markFn";
 
 const Toolbar = ({
   setShowImageChooser,

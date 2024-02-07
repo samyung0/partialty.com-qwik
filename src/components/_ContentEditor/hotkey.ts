@@ -1,10 +1,10 @@
 import isHotkey from "is-hotkey";
 import type { BasePoint } from "slate";
 import { Editor, Element as SlateElement, Transforms } from "slate";
-import { toggleMark } from "~/components/ContentEditor/markFn";
+import { toggleMark } from "~/components/_ContentEditor/markFn";
 
 import { HistoryEditor } from "slate-history";
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
 
 import { onKeyDown } from "@prezly/slate-lists";
 

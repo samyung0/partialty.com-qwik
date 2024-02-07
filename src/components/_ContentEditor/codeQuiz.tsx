@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import { useSlateStatic, type RenderElementProps } from "slate-react";
-import type { QuizCodeBlockElement, QuizCodeInputElement } from "~/components/ContentEditor/types";
+import type { QuizCodeBlockElement, QuizCodeInputElement } from "~/components/_ContentEditor/types";
 
 export const QuizCodeInput = ({ attributes, children, element }: RenderElementProps) => {
   const width = (element as QuizCodeInputElement).inputWidth;

@@ -1,7 +1,7 @@
 /* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
 import type { RenderLeafProps } from "slate-react";
-import HighlightSVG from "~/components/ContentEditor/HighlightSVG";
+import HighlightSVG from "~/components/_ContentEditor/HighlightSVG";
 export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   const { text, ...rest } = leaf;
   const style = { backgroundColor: "inherit", color: "inherit" };

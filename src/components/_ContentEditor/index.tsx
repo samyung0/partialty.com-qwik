@@ -11,31 +11,31 @@ import { Editor, Element as SlateElement, Transforms, createEditor } from "slate
 import { HistoryEditor, withHistory } from "slate-history";
 import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, withReact } from "slate-react";
-import AudioPlayer, { CenterAudioChooser } from "~/components/ContentEditor/AudioPlayer";
+import AudioPlayer, { CenterAudioChooser } from "~/components/_ContentEditor/AudioPlayer";
 
-import { Element } from "~/components/ContentEditor/Element";
-import { HoveringEmbed, withEmbeds } from "~/components/ContentEditor/Embed";
-import { CenterImageChooser, HoveringImage, withImages } from "~/components/ContentEditor/Images";
-import { Leaf } from "~/components/ContentEditor/Leaf";
-import { HoveringLink, withLink } from "~/components/ContentEditor/Link";
-import Preview from "~/components/ContentEditor/Preview";
-import SaveContent from "~/components/ContentEditor/SaveContent";
-import Toolbar from "~/components/ContentEditor/Toolbar";
+import { Element } from "~/components/_ContentEditor/Element";
+import { HoveringEmbed, withEmbeds } from "~/components/_ContentEditor/Embed";
+import { CenterImageChooser, HoveringImage, withImages } from "~/components/_ContentEditor/Images";
+import { Leaf } from "~/components/_ContentEditor/Leaf";
+import { HoveringLink, withLink } from "~/components/_ContentEditor/Link";
+import Preview from "~/components/_ContentEditor/Preview";
+import SaveContent from "~/components/_ContentEditor/SaveContent";
+import Toolbar from "~/components/_ContentEditor/Toolbar";
 import {
   CenterCodeBlockSettings,
   HoveringCodeBlock,
   SetNodeToDecorations,
   useDecorate,
-} from "~/components/ContentEditor/codeBlock";
-import { withQuizCode } from "~/components/ContentEditor/codeQuiz";
-import onKeyDown from "~/components/ContentEditor/hotkey";
+} from "~/components/_ContentEditor/codeBlock";
+import { withQuizCode } from "~/components/_ContentEditor/codeQuiz";
+import onKeyDown from "~/components/_ContentEditor/hotkey";
 import {
   CenterQuizBlockSettings,
   HoveringQuizBlock,
   withQuiz,
-} from "~/components/ContentEditor/quiz";
-import { withTrailingNewLine } from "~/components/ContentEditor/trailingNewLine";
-import type { CustomElement, CustomText } from "~/components/ContentEditor/types";
+} from "~/components/_ContentEditor/quiz";
+import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
+import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
 import QuizHydrate from "~/components/Prose/QuizHydrate";
 import Prose from "~/components/Prose/react-prose";
 import SyncAudio from "~/components/Prose/react-syncAudio";

@@ -2,8 +2,8 @@
 import { useEffect, useRef } from "react";
 import { Editor, Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
-import { isMarkActive, toggleMark } from "~/components/ContentEditor/markFn";
-import type { CustomMarkFormat } from "~/components/ContentEditor/types";
+import { isMarkActive, toggleMark } from "~/components/_ContentEditor/markFn";
+import type { CustomMarkFormat } from "~/components/_ContentEditor/types";
 
 import { Bold, Code, Italic, Strikethrough, Underline } from "lucide-react";
 

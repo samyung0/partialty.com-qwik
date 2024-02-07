@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import type { RenderElementProps } from "slate-react";
 import { ReactEditor, useSlateStatic } from "slate-react";
-import uploadToCloudinary from "~/components/ContentEditor/uploadToCloudinaryContentEditor";
+import uploadToCloudinary from "~/components/_ContentEditor/uploadToCloudinaryContentEditor";
 import {
   CLOUDINARY_MAX_IMG_SIZE,
   CLOUDINARY_MAX_PIXEL_COUNT,
@@ -20,8 +20,8 @@ import type { BaseRange } from "slate";
 import { Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
 
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
-import type { ImageElement } from "~/components/ContentEditor/types";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
+import type { ImageElement } from "~/components/_ContentEditor/types";
 
 export const withImages = (editor: Editor) => {
   const { isVoid } = editor;

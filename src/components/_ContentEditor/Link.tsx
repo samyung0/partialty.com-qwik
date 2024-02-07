@@ -5,9 +5,9 @@ import type { BaseRange } from "slate";
 import { Editor, Range, Element as SlateElement, Text, Transforms } from "slate";
 import { ReactEditor, useFocused, useSlate, type RenderElementProps } from "slate-react";
 
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
-import { getWord } from "~/components/ContentEditor/getWord";
-import type { UrlLink } from "~/components/ContentEditor/types";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
+import { getWord } from "~/components/_ContentEditor/getWord";
+import type { UrlLink } from "~/components/_ContentEditor/types";
 import { isUrl } from "~/utils/isUrl";
 
 export const withLink = (editor: Editor) => {

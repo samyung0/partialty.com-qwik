@@ -12,8 +12,8 @@ import type { BaseRange } from "slate";
 import { Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
 
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
-import type { UrlLink } from "~/components/ContentEditor/types";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
+import type { UrlLink } from "~/components/_ContentEditor/types";
 
 const YOUTUBE_PREFIX = "https://www.youtube.com/embed/";
 const VIMEO_PREFIX = "https://player.vimeo.com/video/";

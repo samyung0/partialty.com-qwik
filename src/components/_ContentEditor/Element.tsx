@@ -1,17 +1,16 @@
 /** @jsxImportSource react */
 import { Info, Lightbulb, XCircle } from "lucide-react";
 import type { RenderElementProps } from "slate-react";
-import { EmbedElement } from "~/components/ContentEditor/Embed";
-import { ImageBlock } from "~/components/ContentEditor/Images";
-import { LinkElement } from "~/components/ContentEditor/Link";
-import { CodeBlock, CodeLine } from "~/components/ContentEditor/codeBlock";
+import { EmbedElement } from "~/components/_ContentEditor/Embed";
+import { ImageBlock } from "~/components/_ContentEditor/Images";
+import { LinkElement } from "~/components/_ContentEditor/Link";
+import { CodeBlock, CodeLine } from "~/components/_ContentEditor/codeBlock";
 import {
   QuizCodeBlock,
   QuizCodeInput,
-  QuizCodeLineBreak,
   QuizCodeParagraph,
-} from "~/components/ContentEditor/codeQuiz";
-import { QuizBlock, QuizOption } from "~/components/ContentEditor/quiz";
+} from "~/components/_ContentEditor/codeQuiz";
+import { QuizBlock, QuizOption } from "~/components/_ContentEditor/quiz";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
   const style = { textAlign: element.align || "left" } as const;

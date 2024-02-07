@@ -1,5 +1,5 @@
 import { Editor, Point, Range, Element as SlateElement, Transforms } from "slate";
-import type { BulletedList } from "~/components/ContentEditor/types";
+import type { BulletedList } from "~/components/_ContentEditor/types";
 
 const SHORTCUTS = {
   "*": "list-item",

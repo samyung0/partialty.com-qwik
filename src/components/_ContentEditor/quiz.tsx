@@ -5,8 +5,8 @@ import type { BaseRange } from "slate";
 import { Editor, Range, Element as SlateElement, Transforms } from "slate";
 import type { RenderElementProps } from "slate-react";
 import { ReactEditor, useFocused, useSlate } from "slate-react";
-import { isBlockActive } from "~/components/ContentEditor/blockFn";
-import type { QuizBlockElement, QuizOptionElement } from "~/components/ContentEditor/types";
+import { isBlockActive } from "~/components/_ContentEditor/blockFn";
+import type { QuizBlockElement, QuizOptionElement } from "~/components/_ContentEditor/types";
 
 export const QuizOption = ({ attributes, children, element }: RenderElementProps) => {
   const optionValue = (element as QuizOptionElement).optionValue;

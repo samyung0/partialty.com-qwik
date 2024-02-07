@@ -2,10 +2,10 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
 import { useSlate } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
-import { toggleLinkAtSelection } from "~/components/ContentEditor/Link";
-import { toCodeLines } from "~/components/ContentEditor/codeBlock";
-import type { Align, BlockFormat, CustomElementType, List } from "~/components/ContentEditor/types";
-import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/ContentEditor/types";
+import { toggleLinkAtSelection } from "~/components/_ContentEditor/Link";
+import { toCodeLines } from "~/components/_ContentEditor/codeBlock";
+import type { Align, BlockFormat, CustomElementType, List } from "~/components/_ContentEditor/types";
+import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/_ContentEditor/types";
 
 export const BlockButton = ({
   format,

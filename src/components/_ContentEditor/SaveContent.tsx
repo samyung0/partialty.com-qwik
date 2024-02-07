@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSlateStatic } from "slate-react";
-import serialize from "~/components/ContentEditor/serialize";
+import serialize from "~/components/_ContentEditor/serialize";
 
 export default ({
   hasChanged,

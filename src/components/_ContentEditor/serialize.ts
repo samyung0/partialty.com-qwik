@@ -12,7 +12,7 @@ const DAILYMOTION_PREFIX = "https://www.dailymotion.com/embed/video/";
 const YOUKU_PREFIX = "https://player.youku.com/embed/";
 const COUB_PREFIX = "https://coub.com/embed/";
 
-import highlightSVGString from "~/components/ContentEditor/highlightSVGString";
+import highlightSVGString from "~/components/_ContentEditor/highlightSVGString";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
 
