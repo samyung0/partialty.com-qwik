@@ -10,4 +10,4 @@ scenarios:
     name: Echo a string
     flow:
       - connect: "{{ target }}"
-      - send: "{\"type\": \"echo\"}"
+      - send: '{"type": "echo"}'
