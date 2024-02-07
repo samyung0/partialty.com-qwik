@@ -226,7 +226,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: userAssets.accessible_courses
+            accessible_courses: userAssets.accessible_courses,
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
