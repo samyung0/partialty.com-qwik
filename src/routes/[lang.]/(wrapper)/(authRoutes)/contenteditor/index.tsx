@@ -3,8 +3,8 @@ import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from
 import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
 import { eq, or } from "drizzle-orm";
-import ContentEditor from "~/components/ContentEditor";
-import SideNav from "~/components/ContentEditor/SideNav";
+import ContentEditor from "~/components/_ContentEditor";
+import SideNav from "~/components/_ContentEditor/SideNav";
 import { BUN_API_ENDPOINT_WS } from "~/const";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
@@ -226,7 +226,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: userAssets.accessible_courses
+            accessible_courses: userAssets.accessible_courses,
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
@@ -295,12 +295,8 @@ export default component$(() => {
       });
 
       ws.addEventListener("error", () => {
+        // error event fires with close event
         alert("Websocket connection error! Retrying connection...");
-        contentWS.value = undefined;
-        clearInterval(muxWSHeartBeat.value);
-
-        clearInterval(retry);
-        _startWSConnection.startWSConnection();
       });
 
       ws.addEventListener("close", () => {

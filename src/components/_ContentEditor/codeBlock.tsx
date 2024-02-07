@@ -70,7 +70,7 @@ import type { BaseRange, NodeEntry } from "slate";
 import { Editor, Range, Element as SlateElement, Transforms } from "slate";
 import type { RenderElementProps } from "slate-react";
 import { ReactEditor, useFocused, useSlate } from "slate-react";
-import "./prism-one-dark.css";
+// import "./prism-one-dark.css";
 
 import { isBlockActive } from "~/components/ContentEditor/blockFn";
 

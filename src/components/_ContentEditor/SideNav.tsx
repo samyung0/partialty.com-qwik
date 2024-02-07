@@ -1,10 +1,10 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
+import { IoCaretDown } from "@qwikest/icons/ionicons";
 import { LuSettings, LuTrash } from "@qwikest/icons/lucide";
 import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import ArrowDown from "~/assets/svg/caret-down-outline.svg";
 import defaultChapter from "~/const/defaultChapter";
 import type roles from "~/const/roles";
 import { useContent } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
@@ -510,13 +510,21 @@ export default component$(
                     class={"flex items-center gap-2"}
                   >
                     <h2 class="text-left text-lg tracking-wide">{topic.name}</h2>
-                    <img
-                      src={ArrowDown}
-                      alt="arrowDown"
-                      width={16}
-                      height={16}
-                      class={"transition-transform " + (navOpen[index] && "rotate-180")}
-                    />
+                    <span
+                      class={
+                        "text-[16px] text-primary-dark-gray transition-transform " +
+                        (navOpen[index] && "rotate-180")
+                      }
+                    >
+                      <IoCaretDown />
+                    </span>
+                    {/*<img*/}
+                    {/*  src={ArrowDown}*/}
+                    {/*  alt="arrowDown"*/}
+                    {/*  width={16}*/}
+                    {/*  height={16}*/}
+                    {/*  class={"transition-transform " + (navOpen[index] && "rotate-180")}*/}
+                    {/*/>*/}
                   </button>
                   <div class="ml-auto flex items-center gap-1">
                     <button

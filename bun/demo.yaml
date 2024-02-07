@@ -1,3 +1,4 @@
+# since we implemented rate-limiting, the success rate should be low
 config:
   target: "wss://echo.websocket.org"
   phases:

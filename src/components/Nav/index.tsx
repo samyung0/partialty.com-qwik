@@ -1,10 +1,10 @@
 import { $, component$ } from "@builder.io/qwik";
 import { Link, removeClientDataCache, useNavigate } from "@builder.io/qwik-city";
 
-import ArrowDown from "~/assets/svg/caret-down-outline.svg";
 import NavCourses from "~/components/NavCourses";
 import type { LuciaSession } from "~/types/LuciaSession";
 
+import { IoCaretDown } from "@qwikest/icons/ionicons";
 import LogoutSVG from "~/assets/svg/log-out-outline.svg";
 import PersonSVG from "~/assets/svg/person-outline.svg";
 import { logout } from "~/auth/logout";
@@ -19,16 +19,16 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
   return (
     <nav>
       <ul class="m-auto flex w-[80%] items-center gap-6 py-6 text-base font-bold tracking-wide">
-        <li class="relative px-6 py-2 pl-0 [&:hover>div]:flex [&:hover_img]:rotate-180">
+        <li class="relative px-6 py-2 pl-0 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
           <div class={"flex gap-2"}>
             <span>Courses</span>
-            <img
-              src={ArrowDown}
-              alt="arrowDown"
-              width={16}
-              height={16}
-              class="transition-transform"
-            />
+            <span
+              class={
+                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
+              }
+            >
+              <IoCaretDown />
+            </span>
           </div>
           <div class="absolute left-0 top-[100%] hidden w-[600px] pt-3">{NavCourses}</div>
         </li>
@@ -42,12 +42,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             Playground
           </Link>
         </li>
-        <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
-            Pricing
-          </Link>
-        </li>
-        <li class="relative ml-auto px-6 py-2 [&:hover>div>img]:rotate-180 [&:hover>div]:flex">
+        <li class="relative ml-auto px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
           <div class={"flex gap-2"}>
             <span>
               <img
@@ -59,13 +54,13 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 referrerPolicy="no-referrer"
               />
             </span>
-            <img
-              src={ArrowDown}
-              alt="arrowDown"
-              width={16}
-              height={16}
-              class="transition-transform"
-            />
+            <span
+              class={
+                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
+              }
+            >
+              <IoCaretDown />
+            </span>
           </div>
           <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
             <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray">

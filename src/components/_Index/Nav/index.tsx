@@ -1,7 +1,7 @@
 import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
-import ArrowDown from "~/assets/svg/caret-down-outline.svg";
+import { IoCaretDown } from "@qwikest/icons/ionicons";
 import NavCourses from "~/components/NavCourses";
 import getUser from "~/components/_Index/Nav/getUser";
 
@@ -26,16 +26,16 @@ export default component$(() => {
     <nav class="absolute left-0 top-0 z-20 flex w-full p-6">
       <div class="w-[50%] pr-[6vw]"></div>
       <ul class="flex w-[50%] items-center gap-6 text-base font-bold tracking-wide">
-        <li class="relative px-6 py-2 [&:hover>div]:flex [&:hover_img]:rotate-180">
+        <li class="relative px-6 py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
           <div class={"flex gap-2"}>
             <span>Courses</span>
-            <img
-              src={ArrowDown}
-              alt="arrowDown"
-              width={16}
-              height={16}
-              class="transition-transform"
-            />
+            <span
+              class={
+                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
+              }
+            >
+              <IoCaretDown />
+            </span>
           </div>
           <div class="absolute left-[50%] top-[100%] hidden w-[600px] -translate-x-[50%] pt-3">
             {NavCourses}
@@ -49,11 +49,6 @@ export default component$(() => {
         <li class="px-2 py-2">
           <Link prefetch href={"/"}>
             Playground
-          </Link>
-        </li>
-        <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
-            Pricing
           </Link>
         </li>
         {login.isLoading ? (
@@ -88,7 +83,7 @@ export default component$(() => {
             </Link>
           </li>
         ) : (
-          <li class="rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray">
+          <li class="rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md">
             <Link prefetch href={"/login"} class="whitespace-nowrap">
               Login | Signup
             </Link>

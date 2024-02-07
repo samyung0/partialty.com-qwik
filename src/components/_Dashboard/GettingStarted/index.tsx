@@ -1,7 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-
-import TimeSVG from "~/assets/svg/time-outline.svg";
+import { IoTimeOutline } from "@qwikest/icons/ionicons";
 
 const currentGuides = [
   {
@@ -46,8 +45,8 @@ export default component$(() => {
                 <div class="flex flex-col gap-1">
                   <h2 class="text-lg tracking-wide">{guidesInfo[currentGuide.slug].name}</h2>
                   <p class="flex items-center gap-1">
-                    <span class="-mt-[2px] block">
-                      <img src={TimeSVG} alt="Time" width={15} height={15} />
+                    <span class="-mt-[2px] flex items-center text-[15px] text-primary-dark-gray">
+                      <IoTimeOutline />
                     </span>
                     <span>
                       {guidesInfo[currentGuide.slug].readingTime} min

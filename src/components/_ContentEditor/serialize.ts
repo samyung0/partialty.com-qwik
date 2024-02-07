@@ -481,13 +481,16 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           )}</p><hr style="margin: 0.5rem;border-color: rgb(156 163 175);"/></div>` +
           highlighted.slice(endoftag);
       }
-      return `<div">
+      return `<div>
     ${highlighted}
   </div>`;
     }
     case "quizBlock": {
       return `<div style="
+      ${style}
       letter-spacing: 0.025em;
+      margin-top: 1.25em;
+      margin-bottom: 1.25em;
       ">
       <h3 style="margin-bottom: 0.75rem; margin-top: 0px;">
         ${node.quizTitle}
@@ -567,6 +570,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       type="button"
       data-formname="${name}"
       style="
+      ${style}
       display: flex;
       align-items: center;
       gap: 1rem;

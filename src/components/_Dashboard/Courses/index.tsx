@@ -1,7 +1,6 @@
 import { component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import ArrowSVG from "~/assets/svg/caret-down-outline.svg";
-import ReaderSVG from "~/assets/svg/reader-outline.svg";
+import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";
@@ -261,14 +260,8 @@ export default component$(() => {
                   <div class="flex flex-col gap-1">
                     <h2 class="text-lg tracking-wide">{coursesInfo[currentCourse.slug].name}</h2>
                     <p class="flex items-center gap-1">
-                      <span class="-mt-1 block">
-                        <img
-                          src={ReaderSVG}
-                          alt="Time"
-                          width={15}
-                          height={15}
-                          class="object-contain"
-                        />
+                      <span class="-mt-1 flex items-center text-[15px] text-primary-dark-gray ">
+                        <IoReaderOutline />
                       </span>
                       <span class="text-sm tracking-wide">
                         {completedChapters.length} / {chapters.length} chapter
@@ -277,7 +270,7 @@ export default component$(() => {
                     </p>
                   </div>
                   <div class="flex items-center gap-2">
-                    <div class="h-1.5 w-[100px] rounded-full bg-light-lilac">
+                    <div class="h-1.5 w-[100px]  rounded-full bg-light-lilac">
                       <div
                         class={`h-1.5 rounded-full bg-lilac`}
                         style={{
@@ -288,13 +281,14 @@ export default component$(() => {
                       ></div>
                     </div>
                     <button class="p-2">
-                      <img
-                        class={currentCourse.open ? "rotate-180" : ""}
-                        src={ArrowSVG}
-                        alt="Expand"
-                        width={15}
-                        height={15}
-                      />
+                      <span
+                        style={{
+                          transform: currentCourse.open ? "rotateZ(180deg)" : "",
+                        }}
+                        class={"inline-block text-[15px] text-primary-dark-gray"}
+                      >
+                        <IoCaretDown />
+                      </span>
                     </button>
                   </div>
                 </div>

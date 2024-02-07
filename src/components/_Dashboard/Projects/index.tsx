@@ -1,8 +1,7 @@
 import { component$, useSignal, useStore } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import ArrowRightSVG from "~/assets/svg/arrow-forward-outline.svg";
-import ArrowSVG from "~/assets/svg/caret-down-outline.svg";
-import ReaderSVG from "~/assets/svg/reader-outline.svg";
+import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
+import { LuArrowRight } from "@qwikest/icons/lucide";
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";
@@ -451,14 +450,8 @@ export default component$(() => {
                   <div class="flex flex-col gap-1">
                     <h2 class="text-lg tracking-wide">{coursesInfo[currentProject.slug].name}</h2>
                     <p class="flex items-center gap-1">
-                      <span class="-mt-1 block">
-                        <img
-                          src={ReaderSVG}
-                          alt="Time"
-                          width={15}
-                          height={15}
-                          class="object-contain"
-                        />
+                      <span class="-mt-1 flex items-center text-[15px] text-primary-dark-gray">
+                        <IoReaderOutline />
                       </span>
                       <span class="text-sm tracking-wide">
                         {completedChapters.length} / {steps.length} step
@@ -476,19 +469,24 @@ export default component$(() => {
                       ></div>
                     </div>
                     <button class="p-2">
-                      <img
-                        class={currentProject.open ? "rotate-180" : ""}
-                        src={ArrowSVG}
-                        alt="Expand"
-                        width={15}
-                        height={15}
-                      />
+                      <span
+                        style={{
+                          transform: currentProject.open ? "rotateZ(180deg)" : "",
+                        }}
+                        class={
+                          "inline-block text-[16px] text-primary-dark-gray transition-transform"
+                        }
+                      >
+                        <IoCaretDown />
+                      </span>
                     </button>
                   </div>
                 </div>
                 <Link href={currentProject.codeSpace} class="mt-6 flex gap-2 self-start">
                   <span class="border-b-2 border-primary-dark-gray">Go to Codespace</span>
-                  <img src={ArrowRightSVG} alt="Right Arrow" width={15} height={15} />
+                  <span class="text-[15px] text-primary-dark-gray">
+                    <LuArrowRight />
+                  </span>
                 </Link>
                 {currentProject.open ? (
                   <>

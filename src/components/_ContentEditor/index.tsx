@@ -8,8 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { HighlighterCore } from "shikiji/core";
 import type { BaseEditor, BaseRange, Node } from "slate";
 import { Editor, Element as SlateElement, Transforms, createEditor } from "slate";
-import type { HistoryEditor } from "slate-history";
-import { withHistory } from "slate-history";
+import { HistoryEditor, withHistory } from "slate-history";
 import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, withReact } from "slate-react";
 import AudioPlayer, { CenterAudioChooser } from "~/components/ContentEditor/AudioPlayer";
@@ -28,6 +27,7 @@ import {
   SetNodeToDecorations,
   useDecorate,
 } from "~/components/ContentEditor/codeBlock";
+import { withQuizCode } from "~/components/ContentEditor/codeQuiz";
 import onKeyDown from "~/components/ContentEditor/hotkey";
 import {
   CenterQuizBlockSettings,
@@ -148,6 +148,34 @@ const ContentEditorReact = ({
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
+      type: "quizCodeBlock",
+      ans: {
+        type: "matchInput",
+        matchInput: [],
+        ast: {},
+      },
+      isCode: false,
+      formName: "test2",
+      quizTitle: "Question 2",
+      inputWidth: 400,
+      inputCount: 1,
+      children: [
+        {
+          type: "quizCodeParagraph",
+          children: [
+            { text: "answer A" },
+            {
+              type: "quizCodeInput",
+              inputWidth: 200,
+              children: [{ text: "" }],
+              inputNumber: 0,
+            },
+            { text: "answer B" },
+          ],
+        },
+      ],
+    },
+    {
       type: "quizBlock",
       ans: "2",
       formName: "test",
@@ -240,7 +268,9 @@ const ContentEditorReact = ({
   const [editor] = useState(() =>
     withLists(schema)(
       withTrailingNewLine(
-        withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+        withQuizCode(
+          withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
+        )
       )
     )
   );
@@ -316,7 +346,9 @@ const ContentEditorReact = ({
     }
     console.log(normalizedInitialValue);
     while (editor.children.length > 1) {
-      Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" });
+      HistoryEditor.withoutSaving(editor, () =>
+        Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
+      );
     }
 
     // const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
@@ -334,13 +366,19 @@ const ContentEditorReact = ({
     } else {
       for (let i = 0; i < normalizedInitialValue.length; i++) {
         const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
-        Transforms.insertNodes(editor, normalizedInitialValue[i], {
-          at: beforeEnd,
-          mode: "highest",
-        });
+        HistoryEditor.withoutSaving(editor, () =>
+          Transforms.insertNodes(editor, normalizedInitialValue[i], {
+            at: beforeEnd,
+            mode: "highest",
+          })
+        );
       }
-      Transforms.removeNodes(editor, { at: Editor.start(editor, []) });
-      Transforms.removeNodes(editor, { at: Editor.end(editor, []) });
+      HistoryEditor.withoutSaving(editor, () =>
+        Transforms.removeNodes(editor, { at: Editor.start(editor, []) })
+      );
+      HistoryEditor.withoutSaving(editor, () =>
+        Transforms.removeNodes(editor, { at: Editor.end(editor, []) })
+      );
     }
 
     setTimeout(() => {

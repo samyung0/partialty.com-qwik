@@ -12,7 +12,11 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
   const optionValue = (element as QuizOptionElement).optionValue;
   const name = (element as QuizOptionElement).formName;
   return (
-    <div data-formname={name} className="flex items-center gap-4">
+    <div
+      {...attributes}
+      data-formname={name}
+      className="flex items-center gap-4 bg-inherit text-inherit"
+    >
       <input hidden className="hidden" type="radio" name={name} value={optionValue} />
       <div
         contentEditable={false}
@@ -27,8 +31,11 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
 
 export const QuizBlock = ({ attributes, children, element }: RenderElementProps) => {
   return (
-    <div {...attributes} className="tracking-wide">
-      <h3 className="mb-3 mt-0" contentEditable={false}>
+    <div
+      {...attributes}
+      className="mb-[1.25rem] mt-[1.25rem] bg-inherit tracking-wide text-inherit"
+    >
+      <h3 className="mb-3 mt-0 bg-inherit text-inherit" contentEditable={false}>
         {(element as QuizBlockElement).quizTitle}
       </h3>
       <form
@@ -37,7 +44,7 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
         onSubmit={(e) => {
           e.preventDefault();
         }}
-        className="quizBlock flex flex-col items-start gap-3"
+        className="quizBlock flex flex-col items-start gap-3 bg-inherit text-inherit"
       >
         {children}
         <button

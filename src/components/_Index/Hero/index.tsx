@@ -7,6 +7,7 @@ import rendered from "~/components/_Index/codeBlock/rendered";
 import codeBlock from "~/components/_Index/codeBlock";
 import blankChar from "~/components/_Index/codeBlock/blankChar";
 
+import { Link } from "@builder.io/qwik-city";
 import styles from "./index.module.css";
 
 export default component$(() => {
@@ -118,9 +119,13 @@ export default component$(() => {
             </span>{" "}
             like you have <i>never</i> before.
           </h1>
-          <button class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray shadow-2xl">
+          <Link
+            href="/signup/"
+            prefetch
+            class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray shadow-2xl"
+          >
             Get Started
-          </button>
+          </Link>
         </div>
       </div>
     </section>

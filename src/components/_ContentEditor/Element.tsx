@@ -5,6 +5,12 @@ import { EmbedElement } from "~/components/ContentEditor/Embed";
 import { ImageBlock } from "~/components/ContentEditor/Images";
 import { LinkElement } from "~/components/ContentEditor/Link";
 import { CodeBlock, CodeLine } from "~/components/ContentEditor/codeBlock";
+import {
+  QuizCodeBlock,
+  QuizCodeInput,
+  QuizCodeLineBreak,
+  QuizCodeParagraph,
+} from "~/components/ContentEditor/codeQuiz";
 import { QuizBlock, QuizOption } from "~/components/ContentEditor/quiz";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
@@ -144,6 +150,12 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       return <QuizBlock attributes={attributes} element={element} children={children} />;
     case "quizOption":
       return <QuizOption attributes={attributes} element={element} children={children} />;
+    case "quizCodeBlock":
+      return <QuizCodeBlock attributes={attributes} element={element} children={children} />;
+    case "quizCodeInput":
+      return <QuizCodeInput attributes={attributes} element={element} children={children} />;
+    case "quizCodeParagraph":
+      return <QuizCodeParagraph attributes={attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

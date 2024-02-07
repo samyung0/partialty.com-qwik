@@ -250,6 +250,55 @@ export type QuizOptionElement = {
   children: (CustomText | CustomElement)[];
 };
 
+export type QuizCodeBlockElement = {
+  type: "quizCodeBlock";
+  quizTitle: string;
+  ans: {
+    type: "matchInput" | "ast",
+    matchInput: string[],
+    ast: any
+  };
+  isCode: boolean;
+  inputCount: number;
+  inputWidth: number;
+  formName: string;
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type QuizCodeInputElement = {
+  type: "quizCodeInput";
+  formName: string;
+  inputWidth: number;
+  inputNumber: number;
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
+export type QuizCodePragraphElement = {
+  type: "quizCodeParagraph";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
 export type CustomText = {
   text: string;
   bold?: true;
@@ -289,7 +338,10 @@ export type CustomElement =
   | UrlLink
   | ImageElement
   | QuizBlockElement
-  | QuizOptionElement;
+  | QuizOptionElement
+  | QuizCodeBlockElement
+  | QuizCodeInputElement
+  | QuizCodePragraphElement;
 
 export type BlockFormat = Align | List | CustomElement["type"];
 export type CustomElementType = CustomElement["type"];

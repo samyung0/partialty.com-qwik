@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 import { ArrowDown, ArrowUp, RotateCcw } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor, Range } from "slate";
 import { useSlate } from "slate-react";
 import ColorChooser from "~/components/ContentEditor/ColorChooser";
@@ -227,6 +227,13 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
   const [fontSize, setFontSize] = useState(mark.fontSize || defaultSize.current);
   const [fontSpacing, setFontSpacing] = useState(mark.fontSpacing || defaultSpacing.current);
   const [fontFamily, setFontFamily] = useState(mark.fontFamily || defaultFamily.current);
+
+  useEffect(() => {
+    setFontSize(mark.fontSize || defaultSize.current);
+    setFontSpacing(mark.fontSpacing || defaultSpacing.current);
+    setFontFamily(mark.fontFamily || defaultFamily.current);
+  }, [mark.fontSize, mark.fontSpacing, mark.fontFamily]);
+
   const [showSelection, setShowSelection] = useState(false);
   return (
     <div
@@ -287,7 +294,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               </button>
               <button
                 onClick={() => {
-                  if (ref.current && Number(ref.current.value) > 0) {
+                  if (ref.current) {
                     if (editor.selection && Range.isCollapsed(editor.selection)) return;
                     Editor.addMark(editor, "fontSize", defaultSize.current);
                     setFontSize(defaultSize.current);
@@ -378,11 +385,9 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
             <div className="ml-auto flex gap-1">
               <button
                 onClick={() => {
-                  if (ref.current && Number(ref.current.value) > 0) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
-                    Editor.addMark(editor, "fontFamily", defaultFamily.current);
-                    setFontFamily(defaultFamily.current);
-                  }
+                  if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                  Editor.addMark(editor, "fontFamily", defaultFamily.current);
+                  setFontFamily(defaultFamily.current);
                 }}
                 className="p-1"
               >
@@ -437,10 +442,10 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               </button>
               <button
                 onClick={() => {
-                  if (ref.current && Number(ref.current.value) > 0) {
+                  if (ref2.current) {
                     if (editor.selection && Range.isCollapsed(editor.selection)) return;
-                    Editor.addMark(editor, "fontSize", defaultSize.current);
-                    setFontSize(defaultSize.current);
+                    Editor.addMark(editor, "fontSpacing", defaultSpacing.current);
+                    setFontSpacing(defaultSpacing.current);
                   }
                 }}
                 className="p-1"
