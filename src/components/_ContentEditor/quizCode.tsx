@@ -419,7 +419,7 @@ export const CenterQuizCodeBlockSettings = ({
                     <textarea
                       value={ast}
                       onChange={(e) => setAst(e.target.value)}
-                      placeholder={"Enter some code and click generate."}
+                      placeholder={"Enter some AST or click generate"}
                       className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none"
                     ></textarea>
                   </div>
