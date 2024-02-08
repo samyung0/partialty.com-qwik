@@ -93,10 +93,7 @@ export const CenterCodeBlockSettings = ({
   const matching = editor.above({
     match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "codeBlock",
   });
-  if (!matching) {
-    setShowCodeBlockSettings(false);
-    return null;
-  }
+  if (!matching) return null;
   const codeBlock = matching[0] as CodeBlockElement;
   const [filename, setFileName] = useState(codeBlock.filename || "");
   const [language, setLanguage] = useState(codeBlock.language);

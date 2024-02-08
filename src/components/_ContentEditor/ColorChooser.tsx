@@ -88,7 +88,6 @@ const ColorChooser = ({
               ref={refSync}
               type="checkbox"
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
-              id="ColorChooserSync"
               checked={syncTime}
               onChange={(e) => {
                 setSyncTime(e.target.checked);
@@ -125,7 +124,7 @@ const ColorChooser = ({
                     step="1"
                     min="0"
                     className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
-                    id="ColorChooserTimeStamp"
+                    id="ColorChooserTimeStamp3"
                     value={timeStamp}
                     onChange={(e) => {
                       setTimeStampState(Number(e.target.value));
@@ -178,7 +177,6 @@ const ColorChooser = ({
               ref={refAnimate}
               type="checkbox"
               className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-dark-gray outline-none"
-              id="ColorChooserAnimate"
               checked={animate}
               onChange={(e) => {
                 setAnimate();

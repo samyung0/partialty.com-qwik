@@ -254,10 +254,11 @@ export type QuizCodeBlockElement = {
   type: "quizCodeBlock";
   quizTitle: string;
   ans: {
-    type: "matchInput" | "ast",
-    matchInput: string[],
-    ast: any
+    type: "matchInput" | "ast";
+    matchInput: Record<string, string>;
+    ast: any;
   };
+  removeTrailingSpaces: boolean;
   isCode: boolean;
   inputCount: number;
   inputWidth: number;
@@ -275,6 +276,7 @@ export type QuizCodeBlockElement = {
 export type QuizCodeInputElement = {
   type: "quizCodeInput";
   formName: string;
+  inputId: string;
   inputWidth: number;
   inputNumber: number;
   align?: Align;

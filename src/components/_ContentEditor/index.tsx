@@ -13,6 +13,9 @@ import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-rea
 import { Editable, Slate, withReact } from "slate-react";
 import AudioPlayer, { CenterAudioChooser } from "~/components/_ContentEditor/AudioPlayer";
 
+import QuizHydrate from "~/components/Prose/QuizHydrate";
+import Prose from "~/components/Prose/react-prose";
+import SyncAudio from "~/components/Prose/react-syncAudio";
 import { Element } from "~/components/_ContentEditor/Element";
 import { HoveringEmbed, withEmbeds } from "~/components/_ContentEditor/Embed";
 import { CenterImageChooser, HoveringImage, withImages } from "~/components/_ContentEditor/Images";
@@ -27,18 +30,19 @@ import {
   SetNodeToDecorations,
   useDecorate,
 } from "~/components/_ContentEditor/codeBlock";
-import { withQuizCode } from "~/components/_ContentEditor/codeQuiz";
 import onKeyDown from "~/components/_ContentEditor/hotkey";
 import {
   CenterQuizBlockSettings,
   HoveringQuizBlock,
   withQuiz,
 } from "~/components/_ContentEditor/quiz";
+import {
+  CenterQuizCodeBlockSettings,
+  HoveringQuizCodeBlock,
+  withQuizCode,
+} from "~/components/_ContentEditor/quizCode";
 import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
-import QuizHydrate from "~/components/Prose/QuizHydrate";
-import Prose from "~/components/Prose/react-prose";
-import SyncAudio from "~/components/Prose/react-syncAudio";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
@@ -150,27 +154,30 @@ const ContentEditorReact = ({
     {
       type: "quizCodeBlock",
       ans: {
-        type: "matchInput",
-        matchInput: [],
+        type: "ast",
+        matchInput: { blablabla: "=" },
         ast: {},
       },
-      isCode: false,
+      isCode: true,
       formName: "test2",
       quizTitle: "Question 2",
+      removeTrailingSpaces: true,
       inputWidth: 400,
       inputCount: 1,
       children: [
         {
           type: "quizCodeParagraph",
           children: [
-            { text: "answer A" },
+            { text: "let x " },
             {
               type: "quizCodeInput",
               inputWidth: 200,
+              formName: "test2",
               children: [{ text: "" }],
               inputNumber: 0,
+              inputId: "blablabla",
             },
-            { text: "answer B" },
+            { text: " 10;" },
           ],
         },
       ],
@@ -309,6 +316,7 @@ const ContentEditorReact = ({
   const [replaceCurrentImage, setReplaceCurrentImage] = useState(false);
   const [showCodeBlockSettings, setShowCodeBlockSettings] = useState(false);
   const [showQuizBlockSettings, setShowQuizBlockSettings] = useState(false);
+  const [showQuizCodeBlockSettings, setShowQuizCodeBlockSettings] = useState(false);
 
   const [audioTrack, _setAudioTrack] = useState<{
     id: string;
@@ -484,6 +492,12 @@ const ContentEditorReact = ({
                 editor={editor}
               />
             )}
+            {showQuizCodeBlockSettings && (
+              <CenterQuizCodeBlockSettings
+                setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
+                editor={editor}
+              />
+            )}
             <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
             <HoveringImage
               parentRef={parentRef}
@@ -499,6 +513,10 @@ const ContentEditorReact = ({
             <HoveringQuizBlock
               parentRef={parentRef}
               setShowQuizBlockSettings={setShowQuizBlockSettings}
+            />
+            <HoveringQuizCodeBlock
+              parentRef={parentRef}
+              setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
             />
             {/* <HoveringToolbar /> */}
             <Prose>

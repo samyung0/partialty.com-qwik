@@ -5,12 +5,12 @@ import { EmbedElement } from "~/components/_ContentEditor/Embed";
 import { ImageBlock } from "~/components/_ContentEditor/Images";
 import { LinkElement } from "~/components/_ContentEditor/Link";
 import { CodeBlock, CodeLine } from "~/components/_ContentEditor/codeBlock";
+import { QuizBlock, QuizOption } from "~/components/_ContentEditor/quiz";
 import {
   QuizCodeBlock,
   QuizCodeInput,
   QuizCodeParagraph,
-} from "~/components/_ContentEditor/codeQuiz";
-import { QuizBlock, QuizOption } from "~/components/_ContentEditor/quiz";
+} from "~/components/_ContentEditor/quizCode";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
   const style = { textAlign: element.align || "left" } as const;

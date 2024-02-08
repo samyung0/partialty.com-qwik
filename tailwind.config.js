@@ -8,7 +8,7 @@ export default {
   plugins: [
     tailwindPlugins(),
     require("daisyui"),
-    require("@tailwindcss/typography") ,
+    require("@tailwindcss/typography"),
     // Method 1: directly use the variant inline: theme-test:bg-red
     // however it does not work well with prettier plugin rn
     // it automatically puts the classnames with custom variants in front of everything else

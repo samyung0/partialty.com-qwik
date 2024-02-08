@@ -594,6 +594,68 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       <span class="optionText">${children}</span>
     </button>`;
     }
+    case "quizCodeParagraph": {
+      return `<div style="
+      border-color: inherit;
+      background-color: inherit;
+      color: inherit;
+      margin-bottom:8px;
+      ">
+      ${children}
+    </div>`;
+    }
+    case "quizCodeInput": {
+      const width = node.inputWidth;
+      const name = node.formName;
+      const number = node.inputNumber;
+      const id = node.inputId; // should use data-id to store since inputId may start with a number and an id that starts with a number is not a valid id
+      return `<div
+      data-formname="${name}"
+      data-inputnumber="${number}"
+      data-id="${id}"
+      style="
+      display: inline-block;
+      border-color: inherit;
+      background-color: inherit;
+      padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  vertical-align: middle;
+  color: inherit;
+      "
+    >
+      <div
+      class="quizCodeInput"
+        style="
+        width: ${width}px;
+        display: inline-block;
+        border-radius: 0.375rem;
+        border-width: 2px;
+        border-color: inherit;
+        background-color: inherit;
+        vertical-align: middle;
+        color: inherit;
+        overflow: hidden;
+        "
+      >
+        <input
+          name="${name}"
+          type="text"
+          style="
+          display: inline-block;
+          width: 100%;
+          border-style: none;
+          border-color: inherit;
+          background-color: inherit;
+          padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: inherit;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+          "
+        />
+      </div>
+    </div>`;
+    }
     default:
       return `<p style="${style}">
           ${children}

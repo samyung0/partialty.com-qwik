@@ -102,10 +102,7 @@ export const CenterQuizBlockSettings = ({
   const matching = editor.above({
     match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "quizBlock",
   });
-  if (!matching) {
-    setShowQuizBlockSettings(false);
-    return null;
-  }
+  if (!matching) return null;
   const quizBlock = matching[0] as QuizBlockElement;
   const [quizTitle, setQuizTitle] = useState(quizBlock.quizTitle || "");
   const [quizAns, setQuizAns] = useState(quizBlock.ans || "");
@@ -113,7 +110,7 @@ export const CenterQuizBlockSettings = ({
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
-        <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Codeblock</h2>
+        <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Quiz</h2>
         <button
           onClick={() => setShowQuizBlockSettings(false)}
           className="absolute right-8 top-8 p-2"
@@ -152,11 +149,6 @@ export const CenterQuizBlockSettings = ({
                   Option {index + 1}
                 </option>
               ))}
-              {/* {languageList.map((language) => (
-                <option key={`codeBlockSettings${language}`} value={language}>
-                  {languageListDisplayNames[language]}
-                </option>
-              ))} */}
             </select>
           </div>
         </div>

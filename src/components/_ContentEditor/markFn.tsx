@@ -406,7 +406,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 step="1"
                 min="0"
                 className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
-                id="ColorChooserTimeStamp"
+                id="ColorChooserTimeStamp2"
                 value={fontSpacing}
                 onChange={(e) => {
                   if (editor.selection && Range.isCollapsed(editor.selection)) return;

@@ -32,7 +32,9 @@ const app = new Elysia()
       name: "heartbeat",
       pattern: "* */14 * * * *", // render apps sleep every 15 minutes
       run() {
-        fetch("https://api.partialty.com");
+        try {
+          fetch("https://api.partialty.com");
+        } catch (e) {}
       },
     })
   )
@@ -41,10 +43,12 @@ const app = new Elysia()
       name: "heartbeat2",
       pattern: "* */15 * * * *", // avoid cold start in vercel for root
       run() {
-        fetch("https://www.partialty.com/");
-        fetch("https://www.partialty.com/members/dashboard/");
-        fetch("https://www.partialty.com/signup/");
-        fetch("https://www.partialty.com/login/");
+        try {
+          fetch("https://www.partialty.com/");
+          fetch("https://www.partialty.com/members/dashboard/");
+          fetch("https://www.partialty.com/signup/");
+          fetch("https://www.partialty.com/login/");
+        } catch (e) {}
       },
     })
   )
