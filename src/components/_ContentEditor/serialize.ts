@@ -594,15 +594,154 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       <span class="optionText">${children}</span>
     </button>`;
     }
+    case "quizCodeBlock": {
+      const width = node.inputWidth;
+      const formName = node.formName;
+      const combinedText = node.combinedText;
+      const astLang = node.astLang;
+      const isCode = node.isCode;
+      return `<div style="
+    margin-bottom: 1.25rem;
+    margin-top: 1.25rem;
+    background-color: inherit;
+    color: inherit;
+    ">
+      <h3 style="
+      margin-bottom: 0.75rem
+      margin-top: 0;
+      background-color: inherit;
+      color: inherit;
+      ">
+        ${node.quizTitle}
+      </h3>
+      <form
+        data-ans="${encodeURIComponent(JSON.stringify(node.ans))}"
+        data-formname="${formName}"
+        data-combinedtext="${combinedText}"
+        data-astlang="${astLang}"
+        class="quizCodeBlock"
+        style="
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        background-color: inherit;
+        color: inherit;
+        "
+        
+      >
+        <div
+          style="
+          width: ${width}px;
+          white-space: nowrap;
+          border-radius: 0.125rem;
+          border-width: 2px;
+          border-color: rgb(31 41 55);
+          background-color: inherit;
+          padding: 0.5rem;
+          vertical-align: middle;
+          color: inherit;
+          "
+        >
+          ${
+            isCode
+              ? `
+          <style>
+            pre .quizCodeInput {
+              background-color: rgb(247 247 247) !important;
+              color: rgb(31 41 55) !important;
+            }
+            pre > code > div {
+              padding-bottom: 0.5rem !important;
+              margin-bottom: 0 !important;
+            }
+            pre > code > div:last-child {
+              padding-bottom: 0 !important;
+            }
+          </style>
+            <pre style="
+            margin: 0;
+            width: 100%;
+            overflow: auto;
+            border-color: rgb(247 247 247);
+            "><code style="border-color: inherit;">${children}</code></pre>
+          `
+              : `
+            <div style="
+            margin: 0;
+            width: 100%;
+            overflow: auto;
+            border-color: rgb(31 41 55);
+            background-color: rgb(247 247 247);
+            ">
+              ${children}
+            </div>
+          `
+          }
+        </div>
+        <button
+        style="
+        border-radius: 0.5rem;
+        background-color: rgb(31 41 55);
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: rgb(247 247 247);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        "
+        class="formCheck"
+        >
+          Check
+        </button>
+        <div
+        style="
+        border-radius: 0.5rem;
+        background-color: rgb(85 175 150);
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: rgb(247 247 247);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        display: none;
+        "
+        class="formCorrect"
+        >
+          Correct
+        </div>
+        <div style="display: none" class="formWrong">
+          <div style="
+          border-radius: 0.5rem;
+          background-color: rgb(255 99 71);
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          color: rgb(247 247 247);
+          box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+          display: inline-block;
+          ">
+            Wrong
+          </div>
+          <p style="
+          margin: 0;
+          padding-top: 0.25rem;
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          color: rgb(255 99 71);
+          "></p>
+        </div>
+      </form>
+    </div>`;
+    }
     case "quizCodeParagraph": {
       return `<div style="
       border-color: inherit;
       background-color: inherit;
       color: inherit;
       margin-bottom:8px;
-      ">
-      ${children}
-    </div>`;
+      ">${children}</div>`;
     }
     case "quizCodeInput": {
       const width = node.inputWidth;
@@ -622,8 +761,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   vertical-align: middle;
   color: inherit;
       "
-    >
-      <div
+    ><div
       class="quizCodeInput"
         style="
         width: ${width}px;
@@ -636,9 +774,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         color: inherit;
         overflow: hidden;
         "
-      >
-        <input
-          name="${name}"
+      ><input
+          name="${id}"
           type="text"
           style="
           display: inline-block;
@@ -652,9 +789,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   outline: 2px solid transparent;
   outline-offset: 2px;
           "
-        />
-      </div>
-    </div>`;
+        /></div></div>`;
     }
     default:
       return `<p style="${style}">

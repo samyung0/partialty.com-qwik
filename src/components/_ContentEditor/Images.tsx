@@ -273,6 +273,7 @@ export const CenterImageChooser = ({
                           SlateElement.isElement(n) &&
                           Editor.isBlock(editor, n) &&
                           n.type === "image",
+                        mode: "highest",
                       }
                     );
                     ReactEditor.deselect(editor);

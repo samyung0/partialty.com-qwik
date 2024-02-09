@@ -8,6 +8,7 @@ import {
   Code,
   FileCode,
   Film,
+  GanttChartSquare,
   Heading1,
   Heading2,
   Heading3,
@@ -36,6 +37,7 @@ import {
   ImageButton,
   LinkButton,
   QuizBlockButton,
+  QuizCodeBlockButton,
 } from "~/components/_ContentEditor/blockFn";
 import {
   BackgroundMarkButton,
@@ -101,6 +103,7 @@ const Toolbar = ({
         <BlockButton format="warningBlock" children={<XCircle size={20} />} />
         <br />
         <QuizBlockButton children={<Rows3 size={20} />} />
+        <QuizCodeBlockButton children={<GanttChartSquare size={20} />} />
       </div>
     </div>
   );

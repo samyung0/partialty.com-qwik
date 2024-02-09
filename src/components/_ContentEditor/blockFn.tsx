@@ -93,6 +93,7 @@ export const EmbedButton = ({
           },
           {
             at: editor.selection,
+            mode: "highest",
           }
         );
       }}
@@ -161,6 +162,7 @@ export const CodeBlockButton = ({
           },
           {
             at: editor.selection,
+            mode: "highest",
           }
         );
       }}
@@ -186,26 +188,83 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
         // ReactEditor.focus(editor);
         if (!editor.selection) return;
         const formName = "a" + uuidv4();
-        editor.insertNode({
-          type: "quizBlock",
-          formName: formName,
-          ans: "1",
-          quizTitle: "Quiz Title",
-          children: [
-            {
-              type: "quizOption",
-              formName: formName,
-              optionValue: "1",
-              children: [{ text: "Option 1" }],
+        editor.insertNode(
+          {
+            type: "quizBlock",
+            formName: formName,
+            ans: "1",
+            quizTitle: "Quiz Title",
+            children: [
+              {
+                type: "quizOption",
+                formName: formName,
+                optionValue: "1",
+                children: [{ text: "Option 1" }],
+              },
+              {
+                type: "quizOption",
+                formName: formName,
+                optionValue: "2",
+                children: [{ text: "Option 2" }],
+              },
+            ],
+          },
+          {
+            mode: "highest",
+          }
+        );
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode }) => {
+  const editor = useSlate();
+  return (
+    <button
+      className={
+        isBlockActive(editor, "quizCodeBlock", "type")
+          ? `border-b-2 border-primary-dark-gray`
+          : "border-b-2 border-light-mint"
+      }
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        // ReactEditor.focus(editor);
+        if (!editor.selection) return;
+        const formName = "a" + uuidv4();
+        editor.insertNode(
+          {
+            type: "quizCodeBlock",
+            formName: formName,
+            quizTitle: "Quiz Title",
+            ans: {
+              type: "matchInput",
+              matchInput: {},
+              ast: "",
             },
-            {
-              type: "quizOption",
-              formName: formName,
-              optionValue: "2",
-              children: [{ text: "Option 2" }],
-            },
-          ],
-        });
+            astLang: "js",
+            combinedText: "",
+            displayAst: "",
+            codeInput: "",
+            removeTrailingSpaces: true,
+            isCode: true,
+            inputCount: 0,
+            inputWidth: 500,
+            children: [
+              {
+                type: "quizCodeParagraph",
+                children: [{ text: "Some code..." }],
+              },
+            ],
+          },
+          {
+            mode: "highest",
+          }
+        );
       }}
     >
       {children}

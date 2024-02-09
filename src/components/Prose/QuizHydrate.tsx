@@ -47,7 +47,6 @@ const QuizHydrate = ({
           const formname = form.getAttribute("data-formname");
           if (!ans || !formname) return;
           let correctAns = false;
-          console.log(val, ans);
           if (val[formname] === ans) correctAns = true;
 
           const check = form.getElementsByClassName("formCheck")[0] as HTMLElement | undefined;

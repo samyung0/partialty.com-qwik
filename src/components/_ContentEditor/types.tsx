@@ -256,8 +256,12 @@ export type QuizCodeBlockElement = {
   ans: {
     type: "matchInput" | "ast";
     matchInput: Record<string, string>;
-    ast: any;
+    ast: string;
   };
+  astLang: string;
+  combinedText: string;
+  displayAst: string;
+  codeInput: string;
   removeTrailingSpaces: boolean;
   isCode: boolean;
   inputCount: number;
@@ -318,6 +322,7 @@ export type CustomText = {
   fontSize?: number;
   fontFamily?: string;
   fontSpacing?: number;
+  isCodeQuizInput?: string;
 };
 export type CustomElement =
   | ParagraphElement

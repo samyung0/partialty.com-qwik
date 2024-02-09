@@ -13,6 +13,7 @@ import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-rea
 import { Editable, Slate, withReact } from "slate-react";
 import AudioPlayer, { CenterAudioChooser } from "~/components/_ContentEditor/AudioPlayer";
 
+import QuizCodeHydrate from "~/components/Prose/QuizCodeHydrate";
 import QuizHydrate from "~/components/Prose/QuizHydrate";
 import Prose from "~/components/Prose/react-prose";
 import SyncAudio from "~/components/Prose/react-syncAudio";
@@ -156,9 +157,12 @@ const ContentEditorReact = ({
       ans: {
         type: "ast",
         matchInput: { blablabla: "=" },
-        ast: {},
+        ast: "{}",
+        displayAst: "{}",
       },
+      codeInput: "",
       isCode: true,
+      astLang: "js",
       formName: "test2",
       quizTitle: "Question 2",
       removeTrailingSpaces: true,
@@ -435,6 +439,7 @@ const ContentEditorReact = ({
         />
         <div
           ref={parentRef}
+          id="ParentRefContainer"
           className={
             "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 " +
             (isPreviewing ? " hidden" : " block")
@@ -544,6 +549,7 @@ const ContentEditorReact = ({
         {isPreviewing && (
           <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
             <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+            <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
             <div className="h-[90vh] overflow-auto">
               <Prose children={<></>} innerHTML={renderedHTML || ""} />
             </div>

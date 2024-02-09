@@ -2,7 +2,7 @@
 import { Trash, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { BaseRange } from "slate";
-import { Editor, Range, Element as SlateElement, Transforms } from "slate";
+import { Editor, Node, Range, Element as SlateElement, Transforms } from "slate";
 import {
   ReactEditor,
   useFocused,
@@ -11,6 +11,7 @@ import {
   type RenderElementProps,
 } from "slate-react";
 import { v4 as uuidv4 } from "uuid";
+import astParse from "~/components/_ContentEditor/astParse";
 import { isBlockActive } from "~/components/_ContentEditor/blockFn";
 import serialize from "~/components/_ContentEditor/serialize";
 import type { QuizCodeBlockElement, QuizCodeInputElement } from "~/components/_ContentEditor/types";
@@ -21,10 +22,15 @@ export const QuizCodeInput = ({ attributes, children, element }: RenderElementPr
   const number = (element as QuizCodeInputElement).inputNumber;
   const editor = useSlateStatic();
   const ref = useRef<any>();
+  const parentRef = useRef<any>();
+  useEffect(() => {
+    parentRef.current = document.getElementById("ParentRefContainer");
+  }, []);
   useEffect(() => {
     if (ref.current) {
       new ResizeObserver((e) => {
         if (ref.current) {
+          if (parentRef.current && parentRef.current.className.includes("hidden")) return;
           const slateNode = ReactEditor.toSlateNode(editor, ref.current);
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!slateNode) return;
@@ -58,9 +64,11 @@ export const QuizCodeInput = ({ attributes, children, element }: RenderElementPr
         className="quizCodeInput inline-block overflow-hidden rounded-md border-2 border-inherit bg-inherit align-middle text-inherit [resize:horizontal]"
         ref={ref}
       >
-        <div className="w-[calc(100%-8px)] whitespace-pre border-inherit bg-inherit px-2 text-inherit">
-          {children}
-        </div>
+        <input
+          className="w-[calc(100%-8px)] whitespace-pre border-inherit bg-inherit px-2 text-inherit outline-none"
+          type="text"
+        />
+        {children}
       </div>
     </div>
   );
@@ -81,9 +89,15 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
   const isCode = (element as QuizCodeBlockElement).isCode;
   const editor = useSlateStatic();
   const ref = useRef<any>();
+  const parentRef = useRef<any>();
+
+  useEffect(() => {
+    parentRef.current = document.getElementById("ParentRefContainer");
+  }, []);
   useEffect(() => {
     if (ref.current)
       new ResizeObserver((e) => {
+        if (parentRef.current && parentRef.current.className.includes("hidden")) return;
         if (ref.current)
           editor.setNodes(
             {
@@ -107,7 +121,7 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
         onSubmit={(e) => {
           e.preventDefault();
         }}
-        className="quizBlock flex flex-col items-start gap-3 bg-inherit text-inherit"
+        className="quizCodeBlock flex flex-col items-start gap-3 bg-inherit text-inherit"
       >
         <button
           type="button"
@@ -115,14 +129,15 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
           contentEditable={false}
           onClick={() => {
             if (!editor.selection) return;
+            const id = uuidv4();
             Transforms.insertNodes(
               editor,
               {
                 type: "quizCodeInput",
                 inputWidth: 200,
-                children: [{ text: "" }],
+                children: [{ text: "", isCodeQuizInput: id }],
                 formName,
-                inputId: uuidv4(),
+                inputId: id,
                 inputNumber: inputCount,
               },
               {
@@ -177,7 +192,7 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
           <div className="inline-block rounded-lg bg-tomato px-6 py-2 text-light-tomato shadow-lg">
             Wrong
           </div>
-          <p className="m-0 pt-1 text-sm text-tomato">sads aDA SD asd asd sa</p>
+          <p className="m-0 pt-1 text-sm text-tomato"></p>
         </div>
       </form>
     </div>
@@ -185,8 +200,28 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
 };
 
 export const withQuizCode = (editor: Editor) => {
-  const { isInline } = editor;
+  const { isInline, onChange } = editor;
   editor.isInline = (element) => ["quizCodeInput"].includes(element.type) || isInline(element);
+  editor.onChange = (props) => {
+    const parent = editor.above({
+      match: (n) =>
+        SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === "quizCodeBlock",
+    });
+    if (parent) {
+      editor.setNodes(
+        {
+          combinedText: encodeURIComponent(
+            JSON.stringify(Array.from(Node.texts(parent[0])).map((x) => x[0]))
+          ),
+        },
+        {
+          match: (n) =>
+            SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === "quizCodeBlock",
+        }
+      );
+    }
+    onChange(props);
+  };
   return editor;
 };
 
@@ -206,8 +241,9 @@ export const CenterQuizCodeBlockSettings = ({
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const [quizMatchInput, setQuizMatchInput] = useState(quizCodeBlock.ans.matchInput || {});
   const [quizAst, setQuizAst] = useState(quizCodeBlock.ans.type === "ast");
-  const [ast, setAst] = useState(quizCodeBlock.ans.ast || {});
-  const [astInputCode, setAstInputCode] = useState("");
+  const [ast, setAst] = useState(quizCodeBlock.displayAst || "{}");
+  const [astInputCode, setAstInputCode] = useState(quizCodeBlock.codeInput || "");
+  const [astGenerateLanguage, setAstGenerateLanguage] = useState(quizCodeBlock.astLang || "js");
   const [showAst, setShowAst] = useState(false);
   const [removeTrailingSpaces, setRemoveTrailingSpaces] = useState(
     !!quizCodeBlock.removeTrailingSpaces
@@ -237,11 +273,15 @@ export const CenterQuizCodeBlockSettings = ({
       } else final[id] = "";
       if (quizAst) {
         (i.firstElementChild as HTMLInputElement).disabled = true;
-        (i.firstElementChild as HTMLInputElement).value = "";
         i.style.setProperty("background-color", "rgb(209 213 219)", "important");
       } else {
         (i.firstElementChild as HTMLInputElement).disabled = false;
-        (i.firstElementChild as HTMLInputElement).value = quizMatchInput[id];
+        (i.firstElementChild as HTMLInputElement).value = Object.prototype.hasOwnProperty.call(
+          quizMatchInput,
+          id
+        )
+          ? quizMatchInput[id]
+          : "";
         i.style.setProperty("background-color", "inherit");
       }
       (i.firstElementChild as HTMLInputElement).oninput = () => {
@@ -330,16 +370,22 @@ export const CenterQuizCodeBlockSettings = ({
           )}
           <button
             onClick={() => {
-              console.log(quizMatchInput);
               editor.setNodes(
                 {
                   quizTitle,
                   isCode,
                   ans: {
                     type: quizAst ? "ast" : "matchInput",
-                    ast,
+                    ast:
+                      astInputCode !== "" &&
+                      Object.prototype.hasOwnProperty.call(astParse, astGenerateLanguage)
+                        ? JSON.stringify(astParse[astGenerateLanguage](astInputCode))
+                        : "{}",
                     matchInput: quizMatchInput,
                   },
+                  astLang: astGenerateLanguage,
+                  displayAst: ast,
+                  codeInput: astInputCode,
                 },
                 {
                   match: (n) =>
@@ -361,15 +407,14 @@ export const CenterQuizCodeBlockSettings = ({
             <>
               <div className="flex gap-4">
                 <h3 className="font-mosk text-2xl font-bold tracking-wider">Answer</h3>
-                {quizAst && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAst(true)}
-                    className="text-base underline decoration-wavy underline-offset-4"
-                  >
-                    Switch to AST
-                  </button>
-                )}
+
+                <button
+                  type="button"
+                  onClick={() => setShowAst(true)}
+                  className="text-base underline decoration-wavy underline-offset-4"
+                >
+                  Switch to AST
+                </button>
               </div>
               <div
                 style={{
@@ -402,24 +447,45 @@ export const CenterQuizCodeBlockSettings = ({
             <>
               <div className="flex gap-4">
                 <h3 className="font-mosk text-2xl font-bold tracking-wider">AST</h3>
-                {quizAst && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAst(false)}
-                    className="text-base underline decoration-wavy underline-offset-4"
-                  >
-                    Switch to Code
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setShowAst(false)}
+                  className="text-base underline decoration-wavy underline-offset-4"
+                >
+                  Switch to Code
+                </button>
               </div>
               <div className={"flex max-w-full flex-1 items-start justify-evenly gap-2"}>
                 <div className="flex flex-col gap-2">
-                  <h4 className="font-mosk text-xl font-bold tracking-wider">AST Tree</h4>
+                  <div className="flex gap-2">
+                    <h4 className="font-mosk text-xl font-bold tracking-wider">AST Tree</h4>
+                    <button
+                      type="button"
+                      className="rounded-md bg-primary-dark-gray px-2 py-1 text-base text-background-light-gray shadow-md"
+                      onClick={async () => {
+                        const copyText = document.getElementById("ASTText");
+                        if (!copyText) return;
+
+                        try {
+                          await navigator.clipboard.writeText(
+                            (copyText as HTMLTextAreaElement).value
+                          );
+                        } catch (err) {
+                          alert("Failed to copy: " + (err as any).toString());
+                        }
+                      }}
+                    >
+                      Copy
+                    </button>
+                  </div>
                   <div className="h-[400px] w-[400px] overflow-hidden rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4">
                     <textarea
                       value={ast}
+                      id="ASTText"
                       onChange={(e) => setAst(e.target.value)}
-                      placeholder={"Enter some AST or click generate"}
+                      placeholder={
+                        "AST matching will check if all the properties listed in the answer's AST is prsent in user's AST. Extra properties/values from the user's AST are also accepted. If the AST object is an array, the order will also be checked."
+                      }
                       className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none"
                     ></textarea>
                   </div>
@@ -434,12 +500,32 @@ export const CenterQuizCodeBlockSettings = ({
                       className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none"
                     ></textarea>
                   </div>
-                  <button
-                    type="button"
-                    className="self-start rounded-lg bg-primary-dark-gray px-3 py-1 text-base text-background-light-gray shadow-md"
-                  >
-                    Generate
-                  </button>
+                  <div className="flex justify-start gap-3 self-start">
+                    <button
+                      type="button"
+                      className="rounded-lg bg-primary-dark-gray px-2 py-1 text-base text-background-light-gray shadow-md"
+                      onClick={() => {
+                        if (Object.prototype.hasOwnProperty.call(astParse, astGenerateLanguage))
+                          setAst(
+                            JSON.stringify(astParse[astGenerateLanguage](astInputCode), null, 2)
+                          );
+                      }}
+                    >
+                      Generate
+                    </button>
+                    <select
+                      className="rounded-lg border-2 border-primary-dark-gray px-3 py-1 shadow-md outline-none"
+                      onChange={(e) => setAstGenerateLanguage(e.target.value)}
+                      value={astGenerateLanguage}
+                    >
+                      <option value="js">JS/TS/JSX</option>
+                      <option value="css">CSS</option>
+                      <option value="html">HTML</option>
+                      <option value="svelte">Svelte</option>
+                      <option value="vue3">Vue 3</option>
+                      <option value="mysql">MYSQL</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </>
