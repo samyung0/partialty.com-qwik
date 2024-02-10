@@ -61,7 +61,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           width: 0%;	
         }
         100% {
-          width: 10%;
+          width: 100%;
         }
       }
       #${uuid}lower {
@@ -72,7 +72,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           width:100%;
           display:block;
           background:${node.underline};
-          z-index: -2;
+          z-index: 0;
       }
     #${uuid}upper {
         position: absolute;
@@ -82,7 +82,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           height: 6px;
           width: 100%;
           background: inherit;
-          z-index: -1;
+          z-index: 1;
           ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;`}
       }
        </style>
@@ -95,6 +95,36 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
              `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
            } id="${uuid}upper"></span>
          </span>`;
+      } else if (node.sync) {
+        str += `
+       <style>
+      #${uuid}lower {
+        position: absolute;
+          top:100%;
+          left:0;
+          height:6px;
+          width:100%;
+          display:block;
+          background:${node.underline};
+          z-index: 0;
+      }
+    #${uuid}upper {
+        position: absolute;
+          display: block;
+          top:100%;
+          right:0;
+          height: 6px;
+          width: 100%;
+          background: inherit;
+          z-index: 1;
+      }
+       </style>
+       `;
+        str += `<span style="position:relative;background:inherit;color:inherit;">
+           ${string}
+           <span id="${uuid}lower"></span>
+           <span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>
+         </span>`;
       } else {
         str += `
        <style>
@@ -106,7 +136,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           width:100%;
           display:block;
           background:${node.underline};
-          z-index: -2;
+          z-index: 0;
       }
        </style>
        `;
@@ -184,6 +214,40 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           } id="${uuid}upper"></span>
          </span>
          </span>`;
+      } else if (node.sync) {
+        str += `
+        <style>
+      #${uuid}lower {
+        position: absolute;
+        top:-2px;
+        height:calc(100% + 4px);
+        left:-4px;
+        width:calc(100% + 8px);
+        display:block;
+        z-index: 0;
+        fill:${node.background};
+      }
+      #${uuid}upper {
+      position: absolute;
+      display: block;
+      top:-2px;
+      right:-4px;
+      height: calc(100% + 4px);
+      width: calc(100% + 8px);
+      background: inherit;
+      z-index: 1;
+      }
+       </style>
+       `;
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
+          <span style="position:relative;background:transparent;color:inherit;z-index:2">${string}</span>
+          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
+          <span
+            data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "calc(100% + 8px)"}'
+          id="${uuid}upper"></span>
+         </span>
+         </span>
+        `;
       } else {
         str += `
         <style>
@@ -634,11 +698,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           style="
           width: ${width}px;
           white-space: nowrap;
-          border-radius: 0.125rem;
-          border-width: 2px;
-          border-color: rgb(31 41 55);
           background-color: inherit;
-          padding: 0.5rem;
           vertical-align: middle;
           color: inherit;
           "
