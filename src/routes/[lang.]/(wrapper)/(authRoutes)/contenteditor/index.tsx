@@ -301,12 +301,12 @@ export default component$(() => {
 
       ws.addEventListener("close", () => {
         clearInterval(retry);
+        contentWS.value = undefined;
+        clearInterval(muxWSHeartBeat.value);
         if (isClosingPage.value) {
           return console.log("Websocket connection closed!");
         }
         console.error("Websocket connection closed!");
-        contentWS.value = undefined;
-        clearInterval(muxWSHeartBeat.value);
 
         _startWSConnection.startWSConnection();
       });

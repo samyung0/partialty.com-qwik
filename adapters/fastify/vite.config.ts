@@ -10,6 +10,15 @@ export default extendConfig(baseConfig, () => {
         input: ["src/entry.fastify.tsx", "@qwik-city-plan"],
       },
     },
-    plugins: [nodeServerAdapter({ name: "fastify" })],
+    plugins: [
+      nodeServerAdapter({
+        name: "fastify",
+        ssg: {
+          include: ["/*"],
+          origin: "https://www.partialty.com",
+          sitemapOutFile: "sitemap.xml",
+        },
+      }),
+    ],
   };
 });

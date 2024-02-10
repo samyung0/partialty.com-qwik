@@ -9,6 +9,7 @@ export default {
     "middle-yellow": "#FDE594",
     "light-yellow": "#fef6db",
     "bright-yellow": "#ffff43",
+    "dark-yellow": "#e5ddc5",
     mint: "#6fdcbf",
     "middle-mint": "#A9EAD9",
     "light-mint": "#e2f8f2",
@@ -40,5 +41,6 @@ export default {
     tomato: "#ff6347",
     "middle-tomato": "#FFA291",
     "light-tomato": "#ffe0da",
+    purple: "#3a10e5",
   },
 } satisfies { colors: NonNullable<ExtendType["colors"]> };

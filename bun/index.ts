@@ -44,7 +44,9 @@ const app = new Elysia()
       pattern: "* */15 * * * *", // avoid cold start in vercel for root
       run() {
         try {
+          // put the major sites here
           fetch("https://www.partialty.com/");
+          fetch("https://www.partialty.com/contenteditor/");
           fetch("https://www.partialty.com/members/dashboard/");
           fetch("https://www.partialty.com/signup/");
           fetch("https://www.partialty.com/login/");

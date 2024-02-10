@@ -124,6 +124,7 @@
     "@types/uuid": "^9.0.8",
     "@vue/compiler-dom": "^3.4.16",
     "@webcontainer/api": "1.1.8",
+    "apexcharts": "^3.45.2",
     "axios": "^1.4.0",
     "chokidar": "^3.5.3",
     "cloudinary": "^1.41.3",

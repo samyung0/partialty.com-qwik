@@ -1,7 +1,31 @@
+import type { RequestEventAction } from "@builder.io/qwik-city";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
 
 let client: Cloudinary | null = null;
+
+export const cloudinaryUpload = async (avatarUrl: string, requestEvent: RequestEventAction) => {
+  try {
+    const uploadTo = `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
+
+    console.log(requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
+
+    const formData = new FormData();
+    formData.append("upload_preset", requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
+    formData.append("file", avatarUrl);
+
+    const result = await fetch(uploadTo, {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+
+    return result;
+  } catch (e) {
+    console.log("HI");
+
+    throw new Error();
+  }
+};
 
 export const initCloudinaryIfNeeded = async () => {
   if (!client) {

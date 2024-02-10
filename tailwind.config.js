@@ -2,7 +2,7 @@
 import tailwindPlugins from "./tailwind/tailwindPlugins";
 import tailwindThemes from "./tailwind/tailwindThemes/base";
 export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "./node_modules/flowbite/**/*.js"],
   ...tailwindThemes,
   darkMode: "class",
   plugins: [
