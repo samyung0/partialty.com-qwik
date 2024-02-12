@@ -5,10 +5,9 @@ import { CLOUDINARY_NAME } from "~/const/cloudinary";
 let client: Cloudinary | null = null;
 
 export const cloudinaryUpload = async (avatarUrl: string, requestEvent: RequestEventAction) => {
+  if(!requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")) throw Error("Server ENV error!")
   try {
     const uploadTo = `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
-
-    console.log(requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
 
     const formData = new FormData();
     formData.append("upload_preset", requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
@@ -21,9 +20,7 @@ export const cloudinaryUpload = async (avatarUrl: string, requestEvent: RequestE
 
     return result;
   } catch (e) {
-    console.log("HI");
-
-    throw new Error();
+    console.error(e);
   }
 };
 

@@ -6,6 +6,7 @@ import { qwik } from "lucia/middleware";
 import tursoClient from "~/utils/tursoClient";
 
 import bunApp from "~/_api/bun/util/edenTreaty";
+import { Profiles } from "../../drizzle_turso/schema/profiles";
 
 let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
@@ -71,10 +72,11 @@ const _lucia = (prodInDev: boolean = false) =>
         username: user.username,
         avatar_url: user.avatar_url,
         github_id: user.github_id,
+        google_id: user.google_id,
         nickname: user.nickname,
-        email_verified: user.email_verified,
+        email_verified: !!user.email_verified,
         github_username: user.github_username,
-      };
+      } as Omit<Omit<Profiles, "accessible_courses" >, "id">;
     },
     getSessionAttributes: (session) => {
       return {

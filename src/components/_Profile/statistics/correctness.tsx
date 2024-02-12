@@ -29,16 +29,12 @@ const options: ApexOptions = {
   // },
   legend: {
     position: "bottom",
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "'Varela_Round'",
+    fontWeight: 500,
     offsetY: 7,
   },
 
   xaxis: {
-    labels: {
-      formatter: function (value: String) {
-        return value + "%";
-      },
-    },
     axisTicks: {
       show: false,
     },

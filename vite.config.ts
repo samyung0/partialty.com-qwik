@@ -5,7 +5,7 @@ import { qwikSpeakInline } from "qwik-speak/inline";
 import { defineConfig, type Connect } from "vite";
 import compileTime from "vite-plugin-compile-time";
 import tsconfigPaths from "vite-tsconfig-paths";
-import lang from "./lang.json";
+import lang from "./lang";
 import { config } from "./src/speak-config";
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
   if (req.url && /^(\/.*)?\/codeplayground/.test(req.url)) {

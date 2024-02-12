@@ -18,6 +18,12 @@ export const protectedRoutes: {
     redirectTo: "/unauth/",
   },
   {
+    path: "/profile", // also matches for /members /members/a /members/a/b
+    authRolesPermitted: profiles.role.enumValues, // the roles are matched against the roles in profile, NOT auth
+    // if you need to test against profile roles, test it after the page loads, meaning you need to implement a loading screen and redirect if roles doesnt match
+    redirectTo: "/unauth/",
+  },
+  {
     path: "/login",
     authRolesPermitted: [], // anything but authenticated
     redirectTo: "/members/dashboard/", // if logged in, redirect to dashboard

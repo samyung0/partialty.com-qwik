@@ -71,6 +71,13 @@
       "when": 1707041059219,
       "tag": "0009_easy_gorilla_man",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1707702126512,
+      "tag": "0010_abnormal_colossus",
+      "breakpoints": true
     }
   ]
 }

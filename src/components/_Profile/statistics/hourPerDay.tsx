@@ -23,7 +23,7 @@ const options: ApexOptions = {
   chart: {
     type: "bar",
     height: "175px",
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "mosk",
     toolbar: {
       show: false,
     },
@@ -40,7 +40,7 @@ const options: ApexOptions = {
     shared: true,
     intersect: false,
     style: {
-      fontFamily: "Inter, sans-serif",
+      fontFamily: "Varela_Round",
     },
   },
   states: {
@@ -105,7 +105,7 @@ export const HourPerDay = component$(() => {
           <div>
             <h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 ">24 Hours</h5>
             <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              Total time on studies last week
+              spent on studying last week
             </p>
           </div>
         </div>
@@ -138,7 +138,7 @@ export const HourPerDay = component$(() => {
         </dl>
       </div>
 
-      <div id={chartElementId}></div>
+      <div id={chartElementId} class="font-mosk"></div>
     </div>
   );
 });

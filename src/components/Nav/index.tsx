@@ -5,6 +5,7 @@ import NavCourses from "~/components/NavCourses";
 import type { LuciaSession } from "~/types/LuciaSession";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
+import { LuHome } from "@qwikest/icons/lucide";
 import LogoutSVG from "~/assets/svg/log-out-outline.svg";
 import PersonSVG from "~/assets/svg/person-outline.svg";
 import { logout } from "~/auth/logout";
@@ -19,7 +20,15 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
   return (
     <nav>
       <ul class="m-auto flex w-[80%] items-center gap-6 py-6 text-base font-bold tracking-wide">
-        <li class="relative px-6 py-2 pl-0 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
+        <li class="px-2 py-2">
+          <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
+            Home
+            <span class="text-[20px] text-primary-dark-gray">
+              <LuHome />
+            </span>
+          </Link>
+        </li>
+        <li class="relative py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
           <div class={"flex gap-2"}>
             <span>Courses</span>
             <span
@@ -30,7 +39,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
               <IoCaretDown />
             </span>
           </div>
-          <div class="absolute left-0 top-[100%] hidden w-[600px] pt-3">{NavCourses}</div>
+          <div class="absolute left-0 top-[100%] z-[100] hidden w-[600px] pt-3">{NavCourses}</div>
         </li>
         <li class="px-2 py-2">
           <Link prefetch href={"/"}>
@@ -42,6 +51,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             Playground
           </Link>
         </li>
+
         <li class="relative ml-auto px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
           <div class={"flex gap-2"}>
             <span>

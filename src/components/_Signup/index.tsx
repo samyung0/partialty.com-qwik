@@ -115,19 +115,6 @@ export default component$(
       recaptcha.onload = () => {
         (globalThis as any).grecaptcha.ready(function () {
           recaptchaReady.value = true;
-          //   (globalThis as any).grecaptcha
-          //     .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: "submit" })
-          //     .then(async function (token: string) {
-          //       const res = await server$(async function () {
-          //         console.log("YOOO", this.env.get("GOOGLE_RECAPTCHA_V3_SECRET"));
-          //         return await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${this.env.get("GOOGLE_RECAPTCHA_V3_SECRET")!}&response=${token}`, {
-          //           method: "POST",
-          //         }).then((x) => x.json());
-          //       })();
-          //       console.log(res);
-          //       // Add your logic to submit to your backend server here.
-          //     });
-          // });
         });
       };
       document.body.append(recaptcha);

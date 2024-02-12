@@ -2,6 +2,7 @@ import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
+import { LuHome } from "@qwikest/icons/lucide";
 import NavCourses from "~/components/NavCourses";
 import getUser from "~/components/_Index/Nav/getUser";
 
@@ -26,6 +27,14 @@ export default component$(() => {
     <nav class="absolute left-0 top-0 z-20 flex w-full p-6">
       <div class="w-[50%] pr-[6vw]"></div>
       <ul class="flex w-[50%] items-center gap-6 text-base font-bold tracking-wide">
+        <li class="px-2 py-2">
+          <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
+            Home
+            <span class="text-[20px] text-primary-dark-gray">
+              <LuHome />
+            </span>
+          </Link>
+        </li>
         <li class="relative px-6 py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
           <div class={"flex gap-2"}>
             <span>Courses</span>
@@ -37,7 +46,7 @@ export default component$(() => {
               <IoCaretDown />
             </span>
           </div>
-          <div class="absolute left-[50%] top-[100%] hidden w-[600px] -translate-x-[50%] pt-3">
+          <div class="absolute left-[50%] top-[100%] z-[100] hidden w-[600px] -translate-x-[50%] pt-3">
             {NavCourses}
           </div>
         </li>

@@ -1,11 +1,10 @@
 import { component$, useSignal } from "@builder.io/qwik";
 
 import Nav from "~/components/Nav";
-import Profile from "~/components/personalProfile/profile";
-import Statistics from "~/components/personalProfile/statistics";
-import Subscription from "~/components/personalProfile/subscription";
+import Profile from "~/components/_Profile/profile";
+import Statistics from "~/components/_Profile/statistics";
+import Subscription from "~/components/_Profile/subscription";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
-import type { LuciaSession } from "~/types/LuciaSession";
 
 const tabs = [
   { name: "Profile", component: <Profile /> },
@@ -14,7 +13,7 @@ const tabs = [
 ];
 
 export default component$(() => {
-  const user: LuciaSession["user"] = useUserLoader().value;
+  const user = useUserLoader().value;
   const displayIdx = useSignal(0);
 
   return (
@@ -29,14 +28,19 @@ export default component$(() => {
               width={100}
               height={100}
             />
-            <p class="p-1 text-center font-mosk">{user.nickname}</p>
+            <p class="p-1 text-center font-mosk text-lg tracking-wide">{user.nickname}</p>
           </div>
           <div class="flex flex-col">
             {tabs.map((tab, idx) => (
-              <div class="relative h-full" key={`tab-${idx}`}>
-                {idx === displayIdx.value && (
-                  <div class="absolute -left-2 h-full w-[5px] rounded-lg bg-yellow"></div>
-                )}
+              <div class="relative flex h-full gap-1" key={`tab-${idx}`}>
+                {/* {idx === displayIdx.value && ( */}
+                <div
+                  class={
+                    "h-full w-[5px] rounded-lg " +
+                    (idx === displayIdx.value ? "bg-yellow" : "bg-light-yellow")
+                  }
+                ></div>
+                {/* )} */}
 
                 <button
                   class={`w-full rounded-md bg-light-yellow p-2 text-left hover:brightness-90 ${

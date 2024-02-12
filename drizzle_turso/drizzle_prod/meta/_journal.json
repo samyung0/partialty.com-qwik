@@ -85,6 +85,13 @@
       "when": 1707041069624,
       "tag": "0011_glamorous_gauntlet",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1707702136823,
+      "tag": "0012_little_serpent_society",
+      "breakpoints": true
     }
   ]
 }
