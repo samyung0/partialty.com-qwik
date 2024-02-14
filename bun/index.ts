@@ -6,10 +6,10 @@ import { helmet } from "elysia-helmet";
 // import { ip } from "elysia-ip";
 import { rateLimit } from "elysia-rate-limit";
 import AuthRoute from "./auth/route";
-import CloudinaryRoute from "./cloudinary/route";
 import MuxRoute from "./contentEditor/route";
 import EmailRoute from "./email/route";
 import HealthRoute from "./health/route";
+import StripeRoute from "./stripe/route"
 
 const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];
@@ -63,8 +63,8 @@ const app = new Elysia()
   .use(HealthRoute)
   .use(AuthRoute)
   .use(EmailRoute)
-  .use(CloudinaryRoute)
   .use(MuxRoute)
+  .use(StripeRoute)
   .post("/idk", ({ body }) => {
     console.log(body);
   })

@@ -25,7 +25,7 @@ const app = new Elysia().group("/mail", (app) => {
   return app.post(
     "/sendMail/verifyMail",
     async ({ body, headers }) => {
-      if (!headers["upstash-signature"]) throw Error("Server Error!");
+      if (!headers["upstash-signature"]) return;
 
       const r = new Receiver({
         currentSigningKey: Bun.env.QSTASH_CURRENT_SIGNING_KEY!,

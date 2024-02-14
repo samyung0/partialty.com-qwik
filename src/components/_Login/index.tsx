@@ -26,7 +26,10 @@ export default component$(() => {
   });
 
   useTask$(({ track }) => {
-    track(() => loginWithPassword.status);
+    track(loginWithPassword);
+    formError.email = "";
+    formError.password = "";
+    formError.wrongInfo = "";
     if (loginWithPassword.status === 400) {
       formError.email = loginWithPassword.value?.fieldErrors?.email?.join("\n") ?? "";
       formError.password = loginWithPassword.value?.fieldErrors?.password?.join("\n") ?? "";
@@ -36,7 +39,6 @@ export default component$(() => {
       if (params.get("redirectedFrom")) nav(params.get("redirectedFrom")!);
       else nav("/members/dashboard/");
     }
-    isLoggingIn.value = false;
   });
   return (
     <section class="flex h-[100vh] items-center justify-center bg-sherbet">
@@ -46,12 +48,16 @@ export default component$(() => {
           <br />
           <form
             preventdefault:submit
-            onSubmit$={() => {
+            onSubmit$={async () => {
               isLoggingIn.value = true;
-              loginWithPassword.submit({
+              formError.email = "";
+              formError.password = "";
+              formError.wrongInfo = "";
+              await loginWithPassword.submit({
                 email: form.email,
                 password: form.password,
               });
+              isLoggingIn.value = false;
             }}
             class="space-y-6"
           >

@@ -1,6 +1,7 @@
-import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { content_index } from "./content_index";
+import { profiles } from "./profiles";
 
 export const content = sqliteTable("content", {
   id: text("id").notNull().primaryKey(),
@@ -19,7 +20,18 @@ export const content = sqliteTable("content", {
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   audio_track_playback_id: text("audio_track_playback_id"),
   audio_track_asset_id: text("audio_track_asset_id"),
+  tags: blob("tags", { mode: "json" }).$type<string[]>(),
+  category: text("category"),
+  authorId: text("author").notNull(), // references profile.id
+  created_by_admin: integer("is_locked", { mode: "boolean" }).notNull().default(false),
 });
+
+export const contentRelations = relations(content, ({ one }) => ({
+  author: one(profiles, {
+    fields: [content.authorId],
+    references: [profiles.id],
+  }),
+}));
 
 export type Content = InferSelectModel<typeof content>;
 export type NewContent = InferInsertModel<typeof content>;

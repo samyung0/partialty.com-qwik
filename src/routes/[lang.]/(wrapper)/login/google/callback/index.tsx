@@ -59,10 +59,10 @@ export const onGet: RequestHandler = async (request) => {
           return user;
         }
       } else {
-        const user = await createUser({
-          attributes,
-        });
-        return user;
+        throw request.redirect(
+          302,
+          "/login/?errMessage=Error! Please use a Google account with a verified email address."
+        );
       }
     };
 

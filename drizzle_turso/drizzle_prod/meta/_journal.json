@@ -92,6 +92,13 @@
       "when": 1707702136823,
       "tag": "0012_little_serpent_society",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1707896148491,
+      "tag": "0013_secret_anita_blake",
+      "breakpoints": true
     }
   ]
 }

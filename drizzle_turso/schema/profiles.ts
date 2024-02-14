@@ -1,7 +1,8 @@
-import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const/defaultRole";
 import roles from "~/const/roles";
+import { content } from "./content";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),
@@ -17,8 +18,12 @@ export const profiles = sqliteTable("profiles", {
   nickname: text("nickname").notNull(),
   email_verified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
   github_username: text("github_username"),
-  accessible_courses: blob("accessible_courses", { mode: "json" }).$type<string[]>(),
+  accessible_courses: blob("accessible_courses", { mode: "json" }).$type<string[]>(), // TODO: remove or change to text based field
 });
+
+// export const profilesRelations = relations(profiles, ({ many }) => ({
+//   posts: many(content),
+// }));
 
 export type Profiles = InferSelectModel<typeof profiles>;
 export type NewProfile = InferInsertModel<typeof profiles>;

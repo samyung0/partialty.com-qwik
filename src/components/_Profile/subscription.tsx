@@ -1,6 +1,8 @@
 import { component$ } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 
 import CheckIcon from "~/assets/svg/fitbit-check-small.svg";
+import { HOBBYIST_PLAN_LINK } from "~/const/stripe";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 
 export default component$(() => {
@@ -63,13 +65,15 @@ export default component$(() => {
                   Cancel Subscription
                 </button>
               ) : (
-                <button class="w-full rounded-lg bg-primary-dark-gray py-3 text-base text-background-light-gray">
+                <Link href={HOBBYIST_PLAN_LINK} target={"_blank"} class="w-full rounded-lg bg-primary-dark-gray py-3 text-base text-background-light-gray">
                   Upgrade plan
-                </button>
+                </Link>
               )}
             </div>
           </div>
           {user.role === "free" && <p>You current do not have any active subscription 🥲</p>}
+          {user.role === "admin" && <p>You have an admin role!</p>}
+          {user.role === "teacher" && <p>You have a teacher role!</p>}
         </div>
       </div>
     </div>

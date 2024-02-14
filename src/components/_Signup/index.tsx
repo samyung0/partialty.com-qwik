@@ -66,7 +66,12 @@ export default component$(
     });
 
     useTask$(({ track }) => {
-      track(() => signupWithPassword.status);
+      track(signupWithPassword);
+      formError.email = "";
+      formError.password = "";
+      formError.wrongRePassword = "";
+      formError.wrongInfo = "";
+      formError.error = "";
       if (signupWithPassword.status === 400) {
         formError.email = signupWithPassword.value?.fieldErrors?.email?.join("\n") ?? "";
         formError.password = signupWithPassword.value?.fieldErrors?.password?.join("\n") ?? "";
@@ -89,11 +94,12 @@ export default component$(
         firstForm.rePassword = "";
         defaultBio.userId = signupWithPassword.value.userId;
       }
-      loadingStepOne.value = false;
     });
 
     useTask$(({ track }) => {
-      track(() => setBio.status);
+      track(setBio);
+      bioError.nickname = "";
+      bioError.wrongInfo = "";
       if (setBio.status === 400) {
         bioError.nickname = setBio.value?.fieldErrors?.nickname?.join("\n") ?? "";
       }
@@ -177,6 +183,10 @@ export default component$(
         return;
       }
       loadingStepOne.value = true;
+      formError.email = "";
+      formError.password = "";
+      formError.wrongRePassword = "";
+      formError.wrongInfo = "";
       formError.error = "";
       const captchaResult = await (globalThis as any).grecaptcha
         .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: "submit" })
@@ -186,11 +196,12 @@ export default component$(
         formError.error = "Looks like captcha thinks that you are not a human (。_。)";
         return;
       }
-      signupWithPassword.submit({
+      await signupWithPassword.submit({
         ...firstForm,
         avatar_cloudinary_id: defaultBio.avatar.public_id,
         nickname: defaultBio.nickname,
       });
+      loadingStepOne.value = false;
     });
 
     return (
@@ -424,17 +435,21 @@ export default component$(
                   <br />
                   <button
                     onClick$={async () => {
+                      if (loadingStepTwo.value) return;
                       if (!defaultBio.userId) {
                         bioError.wrongInfo = "Server Error! Refresh the page and try again.";
                         return;
                       }
                       loadingStepTwo.value = true;
-                      setBio.submit({
+                      bioError.nickname = "";
+                      bioError.wrongInfo = "";
+                      await setBio.submit({
                         nickname: defaultBio.nickname,
                         customAvatar: customAvatar.value,
                         avatar: defaultBio.avatar,
                         userId: defaultBio.userId,
                       });
+                      loadingStepTwo.value = false;
                     }}
                     disabled={loadingStepTwo.value}
                     type="submit"
