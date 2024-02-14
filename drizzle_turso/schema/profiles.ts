@@ -21,9 +21,5 @@ export const profiles = sqliteTable("profiles", {
   accessible_courses: blob("accessible_courses", { mode: "json" }).$type<string[]>(), // TODO: remove or change to text based field
 });
 
-// export const profilesRelations = relations(profiles, ({ many }) => ({
-//   posts: many(content),
-// }));
-
 export type Profiles = InferSelectModel<typeof profiles>;
 export type NewProfile = InferInsertModel<typeof profiles>;

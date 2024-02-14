@@ -12,6 +12,7 @@ export const content_index = sqliteTable("content_index", {
   created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   is_single_page: integer("is_single_page", { mode: "boolean" }).notNull().default(false),
+  authorId: text("author").notNull(), // references profile.id
 });
 
 export type ContentIndex = InferSelectModel<typeof content_index>;
