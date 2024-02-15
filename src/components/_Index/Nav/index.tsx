@@ -14,7 +14,7 @@ export default component$(() => {
   });
 
   getUser;
-  // eslint-disable-next-line qwik/no-use-visible-task
+
   useVisibleTask$(async () => {
     const res = await getUser();
     login.isLoading = false;

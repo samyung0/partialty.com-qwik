@@ -72,7 +72,10 @@ const app = new Elysia().group("/stripe", (app) => {
           billing_address_collection: "auto",
           customer: body.customerId,
         });
-        return session.url;
+        return {
+          url: session.url,
+          id: session.id,
+        };
       },
       {
         body: t.Object({
@@ -114,6 +117,16 @@ const app = new Elysia().group("/stripe", (app) => {
             try {
               const invoice = await stripe.invoices.retrieve(event.data.object.invoice);
               const chargeId = invoice.charge;
+
+              const subscription = await stripe.subscriptions.retrieve(
+                event.data.object.subscription
+              );
+              if (!subscription) throw new Error("Unable to retrieve subscription! Refunding");
+              if (subscription.items.data.length > 1)
+                throw new Error("More than one item in subscription! Refunding");
+              const item = subscription.items.data[0].id;
+              if (!item || (item !== HOBBYIST_PLAN_APIID && item !== HOBBYIST_PLAN_APIID_DEV))
+                throw new Error("Item is not hobbyist plan! Refunding");
 
               const tx = await turso.transaction("write");
               try {

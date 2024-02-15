@@ -11,8 +11,6 @@ export default component$(() => {
     { from: 9.8, highlight: false },
   ]);
 
-  // eslint-disable-next-line qwik/no-use-visible-task
-
   useVisibleTask$(({ track }) => {
     track(() => elapsedTime.value);
 

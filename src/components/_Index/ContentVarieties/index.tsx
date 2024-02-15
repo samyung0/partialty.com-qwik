@@ -30,7 +30,6 @@ export default component$(() => {
   const delay = useSignal(2000);
   const textIndex = useSignal(0);
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
     const loop = () => {
       textIndex.value = (textIndex.value + 1) % texts.length;

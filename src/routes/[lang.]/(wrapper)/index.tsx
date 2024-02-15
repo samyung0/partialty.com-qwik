@@ -12,7 +12,6 @@ import Nav from "~/components/_Index/Nav";
 export default component$(() => {
   const params = useLocation().url.searchParams;
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
     if (params.get("errMessage")) alert(params.get("errMessage"));
   });

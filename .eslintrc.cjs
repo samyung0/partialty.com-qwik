@@ -41,5 +41,6 @@ module.exports = {
     "unused-imports/no-unused-vars": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-unnecessary-condition": "warn",
+    "qwik/no-use-visible-task": "off",
   },
 };

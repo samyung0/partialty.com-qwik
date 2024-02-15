@@ -46,8 +46,15 @@ Now for each page under Root (excluding Root), it will try to look for the expor
 - We are currently not supporting the switching of locale because we don't have enough content that is written in languages other than English. We plan to support it in the future.
 
 - **TODO**
+- **Finish up Stripe payment page**
 
-- ** Proposal **
+  - Put subscription in another page other than profile
+  - Show next billing date
+  - Show pending cancel plan (cancelled but still active until next billing date)
+  - Make a billing page
+  - Show billing history
+
+- **Proposal**
 
   - Priority: url [.lang] params > cookies
 

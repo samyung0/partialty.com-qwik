@@ -44,7 +44,6 @@ export default component$(() => {
     initialDelay: 0, // initial delay on animation when window loads
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     if (!typeWriter.instance) {
       typeWriter.instance = setTimeout(async () => {
@@ -52,8 +51,6 @@ export default component$(() => {
       }, typeWriter.initialDelay);
     }
   });
-
-  // eslint-disable-next-line qwik/no-use-visible-task
 
   let blankCharSum = 0,
     currentCharWithoutNewLine = typeWriter.currentChar + 1;

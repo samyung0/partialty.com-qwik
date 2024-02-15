@@ -35,7 +35,6 @@ export default component$(() => {
     lang: undefined,
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!localStorage) return;

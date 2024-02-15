@@ -111,7 +111,6 @@ export default component$(
       }
     });
 
-    // eslint-disable-next-line qwik/no-use-visible-task
     useVisibleTask$(() => {
       const recaptcha = document.createElement("script");
       recaptcha.src =

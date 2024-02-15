@@ -198,7 +198,6 @@ export default component$(() => {
     showAll.value ? currentCourses : currentCourses.slice(0, 3)
   );
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   // useVisibleTask$(() => {
   //   fuseCourse.value = noSerialize(
   //     new Fuse(coursesObj.value, {

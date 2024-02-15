@@ -33,13 +33,12 @@ export default component$(() => {
         ).data;
         if (!id) throw new Error("Server Error! Please contact support.");
       }
-      console.log(id);
       const url = (
         await bunApp.stripe["create-session"].post({
           customerId: id,
           dev: import.meta.env.MODE !== "production",
         })
-      ).data;
+      ).data?.url;
       if (!url) throw new Error("Server Error! Please contact support.");
       window.location.assign(url);
     } catch (e) {

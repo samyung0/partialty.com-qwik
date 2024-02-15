@@ -6,6 +6,7 @@ import type { LuciaSession } from "~/types/LuciaSession";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
 import { LuHome } from "@qwikest/icons/lucide";
+import CrownPNG from "~/assets/img/crown.png";
 import LogoutSVG from "~/assets/svg/log-out-outline.svg";
 import PersonSVG from "~/assets/svg/person-outline.svg";
 import { logout } from "~/auth/logout";
@@ -54,7 +55,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
 
         <li class="relative ml-auto px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
           <div class={"flex gap-2"}>
-            <span>
+            <span class="relative">
               <img
                 src={user.avatar_url}
                 alt="Avatar"
@@ -63,6 +64,15 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 class="rounded-full object-contain"
                 referrerPolicy="no-referrer"
               />
+              {user.role !== "free" && (
+                <img
+                  src={CrownPNG}
+                  width={20}
+                  height={20}
+                  alt="Crown"
+                  class="absolute right-[-15px] top-[-15px]"
+                />
+              )}
             </span>
             <span
               class={

@@ -337,7 +337,6 @@ export default component$(() => {
     clearInterval(muxWSHeartBeat.value);
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     startWSConnection();
     window.onbeforeunload = () => {
