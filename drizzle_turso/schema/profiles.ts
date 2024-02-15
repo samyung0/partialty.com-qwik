@@ -1,8 +1,7 @@
-import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const/defaultRole";
 import roles from "~/const/roles";
-import { content } from "./content";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),

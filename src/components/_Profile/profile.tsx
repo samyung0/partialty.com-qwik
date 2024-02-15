@@ -7,7 +7,8 @@ import { useUpdateProfile } from "~/action/userAction";
 import Dragndrop from "~/components/_Signup/dragndrop";
 import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
 
-import Lang, { displayNamesLang } from "../../../lang";
+import type Lang from "../../../lang";
+import { displayNamesLang } from "../../../lang";
 
 export default component$(() => {
   const user = useUserLoader().value;
@@ -96,7 +97,7 @@ export default component$(() => {
   return (
     <div class="mx-auto flex w-[80%] flex-col">
       <h1 class="font-mosk text-3xl font-bold tracking-wide">Profile</h1>
-      <div class="mt-3 w-full bg-primary-dark-gray h-[2px]"></div>
+      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray"></div>
       <form
         class="flex flex-col pt-10"
         preventdefault:submit

@@ -9,7 +9,7 @@ import AuthRoute from "./auth/route";
 import MuxRoute from "./contentEditor/route";
 import EmailRoute from "./email/route";
 import HealthRoute from "./health/route";
-import StripeRoute from "./stripe/route"
+import StripeRoute from "./stripe/route";
 
 const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];
@@ -20,7 +20,6 @@ const app = new Elysia()
     cors({
       origin: (request) => {
         const origin = request.headers.get("origin");
-        console.log("ORIGIN: ",origin);
         if (!origin) return false;
         for (const domain of allowedDomains) if (domain.test(origin)) return true;
         return false;

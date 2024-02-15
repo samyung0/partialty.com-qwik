@@ -5,7 +5,7 @@ import { CLOUDINARY_NAME } from "~/const/cloudinary";
 let client: Cloudinary | null = null;
 
 export const cloudinaryUpload = async (avatarUrl: string, requestEvent: RequestEventAction) => {
-  if(!requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")) throw Error("Server ENV error!")
+  if (!requestEvent.env.get("CLOUDINARY_PRESET_PROFILEPIC")) throw Error("Server ENV error!");
   try {
     const uploadTo = `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
 

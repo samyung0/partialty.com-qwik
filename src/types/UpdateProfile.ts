@@ -15,9 +15,7 @@ export const resetPasswordSchema = z
       .min(1, "Please enter your new password.")
       .min(8, "You password must have 8 characters or more.")
       .max(36, "Password is too long"),
-    rePassword: z
-      .string()
-      .min(1, "Please re-enter your new password."),
+    rePassword: z.string().min(1, "Please re-enter your new password."),
     hash: z.string().min(1),
     userId: z.string().min(1),
   })

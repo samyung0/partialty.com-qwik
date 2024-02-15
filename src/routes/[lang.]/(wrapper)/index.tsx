@@ -3,9 +3,9 @@ import { useLocation } from "@builder.io/qwik-city";
 
 import UnderConstruction from "~/assets/img/under_construction.png";
 import Footer from "~/components/Footer";
-import ContentVarieties from "~/components/_Index/ContentVarieties";
 import ContentAudio from "~/components/_Index/ContentAudio";
 import ContentInteractive from "~/components/_Index/ContentInteractive";
+import ContentVarieties from "~/components/_Index/ContentVarieties";
 import Hero from "~/components/_Index/Hero";
 import Nav from "~/components/_Index/Nav";
 
