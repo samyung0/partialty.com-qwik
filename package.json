@@ -18,7 +18,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
-    "build.server": "vite build -c adapters/fastify/vite.config.ts",
+    "build.server": "vite build -c adapters/express/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
     "compile.chokidar": "del-cli ./src/assets/chokidar/index.txt && cd compile && ncc build ./chokidarEntry.js -o ../src/assets/chokidar -m && cd .. && rname ./src/assets/chokidar/index.js ./src/assets/chokidar/index.txt",
     "db:dev": "drizzle-kit studio --config drizzle_turso/drizzle.dev.config.ts",

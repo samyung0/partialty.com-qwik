@@ -20,6 +20,7 @@ const app = new Elysia()
     cors({
       origin: (request) => {
         const origin = request.headers.get("origin");
+        console.log("ORIGIN: ",origin);
         if (!origin) return false;
         for (const domain of allowedDomains) if (domain.test(origin)) return true;
         return false;

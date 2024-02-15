@@ -1,1 +1,0 @@
-export const HOBBYIST_PLAN_LINK = "https://buy.stripe.com/fZeeYdfuY2Zh9MYeUU"

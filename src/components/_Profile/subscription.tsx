@@ -1,15 +1,51 @@
-import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { $, component$ } from "@builder.io/qwik";
+import { server$ } from "@builder.io/qwik-city";
 
+import { eq } from "drizzle-orm";
+import bunApp from "~/_api/bun/util/edenTreaty";
 import CheckIcon from "~/assets/svg/fitbit-check-small.svg";
-import { HOBBYIST_PLAN_LINK } from "~/const/stripe";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import drizzleClient from "~/utils/drizzleClient";
+import { profiles } from "../../../drizzle_turso/schema/profiles";
+
+const getCustomerId = server$((userId: string) => {
+  return drizzleClient()
+    .select({
+      customerId: profiles.stripe_id,
+    })
+    .from(profiles)
+    .where(eq(profiles.id, userId));
+});
 
 export default component$(() => {
   const user = useUserLoader().value;
-  // const formData = useStore({
-  //   nickname: user.nickname,
-  // });
+  const handleUpgrade = $(async () => {
+    try {
+      if (!user.email) return alert("No Email Address detected! Please contact support.");
+      let id = (await getCustomerId(user.userId))[0]?.customerId;
+      if (!id) {
+        id = (
+          await bunApp.stripe.customer.post({
+            email: user.email!,
+            name: user.username || user.nickname,
+            userId: user.userId,
+          })
+        ).data;
+        if (!id) throw new Error("Server Error! Please contact support.");
+      }
+      console.log(id);
+      const url = (
+        await bunApp.stripe["create-session"].post({
+          customerId: id,
+          dev: import.meta.env.MODE !== "production",
+        })
+      ).data;
+      if (!url) throw new Error("Server Error! Please contact support.");
+      window.location.assign(url);
+    } catch (e) {
+      return alert("Error! " + (e as any).toString());
+    }
+  });
   return (
     <div class="mx-auto w-[80%]  ">
       <h1 class="font-mosk text-3xl font-bold tracking-wide">Subscription</h1>
@@ -65,9 +101,12 @@ export default component$(() => {
                   Cancel Subscription
                 </button>
               ) : (
-                <Link href={HOBBYIST_PLAN_LINK} target={"_blank"} class="w-full rounded-lg bg-primary-dark-gray py-3 text-base text-background-light-gray">
+                <button
+                  onClick$={handleUpgrade}
+                  class="w-full rounded-lg bg-primary-dark-gray py-3 text-base text-background-light-gray"
+                >
                   Upgrade plan
-                </Link>
+                </button>
               )}
             </div>
           </div>
