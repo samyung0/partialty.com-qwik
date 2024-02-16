@@ -13,6 +13,10 @@ export const content_index = sqliteTable("content_index", {
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   is_single_page: integer("is_single_page", { mode: "boolean" }).notNull().default(false),
   authorId: text("author").notNull(), // references profile.id
+  tags: blob("tags", { mode: "json" }).$type<string[]>(),
+  category: text("category"),
+  created_by_admin: integer("created_by_admin", { mode: "boolean" }).notNull().default(false),
+  lang: blob("lang", { mode: "json" }).$type<string[]>(),
 });
 
 export type ContentIndex = InferSelectModel<typeof content_index>;

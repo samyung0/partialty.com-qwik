@@ -28,7 +28,6 @@
     "db:dev:migrate": "cd ./drizzle_turso && bun migrate.dev.ts",
     "db:dev:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.dev.config.ts",
     "db:prod": "drizzle-kit studio --config drizzle_turso/drizzle.prod.config.ts",
-    "db:prod:drop": "drizzle-kit drop --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:migrate": "cd ./drizzle_turso && bun migrate.prod.ts",
     "db:prod:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.prod.config.ts",

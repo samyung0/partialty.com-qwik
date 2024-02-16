@@ -19,9 +19,6 @@ export const content = sqliteTable("content", {
   updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   audio_track_playback_id: text("audio_track_playback_id"),
   audio_track_asset_id: text("audio_track_asset_id"),
-  tags: blob("tags", { mode: "json" }).$type<string[]>(),
-  category: text("category"),
-  created_by_admin: integer("is_locked", { mode: "boolean" }).notNull().default(false),
 });
 
 export type Content = InferSelectModel<typeof content>;

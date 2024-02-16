@@ -1,39 +1,9 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "64b5049f-214d-4962-b752-f86afc604582",
-  "prevId": "80277ca9-3008-4849-8d19-eaf3d4948eaa",
+  "id": "c861445e-2712-442e-8116-b7e66341a978",
+  "prevId": "4922459b-a0b2-4e35-85db-a8c41de7f6d9",
   "tables": {
-    "content_category": {
-      "name": "content_category",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "content_index": {
       "name": "content_index",
       "columns": {
@@ -129,21 +99,6 @@
         "category": {
           "name": "category",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_by_admin": {
-          "name": "created_by_admin",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "lang": {
-          "name": "lang",
-          "type": "blob",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
