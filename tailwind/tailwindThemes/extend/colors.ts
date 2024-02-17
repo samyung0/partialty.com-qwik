@@ -5,6 +5,7 @@ export default {
     "primary-dark-gray": "#1f2937",
     "background-light-gray": "#f7f7f7",
     "code-editor-one-dark-pro": "#282c34",
+    "highlight-dark": "#2f3e52",
     yellow: "#fcd34d",
     "middle-yellow": "#FDE594",
     "light-yellow": "#fef6db",
@@ -41,6 +42,5 @@ export default {
     tomato: "#ff6347",
     "middle-tomato": "#FFA291",
     "light-tomato": "#ffe0da",
-    purple: "#3a10e5",
   },
 } satisfies { colors: NonNullable<ExtendType["colors"]> };

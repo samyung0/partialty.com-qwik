@@ -37,7 +37,7 @@ export const useUserLoader = routeLoader$(async (event) => {
 
   const [shouldRedirect, redirectTo, searchParams] = checkProtectedPath(
     event.url.pathname,
-    session?.user.role ?? ""
+    session ? session.user.role : ""
   );
 
   if (shouldRedirect) {
@@ -50,7 +50,6 @@ export const useUserLoader = routeLoader$(async (event) => {
   if (!session) throw event.redirect(302, "/");
   return session.user as LuciaSession["user"];
 });
-
 export default component$(() => {
   return <Slot />;
 });

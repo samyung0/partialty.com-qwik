@@ -62,16 +62,15 @@ export default component$(() => {
     if (resetPassword.status === 200) (window as any).location = "/profile/";
   });
   return (
-    <section class="flex h-[100vh] items-center justify-center bg-sherbet">
-      <div class="flex w-[50vw] min-w-[400px] max-w-[700px] flex-col items-center justify-center gap-6 rounded-lg border-2 border-black bg-white py-16">
+    <section class="flex h-[100vh] items-center justify-center bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray">
+      <div class="dark:border-trasparent flex w-[50vw] min-w-[400px] max-w-[700px] flex-col items-center justify-center gap-6 rounded-lg border-2 border-primary-dark-gray bg-background-light-gray py-16 dark:bg-black/20">
         <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
           Reset Password
         </h1>
         {!canResetPassword && (
           <>
             <p class="block w-[500px] pb-6 text-center text-tomato">
-              You did not sign up with email and password and it is not allowed to reset your
-              password in such situation.
+              You did not sign up with email and password and is not allowed to reset your password.
             </p>
           </>
         )}
@@ -105,7 +104,7 @@ export default component$(() => {
                   onInput$={(e, eventTarget) => (formData.oldPassword = eventTarget.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 " +
+                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20 " +
                     (formError.oldPassword ? "border-tomato" : "border-black/10")
                   }
                 />
@@ -126,7 +125,7 @@ export default component$(() => {
                   onInput$={(e, eventTarget) => (formData.newPassword = eventTarget.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 " +
+                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20 " +
                     (formError.newPassword ? "border-tomato" : "border-black/10")
                   }
                 />
@@ -147,7 +146,7 @@ export default component$(() => {
                   onInput$={(_, el) => (formData.rePassword = el.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 " +
+                    "block w-full rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20 " +
                     (formError.rePassword || formError.wrongInfo
                       ? "border-tomato"
                       : "border-black/10")

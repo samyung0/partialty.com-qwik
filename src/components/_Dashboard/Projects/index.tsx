@@ -436,7 +436,7 @@ export default component$(() => {
             return (
               <li
                 class={
-                  "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+                  "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray"
                 }
                 key={`currentProjects${currentProject.slug}`}
               >
@@ -449,7 +449,7 @@ export default component$(() => {
                   <div class="flex flex-col gap-1">
                     <h2 class="text-lg tracking-wide">{coursesInfo[currentProject.slug].name}</h2>
                     <p class="flex items-center gap-1">
-                      <span class="-mt-1 flex items-center text-[15px] text-primary-dark-gray">
+                      <span class="-mt-1 flex items-center text-[15px] text-primary-dark-gray dark:text-background-light-gray">
                         <IoReaderOutline />
                       </span>
                       <span class="text-sm tracking-wide">
@@ -473,7 +473,7 @@ export default component$(() => {
                           transform: currentProject.open ? "rotateZ(180deg)" : "",
                         }}
                         class={
-                          "inline-block text-[16px] text-primary-dark-gray transition-transform"
+                          "inline-block text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray"
                         }
                       >
                         <IoCaretDown />
@@ -482,8 +482,10 @@ export default component$(() => {
                   </div>
                 </div>
                 <Link href={currentProject.codeSpace} class="mt-6 flex gap-2 self-start">
-                  <span class="border-b-2 border-primary-dark-gray">Go to Codespace</span>
-                  <span class="text-[15px] text-primary-dark-gray">
+                  <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
+                    Go to Codespace
+                  </span>
+                  <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
                     <LuArrowRight />
                   </span>
                 </Link>
@@ -495,7 +497,7 @@ export default component$(() => {
                         {coursesInfo[currentProject.slug].topics.map((topic) => (
                           <li key={`Course${currentProject.slug}Topic${topic}`}>
                             <Link
-                              class="border-b-2 border-primary-dark-gray"
+                              class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
                               href={topics[topic].link}
                             >
                               {topics[topic].name}
@@ -527,7 +529,7 @@ export default component$(() => {
                           key={`Course${currentProject.slug}Chapter${chapter}`}
                           class="flex items-center justify-between"
                         >
-                          <h2 class="border-b-2 border-primary-dark-gray">
+                          <h2 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                             <Link href={coursesInfo[currentProject.slug].steps[chapter].link}>
                               {coursesInfo[currentProject.slug].steps[chapter].name}
                             </Link>

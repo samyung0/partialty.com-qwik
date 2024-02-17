@@ -8,7 +8,7 @@ import Projects from "./Projects";
 
 export default component$(({ user }: { user: LuciaSession["user"] }) => {
   return (
-    <section class="min-h-[100vh] bg-light-yellow">
+    <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={user} />
       <GettingStarted />
       <Courses />

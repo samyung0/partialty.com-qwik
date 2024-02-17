@@ -38,6 +38,12 @@ const component = (addComponents: AddComponents, theme: Theme) => {
       margin: "-2px -6px",
       padding: "2px  6px",
     },
+    ".highlight-mint-down": {
+      background: `no-repeat center url(/src/assets/svg/highlightSVG/mint-down.svg)`,
+      "background-size": "100% 100%",
+      margin: "-2px -6px",
+      padding: "2px  6px",
+    },
   });
 };
 

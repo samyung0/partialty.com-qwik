@@ -76,7 +76,9 @@ const _lucia = (prodInDev: boolean = false) =>
         nickname: user.nickname,
         email_verified: !!user.email_verified,
         github_username: user.github_username,
-      } as Omit<Omit<Profiles, "accessible_courses">, "id">;
+        accessible_courses: user.accessible_courses,
+        accessible_courses_read: user.accessible_courses_read,
+      } as Omit<Profiles, "id">;
     },
     getSessionAttributes: (session) => {
       return {

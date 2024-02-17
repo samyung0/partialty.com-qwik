@@ -88,7 +88,7 @@ html {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  background: #f7f7f7;
+
   --foreground-rgb: #f7f7f7;
   --background-start-rgb: #f7f7f7;
   --background-end-rgb: #f7f7f7;
@@ -161,6 +161,7 @@ body {
 
   body.default {
     @apply text-primary-dark-gray;
+    @apply bg-background-light-gray;
   }
 }
 

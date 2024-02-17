@@ -120,6 +120,27 @@
       "when": 1708061014462,
       "tag": "0016_conscious_shinobi_shaw",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1708136264965,
+      "tag": "0017_dashing_warstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1708136375185,
+      "tag": "0018_sharp_grim_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1708136391101,
+      "tag": "0019_nostalgic_silver_sable",
+      "breakpoints": true
     }
   ]
 }

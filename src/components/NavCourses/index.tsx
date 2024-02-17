@@ -1,7 +1,7 @@
 import { Link } from "@builder.io/qwik-city";
 
 export default (
-  <div class="rounded-md border-4 border-primary-dark-gray bg-primary-dark-gray text-background-light-gray">
+  <div class="rounded-md border-4 border-primary-dark-gray bg-primary-dark-gray text-background-light-gray dark:border-black/40 dark:bg-highlight-dark">
     <ul class="flex flex-col">
       <li class="flex items-stretch justify-center">
         <div class="w-[30%] pt-8 text-center">The Basics</div>

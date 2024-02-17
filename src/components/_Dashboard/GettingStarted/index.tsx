@@ -34,7 +34,7 @@ export default component$(() => {
         <ul class="flex flex-col gap-2 py-2">
           {currentGuides.map((currentGuide) => (
             <li
-              class=" rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+              class=" rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray"
               key={`currentGuides${currentGuide.slug}`}
             >
               <Link
@@ -45,7 +45,7 @@ export default component$(() => {
                 <div class="flex flex-col gap-1">
                   <h2 class="text-lg tracking-wide">{guidesInfo[currentGuide.slug].name}</h2>
                   <p class="flex items-center gap-1">
-                    <span class="-mt-[2px] flex items-center text-[15px] text-primary-dark-gray">
+                    <span class="-mt-[2px] flex items-center text-[15px] text-primary-dark-gray dark:text-background-light-gray">
                       <IoTimeOutline />
                     </span>
                     <span>

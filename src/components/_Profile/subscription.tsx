@@ -46,17 +46,17 @@ export default component$(() => {
     }
   });
   return (
-    <div class="mx-auto w-[80%]  ">
+    <div class="mx-auto w-[80%] dark:text-background-light-gray">
       <h1 class="font-mosk text-3xl font-bold tracking-wide">Subscription</h1>
-      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray"></div>
+      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
       <div class="mt-12 flex flex-col items-center">
         <div class="flex flex-col items-center gap-3">
           <p class=" font-mosk text-4xl font-bold">
-            Want to <span class="highlight-mint">learn more</span>?
+            Want to <span class="highlight-mint-down">learn more</span>?
           </p>
           <p class="text-lg">Upgrade to fully utilize the platform</p>
         </div>
-        <div class="flex flex-col items-center gap-8 pt-8">
+        <div class="flex flex-col items-center gap-8 pt-8 text-primary-dark-gray">
           <div
             class={
               "flex h-[300px] w-[600px] flex-col rounded-lg bg-white p-8  " +
@@ -109,9 +109,17 @@ export default component$(() => {
               )}
             </div>
           </div>
-          {user.role === "free" && <p>You current do not have any active subscription 🥲</p>}
-          {user.role === "admin" && <p>You have an admin role!</p>}
-          {user.role === "teacher" && <p>You have a teacher role!</p>}
+          {user.role === "free" && (
+            <p class="dark:text-background-light-gray">
+              You current do not have any active subscription 🥲
+            </p>
+          )}
+          {user.role === "admin" && (
+            <p class="dark:text-background-light-gray">You have an admin role!</p>
+          )}
+          {user.role === "teacher" && (
+            <p class="dark:text-background-light-gray">You have a teacher role!</p>
+          )}
         </div>
       </div>
     </div>

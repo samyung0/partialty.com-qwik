@@ -17,17 +17,6 @@ import { content } from "../../../../../../drizzle_turso/schema/content";
 import type { ContentIndex } from "../../../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
 import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
-import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
-
-const SERVER1 = server$(
-  async (userId: string) =>
-    (
-      await drizzleClient()
-        .select({ accessible_courses: profiles.accessible_courses })
-        .from(profiles)
-        .where(eq(profiles.id, userId))
-    )[0].accessible_courses || []
-);
 
 const SERVER2 = server$(async function (id: string) {
   const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
@@ -139,9 +128,13 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   if (!res || !res.resources) return ret;
   ret.cloudinaryImages = res.resources;
 
-  if (user.role === "admin") ret.accessible_courses = ["*"];
-  else ret.accessible_courses = await SERVER1(user.userId);
-
+  try {
+    if (user.role === "admin") ret.accessible_courses = ["*"];
+    else ret.accessible_courses = JSON.parse(user.accessible_courses || "[]");
+  } catch (e) {
+    console.error(e);
+    ret.accessible_courses = [];
+  }
   return ret;
 });
 
@@ -152,13 +145,13 @@ export const useContent = routeLoader$<[ContentIndex[], Content[]]>(async (reque
   if (user.role === "admin") {
     contentCourses = await drizzleClient().select().from(content_index);
   } else {
-    const accessible_courses =
-      (
-        await drizzleClient()
-          .select({ accessible_courses: profiles.accessible_courses })
-          .from(profiles)
-          .where(eq(profiles.id, user.userId))
-      )[0].accessible_courses || [];
+    let accessible_courses: string[];
+    try {
+      accessible_courses = JSON.parse(user.accessible_courses || "[]");
+    } catch (e) {
+      console.error(e);
+      accessible_courses = [];
+    }
     contentCourses =
       accessible_courses.length > 0
         ? await drizzleClient()

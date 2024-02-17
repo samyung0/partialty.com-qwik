@@ -20,7 +20,7 @@ export const useUserLoader = routeLoader$(async (event) => {
 
   const [shouldRedirect, redirectTo] = checkProtectedPath(
     event.url.pathname,
-    session?.user.role ?? ""
+    session ? session.user.role : ""
   );
 
   if (shouldRedirect) {

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "ba13ed3d-5c8e-40d5-8077-7eab7b839827",
-  "prevId": "c861445e-2712-442e-8116-b7e66341a978",
+  "id": "f74d6e83-0c73-46ca-80bf-7185dbb1872b",
+  "prevId": "38428a5f-29bf-4697-a92f-64276af6a3f1",
   "tables": {
     "content_category": {
       "name": "content_category",
@@ -537,12 +537,20 @@
           "notNull": false,
           "autoincrement": false
         },
-        "accessible_courses": {
-          "name": "accessible_courses",
-          "type": "blob",
+        "accessible_courses_read": {
+          "name": "accessible_courses_read",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "theme": {
+          "name": "theme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'light'"
         }
       },
       "indexes": {

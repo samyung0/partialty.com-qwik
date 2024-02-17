@@ -17,7 +17,7 @@ export default component$(() => {
   const displayIdx = useSignal(0);
 
   return (
-    <section class="min-h-[100vh] bg-light-yellow">
+    <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={user} />
       <div class="mx-auto flex max-w-[80%] pt-6">
         <div class="flex w-[20%] flex-col gap-4">
@@ -37,14 +37,16 @@ export default component$(() => {
                 <div
                   class={
                     "h-full w-[5px] rounded-lg " +
-                    (idx === displayIdx.value ? "bg-yellow" : "bg-light-yellow")
+                    (idx === displayIdx.value
+                      ? "bg-yellow"
+                      : "bg-light-yellow dark:bg-primary-dark-gray")
                   }
                 ></div>
                 {/* )} */}
 
                 <button
-                  class={`w-full rounded-md bg-light-yellow p-2 text-left hover:brightness-90 ${
-                    idx === displayIdx.value && "brightness-90"
+                  class={`w-full rounded-md bg-light-yellow p-2 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150 ${
+                    idx === displayIdx.value && "brightness-90 dark:brightness-150"
                   }`}
                   onClick$={() => {
                     displayIdx.value = idx;

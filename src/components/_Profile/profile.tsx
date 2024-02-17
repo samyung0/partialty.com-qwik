@@ -28,17 +28,14 @@ export default component$(() => {
   });
 
   const localStorageData = useStore<{
-    theme: "light" | "dark" | undefined;
     lang: (typeof Lang)["supportedLocales"][number]["lang"] | undefined;
   }>({
-    theme: undefined,
     lang: undefined,
   });
 
   useVisibleTask$(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!localStorage) return;
-    localStorageData.theme = localStorage["theme"] || "light";
     localStorageData.lang = localStorage["lang"] || "en-US";
   });
 
@@ -96,7 +93,7 @@ export default component$(() => {
   return (
     <div class="mx-auto flex w-[80%] flex-col">
       <h1 class="font-mosk text-3xl font-bold tracking-wide">Profile</h1>
-      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray"></div>
+      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
       <form
         class="flex flex-col pt-10"
         preventdefault:submit
@@ -105,7 +102,6 @@ export default component$(() => {
           await updateProfile.submit(formData);
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (localStorage) {
-            localStorage["theme"] = localStorageData.theme;
             localStorage["lang"] = localStorageData.lang;
           }
           isUpdating.value = false;
@@ -122,7 +118,7 @@ export default component$(() => {
                   id="nickname"
                   name="nickname"
                   class={
-                    "text-md w-[400px] rounded-md border-2 px-3 py-1 " +
+                    "text-md w-[400px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20" +
                     (bioError.nickname || bioError.wrongInfo ? "border-tomato" : "border-black/10")
                   }
                   value={formData.nickname}
@@ -137,20 +133,20 @@ export default component$(() => {
               <div class="flex items-center gap-4">
                 <label class="text-md  font-bold">Password</label>
                 <Link
-                  class="text-base text-primary-dark-gray underline decoration-wavy underline-offset-4"
+                  class="text-base underline decoration-wavy underline-offset-4 "
                   href={"/profile/resetPassword"}
                 >
                   Change
                 </Link>
               </div>
               <input
-                class="text-md w-[400px] rounded-md border-2 px-3 py-1 disabled:bg-gray-200"
+                class="text-md w-[400px] rounded-md border-2 px-3 py-1 disabled:bg-gray-200 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20"
                 value={"●●●●●●"}
                 readOnly
                 disabled
               />
             </div>
-            <div class="flex flex-col gap-2">
+            {/* <div class="flex flex-col gap-2">
               <label for="theme" class="text-md cursor-pointer font-bold">
                 Theme
               </label>
@@ -167,7 +163,7 @@ export default component$(() => {
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
               </select>
-            </div>
+            </div> */}
             <div class="flex flex-col gap-2">
               <label for="lang" class="text-md cursor-pointer font-bold">
                 Preferred Language
@@ -179,7 +175,7 @@ export default component$(() => {
                     .value as keyof typeof displayNamesLang)
                 }
                 id="lang"
-                class="text-md w-[400px] rounded-md border-2 px-3 py-1"
+                class="text-md w-[400px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20"
               >
                 {Object.entries(displayNamesLang).map(([lang, name]) => (
                   <option key={`language${lang}`} value={lang}>
@@ -190,7 +186,7 @@ export default component$(() => {
             </div>
             <button
               disabled={isUpdating.value}
-              class="self-start rounded-xl bg-primary-dark-gray px-6 py-3 text-white shadow-xl"
+              class="self-start rounded-xl bg-primary-dark-gray px-6 py-3 text-white shadow-xl dark:bg-highlight-dark"
               type="submit"
             >
               {isUpdating.value ? (
