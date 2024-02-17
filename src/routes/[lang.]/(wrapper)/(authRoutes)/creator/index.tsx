@@ -1,30 +1,66 @@
-import {
-  $,
-  NoSerialize,
-  QRL,
-  component$,
-  noSerialize,
-  useComputed$,
-  useSignal,
-  useStore,
-  useVisibleTask$,
-} from "@builder.io/qwik";
-import { DocumentHead } from "@builder.io/qwik-city";
-import { main } from "bun";
+import type { NoSerialize, QRL } from "@builder.io/qwik";
+import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
+import { eq, or } from "drizzle-orm";
+
+import Creator from "~/components/_Creator";
 import { BUN_API_ENDPOINT_WS } from "~/const";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import drizzleClient from "~/utils/drizzleClient";
+import { content_category } from "../../../../../../drizzle_turso/schema/content_category";
+import type { ContentIndex } from "../../../../../../drizzle_turso/schema/content_index";
+import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
+import type { Profiles } from "../../../../../../drizzle_turso/schema/profiles";
+import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
+import { tag } from "../../../../../../drizzle_turso/schema/tag";
+
+export const useAccessibleCourseWrite = routeLoader$(async (event) => {
+  const userVal = await event.resolveValue(useUserLoader);
+  if (userVal.role === "admin") return ["*"];
+  let courses: string[];
+  try {
+    courses = JSON.parse(userVal.accessible_courses || "[]");
+  } catch (e) {
+    console.error(e);
+    courses = [];
+  }
+  return courses;
+});
+
+export const useAccessibleCourseWriteResolved = routeLoader$(async (event) => {
+  const accessibleCourseWrite = await event.resolveValue(useAccessibleCourseWrite);
+  if (accessibleCourseWrite.length === 0) return [];
+  let courses: { content_index: ContentIndex; profiles: Profiles }[] = [];
+  if (accessibleCourseWrite.length === 1 && accessibleCourseWrite[0] === "*") {
+    courses = await drizzleClient()
+      .select()
+      .from(content_index)
+      .innerJoin(profiles, eq(profiles.id, content_index.author));
+  } else
+    courses = await drizzleClient()
+      .select()
+      .from(content_index)
+      .where(or(...accessibleCourseWrite.map((id) => eq(content_index.id, id))))
+      .innerJoin(profiles, eq(profiles.id, content_index.author));
+  return courses;
+});
+
+export const useTags = routeLoader$(async () => {
+  return await drizzleClient().select().from(tag);
+});
+
+export const useCategories = routeLoader$(async () => {
+  return await drizzleClient().select().from(content_category);
+});
 
 export default component$(() => {
   const user = useUserLoader().value;
-  const userAccessibleCourseWrite = useComputed$(() => {
-    let courses: string[];
-    try {
-      courses = JSON.parse(user.accessible_courses || "[]");
-    } catch (e) {
-      courses = [];
-    }
-    return courses;
-  });
+  const userAccessibleCourseWrite = useAccessibleCourseWrite().value;
+  const userAccessibleCourseWriteResolved = useAccessibleCourseWriteResolved().value;
+  const tags = useTags().value;
+  const catgories = useCategories().value;
+
   const contentWS = useSignal<NoSerialize<WebSocket> | undefined>();
   const timeStamp = useSignal<string>("");
   const muxWSHeartBeat = useSignal<any>();
@@ -51,7 +87,7 @@ export default component$(() => {
           JSON.stringify({
             type: "init",
             userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: userAccessibleCourseWrite.value,
+            accessible_courses: userAccessibleCourseWrite,
           })
         );
         muxWSHeartBeat.value = setInterval(() => {
@@ -149,20 +185,29 @@ export default component$(() => {
   });
 
   useVisibleTask$(async () => {
+    if (contentWS.value) {
+      closeWSConnection();
+      contentWS.value = undefined;
+    }
     startWSConnection();
-    window.onbeforeunload = () => {
+    return () => {
       closeWSConnection();
-      return true;
-    };
-    window.onunload = () => {
-      closeWSConnection();
-      return true;
     };
   });
 
-  return <main>
-    
-  </main>;
+  return (
+    <main>
+      <Creator
+        userAccessibleCourseWrite={userAccessibleCourseWrite}
+        userAccessibleCourseWriteResolved={userAccessibleCourseWriteResolved}
+        tags={tags}
+        categories={catgories}
+        courseIdToEditingUser={courseIdToEditingUser}
+        isDeletingChapter={isDeletingChapter}
+        isDeletingChapterCallback={isDeletingChapterCallback}
+      />
+    </main>
+  );
 });
 
 export const head: DocumentHead = {
@@ -170,7 +215,7 @@ export const head: DocumentHead = {
   meta: [
     {
       name: "description",
-      content: "A page to manage all the courses created by you.",
+      content: "A page to manage all the courses and projects created by you.",
     },
   ],
 };

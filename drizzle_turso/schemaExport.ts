@@ -1,7 +1,11 @@
 import { content } from "./schema/content";
+import { content_category } from "./schema/content_category";
 import { content_index } from "./schema/content_index";
+import { content_user_quiz } from "./schema/content_user_quiz";
 import { email_verification_token } from "./schema/email_verification_token";
+import { mux_assets } from "./schema/mux_assets";
 import { profiles } from "./schema/profiles";
+import { tag } from "./schema/tag";
 import { user_key } from "./schema/user_key";
 import { user_session } from "./schema/user_session";
 
@@ -12,4 +16,8 @@ export default {
   user_session,
   content,
   content_index,
+  tag,
+  mux_assets,
+  content_user_quiz,
+  content_category,
 };

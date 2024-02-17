@@ -5,6 +5,7 @@ export const tag = sqliteTable("tag", {
   id: text("id").notNull().primaryKey(),
   slug: text("slug").notNull(),
   name: text("name").notNull(),
+  link: text("link").notNull(),
 });
 
 export type Tag = InferSelectModel<typeof tag>;

@@ -15,8 +15,12 @@ export const content = sqliteTable("content", {
   content_slate: text("content_slate"), // should be of type Descendant[] (slate JS), but for flexibility its stored as string and parsed when fetched
   is_locked: integer("is_locked", { mode: "boolean" }).notNull().default(false),
   is_premium: integer("is_premium", { mode: "boolean" }).notNull().default(false),
-  created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
-  updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+  created_at: text("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updated_at: text("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   audio_track_playback_id: text("audio_track_playback_id"),
   audio_track_asset_id: text("audio_track_asset_id"),
 });

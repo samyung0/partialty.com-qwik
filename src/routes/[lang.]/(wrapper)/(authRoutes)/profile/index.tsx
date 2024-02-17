@@ -1,5 +1,5 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 
 import Nav from "~/components/Nav";
 import Profile from "~/components/_Profile/profile";

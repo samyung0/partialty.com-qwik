@@ -141,6 +141,55 @@
       "when": 1708136391101,
       "tag": "0019_nostalgic_silver_sable",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1708155439866,
+      "tag": "0020_blushing_the_leader",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1708157750933,
+      "tag": "0021_purple_fantastic_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1708157765516,
+      "tag": "0022_wet_stark_industries",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1708159980075,
+      "tag": "0023_goofy_justice",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1708163401455,
+      "tag": "0024_productive_mimic",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1708163433055,
+      "tag": "0025_stale_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1708169975554,
+      "tag": "0026_bent_nuke",
+      "breakpoints": true
     }
   ]
 }

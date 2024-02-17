@@ -5,10 +5,8 @@ import NavCourses from "~/components/NavCourses";
 import type { LuciaSession } from "~/types/LuciaSession";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
-import { LuHome, LuMoon, LuPencilLine, LuSun } from "@qwikest/icons/lucide";
+import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuSun, LuUser2 } from "@qwikest/icons/lucide";
 import CrownPNG from "~/assets/img/crown.png";
-import LogoutSVG from "~/assets/svg/log-out-outline.svg";
-import PersonSVG from "~/assets/svg/person-outline.svg";
 import { logout } from "~/auth/logout";
 import { themeContext } from "~/context/themeContext";
 
@@ -76,7 +74,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
               type="checkbox"
               class="peer sr-only"
             ></input>
-            <div class="peer-checked:after:border-backgroundbg-background-light-gray peer-checked:bg-highlight-dark peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-background-light-gray after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-focus:outline-none"></div>
+            <div class="peer-checked:after:border-backgroundbg-background-light-gray peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-background-light-gray after:transition-all after:content-[''] peer-checked:bg-highlight-dark peer-checked:after:translate-x-full peer-focus:outline-none"></div>
             <LuMoon />
           </label>
         </li>
@@ -110,25 +108,37 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             </span>
           </div>
           <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
-            <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-black">
+            <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray ">
               <ul class="flex flex-col p-2 [&>li]:p-2">
                 <li>
-                  <Link prefetch href="/profile/" class="flex items-center gap-2">
-                    <img src={PersonSVG} alt="Profile" width={25} height={25} />
+                  <Link prefetch href="/members/dashboard/" class="flex items-center gap-3">
+                    <span class="text-[25px]">
+                      <LuHome />
+                    </span>
+                    <span class="whitespace-nowrap">Home</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link prefetch href="/profile/" class="flex items-center gap-3">
+                    <span class="text-[25px]">
+                      <LuUser2 />
+                    </span>
                     <span class="whitespace-nowrap">My Profile</span>
                   </Link>
                 </li>
                 <li>
-                  <Link prefetch href="/creator/" class="flex items-center gap-2">
-                    <span class="text-primary-dark-gray text-[25px]">
+                  <Link prefetch href="/creator/" class="flex items-center gap-3">
+                    <span class="text-[25px]">
                       <LuPencilLine />
                     </span>
                     <span class="whitespace-nowrap">Creator</span>
                   </Link>
                 </li>
                 <li>
-                  <button onClick$={handleLogout} class="flex items-center gap-2">
-                    <img src={LogoutSVG} alt="Profile" width={25} height={25} />
+                  <button onClick$={handleLogout} class="flex items-center gap-3">
+                    <span class="text-[25px]">
+                      <LuLogOut />
+                    </span>
                     <span>Logout</span>
                   </button>
                 </li>

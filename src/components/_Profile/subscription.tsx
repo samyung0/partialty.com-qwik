@@ -20,6 +20,7 @@ const getCustomerId = server$((userId: string) => {
 export default component$(() => {
   const user = useUserLoader().value;
   const handleUpgrade = $(async () => {
+    if (user.role !== "free") return;
     try {
       if (!user.email) return alert("No Email Address detected! Please contact support.");
       let id = (await getCustomerId(user.userId))[0]?.customerId;
@@ -96,7 +97,10 @@ export default component$(() => {
 
             <div class="relative mt-6 flex flex-1">
               {["paid", "admin", "teacher"].includes(user.role) ? (
-                <button class="mx-auto rounded-lg bg-middle-tomato px-6 py-3 text-base">
+                <button
+                  disabled={user.role === "admin" || user.role === "teacher"}
+                  class="mx-auto rounded-lg bg-middle-tomato px-6 py-3 text-base"
+                >
                   Cancel Subscription
                 </button>
               ) : (

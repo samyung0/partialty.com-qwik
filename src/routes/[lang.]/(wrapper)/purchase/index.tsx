@@ -18,14 +18,16 @@ export default component$(() => {
       {success === "1" ? (
         <>
           <h1 class="font-mosk text-[2.5rem] font-bold">
-            Your purchase has been <span class="highlight-mint dark:highlight-mint-down">completed.</span>
+            Your purchase has been{" "}
+            <span class="highlight-mint dark:highlight-mint-down">completed.</span>
           </h1>
           <p>You will be redirected to your dashboard in a few seconds.</p>
         </>
       ) : (
         <>
           <h1 class="font-mosk text-[2.5rem] font-bold">
-            Your purchase has been <span class="highlight-middle-tomato dark:highlight-tomato">cancelled.</span>
+            Your purchase has been{" "}
+            <span class="highlight-middle-tomato dark:highlight-tomato">cancelled.</span>
           </h1>
           <p>You will be redirected to your dashboard in a few seconds.</p>
         </>

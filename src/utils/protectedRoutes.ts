@@ -18,9 +18,13 @@ export const protectedRoutes: {
     redirectTo: "/unauth/",
   },
   {
-    path: "/profile", // also matches for /members /members/a /members/a/b
-    authRolesPermitted: profiles.role.enumValues, // the roles are matched against the roles in profile, NOT auth
-    // if you need to test against profile roles, test it after the page loads, meaning you need to implement a loading screen and redirect if roles doesnt match
+    path: "/profile",
+    authRolesPermitted: profiles.role.enumValues,
+    redirectTo: "/unauth/",
+  },
+  {
+    path: "/creator",
+    authRolesPermitted: ["paid", "teacher", "admin"],
     redirectTo: "/unauth/",
   },
   {

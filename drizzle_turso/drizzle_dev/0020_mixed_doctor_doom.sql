@@ -1,0 +1,1 @@
+ALTER TABLE `content_index` DROP COLUMN `lang`;

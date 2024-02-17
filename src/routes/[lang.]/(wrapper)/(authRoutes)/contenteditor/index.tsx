@@ -1,6 +1,7 @@
 import type { NoSerialize, QRL } from "@builder.io/qwik";
 import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { DocumentHead, routeLoader$, server$ } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
 import { eq, or } from "drizzle-orm";
 import ContentEditor from "~/components/_ContentEditor";
@@ -339,6 +340,9 @@ export default component$(() => {
     window.onunload = () => {
       closeWSConnection();
       return true;
+    };
+    return () => {
+      closeWSConnection();
     };
   });
 

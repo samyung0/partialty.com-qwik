@@ -1,8 +1,9 @@
-import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const/defaultRole";
 import roles from "~/const/roles";
 import theme from "~/const/theme";
+import { content_index } from "./content_index";
 
 export const profiles = sqliteTable("profiles", {
   id: text("id").notNull().primaryKey(),
@@ -22,6 +23,10 @@ export const profiles = sqliteTable("profiles", {
   accessible_courses_read: text("accessible_courses_read"),
   theme: text("theme", { enum: theme }).notNull().default("light"),
 });
+
+export const profilesRelations = relations(profiles, ({ many }) => ({
+  posts: many(content_index),
+}));
 
 export type Profiles = InferSelectModel<typeof profiles>;
 export type NewProfile = InferInsertModel<typeof profiles>;
