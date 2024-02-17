@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
