@@ -1,5 +1,5 @@
 import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { DocumentHead, routeLoader$ } from "@builder.io/qwik-city";
 import { useResetPassword } from "~/action/userAction";
 import { auth } from "~/auth/lucia";
 
@@ -191,3 +191,13 @@ export default component$(() => {
     </section>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Reset Password",
+  meta: [
+    {
+      name: "description",
+      content: "A page to reset your password.",
+    },
+  ],
+};

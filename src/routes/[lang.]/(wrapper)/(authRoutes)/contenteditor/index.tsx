@@ -1,6 +1,6 @@
 import type { NoSerialize, QRL } from "@builder.io/qwik";
 import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { routeLoader$, server$ } from "@builder.io/qwik-city";
+import { DocumentHead, routeLoader$, server$ } from "@builder.io/qwik-city";
 
 import { eq, or } from "drizzle-orm";
 import ContentEditor from "~/components/_ContentEditor";
@@ -415,3 +415,13 @@ export default component$(() => {
     </main>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Content Editor",
+  meta: [
+    {
+      name: "description",
+      content: "A content editor where you can create your own courses.",
+    },
+  ],
+};

@@ -14,6 +14,12 @@ const component = (addComponents: AddComponents, theme: Theme) => {
       margin: "-2px -6px",
       padding: "2px  6px",
     },
+    ".highlight-tomato": {
+      background: `no-repeat center url(/src/assets/svg/highlightSVG/tomato.svg)`,
+      "background-size": "100% 100%",
+      margin: "-2px -6px",
+      padding: "2px  6px",
+    },
     ".highlight-pink": {
       background: `no-repeat center url(/src/assets/svg/highlightSVG/pink.svg)`,
       "background-size": "100% 100%",

@@ -216,7 +216,7 @@ export default component$(() => {
               Need help? Contact us at{" "}
               <a
                 href={"mailto://customer@partialty.com"}
-                class="text-base tracking-wide underline decoration-wavy underline-offset-4"
+                class="tracking-wide underline decoration-wavy underline-offset-[6px]"
               >
                 customer@partialty.com
               </a>

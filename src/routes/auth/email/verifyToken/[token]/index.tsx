@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { Link, routeLoader$ } from "@builder.io/qwik-city";
+import { DocumentHead, Link, routeLoader$ } from "@builder.io/qwik-city";
 
 import { eq } from "drizzle-orm";
 import verifyEmailTokens from "~/auth/verifyEmailTokens";
@@ -26,7 +26,9 @@ export default component$(() => {
     <section
       class={
         "flex h-[100vh] flex-col items-center justify-center " +
-        (verifyInfo.value.verified ? "bg-sherbet" : "bg-light-tomato")
+        (verifyInfo.value.verified
+          ? "bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray"
+          : "bg-light-tomato")
       }
     >
       {verifyInfo.value.verified ? (
@@ -35,7 +37,7 @@ export default component$(() => {
           <p class="pt-4 text-lg tracking-wide">You have successfully verified your email! </p>
           <Link
             href="/members/dashboard/"
-            class="mt-8 p-2 text-lg tracking-wide underline decoration-primary-dark-gray decoration-wavy underline-offset-4"
+            class="mt-8 p-2 text-lg tracking-wide underline decoration-wavy underline-offset-4"
           >
             Go to dashboard
           </Link>
@@ -52,3 +54,13 @@ export default component$(() => {
     </section>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Email Verification",
+  meta: [
+    {
+      name: "description",
+      content: "Email verification page.",
+    },
+  ],
+};

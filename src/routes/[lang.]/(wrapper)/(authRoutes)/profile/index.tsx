@@ -1,4 +1,5 @@
 import { component$, useSignal } from "@builder.io/qwik";
+import { DocumentHead } from "@builder.io/qwik-city";
 
 import Nav from "~/components/Nav";
 import Profile from "~/components/_Profile/profile";
@@ -63,3 +64,13 @@ export default component$(() => {
     </section>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Profile",
+  meta: [
+    {
+      name: "description",
+      content: "A page to customize your profile.",
+    },
+  ],
+};

@@ -19,7 +19,7 @@ export const head: DocumentHead = {
   meta: [
     {
       name: "description",
-      content: "Members dashboard for Code Raiders",
+      content: "Members dashboard for Partialty.com",
     },
   ],
 };
