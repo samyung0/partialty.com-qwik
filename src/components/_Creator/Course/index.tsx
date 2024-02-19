@@ -239,7 +239,8 @@ export default component$(
                                   {categories.find(
                                     (category) => category.id === courses[currentCourse.id].category
                                   ) && (
-                                    <Link
+                                    <a
+                                      target="_blank"
                                       href={
                                         categories.find(
                                           (category) =>
@@ -254,26 +255,27 @@ export default component$(
                                             category.id === courses[currentCourse.id].category
                                         )!.name
                                       }
-                                    </Link>
+                                    </a>
                                   )}
                                 </p>
                               </div>
                             )}
 
                             {courses[currentCourse.id].tags && (
-                              <div class="mt-6 flex gap-4 pb-2">
+                              <div class="flex gap-4 pb-2">
                                 <h3 class="w-[30%]">Tags:</h3>
                                 <ul class="flex w-[70%] flex-wrap gap-x-4 gap-y-2">
                                   {(courses[currentCourse.id].tags || [])
                                     .filter((tag) => tags.find((tag2) => tag2.id === tag))
                                     .map((tag) => (
                                       <li key={`Course${currentCourse.id}Tag${tag}`}>
-                                        <Link
+                                        <a
+                                          target="_blank"
                                           class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
                                           href={tags.find((tag2) => tag2.id === tag)!.link}
                                         >
                                           {tags.find((tag2) => tag2.id === tag)!.name}
-                                        </Link>
+                                        </a>
                                       </li>
                                     ))}
                                 </ul>
