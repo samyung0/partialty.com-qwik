@@ -1,0 +1,1 @@
+ALTER TABLE content_index ADD `is_private` integer DEFAULT false NOT NULL;

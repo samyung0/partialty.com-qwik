@@ -1,10 +1,13 @@
 import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { content_index } from "./content_index";
 
 export const course_approval = sqliteTable("course_approval", {
   id: text("id").notNull().primaryKey(),
   link: text("link").notNull(),
+  ready_for_approval: integer("ready_for_approval", { mode: "boolean" }).notNull().default(false),
+  added_tags: blob("added_tags").$type<string[]>().notNull(),
+  added_categories: text("added_categories"),
   status: text("status", { enum: ["pending", "approved", "rejected", "need_amendment"] }).notNull(),
   description: text("description").notNull(),
   created_at: text("created_at")

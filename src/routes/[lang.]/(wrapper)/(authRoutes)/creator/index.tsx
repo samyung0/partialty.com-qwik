@@ -198,6 +198,7 @@ export default component$(() => {
   return (
     <main>
       <Creator
+        ws={contentWS}
         userAccessibleCourseWrite={userAccessibleCourseWrite}
         userAccessibleCourseWriteResolved={userAccessibleCourseWriteResolved}
         tags={tags}

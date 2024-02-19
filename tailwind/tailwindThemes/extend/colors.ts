@@ -6,6 +6,7 @@ export default {
     "background-light-gray": "#f7f7f7",
     "code-editor-one-dark-pro": "#282c34",
     "highlight-dark": "#2f3e52",
+    "disabled-dark": "#141a23",
     yellow: "#fcd34d",
     "middle-yellow": "#FDE594",
     "light-yellow": "#fef6db",

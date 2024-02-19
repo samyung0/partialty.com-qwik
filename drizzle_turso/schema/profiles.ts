@@ -2,7 +2,6 @@ import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { DEFAULTROLE } from "~/const/defaultRole";
 import roles from "~/const/roles";
-import theme from "~/const/theme";
 import { content_index } from "./content_index";
 
 export const profiles = sqliteTable("profiles", {
@@ -21,11 +20,10 @@ export const profiles = sqliteTable("profiles", {
   github_username: text("github_username"),
   accessible_courses: text("accessible_courses"),
   accessible_courses_read: text("accessible_courses_read"),
-  theme: text("theme", { enum: theme }).notNull().default("light"),
 });
 
 export const profilesRelations = relations(profiles, ({ many }) => ({
-  posts: many(content_index),
+  id: many(content_index),
 }));
 
 export type Profiles = InferSelectModel<typeof profiles>;

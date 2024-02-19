@@ -1,4 +1,4 @@
-import type { QRL, Signal } from "@builder.io/qwik";
+import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
 
 import Nav from "~/components/Nav";
@@ -13,6 +13,7 @@ const tabs = [{ name: "Course" }, { name: "Project" }];
 
 export default component$(
   ({
+    ws,
     userAccessibleCourseWrite,
     userAccessibleCourseWriteResolved,
     tags,
@@ -21,6 +22,7 @@ export default component$(
     isDeletingChapter,
     isDeletingChapterCallback,
   }: {
+    ws: Signal<NoSerialize<WebSocket>>;
     userAccessibleCourseWrite: string[];
     userAccessibleCourseWriteResolved: { content_index: ContentIndex; profiles: Profiles }[];
     tags: Tag[];
@@ -74,6 +76,7 @@ export default component$(
           <div class="w-full ">
             {tabIndex.value === 0 && (
               <Course
+                ws={ws}
                 userAccessibleCourseWrite={userAccessibleCourseWrite}
                 userAccessibleCourseWriteResolved={userAccessibleCourseWriteResolved}
                 tags={tags}

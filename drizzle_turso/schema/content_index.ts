@@ -11,6 +11,7 @@ export const content_index = sqliteTable("content_index", {
   link: text("link"),
   is_locked: integer("is_locked", { mode: "boolean" }).notNull().default(false),
   is_premium: integer("is_premium", { mode: "boolean" }).notNull().default(false),
+  is_private: integer("is_private", { mode: "boolean" }).notNull().default(false),
   created_at: text("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

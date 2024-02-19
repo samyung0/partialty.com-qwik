@@ -1,0 +1,1 @@
+ALTER TABLE course_approval ADD `added_categories` text;
