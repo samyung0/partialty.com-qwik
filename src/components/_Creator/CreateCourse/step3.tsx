@@ -5,7 +5,7 @@ import { LuArrowLeft, LuTrash, LuX } from "@qwikest/icons/lucide";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSVG from "~/components/LoadingSVG";
-import { useCategories } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/create-course";
+import { useCategories } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
 import { content_category } from "../../../../drizzle_turso/schema/content_category";

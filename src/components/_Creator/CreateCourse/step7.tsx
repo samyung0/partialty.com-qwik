@@ -3,10 +3,7 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import { LuArrowLeft } from "@qwikest/icons/lucide";
 import LoadingSVG from "~/components/LoadingSVG";
-import {
-  useCategories,
-  useTags,
-} from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/create-course";
+import { useCategories, useTags } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
@@ -20,12 +17,14 @@ export default component$(
     createdCategory,
     createdTags,
     handleSubmit,
+    isEditing = false,
   }: {
     courseData: NewContentIndex;
     formSteps: Signal<number>;
     createdCategory: Signal<ContentCategory | undefined>;
     createdTags: Signal<Tag[]>;
     handleSubmit: QRL<() => void>;
+    isEditing?: boolean;
   }) => {
     const categories = useCategories().value;
     const tags = useTags().value;
@@ -151,7 +150,7 @@ export default component$(
                     <LoadingSVG />
                   </span>
                 )}
-                {!loading.value && <span>Submit Course</span>}
+                {!loading.value && <span>{isEditing ? "Update Course" : "Submit Course"}</span>}
               </button>
             </div>
           </div>

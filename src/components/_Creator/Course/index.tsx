@@ -86,7 +86,7 @@ export default component$(
           {ws.value && (
             <>
               {displayCourses.value.length === 0 && (
-                <p>You have not created any courses yet. ヾ(•ω•`)o</p>
+                <p class="mt-6">You have not created any courses yet. ヾ(•ω•`)o</p>
               )}
               {displayCourses.value.length > 0 && (
                 <ul class="flex flex-col gap-2 py-6">
@@ -155,27 +155,34 @@ export default component$(
                             Yo! This course does not have a link. It won't be visible to anyone.
                           </p>
                         )}
-                        <Link href={""} class="mt-6 flex gap-2 self-start">
-                          <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
-                            Edit Course
-                          </span>
-                          <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
-                            <LuArrowRight />
-                          </span>
-                        </Link>
-                        {courses[currentCourse.id].link && (
-                          <Link
-                            href={courses[currentCourse.id].link!}
-                            class="mt-2 flex gap-2 self-start"
+                        <div class="mt-6 flex items-center gap-3">
+                          <a
+                            target="_blank"
+                            href={`/creator/edit-course/${currentCourse.id}/`}
+                            class="flex gap-2 self-start"
                           >
                             <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
-                              View Course
+                              Edit Course
                             </span>
                             <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
                               <LuArrowRight />
                             </span>
-                          </Link>
-                        )}
+                          </a>
+                          {courses[currentCourse.id].link && (
+                            <a
+                              target="_blank"
+                              href={courses[currentCourse.id].link!}
+                              class="flex gap-2 self-start"
+                            >
+                              <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
+                                View Course
+                              </span>
+                              <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                                <LuArrowRight />
+                              </span>
+                            </a>
+                          )}
+                        </div>
                         {courses[currentCourse.id].isOpen ? (
                           <>
                             <div class="mt-6 flex gap-4 pb-2">

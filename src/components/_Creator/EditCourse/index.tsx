@@ -9,70 +9,54 @@ import Step4 from "~/components/_Creator/CreateCourse/step4";
 import Step5 from "~/components/_Creator/CreateCourse/step5";
 import Step6 from "~/components/_Creator/CreateCourse/step6";
 import Step7 from "~/components/_Creator/CreateCourse/step7";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/edit-course/[id]/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
 import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
-import { profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 
 const insertCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
   await drizzleClient().insert(course_approval).values(courseApproval);
 });
 
-const insertCourse = server$(async (course: NewContentIndex) => {
-  await drizzleClient().insert(content_index).values(course);
+const updateCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
+  await drizzleClient()
+    .update(course_approval)
+    .set(courseApproval)
+    .where(eq(course_approval.id, courseApproval.id));
 });
 
-const setCourseServer = server$(
-  async (accessible_courses: string, accessible_courses_read: string, userId: string) => {
-    await drizzleClient()
-      .update(profiles)
-      .set({
-        accessible_courses: accessible_courses,
-        accessible_courses_read: accessible_courses_read,
-      })
-      .where(eq(profiles.id, userId));
-  }
-);
+const updateCourse = server$(async (course: NewContentIndex) => {
+  await drizzleClient().update(content_index).set(course).where(eq(content_index.id, course.id));
+});
+
+const deleteCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
+  await drizzleClient().delete(course_approval).where(eq(course_approval.id, courseApproval.id));
+});
 
 export default component$(() => {
-  const user = useUserLoader().value;
+  const { course, approval } = useLoader().value;
   const formSteps = useSignal(0);
   const createdTags = useSignal<Tag[]>([]);
   const createdCategory = useSignal<ContentCategory>();
-  const courseApproval = useStore<NewCourseApproval>({
-    id: uuidv4(),
-    link: "",
-    ready_for_approval: false,
-    added_tags: [],
-    added_categories: "",
-    status: "pending",
-    description: "Default description generated from adding a new course.",
-  });
-  const courseData = useStore<NewContentIndex>({
-    id: uuidv4(),
-    name: "",
-    slug: "",
-    chapter_order: [],
-    link: "",
-    is_premium: false,
-    is_locked: false,
-    is_private: false,
-    is_single_page: true,
-    author: user.userId,
-    tags: [],
-    category: "",
-    created_by_admin: user.role === "admin",
-    lang: "en-US",
-    supported_lang: ["en-US"],
-    description: "",
-    is_deleted: false,
-    approval_id: null,
-  });
+  const courseApproval = useStore<NewCourseApproval>(() =>
+    approval
+      ? approval[0]
+      : {
+          id: uuidv4(),
+          link: "",
+          ready_for_approval: false,
+          added_tags: [],
+          added_categories: "",
+          status: "pending",
+          description: "Default description generated from adding a new course.",
+        }
+  );
+  const prevCourseApproval = useSignal(!!approval);
+  const courseData = useStore<NewContentIndex>(() => course[0]);
   const courseDataError = useStore({
     name: "",
     chapter_order: "",
@@ -81,6 +65,10 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => courseData.slug);
     courseData.link = `/courses/${courseData.slug}`;
+  });
+  useTask$(({ track }) => {
+    track(() => courseData.is_private);
+    courseData.approval_id = courseData.is_private ? courseApproval.id : null;
   });
   useTask$(({ track }) => {
     track(createdTags);
@@ -94,31 +82,10 @@ export default component$(() => {
   const handleSubmit = $(async () => {
     try {
       if (!courseData.is_private) {
-        courseData.approval_id = courseApproval.id;
-        await insertCourseApproval(courseApproval);
-      }
-      await insertCourse(courseData);
-      let accessible_courses: string[];
-      try {
-        accessible_courses = JSON.parse(user.accessible_courses || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses = [];
-      }
-      accessible_courses.push(courseData.id);
-      let accessible_courses_read: string[];
-      try {
-        accessible_courses_read = JSON.parse(user.accessible_courses_read || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses_read = [];
-      }
-      accessible_courses_read.push(courseData.id);
-      await setCourseServer(
-        JSON.stringify(accessible_courses),
-        JSON.stringify(accessible_courses_read),
-        user.userId
-      );
+        if (!prevCourseApproval.value) await insertCourseApproval(courseApproval);
+        else await updateCourseApproval(courseApproval);
+      } else if (prevCourseApproval.value) await deleteCourseApproval(courseApproval);
+      await updateCourse(courseData);
     } catch (e) {
       console.error(e);
       alert("Something went wrong! Please try again later or contact support.");
@@ -158,6 +125,7 @@ export default component$(() => {
               handleSubmit={handleSubmit}
               createdTags={createdTags}
               createdCategory={createdCategory}
+              isEditing={true}
             />
           </div>
         </div>
