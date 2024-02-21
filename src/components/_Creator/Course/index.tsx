@@ -23,29 +23,25 @@ const getChapters = server$(async (courseId: string) => {
   return await drizzleClient().select().from(content).where(eq(content.index_id, courseId));
 });
 
-const deleteCourse = server$(
-  async (
-    courseId: string,
-    approvalId: string | null,
-    accessible_courses: string,
-    accessible_courses_read: string,
-    userId: string
-  ) => {
-    await drizzleClient().transaction(async (tx) => {
-      await tx
-        .update(content_index)
-        .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
-        .where(eq(content_index.id, courseId));
-      // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
-      // await tx.delete(content_index).where(eq(content_index.id, courseId));
-      // if (approvalId) await tx.delete(course_approval).where(eq(course_approval.id, approvalId));
-      // await tx
-      //   .update(profiles)
-      //   .set({ accessible_courses, accessible_courses_read })
-      //   .where(eq(profiles.id, userId));
-    });
-  }
-);
+const deleteCourse = server$(async (courseId: string) => {
+  await drizzleClient().transaction(async (tx) => {
+    await tx
+      .update(content_index)
+      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+      .where(eq(content_index.id, courseId));
+    // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
+  });
+});
+
+const deleteChapter = server$(async (chapterId: string) => {
+  await drizzleClient().transaction(async (tx) => {
+    await tx
+      .update(content)
+      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+      .where(eq(content.id, chapterId));
+    // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
+  });
+});
 
 const createChapter = server$(async (newChapter: NewContent, chapter_order: string[]) => {
   return await drizzleClient().transaction(async (tx) => {
@@ -343,6 +339,7 @@ export default component$(
               isLoadingChapter: false,
               hasLoadedChapter: false,
               profile: profiles,
+              chaptersMap: {} as Record<string, { isDeleting: boolean }>,
             }),
           ];
         })
@@ -422,52 +419,55 @@ export default component$(
       });
     });
 
-    const handleDeleteContentIndex = $(
-      async (
-        courseId: string,
-        approvalId: string | null,
-        accessible_courses: string,
-        accessible_courses_read: string,
-        userId: string
-      ) => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (!courses[courseId])
-          return alert("Something went wrong! Please refresh the page and try again.");
-        if (!window.confirm("Are you sure you want to delete this course?")) return;
-        if (isDeletingChapterIndex.value || !ws.value) return;
-        isDeletingChapterIndex.value = courseId;
-        isDeletingChapterIndexCallback.value = $(async () => {
-          try {
-            await deleteCourse(
-              courseId,
-              approvalId,
-              accessible_courses,
-              accessible_courses_read,
-              userId
-            );
-          } catch (e) {
-            console.error(e);
-            return alert(
-              "An error occurred! Please refresh the page and try again or contact support."
-            );
-          }
-          isDeletingChapterIndex.value = "";
-        });
-        isDeletingChapterIndexTimeout.value = setTimeout(() => {
-          alert("Server Timeout! Please try again later or contact support.");
-          isDeletingChapterIndexCallback.value = undefined;
-          isDeletingChapterIndex.value = "";
-        }, 7000);
-        ws.value.send(
-          JSON.stringify({
-            type: "deleteContentIndex",
-            userId: user.userId,
-            courseId,
-            contentId: courses[courseId].chapter_order,
-          })
+    const handleDeleteContentIndex = $(async (courseId: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!courses[courseId])
+        return alert("Something went wrong! Please refresh the page and try again.");
+      if (!window.confirm("Are you sure you want to delete this course?")) return;
+      if (isDeletingChapterIndex.value || !ws.value) return;
+      isDeletingChapterIndex.value = courseId;
+      isDeletingChapterIndexCallback.value = $(async () => {
+        try {
+          await deleteCourse(courseId);
+        } catch (e) {
+          console.error(e);
+          return alert(
+            "An error occurred! Please refresh the page and try again or contact support."
+          );
+        }
+        isDeletingChapterIndex.value = "";
+      });
+      isDeletingChapterIndexTimeout.value = setTimeout(() => {
+        alert("Server Timeout! Please try again later or contact support.");
+        isDeletingChapterIndexCallback.value = undefined;
+        isDeletingChapterIndex.value = "";
+      }, 7000);
+      ws.value.send(
+        JSON.stringify({
+          type: "deleteContentIndex",
+          userId: user.userId,
+          courseId,
+          contentId: courses[courseId].chapter_order,
+        })
+      );
+    });
+
+    const refreshChapters = $((id: string) => {
+      courses[id].isLoadingChapter = true;
+      getChapters(id).then((chapters) => {
+        courses[id].chapters = chapters;
+        courses[id].chaptersMap = Object.fromEntries(
+          chapters.map((c) => [
+            c.id,
+            {
+              isDeleting: false,
+            },
+          ])
         );
-      }
-    );
+        courses[id].isLoadingChapter = false;
+        courses[id].hasLoadedChapter = true;
+      });
+    });
 
     return (
       <>
@@ -478,13 +478,8 @@ export default component$(
             courseChapters={showAddCourseChapters}
             courseSlug={showAddCourseSlug}
             callBackOnCreate={$((chapter) => {
-              courses[showAddCourseId.value].isLoadingChapter = true;
               courses[showAddCourseId.value].chapter_order.push(chapter.id);
-              getChapters(showAddCourseId.value).then((chapters) => {
-                courses[showAddCourseId.value].chapters = chapters;
-                courses[showAddCourseId.value].isLoadingChapter = false;
-                courses[showAddCourseId.value].hasLoadedChapter = true;
-              });
+              refreshChapters(showAddCourseId.value);
             })}
           />
         )}
@@ -524,12 +519,7 @@ export default component$(
                             onClick$={() => {
                               courses[currentCourse.id].isOpen = !courses[currentCourse.id].isOpen;
                               if (courses[currentCourse.id].hasLoadedChapter) return;
-                              courses[currentCourse.id].isLoadingChapter = true;
-                              getChapters(currentCourse.id).then((chapters) => {
-                                courses[currentCourse.id].chapters = chapters;
-                                courses[currentCourse.id].isLoadingChapter = false;
-                                courses[currentCourse.id].hasLoadedChapter = true;
-                              });
+                              refreshChapters(currentCourse.id);
                             }}
                             class="flex cursor-pointer items-center justify-between"
                           >
@@ -833,64 +823,63 @@ export default component$(
                                 {!courses[currentCourse.id].is_single_page &&
                                   courses[currentCourse.id].hasLoadedChapter && (
                                     <ul class="flex flex-col gap-4 py-4">
-                                      {courses[currentCourse.id].chapters.map((chapter) => (
-                                        <li
-                                          key={`Course${currentCourse.id}Chapter${chapter.id}`}
-                                          class="flex items-center justify-between"
-                                        >
-                                          <h2 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
-                                            <Link href={chapter.link || undefined}>
-                                              {chapter.name}
-                                            </Link>
-                                          </h2>
-                                          <div class="flex items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
-                                            <button class="p-1">
-                                              <FaPenToSquareRegular />
-                                            </button>
-                                            <button class="p-1">
-                                              <FaSlidersSolid />
-                                            </button>
-                                            <button class="rounded-sm bg-tomato p-1 text-background-light-gray">
-                                              <FaTrashSolid />
-                                            </button>
-                                          </div>
-                                        </li>
-                                      ))}
+                                      {courses[currentCourse.id].chapter_order.map((_chapterId) => {
+                                        const chapter = courses[currentCourse.id].chapters.find(
+                                          (c) => c.id === _chapterId
+                                        );
+                                        if (!chapter || chapter.is_deleted) return null;
+                                        return (
+                                          <li
+                                            key={`Course${currentCourse.id}Chapter${chapter.id}`}
+                                            class="flex items-center justify-between"
+                                          >
+                                            <h2 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
+                                              <Link href={chapter.link || undefined}>
+                                                {chapter.name}
+                                              </Link>
+                                            </h2>
+                                            <div class="flex items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                              <button class="p-1">
+                                                <FaPenToSquareRegular />
+                                              </button>
+                                              <button class="p-1">
+                                                <FaSlidersSolid />
+                                              </button>
+                                              <button
+                                                onClick$={async () => {
+                                                  if (
+                                                    !window.confirm(
+                                                      "Are you sure you want to delete this chapter?"
+                                                    )
+                                                  )
+                                                    return;
+                                                  courses[currentCourse.id].chaptersMap[
+                                                    chapter.id
+                                                  ].isDeleting = true;
+                                                  await deleteChapter(chapter.id);
+                                                  courses[currentCourse.id].chaptersMap[
+                                                    chapter.id
+                                                  ].isDeleting = false;
+                                                  refreshChapters(currentCourse.id);
+                                                }}
+                                                class="rounded-sm bg-tomato p-1 text-background-light-gray"
+                                              >
+                                                {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                  .isDeleting ? (
+                                                  <LoadingSVG />
+                                                ) : (
+                                                  <FaTrashSolid />
+                                                )}
+                                              </button>
+                                            </div>
+                                          </li>
+                                        );
+                                      })}
                                     </ul>
                                   )}
                                 <button
                                   onClick$={() => {
-                                    let accessible_courses: any = [],
-                                      accessible_courses_read: any = [];
-                                    try {
-                                      accessible_courses = JSON.parse(
-                                        user.accessible_courses || "[]"
-                                      );
-                                      accessible_courses_read = JSON.parse(
-                                        user.accessible_courses_read || "[]"
-                                      );
-                                      accessible_courses = accessible_courses.filter(
-                                        (course: string) => course !== currentCourse.id
-                                      );
-                                      accessible_courses_read = accessible_courses_read.filter(
-                                        (course: string) => course !== currentCourse.id
-                                      );
-                                      accessible_courses = JSON.stringify(accessible_courses);
-                                      accessible_courses_read =
-                                        JSON.stringify(accessible_courses_read);
-                                    } catch (error) {
-                                      console.log(error);
-                                      return alert(
-                                        "An error occured. Please refresh the page and try again or contact support."
-                                      );
-                                    }
-                                    handleDeleteContentIndex(
-                                      currentCourse.id,
-                                      currentCourse.approval_id,
-                                      accessible_courses,
-                                      accessible_courses_read,
-                                      user.userId
-                                    );
+                                    handleDeleteContentIndex(currentCourse.id);
                                   }}
                                   class="rounded-lg bg-tomato px-6 py-3 shadow-lg"
                                 >
