@@ -5,4 +5,5 @@ export const MAX_NUMBER_OF_FILES_R2_FETCHGITHUB = 1000; // corresponds to maxkey
 
 export const BUN_API_ENDPOINT = "https://api.partialty.com";
 export const BUN_API_ENDPOINT_WS = "wss://api.partialty.com";
+export const BUN_API_ENDPOINT_WS_DEV = "ws://localhost:8080";
 export const PROD_FILES_URL = "https://files.partialty.com";

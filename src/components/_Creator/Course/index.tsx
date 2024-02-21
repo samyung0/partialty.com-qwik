@@ -1,5 +1,5 @@
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
-import { component$, useComputed$, useStore } from "@builder.io/qwik";
+import { $, component$, useComputed$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { Link, server$ } from "@builder.io/qwik-city";
 import { FaPenToSquareRegular, FaSlidersSolid, FaTrashSolid } from "@qwikest/icons/font-awesome";
 import { IoCaretDown } from "@qwikest/icons/ionicons";
@@ -12,14 +12,39 @@ import drizzleClient from "~/utils/drizzleClient";
 import type { Content } from "../../../../drizzle_turso/schema/content";
 import { content } from "../../../../drizzle_turso/schema/content";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
-import type { ContentIndex } from "../../../../drizzle_turso/schema/content_index";
-import type { Profiles } from "../../../../drizzle_turso/schema/profiles";
+import { content_index, type ContentIndex } from "../../../../drizzle_turso/schema/content_index";
+import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
+import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
 
 const getChapters = server$(async (courseId: string) => {
   return await drizzleClient().select().from(content).where(eq(content.index_id, courseId));
 });
+
+const deleteCourse = server$(
+  async (
+    courseId: string,
+    approvalId: string | null,
+    accessible_courses: string,
+    accessible_courses_read: string,
+    userId: string
+  ) => {
+    await drizzleClient().transaction(async (tx) => {
+      try {
+        await tx.delete(content_index).where(eq(content_index.id, courseId));
+        if (approvalId) await tx.delete(course_approval).where(eq(course_approval.id, approvalId));
+        await tx
+          .update(profiles)
+          .set({ accessible_courses, accessible_courses_read })
+          .where(eq(profiles.id, userId));
+      } catch (e) {
+        tx.rollback();
+        throw Error(e as string);
+      }
+    });
+  }
+);
 
 export default component$(
   ({
@@ -29,8 +54,6 @@ export default component$(
     tags,
     categories,
     courseIdToEditingUser,
-    isDeletingChapter,
-    isDeletingChapterCallback,
   }: {
     ws: Signal<NoSerialize<WebSocket>>;
     userAccessibleCourseWrite: string[];
@@ -38,8 +61,6 @@ export default component$(
     tags: Tag[];
     categories: ContentCategory[];
     courseIdToEditingUser: Record<string, [string, string]>;
-    isDeletingChapter: Signal<string>;
-    isDeletingChapterCallback: Signal<QRL<() => any> | undefined>;
   }) => {
     const user = useUserLoader().value;
 
@@ -63,6 +84,112 @@ export default component$(
       Object.values(courses).toSorted(
         (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       )
+    );
+
+    const isDeletingChapter = useSignal("");
+    const isDeletingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
+    const isDeletingChapterTimeout = useSignal<any>();
+
+    const isDeletingChapterIndex = useSignal("");
+    const isDeletingChapterIndexCallback = useSignal<QRL<() => any> | undefined>(undefined);
+    const isDeletingChapterIndexTimeout = useSignal<any>();
+
+    useTask$(({ track }) => {
+      track(ws);
+      if (!ws.value) return;
+
+      ws.value.addEventListener("message", ({ data }) => {
+        try {
+          const d = JSON.parse(data);
+          if (d.type === "deleteContentSuccess") {
+            if (!isDeletingChapterCallback.value) return;
+            isDeletingChapterCallback.value();
+            isDeletingChapterCallback.value = undefined;
+            clearTimeout(isDeletingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "deleteContentError") {
+            alert(d.message);
+            isDeletingChapter.value = "";
+            isDeletingChapterCallback.value = undefined;
+            clearTimeout(isDeletingChapterTimeout.value);
+            return;
+          }
+          if (d.type === "deleteContentIndexSuccess") {
+            if (!isDeletingChapterIndexCallback.value) return;
+            isDeletingChapterIndexCallback.value();
+            isDeletingChapterIndexCallback.value = undefined;
+            clearTimeout(isDeletingChapterIndexTimeout.value);
+            return;
+          }
+          if (d.type === "deleteContentIndexError") {
+            alert(d.message);
+            isDeletingChapterIndex.value = "";
+            isDeletingChapterIndexCallback.value = undefined;
+            clearTimeout(isDeletingChapterIndexTimeout.value);
+            return;
+          }
+          if (d.type === "contentIndexDeleted") {
+            if (isDeletingChapterIndexCallback.value) {
+              const t = isDeletingChapterIndexCallback.value;
+              isDeletingChapterIndexCallback.value = $(async () => {
+                await t();
+                delete courses[d.message.courseId];
+              });
+            } else delete courses[d.message.courseId];
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    });
+
+    const handleDeleteContentIndex = $(
+      async (
+        courseId: string,
+        approvalId: string | null,
+        accessible_courses: string,
+        accessible_courses_read: string,
+        userId: string
+      ) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (!courses[courseId])
+          return alert("Something went wrong! Please refresh the page and try again.");
+        if (!window.confirm("Are you sure you want to delete this course?")) return;
+        if (isDeletingChapterIndex.value || !ws.value) return;
+        isDeletingChapterIndex.value = courseId;
+        isDeletingChapterIndexCallback.value = $(async () => {
+          try {
+            await deleteCourse(
+              courseId,
+              approvalId,
+              accessible_courses,
+              accessible_courses_read,
+              userId
+            );
+          } catch (e) {
+            console.error(e);
+            return alert(
+              "An error occurred! Please refresh the page and try again or contact support."
+            );
+          }
+          isDeletingChapterIndex.value = "";
+        });
+        isDeletingChapterIndexTimeout.value = setTimeout(() => {
+          alert("Server Timeout! Please try again later or contact support.");
+          isDeletingChapterIndexCallback.value = undefined;
+          isDeletingChapterIndex.value = "";
+        }, 7000);
+        ws.value.send(
+          JSON.stringify({
+            type: "deleteContentIndex",
+            userId: user.userId,
+            courseId,
+            contentId: courses[courseId].chapter_order,
+          })
+        );
+      }
     );
 
     return (
@@ -401,7 +528,39 @@ export default component$(
                                   ))}
                                 </ul>
                               )}
-                            <button class="rounded-lg bg-tomato px-6 py-3 shadow-lg">
+                            <button
+                              onClick$={() => {
+                                let accessible_courses: any = [],
+                                  accessible_courses_read: any = [];
+                                try {
+                                  accessible_courses = JSON.parse(user.accessible_courses || "[]");
+                                  accessible_courses_read = JSON.parse(
+                                    user.accessible_courses_read || "[]"
+                                  );
+                                  accessible_courses = accessible_courses.filter(
+                                    (course: string) => course !== currentCourse.id
+                                  );
+                                  accessible_courses_read = accessible_courses_read.filter(
+                                    (course: string) => course !== currentCourse.id
+                                  );
+                                  accessible_courses = JSON.stringify(accessible_courses);
+                                  accessible_courses_read = JSON.stringify(accessible_courses_read);
+                                } catch (error) {
+                                  console.log(error);
+                                  return alert(
+                                    "An error occured. Please refresh the page and try again or contact support."
+                                  );
+                                }
+                                handleDeleteContentIndex(
+                                  currentCourse.id,
+                                  currentCourse.approval_id,
+                                  accessible_courses,
+                                  accessible_courses_read,
+                                  user.userId
+                                );
+                              }}
+                              class="rounded-lg bg-tomato px-6 py-3 shadow-lg"
+                            >
                               Delete Course
                             </button>
                           </>

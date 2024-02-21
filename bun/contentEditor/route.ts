@@ -365,6 +365,47 @@ const app = new Elysia()
             })
           );
         }
+        if (msg.type === "deleteContentIndex") {
+          const userId = msg.userId;
+          const _contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!userId || !_contentId || !courseId) {
+            console.log("missing", msg.contentId);
+            return;
+          }
+          for (let i = 0; i < _contentId.length; i++) {
+            const contentId = _contentId[i];
+            if (courseIdToUserId.get(contentId)) {
+              return ws.send(
+                JSON.stringify({
+                  type: "deleteContentIndexError",
+                  message: "Someone is editing the content!",
+                })
+              );
+            }
+          }
+          const message: any = {};
+          message.courseId = courseId;
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentIndexDeleted",
+                  message,
+                })
+              );
+          });
+          return ws.send(
+            JSON.stringify({
+              type: "deleteContentIndexSuccess",
+              message: "OK",
+            })
+          );
+        }
         if (msg.type === "heartBeat") {
           const userId = msg.userId;
           if (!userId || !wsContentArrClear.get(userId)) {

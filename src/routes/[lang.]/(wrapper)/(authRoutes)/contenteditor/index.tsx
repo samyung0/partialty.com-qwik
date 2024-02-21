@@ -185,6 +185,11 @@ export default component$(() => {
   const timeStamp = useSignal<string>("");
   const muxWSHeartBeat = useSignal<any>();
   const isClosingPage = useSignal(false);
+  const retryCleared = useSignal(false);
+  const failedCount = useSignal(0);
+  const currentTimeout = useSignal(0);
+  const exponentialFallback = useSignal([1, 5, 10]);
+  const isConnecting = useSignal(false);
 
   const courseIdToEditingUser = useStore<Record<string, [string, string]>>({});
   const contentEditorValue = useSignal<any>();
@@ -210,8 +215,17 @@ export default component$(() => {
     fn: $((retry: any) => {}),
   };
   _startWSConnection.fn = $((retry: any) => {
+    if (isConnecting.value) return;
+    if (
+      failedCount.value > 0 &&
+      currentTimeout.value < exponentialFallback.value[failedCount.value - 1]
+    ) {
+      currentTimeout.value++;
+      return;
+    }
     try {
       console.log("Starting Websocket connection");
+      isConnecting.value = true;
       timeStamp.value = Date.now() + "";
       const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
       ws.addEventListener("open", () => {
@@ -232,6 +246,11 @@ export default component$(() => {
             })
           );
         }, 30 * 1000);
+
+        contentWS.value = noSerialize(ws);
+        failedCount.value = 0;
+        currentTimeout.value = 0;
+        isConnecting.value = false;
       });
 
       ws.addEventListener("message", ({ data }) => {
@@ -290,7 +309,23 @@ export default component$(() => {
 
       ws.addEventListener("error", () => {
         // error event fires with close event
-        alert("Websocket connection error! Retrying connection...");
+        contentWS.value = undefined;
+        clearInterval(muxWSHeartBeat.value);
+
+        failedCount.value++;
+        currentTimeout.value = 0;
+        isConnecting.value = false;
+
+        if (failedCount.value > exponentialFallback.value.length) {
+          alert("Failed to connect to server! Please try again later or contact support.");
+          clearInterval(retry);
+          return;
+        } else
+          alert(
+            "Websocket connection error! Retrying connection in " +
+              exponentialFallback.value[failedCount.value - 1] +
+              " second(s)..."
+          );
       });
 
       ws.addEventListener("close", () => {
@@ -302,10 +337,11 @@ export default component$(() => {
         }
         console.error("Websocket connection closed!");
 
-        _startWSConnection.startWSConnection();
+        if (retryCleared.value) {
+          _startWSConnection.startWSConnection();
+          retryCleared.value = false;
+        }
       });
-
-      contentWS.value = noSerialize(ws);
     } catch (e) {
       console.error(e);
       console.log("retrying connection in 10 seconds...");

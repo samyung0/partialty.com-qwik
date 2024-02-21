@@ -1,4 +1,4 @@
-import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
+import type { NoSerialize, Signal } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
 
 import Nav from "~/components/Nav";
@@ -19,8 +19,6 @@ export default component$(
     tags,
     categories,
     courseIdToEditingUser,
-    isDeletingChapter,
-    isDeletingChapterCallback,
   }: {
     ws: Signal<NoSerialize<WebSocket>>;
     userAccessibleCourseWrite: string[];
@@ -28,8 +26,6 @@ export default component$(
     tags: Tag[];
     categories: ContentCategory[];
     courseIdToEditingUser: Record<string, [string, string]>;
-    isDeletingChapter: Signal<string>;
-    isDeletingChapterCallback: Signal<QRL<() => any> | undefined>;
   }) => {
     const user = useUserLoader().value;
     const tabIndex = useSignal(0);
@@ -82,8 +78,6 @@ export default component$(
                 tags={tags}
                 categories={categories}
                 courseIdToEditingUser={courseIdToEditingUser}
-                isDeletingChapter={isDeletingChapter}
-                isDeletingChapterCallback={isDeletingChapterCallback}
               />
             )}
           </div>
