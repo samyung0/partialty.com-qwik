@@ -218,6 +218,20 @@
       "when": 1708247866298,
       "tag": "0030_wooden_the_twelve",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1708501217097,
+      "tag": "0031_yielding_terror",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1708513601562,
+      "tag": "0032_complex_chimera",
+      "breakpoints": true
     }
   ]
 }

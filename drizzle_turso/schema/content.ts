@@ -1,5 +1,5 @@
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
-import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { content_index } from "./content_index";
 
 export const content = sqliteTable("content", {
@@ -9,7 +9,6 @@ export const content = sqliteTable("content", {
     .references(() => content_index.id),
   slug: text("slug").notNull(),
   name: text("name").notNull(),
-  chapter_order: blob("chapter_order", { mode: "json" }).$type<string[]>().notNull(), // unused, default []
   link: text("link"),
   renderedHTML: text("renderedHTML"),
   content_slate: text("content_slate"), // should be of type Descendant[] (slate JS), but for flexibility its stored as string and parsed when fetched
@@ -23,6 +22,7 @@ export const content = sqliteTable("content", {
     .notNull(),
   audio_track_playback_id: text("audio_track_playback_id"),
   audio_track_asset_id: text("audio_track_asset_id"),
+  is_deleted: integer("is_deleted", { mode: "boolean" }).notNull().default(false),
 });
 
 export type Content = InferSelectModel<typeof content>;

@@ -246,6 +246,20 @@
       "when": 1708247862488,
       "tag": "0034_odd_catseye",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1708501229712,
+      "tag": "0035_illegal_talos",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1708513611525,
+      "tag": "0036_great_madame_hydra",
+      "breakpoints": true
     }
   ]
 }

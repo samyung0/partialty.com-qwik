@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSVG from "~/components/LoadingSVG";
 import { useTags } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
+import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import type { NewTag, Tag } from "../../../../drizzle_turso/schema/tag";
@@ -36,17 +37,16 @@ const addTagSchema = z.object({
   slug: z
     .string()
     .min(1, "A slug is required")
-    .regex(/^[a-zA-Z]+.*[a-zA-Z ]+$/, "The slug must start and end with characters!")
-    .regex(/^[a-zA-Z]+[-a-zA-Z]*[a-zA-Z ]+$/, "No special characters except hyphens are allowed"),
+    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, "The slug must start and end with characters!")
+    .regex(
+      /^[a-za-z0-9]+[-a-za-z0-9]*[a-za-z0-9]+$/,
+      "No special characters except hyphens are allowed"
+    ),
   link: z
     .string()
     .min(1, "A link is required")
     .regex(/^\//, "The link needs to start with a slash")
-    .regex(/[a-zA-Z ]+$/, "The link needs to end with a character")
-    .regex(
-      /^\/[a-zA-Z]+[-?=&/a-zA-Z]*[a-zA-Z ]+$/,
-      "No special characters except -?=& are allowed"
-    ),
+    .regex(/^\/[a-za-z0-9]+[-?=&/a-za-z0-9]*$/, "No special characters except -?=& are allowed"),
 });
 
 export const AddTag = component$(
@@ -59,6 +59,7 @@ export const AddTag = component$(
     tags: Tag[];
     createdTags: Signal<Tag[]>;
   }) => {
+    const userRole = useUserLoader().value.role;
     const formData = useStore<NewTag>({
       id: uuidv4(),
       name: "",
@@ -150,7 +151,7 @@ export const AddTag = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
                     (formError.name ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
@@ -170,9 +171,13 @@ export const AddTag = component$(
                   name="slug"
                   type="text"
                   value={formData.slug}
+                  disabled={userRole !== "admin"}
+                  onInput$={(_, el) => {
+                    formData.slug = el.value;
+                  }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
                     (formError.slug ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
@@ -191,10 +196,14 @@ export const AddTag = component$(
                   id="categorLink"
                   name="link"
                   type="text"
+                  disabled={userRole !== "admin"}
                   value={formData.link}
+                  onInput$={(_, el) => {
+                    formData.link = el.value;
+                  }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
                     (formError.link ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />

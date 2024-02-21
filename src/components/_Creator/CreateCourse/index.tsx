@@ -80,7 +80,7 @@ export default component$(() => {
   });
   useTask$(({ track }) => {
     track(() => courseData.slug);
-    courseData.link = `/courses/${courseData.slug}`;
+    courseData.link = `/courses/${courseData.slug}/`;
   });
   useTask$(({ track }) => {
     track(createdTags);

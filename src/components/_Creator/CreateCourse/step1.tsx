@@ -3,6 +3,7 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
 import LoadingSVG from "~/components/LoadingSVG";
+import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
@@ -32,6 +33,7 @@ export default component$(
     };
     formSteps: Signal<number>;
   }) => {
+    const user = useUserLoader().value;
     const loading = useSignal(false);
     const ref = useSignal<HTMLInputElement>();
     return (
@@ -85,7 +87,7 @@ export default component$(
                     value={courseData.slug}
                     required
                     class={
-                      "block w-[300px] rounded-md border-2 border-black/10 px-3 py-2 disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark "
+                      "w-[300px] rounded-md border-2 px-3 py-2 disabled:bg-gray-300  dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark "
                     }
                   />
                 </div>

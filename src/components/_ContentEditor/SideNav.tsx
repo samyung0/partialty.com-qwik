@@ -768,7 +768,6 @@ export default component$(
                         slug: slug,
                         is_premium: !!parseResult.data.sub,
                         link: defaultChapter(topic.slug, slug),
-                        chapter_order: [],
                         index_id: courseId,
                       };
                       const newChapterOrder = [...topic.chapter_order, newId];

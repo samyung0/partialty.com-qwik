@@ -2,7 +2,7 @@ import type { NoSerialize, QRL } from "@builder.io/qwik";
 import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { eq, or } from "drizzle-orm";
+import { and, eq, not, or } from "drizzle-orm";
 
 import Creator from "~/components/_Creator";
 import { BUN_API_ENDPOINT_WS, BUN_API_ENDPOINT_WS_DEV } from "~/const";
@@ -36,12 +36,18 @@ export const useAccessibleCourseWriteResolved = routeLoader$(async (event) => {
     courses = await drizzleClient()
       .select()
       .from(content_index)
+      .where(not(eq(content_index.is_deleted, true)))
       .innerJoin(profiles, eq(profiles.id, content_index.author));
   } else
     courses = await drizzleClient()
       .select()
       .from(content_index)
-      .where(or(...accessibleCourseWrite.map((id) => eq(content_index.id, id))))
+      .where(
+        and(
+          or(...accessibleCourseWrite.map((id) => eq(content_index.id, id))),
+          not(eq(content_index.is_deleted, true))
+        )
+      )
       .innerJoin(profiles, eq(profiles.id, content_index.author));
   return courses;
 });
