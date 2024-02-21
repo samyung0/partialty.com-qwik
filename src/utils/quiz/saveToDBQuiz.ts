@@ -5,7 +5,7 @@ import drizzleClient from "~/utils/drizzleClient";
 import { content_user_quiz } from "../../../drizzle_turso/schema/content_user_quiz";
 
 export default $((isCorrect: boolean, userId: string, course_id: string, chapter_id: string) => {
-  server$((isCorrect: boolean) => {
+  const server = server$((isCorrect: boolean) => {
     drizzleClient().transaction(async (tx) => {
       const recordExists = await tx
         .select()
@@ -41,5 +41,6 @@ export default $((isCorrect: boolean, userId: string, course_id: string, chapter
         });
       }
     });
-  })(isCorrect);
+  });
+  server(isCorrect);
 });
