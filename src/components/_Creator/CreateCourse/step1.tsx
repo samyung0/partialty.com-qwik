@@ -1,7 +1,7 @@
 import type { Signal } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import LoadingSVG from "~/components/LoadingSVG";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
@@ -12,7 +12,7 @@ const checkExistingCourse = server$(async (slug: string) => {
   return await drizzleClient()
     .select({ id: content_index.id })
     .from(content_index)
-    .where(eq(content_index.slug, slug));
+    .where(and(eq(content_index.slug, slug), eq(content_index.is_deleted, false)));
 });
 
 const schema = z.object({
@@ -24,6 +24,7 @@ export default component$(
     courseData,
     courseDataError,
     formSteps,
+    isEditing = false,
   }: {
     courseData: NewContentIndex;
     courseDataError: {
@@ -32,6 +33,7 @@ export default component$(
       description: string;
     };
     formSteps: Signal<number>;
+    isEditing?: boolean;
   }) => {
     const user = useUserLoader().value;
     const loading = useSignal(false);
@@ -104,7 +106,10 @@ export default component$(
                     return;
                   }
                   const existingCourse = await checkExistingCourse(courseData.slug);
-                  if (existingCourse.length > 0) {
+                  if (
+                    existingCourse.length > 0 &&
+                    (isEditing ? existingCourse[0].id !== courseData.id : true)
+                  ) {
                     courseDataError.name = "A course with this name already exists";
                     loading.value = false;
                     return;

@@ -23,11 +23,12 @@ export const useLoader = routeLoader$(async (event) => {
       .select()
       .from(content_index)
       .where(eq(content_index.id, id));
-    if (!course[0].approval_id) return { course, approval: null };
+    if (!course[0]) throw event.redirect(302, "/notfound/");
     const approval = await drizzleClient()
       .select()
       .from(course_approval)
-      .where(eq(course_approval.id, course[0].approval_id));
+      .where(eq(course_approval.course_id, course[0].id));
+    if (!approval[0]) throw event.redirect(302, "/notfound/");
     return { course, approval };
   } catch (e) {
     console.error(e);

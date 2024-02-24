@@ -1,11 +1,10 @@
 import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { content_category } from "./content_category";
 import { profiles } from "./profiles";
 
 export const content_index = sqliteTable("content_index", {
   id: text("id").notNull().primaryKey(),
-  slug: text("slug").notNull().unique(),
+  slug: text("slug").notNull(),
   name: text("name").notNull(),
   chapter_order: blob("chapter_order", { mode: "json" }).$type<string[]>().notNull(),
   link: text("link"),
@@ -27,17 +26,12 @@ export const content_index = sqliteTable("content_index", {
   supported_lang: blob("supported_lang", { mode: "json" }).$type<string[]>().notNull(),
   description: text("description").notNull().default(""),
   is_deleted: integer("is_deleted", { mode: "boolean" }).notNull().default(false),
-  approval_id: text("approval_id"),
 });
 
 export const contentIndexRelations = relations(content_index, ({ one }) => ({
   author: one(profiles, {
     fields: [content_index.author],
     references: [profiles.id],
-  }),
-  approval_id: one(content_category, {
-    fields: [content_index.approval_id],
-    references: [content_category.id],
   }),
 }));
 

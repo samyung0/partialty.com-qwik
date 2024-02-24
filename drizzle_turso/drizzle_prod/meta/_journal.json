@@ -260,6 +260,55 @@
       "when": 1708513611525,
       "tag": "0036_great_madame_hydra",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1708672151099,
+      "tag": "0037_typical_maddog",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1708672483573,
+      "tag": "0038_quick_eternals",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1708674476024,
+      "tag": "0039_tense_human_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1708674482596,
+      "tag": "0040_material_shooting_star",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1708674886011,
+      "tag": "0041_robust_karma",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "5",
+      "when": 1708680593253,
+      "tag": "0042_nosy_deathstrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1708680639704,
+      "tag": "0043_yummy_zemo",
+      "breakpoints": true
     }
   ]
 }

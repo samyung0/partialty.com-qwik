@@ -5,6 +5,7 @@ import Nav from "~/components/Nav";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { ContentCategory } from "../../../drizzle_turso/schema/content_category";
 import type { ContentIndex } from "../../../drizzle_turso/schema/content_index";
+import type { CourseApproval } from "../../../drizzle_turso/schema/course_approval";
 import type { Profiles } from "../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../drizzle_turso/schema/tag";
 import Course from "./Course";
@@ -21,8 +22,14 @@ export default component$(
     courseIdToEditingUser,
   }: {
     ws: Signal<NoSerialize<WebSocket>>;
-    userAccessibleCourseWrite: string[];
-    userAccessibleCourseWriteResolved: { content_index: ContentIndex; profiles: Profiles }[];
+    userAccessibleCourseWrite: Signal<string[]>;
+    userAccessibleCourseWriteResolved: Signal<
+      {
+        content_index: ContentIndex;
+        profiles: Profiles;
+        course_approval: CourseApproval;
+      }[]
+    >;
     tags: Tag[];
     categories: ContentCategory[];
     courseIdToEditingUser: Record<string, [string, string]>;

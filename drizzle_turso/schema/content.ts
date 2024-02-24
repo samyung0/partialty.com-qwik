@@ -7,7 +7,7 @@ export const content = sqliteTable("content", {
   index_id: text("index_id")
     .notNull()
     .references(() => content_index.id),
-  slug: text("slug").notNull(),
+  slug: text("slug"),
   name: text("name").notNull(),
   link: text("link"),
   renderedHTML: text("renderedHTML"),

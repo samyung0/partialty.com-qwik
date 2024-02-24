@@ -12,6 +12,7 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type Mux from "~/types/Mux";
 import drizzleClient from "~/utils/drizzleClient";
+import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
 import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";
 import type { Content } from "../../../../../../drizzle_turso/schema/content";
 import { content } from "../../../../../../drizzle_turso/schema/content";
@@ -50,15 +51,21 @@ const SERVER3 = server$(
     contentEditorValue2: string | null,
     renderedHTML2: string,
     audio_track_playback_id: string | undefined,
-    audio_track_asset_id: string | undefined
+    audio_track_asset_id: string | undefined,
+    courseId: string
   ) => {
     try {
       const contentVal: any = {
         content_slate: contentEditorValue2,
         renderedHTML: renderedHTML2,
+        updated_at: getSQLTimeStamp(),
       };
       contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
       contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
+      await drizzleClient()
+        .update(content_index)
+        .set({ updated_at: getSQLTimeStamp() })
+        .where(eq(content_index.id, courseId));
       return await drizzleClient()
         .update(content)
         .set(contentVal)
@@ -440,7 +447,8 @@ export default component$(() => {
                 contentEditorValue2,
                 renderedHTML2,
                 audio_track_playback_id,
-                audio_track_asset_id
+                audio_track_asset_id,
+                courseId.value
               )) as any[];
               if (ret.length > 0 && ret[0] === false) {
                 alert("Save failed! " + ret[1].toString());

@@ -5,7 +5,15 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 
 export default component$(
-  ({ courseData, formSteps }: { courseData: NewContentIndex; formSteps: Signal<number> }) => {
+  ({
+    courseData,
+    formSteps,
+    isEditing = false,
+  }: {
+    courseData: NewContentIndex;
+    formSteps: Signal<number>;
+    isEditing?: boolean;
+  }) => {
     const user = useUserLoader().value;
     return (
       <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
@@ -47,7 +55,7 @@ export default component$(
               </div>
               <div>
                 <label
-                  title="The option should be left empty if you are creating a blog or guide that has only a single page. Check this if you think it is better to split the course into multiple chapters."
+                  title="The option should be left empty if you are creating a blog or guide that has only a single page. Check this if you think it is better to split the course into multiple chapters. You CANNOT change this after creating the course."
                   for="multipleChapters"
                   class="flex cursor-pointer items-center gap-5   text-lg"
                 >
@@ -58,13 +66,15 @@ export default component$(
                     Multiple chapters
                   </span>
                   <input
+                    disabled={isEditing}
                     id="multipleChapters"
                     type="checkbox"
                     class="h-4 w-4"
                     checked={!courseData.is_single_page}
-                    onChange$={(e, currentTarget) =>
-                      (courseData.is_single_page = !currentTarget.checked)
-                    }
+                    onChange$={(e, currentTarget) => {
+                      if (isEditing) return;
+                      courseData.is_single_page = !currentTarget.checked;
+                    }}
                   />
                 </label>
               </div>

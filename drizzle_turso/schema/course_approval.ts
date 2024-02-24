@@ -1,9 +1,12 @@
-import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { content_index } from "./content_index";
 
 export const course_approval = sqliteTable("course_approval", {
   id: text("id").notNull().primaryKey(),
+  course_id: text("course_id")
+    .notNull()
+    .references(() => content_index.id),
   link: text("link").notNull(),
   ready_for_approval: integer("ready_for_approval", { mode: "boolean" }).notNull().default(false),
   added_tags: blob("added_tags").$type<string[]>().notNull(),
@@ -19,13 +22,6 @@ export const course_approval = sqliteTable("course_approval", {
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
 });
-
-export const courseApprovalRelations = relations(course_approval, ({ one }) => ({
-  id: one(content_index, {
-    fields: [course_approval.id],
-    references: [content_index.id],
-  }),
-}));
 
 export type CourseApproval = InferSelectModel<typeof course_approval>;
 export type NewCourseApproval = InferInsertModel<typeof course_approval>;

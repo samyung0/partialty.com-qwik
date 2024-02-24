@@ -286,12 +286,12 @@ const app = new Elysia()
           }
         }
         if (msg.type === "createContent") {
-          const content = msg.content[0];
-          const courseId = content.index_id;
-          if (!content || !courseId) {
+          const details = msg.details;
+          const courseId = msg.courseId;
+          if (!details || !courseId) {
             return ws.send(JSON.stringify({ type: "createContentFail", msg: "Content is empty!" }));
           }
-          const message = { content: msg.content };
+          const message = { details, courseId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
             if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
@@ -307,11 +307,32 @@ const app = new Elysia()
           });
           return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }));
         }
-        if (msg.type === "editContentDetails") {
+        if (msg.type === "createChapter") {
           const details = msg.details;
           const courseId = msg.courseId;
           const chapterId = msg.chapterId;
           if (!details || !courseId) return;
+          const message = { details, courseId, chapterId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "chapterCreated",
+                  message,
+                })
+              );
+          });
+          return ws.send(JSON.stringify({ type: "createChapterSuccess", msg: "OK" }));
+        }
+        if (msg.type === "editContentDetails") {
+          const details = msg.details;
+          const courseId = msg.courseId;
+          const chapterId = msg.chapterId;
+          if (!details || !courseId || !chapterId) return;
           const message = { details, courseId, chapterId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
@@ -326,6 +347,27 @@ const app = new Elysia()
                 })
               );
           });
+          return;
+        }
+        if (msg.type === "editContentIndexDetails") {
+          const details = msg.details;
+          const courseId = msg.courseId;
+          if (!details || !courseId) return;
+          const message = { details, courseId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentIndexDetailsEdited",
+                  message,
+                })
+              );
+          });
+          return;
         }
         if (msg.type === "deleteContent") {
           const userId = msg.userId;
@@ -342,22 +384,6 @@ const app = new Elysia()
               })
             );
           }
-          const message: any = {};
-          message.contentId = contentId;
-          message.courseId = courseId;
-          const userIdAccessible: string[] = [];
-          userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
-          });
-          userIdAccessible.forEach((userId) => {
-            if (wsContentArr.get(userId))
-              wsContentArr.get(userId).send(
-                JSON.stringify({
-                  type: "contentDeleted",
-                  message,
-                })
-              );
-          });
           return ws.send(
             JSON.stringify({
               type: "deleteContentSuccess",
@@ -384,6 +410,42 @@ const app = new Elysia()
               );
             }
           }
+          return ws.send(
+            JSON.stringify({
+              type: "deleteContentIndexSuccess",
+              message: "OK",
+            })
+          );
+        }
+        if (msg.type === "deleteContentCB") {
+          const contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!contentId || !courseId) {
+            return;
+          }
+          const message: any = {};
+          message.contentId = contentId;
+          message.courseId = courseId;
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentDeleted",
+                  message,
+                })
+              );
+          });
+        }
+        if (msg.type === "deleteContentIndexCB") {
+          const courseId = msg.courseId;
+          if (!courseId) {
+            console.log("missing", msg.contentId);
+            return;
+          }
           const message: any = {};
           message.courseId = courseId;
           const userIdAccessible: string[] = [];
@@ -399,12 +461,115 @@ const app = new Elysia()
                 })
               );
           });
-          return ws.send(
-            JSON.stringify({
-              type: "deleteContentIndexSuccess",
-              message: "OK",
-            })
-          );
+        }
+        if (msg.type === "lockContent") {
+          const contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!contentId || !courseId) {
+            return;
+          }
+          if (courseIdToUserId.get(contentId)) {
+            if (wsContentArr.get(courseIdToUserId.get(contentId)![0]))
+              wsContentArr.get(courseIdToUserId.get(contentId)![0]).send(
+                JSON.stringify({
+                  type: "forceCloseContent",
+                  message: "Chapter locked by author!",
+                })
+              );
+          }
+          const message = { courseId, contentId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentLocked",
+                  message,
+                })
+              );
+          });
+          return;
+        }
+        if (msg.type === "lockContentIndex") {
+          const _contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!_contentId || !courseId) {
+            return;
+          }
+          for (let i = 0; i < _contentId.length; i++) {
+            const contentId = _contentId[i];
+            if (courseIdToUserId.get(contentId)) {
+              if (wsContentArr.get(courseIdToUserId.get(contentId)![0]))
+                wsContentArr.get(courseIdToUserId.get(contentId)![0]).send(
+                  JSON.stringify({
+                    type: "forceCloseContent",
+                    message: "Course locked by author!",
+                  })
+                );
+            }
+          }
+          const message = { courseId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentIndexLocked",
+                  message,
+                })
+              );
+          });
+          return;
+        }
+        if (msg.type === "unlockContent") {
+          const contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!contentId || !courseId) {
+            return;
+          }
+          const message = { courseId, contentId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentUnlocked",
+                  message,
+                })
+              );
+          });
+          return;
+        }
+        if (msg.type === "unlockContentIndex") {
+          const _contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!_contentId || !courseId) {
+            return;
+          }
+          const message = { courseId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: "contentIndexUnlocked",
+                  message,
+                })
+              );
+          });
+          return;
         }
         if (msg.type === "heartBeat") {
           const userId = msg.userId;

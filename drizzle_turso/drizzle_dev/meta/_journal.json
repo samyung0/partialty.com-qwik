@@ -232,6 +232,55 @@
       "when": 1708513601562,
       "tag": "0032_complex_chimera",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "5",
+      "when": 1708672138371,
+      "tag": "0033_plain_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1708672479936,
+      "tag": "0034_same_hannibal_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1708674327424,
+      "tag": "0035_ordinary_jetstream",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1708674338616,
+      "tag": "0036_living_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1708674880693,
+      "tag": "0037_wise_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1708680444486,
+      "tag": "0038_broad_makkari",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1708680632978,
+      "tag": "0039_unusual_sentry",
+      "breakpoints": true
     }
   ]
 }

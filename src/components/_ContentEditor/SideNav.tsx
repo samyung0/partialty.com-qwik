@@ -211,7 +211,6 @@ export default component$(
             }
             if (courseId) {
               const courseIndex = topics.findIndex((topic) => topic.id === courseId);
-              console.log(courseIndex);
               if (courseIndex < 0) return;
               topics.splice(courseIndex, 1);
               setTimeout(() => topics.splice(courseIndex, 0, details), 0);
@@ -229,7 +228,13 @@ export default component$(
         await drizzleClient()
           .select()
           .from(content)
-          .where(and(eq(content.slug, slug), eq(content.index_id, courseId)))
+          .where(
+            and(
+              eq(content.slug, slug),
+              eq(content.index_id, courseId),
+              eq(content.is_deleted, false)
+            )
+          )
     );
 
     const SERVER2 = server$(
@@ -264,7 +269,13 @@ export default component$(
         await drizzleClient()
           .select()
           .from(content)
-          .where(and(eq(content.slug, slug), eq(content.index_id, courseId)))
+          .where(
+            and(
+              eq(content.slug, slug),
+              eq(content.index_id, courseId),
+              eq(content.is_deleted, false)
+            )
+          )
     );
 
     const SERVER5 = server$(

@@ -5,7 +5,9 @@ import { type RequestHandler } from "@builder.io/qwik-city";
 import { validateLocale } from "qwik-speak";
 import { config } from "~/speak-config";
 
-export const onRequest: RequestHandler = ({ request, locale, params }) => {
+export const onRequest: RequestHandler = ({ request, locale, params, status }) => {
+  status(404);
+
   const acceptLanguage = request.headers.get("accept-language");
   const paramsLang = params.all.slice(0, params.all.indexOf("/"));
   let lang: string | undefined = undefined;

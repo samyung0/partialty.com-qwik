@@ -136,6 +136,7 @@ export default component$(
               <br />
               <button
                 onClick$={async () => {
+                  if (loading.value) return;
                   loading.value = true;
                   await handleSubmit();
                   loading.value = false;

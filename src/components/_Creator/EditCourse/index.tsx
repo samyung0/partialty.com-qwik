@@ -1,7 +1,6 @@
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
-import { v4 as uuidv4 } from "uuid";
 import Step1 from "~/components/_Creator/CreateCourse/step1";
 import Step2 from "~/components/_Creator/CreateCourse/step2";
 import Step3 from "~/components/_Creator/CreateCourse/step3";
@@ -10,7 +9,9 @@ import Step5 from "~/components/_Creator/CreateCourse/step5";
 import Step6 from "~/components/_Creator/CreateCourse/step6";
 import Step7 from "~/components/_Creator/CreateCourse/step7";
 import { useLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/edit-course/[id]/layout";
+import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
+import useWS from "~/utils/useWS";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
@@ -38,23 +39,13 @@ const deleteCourseApproval = server$(async (courseApproval: NewCourseApproval) =
 });
 
 export default component$(() => {
+  const user = useUserLoader().value;
+  const ws = useWS(user);
   const { course, approval } = useLoader().value;
   const formSteps = useSignal(0);
   const createdTags = useSignal<Tag[]>([]);
   const createdCategory = useSignal<ContentCategory>();
-  const courseApproval = useStore<NewCourseApproval>(() =>
-    approval
-      ? approval[0]
-      : {
-          id: uuidv4(),
-          link: "",
-          ready_for_approval: false,
-          added_tags: [],
-          added_categories: "",
-          status: "pending",
-          description: "Default description generated from adding a new course.",
-        }
-  );
+  const courseApproval = useStore<NewCourseApproval>(() => approval[0]);
   const prevCourseApproval = useSignal(!!approval);
   const courseData = useStore<NewContentIndex>(() => course[0]);
   const courseDataError = useStore({
@@ -65,10 +56,6 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => courseData.slug);
     courseData.link = `/courses/${courseData.slug}`;
-  });
-  useTask$(({ track }) => {
-    track(() => courseData.is_private);
-    courseData.approval_id = courseData.is_private ? courseApproval.id : null;
   });
   useTask$(({ track }) => {
     track(createdTags);
@@ -90,6 +77,14 @@ export default component$(() => {
       console.error(e);
       alert("Something went wrong! Please try again later or contact support.");
     }
+    ws.value?.send(
+      JSON.stringify({
+        type: "editContentIndexDetails",
+        courseId: courseData.id,
+        details: courseData,
+      })
+    );
+    window.close();
   });
 
   return (
@@ -104,6 +99,7 @@ export default component$(() => {
               courseData={courseData}
               courseDataError={courseDataError}
               formSteps={formSteps}
+              isEditing={true}
             />
             <Step2
               courseData={courseData}
@@ -118,7 +114,7 @@ export default component$(() => {
             />
             <Step4 courseData={courseData} formSteps={formSteps} createdTags={createdTags} />
             <Step5 courseData={courseData} formSteps={formSteps} />
-            <Step6 courseData={courseData} formSteps={formSteps} />
+            <Step6 courseData={courseData} formSteps={formSteps} isEditing={true} />
             <Step7
               courseData={courseData}
               formSteps={formSteps}
