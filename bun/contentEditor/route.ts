@@ -212,7 +212,10 @@ const app = new Elysia()
           userIdToAccessibleCourses.set(userId, accessible_courses);
           uuidToUserId.set(ws.id, userId);
           const entries: Record<string, [string, string]> = {};
-          courseIdToUserId.forEach((val, key) => (entries[key] = [val[0].split("###")[0], val[1]]));
+          courseIdToUserId.forEach((val, key) => {
+            if (accessible_courses[0] === "*" || accessible_courses.includes(key))
+              entries[key] = [val[0].split("###")[0], val[1]];
+          });
           ws.send(
             JSON.stringify({
               type: "initUserEditing",

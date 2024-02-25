@@ -40,8 +40,9 @@ const useWS = (
       isConnecting.value = true;
       timeStamp.value = Date.now() + "";
       const ws = new WebSocket(
-        (import.meta.env.MODE === "production" ? BUN_API_ENDPOINT_WS : BUN_API_ENDPOINT_WS_DEV) +
-          "/content/ws"
+        (import.meta.env.MODE === "production" || import.meta.env.VITE_USE_PROD_DB === "1"
+          ? BUN_API_ENDPOINT_WS
+          : BUN_API_ENDPOINT_WS_DEV) + "/content/ws"
       );
       ws.addEventListener("open", () => {
         clearInterval(retry);
