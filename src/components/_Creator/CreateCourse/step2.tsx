@@ -59,7 +59,7 @@ export default component$(
                       if (ref.value) ref.value.value = courseData.description;
                     }}
                     class={
-                      "h-[200px] w-[400px] rounded-md border-2 px-3 py-2 text-lg dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                      "h-[300px] w-[500px] rounded-md border-2 px-3 py-2 text-lg dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
                       (courseDataError.description
                         ? "border-tomato dark:border-tomato"
                         : "border-black/10")

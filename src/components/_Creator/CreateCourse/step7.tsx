@@ -141,6 +141,7 @@ export default component$(
                   await handleSubmit();
                   loading.value = false;
                   window.close();
+                  nav("/creator/", { forceReload: true });
                 }}
                 class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
               >
