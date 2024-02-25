@@ -36,7 +36,7 @@ const addTagSchema = z.object({
   name: z.string().min(1, "A name is required").max(35, "Name is too long (max. 35 chars)"),
   slug: z
     .string()
-    .min(1, "A slug is required")
+    .min(2, "A slug is required")
     .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, "The slug must start and end with characters!")
     .regex(
       /^[a-za-z0-9]+[-a-za-z0-9]*[a-za-z0-9]+$/,

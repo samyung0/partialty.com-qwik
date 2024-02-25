@@ -7,7 +7,7 @@ let client: ReturnType<typeof init> | null = null;
 
 const init = (client: Client) => drizzle(client, { schema: schemaExport });
 
-export const initDrizzleIfNeeded = async (prodInDev: boolean = false) => {
+export const initDrizzleIfNeeded = (prodInDev: boolean = false) => {
   if (!client) {
     client = init(tursoClient());
   }

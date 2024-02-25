@@ -34,6 +34,18 @@ const insertMuxAssetDB = (id: string, userId: string, filename: string) =>
 
 const deleteMuxAssetDB = (id: string) => turso.execute(`DELETE FROM mux_assets where id='${id}'`);
 
+const getUser = (id: string) =>
+  turso.execute({
+    sql: "SELECT * FROM profiles WHERE id = ? LIMIT 1",
+    args: [id],
+  });
+
+const getContentIndex = (id: string) =>
+  turso.execute({
+    sql: "SELECT author FROM content_index WHERE id = ? LIMIT 1",
+    args: [id],
+  });
+
 const app = new Elysia()
   .group("/mux", (app) => {
     return app.post(
@@ -154,8 +166,8 @@ const app = new Elysia()
     );
   })
   .ws("/content/ws", {
-    message(ws, msg: any) {
-      console.log(msg);
+    async message(ws, msg: any) {
+      // console.log(msg);
       try {
         if (msg.type === "init") {
           const userId = msg.userId;
@@ -374,7 +386,41 @@ const app = new Elysia()
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           if (!userId || !contentId || !courseId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Badly formatted request",
+              })
+            );
+          }
+          const user = (await getUser(userId)).rows[0];
+          if (!user)
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Badly formatted request",
+              })
+            );
+          try {
+            let accessible_courses: string[] = [];
+            if (user.role !== "admin") {
+              accessible_courses = JSON.parse((user.accessible_courses as string) || "[]");
+              if (!accessible_courses.includes(courseId))
+                return ws.send(
+                  JSON.stringify({
+                    type: "deleteContentError",
+                    message: "No permission!",
+                  })
+                );
+            }
+          } catch (e) {
+            console.error(e);
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Server error occured. Please try again later.",
+              })
+            );
           }
           if (courseIdToUserId.get(contentId)) {
             return ws.send(
@@ -396,8 +442,41 @@ const app = new Elysia()
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           if (!userId || !_contentId || !courseId) {
-            console.log("missing", msg.contentId);
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Badly formatted request",
+              })
+            );
+          }
+          const user = (await getUser(userId)).rows[0];
+          if (!user)
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Badly formatted request",
+              })
+            );
+          try {
+            let accessible_courses: string[] = [];
+            if (user.role !== "admin") {
+              accessible_courses = JSON.parse((user.accessible_courses as string) || "[]");
+              if (!accessible_courses.includes(courseId))
+                return ws.send(
+                  JSON.stringify({
+                    type: "deleteContentError",
+                    message: "No permission!",
+                  })
+                );
+            }
+          } catch (e) {
+            console.error(e);
+            return ws.send(
+              JSON.stringify({
+                type: "deleteContentError",
+                message: "Server error occured. Please try again later.",
+              })
+            );
           }
           for (let i = 0; i < _contentId.length; i++) {
             const contentId = _contentId[i];
@@ -465,7 +544,12 @@ const app = new Elysia()
         if (msg.type === "lockContent") {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
-          if (!contentId || !courseId) {
+          const userId = msg.userId;
+          if (!contentId || !courseId || !userId) {
+            return;
+          }
+          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
           if (courseIdToUserId.get(contentId)) {
@@ -496,7 +580,12 @@ const app = new Elysia()
         if (msg.type === "lockContentIndex") {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
-          if (!_contentId || !courseId) {
+          const userId = msg.userId;
+          if (!_contentId || !courseId || !userId) {
+            return;
+          }
+          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
           for (let i = 0; i < _contentId.length; i++) {
@@ -530,7 +619,12 @@ const app = new Elysia()
         if (msg.type === "unlockContent") {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
-          if (!contentId || !courseId) {
+          const userId = msg.userId;
+          if (!contentId || !courseId || !userId) {
+            return;
+          }
+          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
           const message = { courseId, contentId };
@@ -552,7 +646,12 @@ const app = new Elysia()
         if (msg.type === "unlockContentIndex") {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
-          if (!_contentId || !courseId) {
+          const userId = msg.userId;
+          if (!_contentId || !courseId || !userId) {
+            return;
+          }
+          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
           const message = { courseId };

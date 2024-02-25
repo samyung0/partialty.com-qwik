@@ -24,7 +24,7 @@ export const cloudinaryUpload = async (avatarUrl: string, requestEvent: RequestE
   }
 };
 
-export const initCloudinaryIfNeeded = async () => {
+export const initCloudinaryIfNeeded = () => {
   if (!client) {
     client = new Cloudinary({ cloud: { cloudName: CLOUDINARY_NAME } });
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
 import { $, component$, useComputed$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$, useNavigate, z } from "@builder.io/qwik-city";
@@ -99,7 +100,7 @@ const addCategorySchema = z.object({
   name: z.string().min(1, "A name is required").max(35, "Name is too long (max. 35 chars)"),
   slug: z
     .string()
-    .min(1, "A slug is required")
+    .min(2, "A slug is required")
     .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, "The slug must start and end with characters!")
     .regex(
       /^[a-za-z0-9]+[-a-za-z0-9]*[a-za-z0-9]+$/,
@@ -650,10 +651,10 @@ export default component$(
           keys.splice(keys.indexOf(content_index.id), 1);
           const chapters = await getChapters(content_index.id);
           courses[content_index.id] = Object.assign({}, content_index, {
-            isOpen: courses[content_index.id].isOpen || false,
+            isOpen: courses[content_index.id]?.isOpen || false,
             chapters,
-            isLoadingChapter: false,
-            hasLoadedChapter: true,
+            isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
+            hasLoadedChapter: courses[content_index.id]?.hasLoadedChapter || false,
             profile: profiles,
             chaptersMap: Object.fromEntries(
               chapters.map((c) => [
@@ -664,10 +665,8 @@ export default component$(
               ])
             ),
             courseApproval: course_approval,
-            isPublishing: false,
+            isPublishing: courses[content_index.id]?.isPublishing || false,
           });
-
-          setTimeout(() => (courses[content_index.id].chapters = chapters), 0);
         }
       );
       for (const i of keys) {
@@ -755,33 +754,34 @@ export default component$(
             d.type === "contentLocked" ||
             d.type === "contentIndexLocked" ||
             d.type === "contentIndexUnlocked" ||
-            d.type === "contentUnlocked"
+            d.type === "contentUnlocked" ||
+            d.type === "contentDetailsEdited"
           ) {
             nav();
             return;
           }
 
-          if (d.type === "contentDetailsEdited") {
-            // the reactivity for chapter is broken for some reason
-            // manually updating
+          // if (d.type === "contentDetailsEdited") {
+          //   // the reactivity for chapter is broken for some reason
+          //   // manually updating
 
-            if (!Object.prototype.hasOwnProperty.call(courses, d.message.courseId)) return;
-            const chapter = courses[d.message.courseId].chapters.find(
-              (c) => c.id === d.message.chapterId
-            );
-            if (!chapter) return;
-            for (const i in d.message.details) {
-              (chapter as any)[i] = d.message.details[i];
-            }
+          //   if (!Object.prototype.hasOwnProperty.call(courses, d.message.courseId)) return;
+          //   const chapter = courses[d.message.courseId].chapters.find(
+          //     (c) => c.id === d.message.chapterId
+          //   );
+          //   if (!chapter) return;
+          //   for (const i in d.message.details) {
+          //     (chapter as any)[i] = d.message.details[i];
+          //   }
 
-            // forcefully repaint
-            const t = [...courses[d.message.courseId].chapter_order];
-            courses[d.message.courseId].chapter_order = [];
-            setTimeout(() => {
-              courses[d.message.courseId].chapter_order = t;
-            }, 0);
-            return;
-          }
+          //   // forcefully repaint
+          //   const t = [...courses[d.message.courseId].chapter_order];
+          //   courses[d.message.courseId].chapter_order = [];
+          //   setTimeout(() => {
+          //     courses[d.message.courseId].chapter_order = t;
+          //   }, 0);
+          //   return;
+          // }
         } catch (e) {
           console.error(e);
         }
@@ -949,6 +949,7 @@ export default component$(
               type: "unlockContent",
               contentId: chapterId,
               courseId,
+              userId,
             })
           );
         } else {
@@ -971,6 +972,7 @@ export default component$(
               type: "lockContent",
               contentId: chapterId,
               courseId,
+              userId,
             })
           );
         }
@@ -989,6 +991,7 @@ export default component$(
             type: "unlockContentIndex",
             contentId: courses[courseId].chapter_order,
             courseId,
+            userId,
           })
         );
       } else {
@@ -1014,13 +1017,14 @@ export default component$(
             type: "lockContentIndex",
             contentId: courses[courseId].chapter_order,
             courseId,
+            userId,
           })
         );
       }
     });
 
     const handleEditChapter = $((chapterId: string) => {
-      if (Object.prototype.hasOwnProperty.call(courseIdToEditingUser, chapterId)) {
+      if (courseIdToEditingUser[chapterId]) {
         return alert("Someone is already editing this chapter!");
       }
     });
@@ -1557,7 +1561,7 @@ export default component$(
                                                       target="_blank"
                                                       href={chapter.link || undefined}
                                                     >
-                                                      {chapter.name}
+                                                      {chapter.name ? chapter.name : ""}
                                                     </a>
                                                   </h4>
                                                   {user.role === "admin" && (

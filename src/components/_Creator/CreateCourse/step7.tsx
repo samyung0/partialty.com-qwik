@@ -140,9 +140,7 @@ export default component$(
                   loading.value = true;
                   await handleSubmit();
                   loading.value = false;
-                  nav("/creator/", {
-                    forceReload: true,
-                  });
+                  window.close();
                 }}
                 class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
               >

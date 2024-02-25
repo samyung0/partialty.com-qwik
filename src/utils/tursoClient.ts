@@ -3,10 +3,7 @@ import { createClient, type Client } from "@libsql/client/web";
 
 let client: Client | null = null;
 
-export const initTursoIfNeeded = async (
-  env: RequestEventBase["env"],
-  prodInDev: boolean = false
-) => {
+export const initTursoIfNeeded = (env: RequestEventBase["env"], prodInDev: boolean = false) => {
   if (!client) {
     if (prodInDev) {
       if (!env.get("TURSO_PROD_URL") || !env.get("TURSO_PROD_TOKEN")) {

@@ -29,9 +29,7 @@ export const useUserLoader = routeLoader$(async (event) => {
 });
 
 export const onRequest: RequestHandler = async ({ env }) => {
-  await initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  await Promise.all([
-    initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1"),
-    initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1"),
-  ]);
+  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
 };

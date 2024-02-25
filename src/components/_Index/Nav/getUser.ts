@@ -5,11 +5,9 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 export default server$(async function () {
   try {
-    await initTursoIfNeeded(this.env, import.meta.env.VITE_USE_PROD_DB === "1");
-    await Promise.all([
-      initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1"),
-      initLuciaIfNeeded(this.env, import.meta.env.VITE_USE_PROD_DB === "1"),
-    ]);
+    initTursoIfNeeded(this.env, import.meta.env.VITE_USE_PROD_DB === "1");
+    initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+    initLuciaIfNeeded(this.env, import.meta.env.VITE_USE_PROD_DB === "1");
     const authRequest = auth().handleRequest(this);
     const session = await authRequest.validate();
     return session;

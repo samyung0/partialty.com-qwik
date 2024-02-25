@@ -9,8 +9,8 @@ const schema = z.object({
   description: z
     .string()
     .trim()
-    .min(1, "A description is required")
-    .max(250, "Description is too long (max. 250 chars)"),
+    .min(2, "A description is required")
+    .max(5000, "Description is too long (max. 5000 chars)"),
 });
 
 export default component$(
@@ -46,7 +46,7 @@ export default component$(
             <div class="flex flex-col items-center justify-center space-y-6">
               <div>
                 <label for="description" class="cursor-pointer text-lg">
-                  Description (words: {courseData.description?.length ?? 0}/250)
+                  Description (chars: {courseData.description?.length ?? 0}/5000)
                 </label>
                 <div class="pt-1">
                   <textarea
@@ -55,7 +55,7 @@ export default component$(
                     id="description"
                     value={courseData.description}
                     onInput$={(e, eventTarget) => {
-                      courseData.description = eventTarget.value.slice(0, 250);
+                      courseData.description = eventTarget.value.slice(0, 5000);
                       if (ref.value) ref.value.value = courseData.description;
                     }}
                     class={

@@ -91,7 +91,7 @@ const _lucia = (prodInDev: boolean = false) =>
     },
   });
 
-export const initLuciaIfNeeded = async (env: RequestEvent["env"], prodInDev: boolean = false) => {
+export const initLuciaIfNeeded = (env: RequestEvent["env"], prodInDev: boolean = false) => {
   if (!_auth) {
     _auth = _lucia(prodInDev);
   }

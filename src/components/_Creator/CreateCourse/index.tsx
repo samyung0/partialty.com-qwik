@@ -143,6 +143,7 @@ export default component$(() => {
         JSON.stringify(accessible_courses_read),
         user.userId
       );
+      console.log(ws.value);
       ws.value?.send(
         JSON.stringify({
           type: "createContent",
@@ -150,7 +151,7 @@ export default component$(() => {
           details: courseData,
         })
       );
-      window.close();
+      // window.close();
     } catch (e) {
       console.error(e);
       alert("Something went wrong! Please try again later or contact support.");

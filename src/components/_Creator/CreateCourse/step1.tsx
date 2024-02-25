@@ -16,7 +16,7 @@ const checkExistingCourse = server$(async (slug: string) => {
 });
 
 const schema = z.object({
-  name: z.string().trim().min(1, "A name is required").max(70, "Name is too long (max. 70 chars)"),
+  name: z.string().trim().min(2, "A name is required").max(70, "Name is too long (max. 70 chars)"),
 });
 
 export default component$(
