@@ -1,5 +1,7 @@
 import { Slot, component$, useContextProvider, useStore } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
+import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
+
 import type theme from "~/const/theme";
 import { themeContext } from "~/context/themeContext";
 
@@ -14,8 +16,15 @@ export default component$(() => {
   useContextProvider(themeContext, themeStore);
 
   return (
-    <div class={themeStore.value}>
-      <Slot />
-    </div>
+    <>
+      <QwikCityNprogress
+        options={{
+          color: themeStore.value === "dark" ? "#72cada" : "#72cada",
+        }}
+      />
+      <div class={themeStore.value}>
+        <Slot />
+      </div>
+    </>
   );
 });
