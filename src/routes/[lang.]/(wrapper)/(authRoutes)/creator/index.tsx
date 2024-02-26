@@ -75,7 +75,7 @@ export default component$(() => {
   const catgories = useCategories().value;
   const courseIdToEditingUser = useStore<Record<string, [string, string]>>({});
 
-  const contentWS = useWS(user, {
+  const ws = useWS(user, {
     onOpen$: $((ws, useTimeStamp) => {
       ws.send(
         JSON.stringify({
@@ -103,7 +103,7 @@ export default component$(() => {
           return;
         }
         if (d.type === "error") {
-          alert(d.message);
+          console.error(d.message);
           return;
         }
       } catch (e) {
@@ -111,6 +111,7 @@ export default component$(() => {
       }
     }),
   });
+  const contentWS = ws.contentWS;
 
   return (
     <main>

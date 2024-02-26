@@ -46,13 +46,6 @@ Now for each page under Root (excluding Root), it will try to look for the expor
 - We are currently not supporting the switching of locale because we don't have enough content that is written in languages other than English. We plan to support it in the future.
 
 - **TODO**
-- **Finish up Stripe payment page**
-
-  - Put subscription in another page other than profile
-  - Show next billing date
-  - Show pending cancel plan (cancelled but still active until next billing date)
-  - Make a billing page
-  - Show billing history
 
 - **Proposal**
 
@@ -65,6 +58,10 @@ Add a layout file that includes the `useSpeak({assets: ["pageName"]})`. Key in t
 **To add a locale:**
 
 Edit the `lang.json` and also `qwik-speak-extract` script in package.json.
+
+### Switching adapters
+
+Go to `package.json` and chnage the `build.server` command, and also `index.mjs` in `api` folder.
 
 ### Customizing Qwik-city
 
@@ -297,6 +294,14 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
   - In production with vercel, add the headers for the relevant paths (**make sure it ends with a slash**, it's a qwik thing to redirect every route except root to one ending with slash) in vercel.json
 
 ## TODO
+
+- **Finish up Stripe payment page**
+
+  - Put subscription in another page other than profile
+  - Show next billing date
+  - Show pending cancel plan (cancelled but still active until next billing date)
+  - Make a billing page
+  - Show billing history
 
 - **Configure cloudinary to store private images**
 

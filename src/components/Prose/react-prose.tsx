@@ -13,6 +13,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
     prose-code:text-[unset] prose-pre:bg-code-editor-one-dark-pro prose-pre:text-base
     prose-pre:font-bold
     prose-img:m-0
+    dark:bg-primary-dark-gray dark:text-background-light-gray
     "
       dangerouslySetInnerHTML={{ __html: innerHTML }}
     ></section>
@@ -27,6 +28,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
   prose-code:text-[unset] prose-pre:bg-code-editor-one-dark-pro prose-pre:text-base
   prose-pre:font-bold
   prose-img:m-0
+  dark:bg-primary-dark-gray dark:text-background-light-gray
   "
     >
       {children}

@@ -114,6 +114,7 @@
     "@mux/mux-player-react": "^2.3.2",
     "@mux/upchunk": "^3.3.1",
     "@prezly/slate-lists": "^0.101.0",
+    "@quasarwork/qwik-city-nprogress": "^0.0.3",
     "@qwikest/icons": "^0.0.13",
     "@react-email/components": "0.0.12",
     "@types/css-tree": "^2.3.5",

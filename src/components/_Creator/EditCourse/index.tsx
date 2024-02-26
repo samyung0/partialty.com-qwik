@@ -40,7 +40,18 @@ const deleteCourseApproval = server$(async (courseApproval: NewCourseApproval) =
 
 export default component$(() => {
   const user = useUserLoader().value;
-  const ws = useWS(user);
+  const contentWS = useWS(user, {
+    onOpen$: $((ws, useTimeStamp) => {
+      ws.send(
+        JSON.stringify({
+          type: "init",
+          userId: useTimeStamp,
+          accessible_courses: [],
+        })
+      );
+    }),
+  });
+  const ws = contentWS.contentWS;
   const { course, approval } = useLoader().value;
   const formSteps = useSignal(0);
   const createdTags = useSignal<Tag[]>([]);

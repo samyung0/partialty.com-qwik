@@ -1,7 +1,6 @@
 import { $, component$, useContext } from "@builder.io/qwik";
 import { Link, removeClientDataCache, server$, useNavigate } from "@builder.io/qwik-city";
 
-import NavCourses from "~/components/NavCourses";
 import type { LuciaSession } from "~/types/LuciaSession";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
@@ -30,39 +29,8 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
   });
   return (
     <nav class="dark:text-background-light-gray">
-      <ul class="m-auto flex w-[80%] items-center gap-6 py-6 text-base font-bold tracking-wide">
-        <li class="px-2 py-2">
-          <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
-            Home
-            <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
-              <LuHome />
-            </span>
-          </Link>
-        </li>
-        <li class="relative py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
-          <div class={"flex gap-2"}>
-            <span>Courses</span>
-            <span
-              class={
-                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray"
-              }
-            >
-              <IoCaretDown />
-            </span>
-          </div>
-          <div class="absolute left-0 top-[100%] z-[100] hidden w-[600px] pt-3">{NavCourses}</div>
-        </li>
-        <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
-            Projects
-          </Link>
-        </li>
-        <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
-            Playground
-          </Link>
-        </li>
-        <li class="ml-auto">
+      <ul class="flex items-center gap-6 text-base font-bold tracking-wide">
+        <li>
           <label class="flex cursor-pointer items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
             <LuSun />
             <input
@@ -88,18 +56,18 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
               <img
                 src={user.avatar_url}
                 alt="Avatar"
-                width={40}
-                height={40}
+                width={30}
+                height={30}
                 class="rounded-full object-contain"
                 referrerPolicy="no-referrer"
               />
               {user.role !== "free" && (
                 <img
                   src={CrownPNG}
-                  width={20}
-                  height={20}
+                  width={16}
+                  height={16}
                   alt="Crown"
-                  class="absolute right-[-15px] top-[-15px]"
+                  class="absolute right-[-14px] top-[-14px]"
                 />
               )}
             </span>
@@ -111,12 +79,12 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
               <IoCaretDown />
             </span>
           </div>
-          <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
+          <div class="absolute left-[0] top-[100%] z-10 hidden w-[180px] -translate-x-[50%] pt-2">
             <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray ">
-              <ul class="flex flex-col p-2 [&>li]:p-2">
+              <ul class="flex flex-col p-2 text-base [&>li]:p-1">
                 <li>
                   <Link prefetch href="/members/dashboard/" class="flex items-center gap-3">
-                    <span class="text-[25px]">
+                    <span class="text-[20px]">
                       <LuHome />
                     </span>
                     <span class="whitespace-nowrap">Home</span>
@@ -124,7 +92,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 </li>
                 <li>
                   <Link prefetch href="/profile/" class="flex items-center gap-3">
-                    <span class="text-[25px]">
+                    <span class="text-[20px]">
                       <LuUser2 />
                     </span>
                     <span class="whitespace-nowrap">My Profile</span>
@@ -132,7 +100,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 </li>
                 <li>
                   <Link prefetch href="/creator/" class="flex items-center gap-3">
-                    <span class="text-[25px]">
+                    <span class="text-[20px]">
                       <LuPencilLine />
                     </span>
                     <span class="whitespace-nowrap">Creator</span>
@@ -140,7 +108,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
                 </li>
                 <li>
                   <button onClick$={handleLogout} class="flex items-center gap-3">
-                    <span class="text-[25px]">
+                    <span class="text-[20px]">
                       <LuLogOut />
                     </span>
                     <span>Logout</span>

@@ -3,7 +3,7 @@ import { initLuciaIfNeeded } from "~/auth/lucia";
 import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { initTursoIfNeeded } from "~/utils/tursoClient";
 
-export const onRequest: RequestHandler = async ({ env, url, cacheControl }) => {
+export const onRequest: RequestHandler = ({ env, url, cacheControl }) => {
   cacheControl({
     maxAge: 0,
     sMaxAge: 0,

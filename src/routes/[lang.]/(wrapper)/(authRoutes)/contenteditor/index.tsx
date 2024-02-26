@@ -1,26 +1,30 @@
-import type { NoSerialize, QRL } from "@builder.io/qwik";
-import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import ContentEditor from "~/components/_ContentEditor";
 import SideNav from "~/components/_ContentEditor/SideNav";
-import { BUN_API_ENDPOINT_WS } from "~/const";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
+import { themeContext } from "~/context/themeContext";
+import {
+  useAccessibleCourseWrite,
+  useAccessibleCourseWriteResolved,
+} from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type Mux from "~/types/Mux";
 import drizzleClient from "~/utils/drizzleClient";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
 import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";
-import type { Content } from "../../../../../../drizzle_turso/schema/content";
+import useWS from "~/utils/useWS";
 import { content } from "../../../../../../drizzle_turso/schema/content";
-import type { ContentIndex } from "../../../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
 import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
 
-const SERVER2 = server$(async function (id: string) {
+export { useAccessibleCourseWrite, useAccessibleCourseWriteResolved };
+
+const fetchAudioServer = server$(async function (id: string) {
   const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
     method: "GET",
     headers: {
@@ -45,7 +49,7 @@ const SERVER2 = server$(async function (id: string) {
   };
 });
 
-const SERVER3 = server$(
+const saveContentServer = server$(
   async (
     chapterId: string,
     contentEditorValue2: string | null,
@@ -146,59 +150,53 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
   return ret;
 });
 
-export const useContent = routeLoader$<[ContentIndex[], Content[]]>(async (requestEvent) => {
-  const user = await requestEvent.resolveValue(useUserLoader);
-  let contentCourses: ContentIndex[] = [],
-    contentChapters: Content[] = [];
-  if (user.role === "admin") {
-    contentCourses = await drizzleClient().select().from(content_index);
-  } else {
-    let accessible_courses: string[];
-    try {
-      accessible_courses = JSON.parse(user.accessible_courses || "[]");
-    } catch (e) {
-      console.error(e);
-      accessible_courses = [];
-    }
-    contentCourses =
-      accessible_courses.length > 0
-        ? await drizzleClient()
-            .select()
-            .from(content_index)
-            .where(or(...accessible_courses.map((id) => eq(content_index.id, id))))
-        : [];
-  }
-  contentChapters =
-    contentCourses.length > 0
-      ? await drizzleClient()
-          .select()
-          .from(content)
-          .where(
-            or(
-              ...contentCourses
-                .map((course) => course.chapter_order.map((chapterId) => eq(content.id, chapterId)))
-                .flat()
-            )
-          )
-      : [];
-  return [contentCourses, contentChapters];
-});
-
 export default component$(() => {
   const user = useUserLoader().value;
   const userAssets = useUserAssets().value;
+  const themeContent = useContext(themeContext);
 
-  const contentWS = useSignal<NoSerialize<WebSocket> | undefined>();
-  const timeStamp = useSignal<string>("");
-  const muxWSHeartBeat = useSignal<any>();
-  const isClosingPage = useSignal(false);
-  const retryCleared = useSignal(false);
-  const failedCount = useSignal(0);
-  const currentTimeout = useSignal(0);
-  const exponentialFallback = useSignal([1, 5, 10]);
-  const isConnecting = useSignal(false);
-
+  const userAccessibleCourseWrite = useAccessibleCourseWrite().value;
   const courseIdToEditingUser = useStore<Record<string, [string, string]>>({});
+  const ws = useWS(user, {
+    onOpen$: $((ws, useTimeStamp) => {
+      ws.send(
+        JSON.stringify({
+          type: "init",
+          userId: useTimeStamp,
+          accessible_courses: userAccessibleCourseWrite,
+        })
+      );
+    }),
+    onMessage$: $((ws, useTimeStamp, data) => {
+      try {
+        const d = JSON.parse(data);
+        console.log(d);
+        if (d.type === "initUserEditing") {
+          for (const i in courseIdToEditingUser) delete courseIdToEditingUser[i];
+          for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+          return;
+        }
+        if (d.type === "addUserEditing") {
+          for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
+          return;
+        }
+        if (d.type === "removeUserEditing") {
+          for (const i in d.message) delete courseIdToEditingUser[i];
+          return;
+        }
+        if (d.type === "error") {
+          alert(d.message);
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }),
+  });
+  const contentWS = ws.contentWS;
+  const wsTimeStamp = ws.timeStamp;
+
+  const timeStamp = useSignal("");
   const contentEditorValue = useSignal<any>();
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
@@ -206,215 +204,38 @@ export default component$(() => {
   const courseId = useSignal("");
   const audioAssetId = useSignal<string | undefined>(undefined);
   const hasChanged = useSignal(false);
-  const isRequestingChapter = useSignal("");
-  const isRequestingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
-  const isRequestingChapterTimeout = useSignal<any>();
-  const isDeletingChapter = useSignal("");
-  const isDeletingChapterCallback = useSignal<QRL<() => any> | undefined>(undefined);
-  const isDeletingChapterTimeout = useSignal<any>();
   const isPreviewing = useSignal(false);
   const chapterName = useSignal("");
 
-  const fetchAudio = $(async (id: string) => await SERVER2(id));
-
-  const _startWSConnection: { startWSConnection: QRL<() => any>; fn: QRL<(retry: any) => any> } = {
-    startWSConnection: $(() => {}),
-    fn: $((retry: any) => {}),
-  };
-  _startWSConnection.fn = $((retry: any) => {
-    if (isConnecting.value) return;
-    if (
-      failedCount.value > 0 &&
-      currentTimeout.value < exponentialFallback.value[failedCount.value - 1]
-    ) {
-      currentTimeout.value++;
-      return;
-    }
-    try {
-      console.log("Starting Websocket connection");
-      isConnecting.value = true;
-      timeStamp.value = Date.now() + "";
-      const ws = new WebSocket(BUN_API_ENDPOINT_WS + "/content/ws");
-      ws.addEventListener("open", () => {
-        clearInterval(retry);
-        ws.send(
-          JSON.stringify({
-            type: "init",
-            userId: user.userId + "###" + timeStamp.value,
-            accessible_courses: userAssets.accessible_courses,
-          })
-        );
-        muxWSHeartBeat.value = setInterval(() => {
-          console.log("heartbeat sent");
-          ws.send(
-            JSON.stringify({
-              type: "heartBeat",
-              userId: user.userId + "###" + timeStamp.value,
-            })
-          );
-        }, 30 * 1000);
-
-        contentWS.value = noSerialize(ws);
-        failedCount.value = 0;
-        currentTimeout.value = 0;
-        isConnecting.value = false;
-      });
-
-      ws.addEventListener("message", ({ data }) => {
-        try {
-          const d = JSON.parse(data);
-          console.log(d);
-          if (d.type === "initUserEditing") {
-            for (const i in courseIdToEditingUser) delete courseIdToEditingUser[i];
-            for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
-            return;
-          }
-          if (d.type === "addUserEditing") {
-            for (const i in d.message) courseIdToEditingUser[i] = d.message[i];
-            return;
-          }
-          if (d.type === "removeUserEditing") {
-            for (const i in d.message) delete courseIdToEditingUser[i];
-            return;
-          }
-          if (d.type === "openContentSuccess") {
-            if (!isRequestingChapterCallback.value) return;
-            isRequestingChapterCallback.value();
-            isRequestingChapterCallback.value = undefined;
-            clearTimeout(isRequestingChapterTimeout.value);
-            return;
-          }
-          if (d.type === "openContentError") {
-            alert(d.message);
-            isRequestingChapter.value = "";
-            isRequestingChapterCallback.value = undefined;
-            clearTimeout(isRequestingChapterTimeout.value);
-            return;
-          }
-          if (d.type === "deleteContentSuccess") {
-            if (!isDeletingChapterCallback.value) return;
-            isDeletingChapterCallback.value();
-            isDeletingChapterCallback.value = undefined;
-            clearTimeout(isDeletingChapterTimeout.value);
-            return;
-          }
-          if (d.type === "deleteContentError") {
-            alert(d.message);
-            isDeletingChapter.value = "";
-            isDeletingChapterCallback.value = undefined;
-            clearTimeout(isDeletingChapterTimeout.value);
-            return;
-          }
-          if (d.type === "error") {
-            alert(d.message);
-            return;
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      });
-
-      ws.addEventListener("error", () => {
-        // error event fires with close event
-        contentWS.value = undefined;
-        clearInterval(muxWSHeartBeat.value);
-
-        failedCount.value++;
-        currentTimeout.value = 0;
-        isConnecting.value = false;
-
-        if (failedCount.value > exponentialFallback.value.length) {
-          alert("Failed to connect to server! Please try again later or contact support.");
-          clearInterval(retry);
-          return;
-        } else
-          alert(
-            "Websocket connection error! Retrying connection in " +
-              exponentialFallback.value[failedCount.value - 1] +
-              " second(s)..."
-          );
-      });
-
-      ws.addEventListener("close", () => {
-        clearInterval(retry);
-        contentWS.value = undefined;
-        clearInterval(muxWSHeartBeat.value);
-        if (isClosingPage.value) {
-          return console.log("Websocket connection closed!");
-        }
-        console.error("Websocket connection closed!");
-
-        if (retryCleared.value) {
-          _startWSConnection.startWSConnection();
-          retryCleared.value = false;
-        }
-      });
-    } catch (e) {
-      console.error(e);
-      console.log("retrying connection in 10 seconds...");
-    }
-  });
-  _startWSConnection.startWSConnection = $(() => {
-    const retry = setInterval((): any => {
-      _startWSConnection.fn(retry);
-    }, 10 * 1000);
-    _startWSConnection.fn(retry);
-  });
-  const startWSConnection = _startWSConnection.startWSConnection;
-  const closeWSConnection = $(() => {
-    console.log("closing content websocket");
-    isClosingPage.value = true;
-    if (contentWS.value) {
-      contentWS.value.send(
-        JSON.stringify({ type: "terminate", userId: user.userId + "###" + timeStamp.value })
-      );
-      contentWS.value.close();
-    }
-    contentWS.value = undefined;
-    clearInterval(muxWSHeartBeat.value);
-  });
+  const fetchAudio = $(async (id: string) => await fetchAudioServer(id));
 
   useVisibleTask$(async () => {
-    startWSConnection();
     window.onbeforeunload = () => {
-      closeWSConnection();
       return true;
     };
     window.onunload = () => {
-      closeWSConnection();
       return true;
-    };
-    return () => {
-      closeWSConnection();
     };
   });
 
   return (
     <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
       <SideNav
-        timeStamp={timeStamp}
-        isRequestingChapter={isRequestingChapter}
-        isRequestingChapterCallback={isRequestingChapterCallback}
-        isRequestingChapterTimeout={isRequestingChapterTimeout}
-        isDeletingChapter={isDeletingChapter}
-        isDeletingChapterTimeout={isDeletingChapterTimeout}
-        isDeletingChapterCallback={isDeletingChapterCallback}
         courseIdToEditingUser={courseIdToEditingUser}
         contentEditorValue={contentEditorValue}
         renderedHTML={renderedHTML}
         contentWS={contentWS}
-        userId={user.userId}
         isEditing={isEditing}
         chapterId={chapterId}
         courseId={courseId}
         audioAssetId={audioAssetId}
-        userRole={user.role}
-        avatar_url={user.avatar_url}
         hasChanged={hasChanged}
         chapterName={chapterName}
+        timeStamp={wsTimeStamp}
       />
       {contentWS.value && (
         <ContentEditor
+          themeValue={themeContent.value}
           saveToDBQuiz={$((isCorrect: boolean) =>
             saveToDBQuiz(isCorrect, user.userId, courseId.value, chapterId.value)
           )}
@@ -442,7 +263,7 @@ export default component$(() => {
               audio_track_asset_id: string | undefined
             ) => {
               renderedHTML.value = renderedHTML2;
-              const ret = (await SERVER3(
+              const ret = (await saveContentServer(
                 chapterId.value,
                 contentEditorValue2,
                 renderedHTML2,

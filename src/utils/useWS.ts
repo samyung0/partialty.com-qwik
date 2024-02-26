@@ -139,7 +139,7 @@ const useWS = (
     };
   });
 
-  return contentWS;
+  return { contentWS, timeStamp };
 };
 
 export default useWS;

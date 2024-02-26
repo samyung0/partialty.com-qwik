@@ -44,6 +44,7 @@ import {
 } from "~/components/_ContentEditor/quizCode";
 import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
+import type theme from "~/const/theme";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
@@ -118,6 +119,7 @@ const ContentEditorReact = ({
   fetchAudio,
   chapterName,
   saveToDBQuiz,
+  themeValue,
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -150,6 +152,7 @@ const ContentEditorReact = ({
   >;
   chapterName: string;
   saveToDBQuiz: (isCorrect: boolean) => any;
+  themeValue: (typeof theme)[number];
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
@@ -441,8 +444,8 @@ const ContentEditorReact = ({
           ref={parentRef}
           id="ParentRefContainer"
           className={
-            "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 " +
-            (isPreviewing ? " hidden" : " block")
+            "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 dark:bg-primary-dark-gray dark:text-background-light-gray " +
+            (isPreviewing ? " hidden " : " block ")
           }
         >
           <Slate

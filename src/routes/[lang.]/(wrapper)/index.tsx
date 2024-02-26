@@ -1,4 +1,5 @@
 import { component$, useVisibleTask$ } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { useLocation } from "@builder.io/qwik-city";
 
 import UnderConstruction from "~/assets/img/under_construction.png";
@@ -65,3 +66,13 @@ export default component$(() => {
     </main>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Partialty",
+  meta: [
+    {
+      name: "description",
+      content: `Partialty is an e-learning platform that teaches web development in simple words and includes frameworks such as React, Vue, Next JS and much more. The biggest difference that sets aside us and the other learning platform is the addition of audio that explains alongside the text.`,
+    },
+  ],
+};

@@ -48,7 +48,18 @@ const setCourseServer = server$(
 
 export default component$(() => {
   const user = useUserLoader().value;
-  const ws = useWS(user);
+  const contentWS = useWS(user, {
+    onOpen$: $((ws, useTimeStamp) => {
+      ws.send(
+        JSON.stringify({
+          type: "init",
+          userId: useTimeStamp,
+          accessible_courses: [],
+        })
+      );
+    }),
+  });
+  const ws = contentWS.contentWS;
   const formSteps = useSignal(0);
   const createdTags = useSignal<Tag[]>([]);
   const createdCategory = useSignal<ContentCategory>();
@@ -70,6 +81,7 @@ export default component$(() => {
     supported_lang: ["en-US"],
     description: "",
     is_deleted: false,
+    difficulty: "easy",
   });
   const courseApproval = useStore<NewCourseApproval>({
     id: uuidv4(),

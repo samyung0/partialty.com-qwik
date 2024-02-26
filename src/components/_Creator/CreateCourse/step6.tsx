@@ -1,6 +1,8 @@
 import type { Signal } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 import { LuArrowLeft, LuEyeOff, LuFiles, LuGem } from "@qwikest/icons/lucide";
+import type difficulty from "~/const/difficulty";
+import { difficultyLabels } from "~/const/difficulty";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 
@@ -30,6 +32,32 @@ export default component$(
             </h1>
             <br />
             <div class="flex flex-col items-center justify-center space-y-6">
+              <div>
+                <label
+                  title="Sets the difficulty of the course"
+                  for="difficulty"
+                  class="flex cursor-pointer items-center gap-5 text-lg"
+                >
+                  <span class="flex items-center gap-2">Difficulty</span>
+                  <select
+                    name="difficulty"
+                    id="diffculty"
+                    value={courseData.difficulty}
+                    class="rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-primary-dark-gray"
+                    onChange$={(e, currentTarget) => {
+                      courseData.difficulty = currentTarget.value as (typeof difficulty)[number];
+                    }}
+                  >
+                    {Object.entries(difficultyLabels).map(([val, label]) => {
+                      return (
+                        <option key={`difficulty${val}`} value={val}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
+              </div>
               <div>
                 <label
                   title="A course can only be viewed through invite codes if it is set to private, and will not be listed in the course catalog."

@@ -1,5 +1,13 @@
 import type { Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useComputed$,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { useSetBio, useSignupWithPassword } from "~/auth/signup";
 import recaptcha from "~/components/_Signup/recaptcha";
@@ -16,7 +24,11 @@ import Dragndrop from "~/components/_Signup/dragndrop";
 import LoadingSVG from "~/components/LoadingSVG";
 
 export default component$(
-  ({ cloudinaryDefaultPics }: { cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[]> }) => {
+  ({
+    cloudinaryDefaultPics,
+  }: {
+    cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[] | null | undefined>;
+  }) => {
     recaptcha;
 
     const params = useLocation().url.searchParams;
@@ -47,8 +59,19 @@ export default component$(
     });
     const nav = useNavigate();
     const isSetBio = useSignal(false);
-    const originalAvatar = useSignal(
-      cloudinaryDefaultPics.value[Math.floor(Math.random() * cloudinaryDefaultPics.value.length)]
+    const originalAvatar = useComputed$(() =>
+      cloudinaryDefaultPics.value
+        ? cloudinaryDefaultPics.value[
+            Math.floor(Math.random() * cloudinaryDefaultPics.value.length)
+          ]
+        : {
+            width: 0,
+            height: 0,
+            bytes: 0,
+            pixels: 0,
+            secure_url: "",
+            public_id: "",
+          }
     );
     const defaultBio = useStore<{
       avatar: CloudinaryDefaultPic;
@@ -58,6 +81,10 @@ export default component$(
       avatar: JSON.parse(JSON.stringify(originalAvatar.value)),
       nickname: "Anonymous",
       userId: null,
+    });
+    useTask$(({ track }) => {
+      track(originalAvatar);
+      defaultBio.avatar = JSON.parse(JSON.stringify(originalAvatar.value));
     });
     const customAvatar = useSignal(false);
 
@@ -133,6 +160,7 @@ export default component$(
     });
 
     const randomizeDefaultAvatar = $(() => {
+      if (!cloudinaryDefaultPics.value) return;
       defaultBio.avatar = JSON.parse(
         JSON.stringify(
           cloudinaryDefaultPics.value[

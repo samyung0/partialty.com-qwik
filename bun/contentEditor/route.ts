@@ -65,7 +65,6 @@ const app = new Elysia()
           throw new Error("Invalid signature!");
         }
         try {
-          console.log(body);
           const data = JSON.parse(body as any);
           const type = data.type;
           if (!type) {
@@ -240,7 +239,6 @@ const app = new Elysia()
           }
           if (courseIdToUserId.get(contentId)) {
             if (courseIdToUserId.get(contentId) === userId) return;
-            console.error("Another Person is already editing the content!");
             return ws.send(
               JSON.stringify({
                 type: "openContentError",

@@ -42,7 +42,7 @@ import { type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
 
-const getChapters = server$(async (courseId: string) => {
+export const getChapters = server$(async (courseId: string) => {
   return await drizzleClient().select().from(content).where(eq(content.index_id, courseId));
 });
 
@@ -618,9 +618,7 @@ export default component$(
     courseIdToEditingUser: Record<string, [string, string]>;
   }) => {
     const nav = useNavigate();
-
     const user = useUserLoader().value;
-
     const courses = useStore(() =>
       Object.fromEntries(
         userAccessibleCourseWriteResolved.value.map(
@@ -649,24 +647,38 @@ export default component$(
       userAccessibleCourseWriteResolved.value.forEach(
         async ({ content_index, profiles, course_approval }) => {
           keys.splice(keys.indexOf(content_index.id), 1);
-          const chapters = await getChapters(content_index.id);
-          courses[content_index.id] = Object.assign({}, content_index, {
-            isOpen: courses[content_index.id]?.isOpen || false,
-            chapters,
-            isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
-            hasLoadedChapter: courses[content_index.id]?.hasLoadedChapter || false,
-            profile: profiles,
-            chaptersMap: Object.fromEntries(
-              chapters.map((c) => [
-                c.id,
-                {
-                  isDeleting: false,
-                },
-              ])
-            ),
-            courseApproval: course_approval,
-            isPublishing: courses[content_index.id]?.isPublishing || false,
-          });
+          const isOpen = courses[content_index.id]?.isOpen || false;
+          if (isOpen) {
+            const chapters = await getChapters(content_index.id);
+            courses[content_index.id] = Object.assign({}, content_index, {
+              isOpen: true,
+              chapters,
+              isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
+              hasLoadedChapter: true,
+              profile: profiles,
+              chaptersMap: Object.fromEntries(
+                chapters.map((c) => [
+                  c.id,
+                  {
+                    isDeleting: false,
+                  },
+                ])
+              ),
+              courseApproval: course_approval,
+              isPublishing: courses[content_index.id]?.isPublishing || false,
+            });
+          } else {
+            courses[content_index.id] = Object.assign({}, content_index, {
+              isOpen: false,
+              chapters: [],
+              isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
+              hasLoadedChapter: false,
+              profile: profiles,
+              chaptersMap: {},
+              courseApproval: course_approval,
+              isPublishing: courses[content_index.id]?.isPublishing || false,
+            });
+          }
         }
       );
       for (const i of keys) {
@@ -760,28 +772,6 @@ export default component$(
             nav();
             return;
           }
-
-          // if (d.type === "contentDetailsEdited") {
-          //   // the reactivity for chapter is broken for some reason
-          //   // manually updating
-
-          //   if (!Object.prototype.hasOwnProperty.call(courses, d.message.courseId)) return;
-          //   const chapter = courses[d.message.courseId].chapters.find(
-          //     (c) => c.id === d.message.chapterId
-          //   );
-          //   if (!chapter) return;
-          //   for (const i in d.message.details) {
-          //     (chapter as any)[i] = d.message.details[i];
-          //   }
-
-          //   // forcefully repaint
-          //   const t = [...courses[d.message.courseId].chapter_order];
-          //   courses[d.message.courseId].chapter_order = [];
-          //   setTimeout(() => {
-          //     courses[d.message.courseId].chapter_order = t;
-          //   }, 0);
-          //   return;
-          // }
         } catch (e) {
           console.error(e);
         }

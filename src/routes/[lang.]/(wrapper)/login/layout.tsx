@@ -28,7 +28,7 @@ export const useUserLoader = routeLoader$(async (event) => {
   return session;
 });
 
-export const onRequest: RequestHandler = async ({ env }) => {
+export const onRequest: RequestHandler = ({ env }) => {
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
   initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
   initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");

@@ -8,7 +8,7 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 // turso, drizzle and lucia are all initialized per page request
 // since edge and serverless functions are stateless
-export const onRequest: RequestHandler = async ({ env, cacheControl }) => {
+export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   cacheControl({
     maxAge: 0,
     sMaxAge: 0,

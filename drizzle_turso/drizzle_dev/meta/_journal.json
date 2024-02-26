@@ -281,6 +281,13 @@
       "when": 1708680632978,
       "tag": "0039_unusual_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1708954809099,
+      "tag": "0040_gifted_molly_hayes",
+      "breakpoints": true
     }
   ]
 }

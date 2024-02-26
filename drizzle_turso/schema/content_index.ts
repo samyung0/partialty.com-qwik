@@ -1,5 +1,6 @@
 import { InferInsertModel, InferSelectModel, relations, sql } from "drizzle-orm";
 import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import difficulty from "~/const/difficulty";
 import { profiles } from "./profiles";
 
 export const content_index = sqliteTable("content_index", {
@@ -26,6 +27,7 @@ export const content_index = sqliteTable("content_index", {
   supported_lang: blob("supported_lang", { mode: "json" }).$type<string[]>().notNull(),
   description: text("description").notNull().default(""),
   is_deleted: integer("is_deleted", { mode: "boolean" }).notNull().default(false),
+  difficulty: text("difficulty", { enum: difficulty }).notNull().default("easy"),
 });
 
 export const contentIndexRelations = relations(content_index, ({ one }) => ({
