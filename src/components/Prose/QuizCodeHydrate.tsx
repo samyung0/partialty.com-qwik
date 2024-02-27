@@ -26,9 +26,10 @@ const QuizCodeHydrate = ({
           }
 
           const formname = form.getAttribute("data-formname");
+          const isCode = form.getAttribute("data-iscode");
           let correctAns = false;
           if (!ans || !formname) return;
-          if (ans.type === "matchInput") {
+          if (isCode === "0" || ans.type === "matchInput") {
             correctAns = JSON.stringify(ans.matchInput) === JSON.stringify(val);
           } else {
             let combinedText: string = "";

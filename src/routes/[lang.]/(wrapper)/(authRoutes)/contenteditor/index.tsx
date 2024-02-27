@@ -196,7 +196,6 @@ export default component$(() => {
   const contentWS = ws.contentWS;
   const wsTimeStamp = ws.timeStamp;
 
-  const timeStamp = useSignal("");
   const contentEditorValue = useSignal<any>();
   const renderedHTML = useSignal<string>();
   const isEditing = useSignal(false);
@@ -219,7 +218,7 @@ export default component$(() => {
   });
 
   return (
-    <main class="relative flex h-[100vh] overflow-hidden bg-background-light-gray">
+    <main class="relative flex h-[100vh] w-full overflow-hidden bg-background-light-gray dark:bg-primary-dark-gray">
       <SideNav
         courseIdToEditingUser={courseIdToEditingUser}
         contentEditorValue={contentEditorValue}
@@ -242,7 +241,7 @@ export default component$(() => {
           chapterName={chapterName.value}
           isPreviewing={isPreviewing.value}
           setIsPreviewing={$((t: boolean) => (isPreviewing.value = t))}
-          timeStamp={timeStamp.value}
+          timeStamp={wsTimeStamp.value}
           isEditing={isEditing.value}
           initialValue={contentEditorValue.value}
           renderedHTML={renderedHTML.value}

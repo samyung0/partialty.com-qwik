@@ -426,7 +426,7 @@ export function toggleLinkAtSelection(editor: Editor) {
 
 export const LinkElement = ({ attributes, children, element }: RenderElementProps) => {
   return (
-    <a {...attributes} href={element.url}>
+    <a style={{ backgroundColor: "inherit", color: "inherit" }} {...attributes} href={element.url}>
       <InlineChromiumBugfix />
       {children}
       <InlineChromiumBugfix />

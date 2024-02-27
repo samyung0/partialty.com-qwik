@@ -24,7 +24,7 @@ export const protectedRoutes: {
   },
   {
     path: "/creator",
-    authRolesPermitted: ["paid", "teacher", "admin"],
+    authRolesPermitted: ROLES_PERITTED_TO_EDITCONTENT,
     redirectTo: "/unauth/",
   },
   {

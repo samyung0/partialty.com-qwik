@@ -320,9 +320,9 @@ export default component$(
                     {courses[currentCourse.id].isOpen &&
                       courses[currentCourse.id].isLoadingChapter &&
                       !courses[currentCourse.id].is_single_page && (
-                        <span class="mt-6">
+                        <div class="mt-6">
                           <LoadingSVG />
-                        </span>
+                        </div>
                       )}
                     {courses[currentCourse.id].isOpen &&
                       !courses[currentCourse.id].is_single_page &&

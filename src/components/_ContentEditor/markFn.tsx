@@ -17,7 +17,9 @@ export const MarkButton = ({
   return (
     <button
       className={
-        isMarkActive(editor, format) ? `border-b-2 border-black` : "border-b-2 border-light-mint"
+        isMarkActive(editor, format)
+          ? `border-b-2 border-black dark:border-light-mint`
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -46,8 +48,9 @@ export const BackgroundMarkButton = ({
     <div
       className={
         (isMarkActive(editor, format)
-          ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
+          ? `border-b-2 border-black dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
+        " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -107,8 +110,9 @@ export const UnderlineMarkButton = ({
     <div
       className={
         (isMarkActive(editor, format)
-          ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
+          ? `border-b-2 border-black dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
+        " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -168,8 +172,9 @@ export const ColorMarkButton = ({
     <div
       className={
         (isMarkActive(editor, format)
-          ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
+          ? `border-b-2 border-black dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
+        " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -239,8 +244,9 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
     <div
       className={
         (isMarkActive(editor, "fontSize") || isMarkActive(editor, "fontFamily")
-          ? `border-b-2 border-black`
-          : "border-b-2 border-light-mint ") + " relative cursor-pointer [&:hover>div]:block"
+          ? `border-b-2 border-black dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
+        " relative cursor-pointer [&:hover>div]:block"
       }
       onMouseDown={(event) => event.preventDefault()}
     >

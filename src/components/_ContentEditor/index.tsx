@@ -432,135 +432,170 @@ const ContentEditorReact = ({
   const [saveBeforePreview, setSaveBeforePreview] = useState(false);
 
   return (
-    isEditing && (
-      <>
-        <Preview
-          setIsPreviewing={setIsPreviewing}
-          hasAudioTrack={audioTrack === undefined}
-          isPreviewing={isPreviewing}
-          setSaveBeforePreview={setSaveBeforePreview}
-        />
-        <div
-          ref={parentRef}
-          id="ParentRefContainer"
-          className={
-            "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 dark:bg-primary-dark-gray dark:text-background-light-gray " +
-            (isPreviewing ? " hidden " : " block ")
-          }
-        >
-          <Slate
-            onValueChange={() => {
-              if (isChangingContent) return;
-              setHasChanged();
-              setChangingValue(changingValue + 1);
-            }}
-            editor={editor}
-            initialValue={normalizedInitialValue}
+    <>
+      {isEditing && (
+        <>
+          <Preview
+            setIsPreviewing={setIsPreviewing}
+            hasAudioTrack={audioTrack === undefined}
+            isPreviewing={isPreviewing}
+            setSaveBeforePreview={setSaveBeforePreview}
+          />
+          <div
+            ref={parentRef}
+            id="ParentRefContainer"
+            className={
+              "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 dark:bg-primary-dark-gray dark:text-background-light-gray " +
+              (isPreviewing ? " hidden " : " block ")
+            }
           >
-            <SaveContent
-              setSaveBeforePreview={setSaveBeforePreview}
-              saveBeforePreview={saveBeforePreview}
-              setIsPreviewing={setIsPreviewing}
-              changingValue={changingValue}
-              audioTrack={audioTrack}
-              hasChanged={hasChanged}
-              saveChanges={saveChanges}
-              chapterName={chapterName}
-            />
-            {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
-            {showAudioChooser && (
-              <CenterAudioChooser
-                setAudioTrack={setAudioTrack}
-                timeStamp={timeStamp}
-                contentWS={contentWS}
-                userId={user.userId}
-                setShowAudioChooser={setShowAudioChooser}
-                userAudiosWithName={userAudiosWithName.current}
+            <Slate
+              onValueChange={() => {
+                if (isChangingContent) return;
+                setHasChanged();
+                setChangingValue(changingValue + 1);
+              }}
+              editor={editor}
+              initialValue={normalizedInitialValue}
+            >
+              <SaveContent
+                setSaveBeforePreview={setSaveBeforePreview}
+                saveBeforePreview={saveBeforePreview}
+                setIsPreviewing={setIsPreviewing}
+                changingValue={changingValue}
+                audioTrack={audioTrack}
+                hasChanged={hasChanged}
+                saveChanges={saveChanges}
+                chapterName={chapterName}
               />
-            )}
-            {showImageChooser && (
-              <CenterImageChooser
-                replaceCurrentImage={replaceCurrentImage}
+              {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
+              {showAudioChooser && (
+                <CenterAudioChooser
+                  setAudioTrack={setAudioTrack}
+                  timeStamp={timeStamp}
+                  contentWS={contentWS}
+                  userId={user.userId}
+                  setShowAudioChooser={setShowAudioChooser}
+                  userAudiosWithName={userAudiosWithName.current}
+                />
+              )}
+              {showImageChooser && (
+                <CenterImageChooser
+                  replaceCurrentImage={replaceCurrentImage}
+                  setReplaceCurrentImage={setReplaceCurrentImage}
+                  setShowImageChooser={setShowImageChooser}
+                  userId={user.userId}
+                  userImages={userImages.current}
+                  editor={editor}
+                />
+              )}
+              {showCodeBlockSettings && (
+                <CenterCodeBlockSettings
+                  setShowCodeBlockSettings={setShowCodeBlockSettings}
+                  editor={editor}
+                />
+              )}
+              {showQuizBlockSettings && (
+                <CenterQuizBlockSettings
+                  setShowQuizBlockSettings={setShowQuizBlockSettings}
+                  editor={editor}
+                />
+              )}
+              {showQuizCodeBlockSettings && (
+                <CenterQuizCodeBlockSettings
+                  setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
+                  editor={editor}
+                  themeValue={themeValue}
+                />
+              )}
+              <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
+              <HoveringImage
+                parentRef={parentRef}
                 setReplaceCurrentImage={setReplaceCurrentImage}
                 setShowImageChooser={setShowImageChooser}
-                userId={user.userId}
-                userImages={userImages.current}
-                editor={editor}
               />
-            )}
-            {showCodeBlockSettings && (
-              <CenterCodeBlockSettings
+              <HoveringEmbed parentRef={parentRef} />
+              <HoveringLink parentRef={parentRef} />
+              <HoveringCodeBlock
+                parentRef={parentRef}
                 setShowCodeBlockSettings={setShowCodeBlockSettings}
-                editor={editor}
               />
-            )}
-            {showQuizBlockSettings && (
-              <CenterQuizBlockSettings
+              <HoveringQuizBlock
+                parentRef={parentRef}
                 setShowQuizBlockSettings={setShowQuizBlockSettings}
-                editor={editor}
               />
-            )}
-            {showQuizCodeBlockSettings && (
-              <CenterQuizCodeBlockSettings
+              <HoveringQuizCodeBlock
+                parentRef={parentRef}
                 setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
-                editor={editor}
               />
-            )}
-            <Toolbar audioTimeStamp={audioTimeStamp} setShowImageChooser={setShowImageChooser} />
-            <HoveringImage
-              parentRef={parentRef}
-              setReplaceCurrentImage={setReplaceCurrentImage}
-              setShowImageChooser={setShowImageChooser}
+              {/* <HoveringToolbar /> */}
+              <Prose>
+                <Editable
+                  className="outline-none"
+                  placeholder="Enter some rich text…"
+                  spellCheck
+                  autoFocus
+                  decorate={decorate}
+                  onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
+                  renderElement={renderElement}
+                  renderLeaf={renderLeaf}
+                />
+              </Prose>
+            </Slate>
+            <AudioPlayer
+              isLoadingAudio={isLoadingAudio}
+              audioTimeStamp={audioTimeStamp}
+              setAudioTrack={setAudioTrack}
+              setShowAudioChooser={setShowAudioChooser}
+              audioTrack={audioTrack}
+              themeValue={themeValue}
             />
-            <HoveringEmbed parentRef={parentRef} />
-            <HoveringLink parentRef={parentRef} />
-            <HoveringCodeBlock
-              parentRef={parentRef}
-              setShowCodeBlockSettings={setShowCodeBlockSettings}
-            />
-            <HoveringQuizBlock
-              parentRef={parentRef}
-              setShowQuizBlockSettings={setShowQuizBlockSettings}
-            />
-            <HoveringQuizCodeBlock
-              parentRef={parentRef}
-              setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
-            />
-            {/* <HoveringToolbar /> */}
-            <Prose>
-              <Editable
-                className="outline-none"
-                placeholder="Enter some rich text…"
-                spellCheck
-                autoFocus
-                decorate={decorate}
-                onKeyDown={(event: React.KeyboardEvent) => onKeyDown(editor, event)}
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-              />
-            </Prose>
-          </Slate>
-          <AudioPlayer
-            isLoadingAudio={isLoadingAudio}
-            audioTimeStamp={audioTimeStamp}
-            setAudioTrack={setAudioTrack}
-            setShowAudioChooser={setShowAudioChooser}
-            audioTrack={audioTrack}
-          />
-        </div>
-
-        {isPreviewing && (
-          <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
-            <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
-            <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
-            <div className="h-[90vh] overflow-auto">
-              <Prose children={<></>} innerHTML={renderedHTML || ""} />
-            </div>
-            <SyncAudio audioTrack={audioTrack} />
           </div>
-        )}
-      </>
-    )
+
+          {isPreviewing && (
+            <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
+              <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+              <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+              <div className="h-[90vh] overflow-auto">
+                <Prose children={<></>} innerHTML={renderedHTML || ""} />
+              </div>
+              <SyncAudio audioTrack={audioTrack} />
+            </div>
+          )}
+        </>
+      )}
+      {!isEditing && (
+        <div className="flex h-full w-[80vw] items-center justify-center dark:text-background-light-gray">
+          <div className="flex flex-col gap-6">
+            <h1 className="text-center font-mosk text-[2rem] font-bold">
+              Welcome to the Content Editor
+            </h1>
+            <p>
+              Start by selecting a course and chapter to edit on the left. If it is empty, go to{" "}
+              <a
+                target="_blank"
+                href="/creator/"
+                className="underline decoration-wavy underline-offset-[6px]"
+              >
+                Creator
+              </a>{" "}
+              and create a course :D
+            </p>
+            <p className="text-tomato">
+              Note: Content Editor is still in beta mode! Please kindly report any bugs and glitches
+              to{" "}
+              <a
+                href="mailto:customer@partialty.com"
+                target="_blank"
+                className="underline decoration-wavy underline-offset-[6px]"
+              >
+                customer@partialty.com
+              </a>
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

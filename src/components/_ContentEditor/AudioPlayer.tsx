@@ -6,6 +6,7 @@ import * as UpChunk from "@mux/upchunk";
 import { Pause, Play, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { MUX_AUDIO_MAX_SIZE } from "~/const/mux";
+import type theme from "~/const/theme";
 
 import type Mux from "~/types/Mux";
 
@@ -127,7 +128,7 @@ export const CenterAudioChooser = ({
 
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
-      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
+      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:border-disabled-dark dark:bg-primary-dark-gray">
         <h2 className="pb-8 font-mosk text-[2rem] font-bold tracking-wider">Select Audio</h2>
         <button onClick={() => setShowAudioChooser(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
@@ -151,7 +152,7 @@ export const CenterAudioChooser = ({
                   setShowAudioChooser(false);
                 }}
                 key={`AudioChooser${audioTrack.id}`}
-                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark"
               >
                 <div className="flex cursor-pointer flex-col items-start justify-center">
                   <h3 className="text-lg tracking-wide">{name}</h3>
@@ -179,7 +180,7 @@ export const CenterAudioChooser = ({
                   setShowAudioChooser(false);
                 }}
                 key={`AudioChooser${audioTrack.id}`}
-                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3"
+                className="flex cursor-pointer justify-between rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark"
               >
                 <div className="flex cursor-pointer flex-col items-start justify-center">
                   <h3 className="text-lg tracking-wide">{name}</h3>
@@ -245,7 +246,10 @@ export const CenterAudioChooser = ({
             <div className="flex flex-1 flex-col">
               <div className="mb-1 ml-[10%] text-base font-medium">{status}</div>
               <div className="mx-auto mb-4 h-1.5 w-[80%] rounded-full bg-gray-200">
-                <div className="h-1.5 rounded-full bg-sea" style={{ width: `${progress}%` }}></div>
+                <div
+                  className="h-1.5 rounded-full bg-sea dark:bg-highlight-dark"
+                  style={{ width: `${progress}%` }}
+                ></div>
               </div>
             </div>
           )}
@@ -261,6 +265,7 @@ export default ({
   setAudioTrack,
   audioTimeStamp,
   isLoadingAudio,
+  themeValue,
 }: {
   audioTrack:
     | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
@@ -278,12 +283,13 @@ export default ({
   ) => any;
   audioTimeStamp: React.MutableRefObject<number>;
   isLoadingAudio: boolean;
+  themeValue: (typeof theme)[number];
 }) => {
   const [timeStamp, setTimeStamp] = useState(0);
   const [paused, setPaused] = useState(true);
   const muxRef = useRef<any>();
   return (
-    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t-2 border-sea bg-light-sea px-8">
+    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t-2 border-sea bg-light-sea px-8 dark:border-disabled-dark dark:bg-primary-dark-gray">
       <MuxPlayer
         ref={muxRef}
         className="hidden"
@@ -309,7 +315,7 @@ export default ({
                   <button
                     data-tooltip-target="tooltip-pause"
                     type="button"
-                    className="group mx-2 inline-flex items-center justify-center rounded-full bg-sea p-2.5 font-medium focus:outline-none"
+                    className="group mx-2 inline-flex items-center justify-center rounded-full bg-sea p-2.5 font-medium focus:outline-none dark:bg-highlight-dark"
                     onClick={() => setPaused(!paused)}
                   >
                     {paused ? (
@@ -343,12 +349,17 @@ export default ({
                       min="0"
                       max={audioTrack.duration}
                       style={{
-                        background: `linear-gradient(90deg,rgb(114,202,218) ${
-                          (timeStamp / audioTrack.duration) * 100
-                        }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
+                        background:
+                          themeValue === "light"
+                            ? `linear-gradient(90deg,rgb(114,202,218) ${
+                                (timeStamp / audioTrack.duration) * 100
+                              }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`
+                            : `linear-gradient(90deg,#2f3e52 ${
+                                (timeStamp / audioTrack.duration) * 100
+                              }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
                       }}
                       className={`m-0 h-1.5 w-full cursor-pointer appearance-none rounded-full
-               bg-background-light-gray p-0 accent-sea`}
+               bg-background-light-gray p-0 accent-sea dark:accent-highlight-dark`}
                     />
                   </label>
                   <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">
@@ -373,7 +384,7 @@ export default ({
           <div className="flex items-center justify-center">
             <button
               onClick={() => setShowAudioChooser(true)}
-              className="rounded-lg bg-sea px-6 py-3 text-background-light-gray shadow-lg"
+              className="rounded-lg bg-sea px-6 py-3 text-background-light-gray shadow-lg dark:bg-highlight-dark"
             >
               Choose Audio File
             </button>

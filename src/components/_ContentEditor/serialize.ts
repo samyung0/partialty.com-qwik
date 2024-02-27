@@ -495,11 +495,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "link": {
       return `<a target="_blank" href=${node.url} style="
       ${style}
-      "><span style="font-size: 0;">
-    ${String.fromCodePoint(160)}
-  </span>${children}<span style="font-size: 0;">
-    ${String.fromCodePoint(160)}
-  </span></a>`;
+      ">${children}</a>`;
     }
     case "image": {
       const caption = node.caption || "";
@@ -513,8 +509,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       ">
         <img width={400} height={400} src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
         max-height: 400px;
-        border-width: 2px;
-        border-color: rgb(111 220 191);
         object-fit: contain;
         "/>
         <p
@@ -683,6 +677,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         data-formname="${formName}"
         data-combinedtext="${combinedText}"
         data-astlang="${astLang}"
+        data-isCode="${isCode ? "1" : "0"}"
         class="quizCodeBlock"
         style="
         display: flex;

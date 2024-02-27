@@ -15,6 +15,7 @@ import astParse from "~/components/_ContentEditor/astParse";
 import { isBlockActive } from "~/components/_ContentEditor/blockFn";
 import serialize from "~/components/_ContentEditor/serialize";
 import type { QuizCodeBlockElement, QuizCodeInputElement } from "~/components/_ContentEditor/types";
+import type theme from "~/const/theme";
 
 export const QuizCodeInput = ({ attributes, children, element }: RenderElementProps) => {
   const width = (element as QuizCodeInputElement).inputWidth;
@@ -125,7 +126,7 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
       >
         <button
           type="button"
-          className="rounded-lg bg-primary-dark-gray px-3 py-1 text-base text-background-light-gray shadow-md"
+          className="rounded-lg bg-primary-dark-gray px-3 py-1 text-base text-background-light-gray shadow-md dark:bg-highlight-dark"
           contentEditable={false}
           onClick={() => {
             if (!editor.selection) return;
@@ -161,7 +162,7 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
         </button>
         <div
           style={{ width: `${width}px` }}
-          className="overflow-hidden whitespace-nowrap rounded-sm border-2 border-primary-dark-gray bg-inherit p-2 align-middle text-inherit [resize:horizontal]"
+          className="overflow-hidden whitespace-nowrap rounded-sm border-2 border-primary-dark-gray bg-inherit p-2 align-middle text-inherit [resize:horizontal] dark:border-highlight-dark"
           ref={ref}
         >
           {isCode ? (
@@ -171,14 +172,14 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
               </code>
             </pre>
           ) : (
-            <div className="w-[calc(100%-8px)] overflow-auto border-primary-dark-gray bg-background-light-gray [&>div:last-child]:pb-0 [&>div]:pb-2">
+            <div className="w-[calc(100%-8px)] overflow-auto border-primary-dark-gray bg-background-light-gray dark:border-highlight-dark dark:bg-primary-dark-gray [&>div:last-child]:pb-0 [&>div]:pb-2">
               {children}
             </div>
           )}
         </div>
         <button
           contentEditable={false}
-          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg"
+          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark"
         >
           Check
         </button>
@@ -228,9 +229,11 @@ export const withQuizCode = (editor: Editor) => {
 export const CenterQuizCodeBlockSettings = ({
   editor,
   setShowQuizCodeBlockSettings,
+  themeValue,
 }: {
   editor: Editor;
   setShowQuizCodeBlockSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  themeValue: (typeof theme)[number];
 }) => {
   const matching = editor.above({
     match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "quizCodeBlock",
@@ -271,7 +274,7 @@ export const CenterQuizCodeBlockSettings = ({
       if (Object.prototype.hasOwnProperty.call(quizMatchInput, id)) {
         final[id] = quizMatchInput[id];
       } else final[id] = "";
-      if (quizAst) {
+      if (quizAst && isCode) {
         (i.firstElementChild as HTMLInputElement).disabled = true;
         i.style.setProperty("background-color", "rgb(209 213 219)", "important");
       } else {
@@ -296,7 +299,7 @@ export const CenterQuizCodeBlockSettings = ({
 
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
-      <div className="relative flex max-h-[80vh] w-[80vw] flex-wrap items-stretch justify-evenly overflow-auto rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
+      <div className="relative flex max-h-[80vh] w-[80vw] flex-wrap items-stretch justify-evenly overflow-auto rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
         <div className="flex flex-col items-start justify-center">
           <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Quiz</h2>
           <button
@@ -316,7 +319,9 @@ export const CenterQuizCodeBlockSettings = ({
                 id="QuizCodeTitle"
                 name="QuizCodeTitle"
                 type="text"
-                className={"block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2"}
+                className={
+                  "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+                }
               />
             </div>
           </div>
@@ -396,7 +401,7 @@ export const CenterQuizCodeBlockSettings = ({
               );
               setShowQuizCodeBlockSettings(false);
             }}
-            className="my-8 inline-block rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray"
+            className="my-8 inline-block rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray dark:bg-highlight-dark"
           >
             Save
           </button>
@@ -418,8 +423,12 @@ export const CenterQuizCodeBlockSettings = ({
               </div>
               <div
                 style={{
-                  background: isCode ? "rgb(31 41 55)" : "rgb(247 247 247)",
-                  borderColor: isCode ? "transparent" : "rgb(31 41 55)",
+                  background: isCode
+                    ? "#282c34"
+                    : themeValue === "light"
+                    ? "rgb(247 247 247)"
+                    : "#2f3e52",
+                  borderColor: isCode ? "transparent" : "#282c34",
                 }}
                 className={"max-h-[500px] max-w-full flex-1 overflow-auto rounded-lg border-2 p-4"}
               >
@@ -427,7 +436,7 @@ export const CenterQuizCodeBlockSettings = ({
                   <pre
                     ref={ref}
                     style={{ width: `${width}px` }}
-                    className="overflow-auto whitespace-nowrap border-background-light-gray bg-primary-dark-gray text-lg text-background-light-gray [&_.quizCodeInput]:!bg-background-light-gray [&_.quizCodeInput]:!text-primary-dark-gray"
+                    className="overflow-auto whitespace-nowrap border-background-light-gray bg-code-editor-one-dark-pro text-lg text-background-light-gray [&_.quizCodeInput]:!bg-background-light-gray [&_.quizCodeInput]:!text-primary-dark-gray"
                   >
                     <code dangerouslySetInnerHTML={{ __html: rendered }}></code>
                   </pre>
@@ -435,7 +444,7 @@ export const CenterQuizCodeBlockSettings = ({
                   <div
                     ref={ref}
                     style={{ width: `${width}px` }}
-                    className="overflow-auto whitespace-nowrap border-primary-dark-gray bg-background-light-gray text-lg"
+                    className="overflow-auto whitespace-nowrap border-primary-dark-gray bg-background-light-gray text-lg dark:bg-highlight-dark"
                     dangerouslySetInnerHTML={{ __html: rendered }}
                   ></div>
                 )}
@@ -478,7 +487,7 @@ export const CenterQuizCodeBlockSettings = ({
                       Copy
                     </button>
                   </div>
-                  <div className="h-[400px] w-[400px] overflow-hidden rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4">
+                  <div className="h-[400px] w-[400px] overflow-hidden rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:bg-highlight-dark">
                     <textarea
                       value={ast}
                       id="ASTText"
@@ -486,24 +495,24 @@ export const CenterQuizCodeBlockSettings = ({
                       placeholder={
                         "AST matching will check if all the properties listed in the answer's AST is prsent in user's AST. Extra properties/values from the user's AST are also accepted. If the AST object is an array, the order will also be checked."
                       }
-                      className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none"
+                      className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none dark:bg-highlight-dark"
                     ></textarea>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
                   <h4 className="font-mosk text-xl font-bold tracking-wider">Code Input</h4>
-                  <div className="h-[400px] w-[400px] overflow-hidden rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4">
+                  <div className="h-[400px] w-[400px] overflow-hidden rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:bg-highlight-dark">
                     <textarea
                       value={astInputCode}
                       onChange={(e) => setAstInputCode(e.target.value)}
                       placeholder={"Enter some code and click generate."}
-                      className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none"
+                      className="h-full w-full resize-none overflow-auto bg-background-light-gray outline-none dark:bg-highlight-dark"
                     ></textarea>
                   </div>
                   <div className="flex justify-start gap-3 self-start">
                     <button
                       type="button"
-                      className="rounded-lg bg-primary-dark-gray px-2 py-1 text-base text-background-light-gray shadow-md"
+                      className="rounded-lg bg-primary-dark-gray px-2 py-1 text-base text-background-light-gray shadow-md dark:bg-highlight-dark"
                       onClick={() => {
                         if (Object.prototype.hasOwnProperty.call(astParse, astGenerateLanguage))
                           setAst(
@@ -514,7 +523,7 @@ export const CenterQuizCodeBlockSettings = ({
                       Generate
                     </button>
                     <select
-                      className="rounded-lg border-2 border-primary-dark-gray px-3 py-1 shadow-md outline-none"
+                      className="rounded-lg border-2 border-primary-dark-gray px-3 py-1 shadow-md outline-none dark:bg-highlight-dark"
                       onChange={(e) => setAstGenerateLanguage(e.target.value)}
                       value={astGenerateLanguage}
                     >

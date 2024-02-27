@@ -164,12 +164,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   return (
     <div {...attributes}>
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
-        <img
-          width={400}
-          height={400}
-          src={element.url}
-          className="max-h-[400px] border-2 border-mint object-contain"
-        />
+        <img width={400} height={400} src={element.url} className="w-[80%] object-contain" />
         <textarea
           ref={ref}
           rows={1}
@@ -191,7 +186,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
             }
           }}
           value={value}
-          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
           placeholder={"Enter some captions..."}
         />
         {children}
@@ -243,7 +238,7 @@ export const CenterImageChooser = ({
   }, []);
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
-      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
+      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
         <h2 className="pb-8 font-mosk text-[2rem] font-bold tracking-wider">Select Image</h2>
         <button onClick={() => setShowImageChooser(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
@@ -258,7 +253,7 @@ export const CenterImageChooser = ({
             {resolvedUserImages.map(([blobUrl, imgData]) => (
               <button
                 key={`resolvedUserImages${blobUrl}`}
-                className="flex h-[220px] w-[220px] flex-col items-stretch justify-stretch rounded-lg border-2 border-light-mint p-2 hover:border-pink hover:bg-light-pink"
+                className="flex h-[220px] w-[220px] flex-col items-stretch justify-stretch rounded-lg border-2 border-light-mint p-2 hover:border-pink hover:bg-light-pink dark:border-highlight-dark dark:hover:border-disabled-dark dark:hover:bg-highlight-dark"
                 onClick={() => {
                   ReactEditor.focus(editor);
                   if (!editor.selection) return;

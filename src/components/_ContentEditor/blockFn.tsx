@@ -24,8 +24,8 @@ export const BlockButton = ({
     <button
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -50,8 +50,8 @@ export const LinkButton = ({
     <button
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -76,8 +76,8 @@ export const EmbedButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
       }
       // onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -117,8 +117,8 @@ export const ImageButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
       }
       onMouseDown={(event) => {
         event.preventDefault();
@@ -145,8 +145,8 @@ export const CodeBlockButton = ({
     <button
       className={
         isBlockActive(editor, format, "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -178,8 +178,8 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
     <button
       className={
         isBlockActive(editor, "quizBlock", "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -226,8 +226,8 @@ export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode })
     <button
       className={
         isBlockActive(editor, "quizCodeBlock", "type")
-          ? `border-b-2 border-primary-dark-gray`
-          : "border-b-2 border-light-mint"
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {

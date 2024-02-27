@@ -99,7 +99,7 @@ export const CenterCodeBlockSettings = ({
   const [language, setLanguage] = useState(codeBlock.language);
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
-      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8">
+      <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
         <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Codeblock</h2>
         <button
           onClick={() => setShowCodeBlockSettings(false)}
@@ -153,7 +153,7 @@ export const CenterCodeBlockSettings = ({
             );
             setShowCodeBlockSettings(false);
           }}
-          className="my-8 inline-block rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray"
+          className="my-8 inline-block rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray dark:bg-highlight-dark"
         >
           Save
         </button>
