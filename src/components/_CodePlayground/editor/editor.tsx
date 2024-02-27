@@ -1,12 +1,10 @@
 import type { NoSerialize, PropFunction, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { getMonaco, getUri, openFile } from "~/components/editor/monaco";
-import FolderStructure from "~/components/folderStructure/folderStructure";
-import type { WebContainerInterface } from "~/components/serverInterface/serverInterface";
+import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
+import FileStructure from "../fileStructure/fileStructure";
 import type { IStandaloneCodeEditor } from "./monaco";
-import { initMonacoEditor, type ICodeEditorViewState } from "./monaco";
-
+import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
 export default component$((props: Props) => {
   const hostRef = useSignal<Element>();
   const editorStore = useStore<EditorStore>({
@@ -220,26 +218,19 @@ export default component$((props: Props) => {
   //   }
   // });
   return (
-    <>
-      <div>
-        <Helper openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
-        <button class="daisyui-btn" onClick$={saveOpenedFile}>
-          Save
-        </button>
+    <div class="flex">
+      <div class="">
+        <FileStructure
+          entries={props.fileStore.entries}
+          addToStage={addToStage}
+          openStagedFile={openStagedFile}
+        />
       </div>
-      <div class="flex">
-        <div class="p-4">
-          <ul>
-            <FolderStructure
-              addToStage={addToStage}
-              openStagedFile={openStagedFile}
-              entries={props.fileStore.entries}
-            />
-          </ul>
-        </div>
+      <div class="w-[1000px] flex-col">
+        <Helper openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
         <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
       </div>
-    </>
+    </div>
   );
 });
 

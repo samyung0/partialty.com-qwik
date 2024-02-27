@@ -61,7 +61,7 @@ export default component$(() => {
   });
 
   return (
-    <>
+    <section>
       {controlStore.interfaceReady ? (
         <Editor
           interfaceStore={interfaceStore}
@@ -81,7 +81,7 @@ export default component$(() => {
         ) : null}
         <iframe style={{ width: "100%" }} ref={refIframe}></iframe>
       </div>
-    </>
+    </section>
   );
 });
 

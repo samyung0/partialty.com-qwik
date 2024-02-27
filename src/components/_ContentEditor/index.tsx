@@ -44,7 +44,7 @@ import {
 } from "~/components/_ContentEditor/quizCode";
 import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
-import theme from "~/const/theme";
+import type theme from "~/const/theme";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
