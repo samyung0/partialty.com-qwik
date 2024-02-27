@@ -1,32 +1,40 @@
 import type { NoSerialize } from "@builder.io/qwik";
-import { component$, noSerialize, useSignal, useStyles$, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  noSerialize,
+  useContext,
+  useSignal,
+  useStyles$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import xtermStyles from "xterm/css/xterm.css?inline";
 
-interface Props {
-  style?: Record<string, string>;
-  class?: string;
-  terminalStore: TerminalStore;
-}
+import xtermStyles from "xterm/css/xterm.css?inline";
+import { TerminalContext } from "~/routes/[lang.]/(wrapper)/codeplaygroundv2";
 
 export interface TerminalStore {
   fitAddon: NoSerialize<FitAddon> | null;
   terminal: NoSerialize<Terminal> | null;
 }
 
-export default component$((props: Props) => {
+export default component$(() => {
   useStyles$(xtermStyles);
+
+  const terminalStore = useContext(TerminalContext);
+
   const refTerminal = useSignal<HTMLElement>();
 
   useVisibleTask$(async ({ cleanup }) => {
     let resizeListener: any = null;
 
-    const fitAddon = new FitAddon();
+    console.log("Hello");
+
     const terminal = new Terminal({
       convertEol: true,
     });
+    const fitAddon = new FitAddon();
 
     if (refTerminal.value) {
       terminal.loadAddon(fitAddon);
@@ -40,13 +48,13 @@ export default component$((props: Props) => {
       console.error("Unable to initialize terminal!!");
     }
 
-    props.terminalStore.fitAddon = noSerialize(fitAddon);
-    props.terminalStore.terminal = noSerialize(terminal);
+    terminalStore.fitAddon = noSerialize(fitAddon);
+    terminalStore.terminal = noSerialize(terminal);
 
     cleanup(() => {
       if (resizeListener) window.removeEventListener("resize", resizeListener);
     });
   });
 
-  return <div style={props.style} class={"terminal " + props.class} ref={refTerminal}></div>;
+  return <div class="h-[200px]" ref={refTerminal}></div>;
 });

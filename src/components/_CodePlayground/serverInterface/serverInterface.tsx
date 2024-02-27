@@ -48,6 +48,41 @@ export class WebContainerInterface {
     }
   }
 
+  async relocateTerminal(terminal: Terminal) {
+    this.#shellProcess?.kill();
+    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
+    if (!this.#webcontainerInstance) return;
+
+    const shellProcess = await this.#webcontainerInstance.spawn("jsh", {
+      terminal: {
+        // give a bit of spaces
+        cols: terminal.cols - 1,
+        rows: terminal.rows,
+      },
+    });
+    shellProcess.output.pipeTo(
+      new WritableStream({
+        write: (data) => {
+          terminal.write(data);
+        },
+      })
+    );
+    const input = shellProcess.input.getWriter();
+    terminal.onData((data) => {
+      input.write(data);
+    });
+
+    this.#shellProcess = shellProcess;
+    this.#terminal = terminal;
+
+    this.#terminalResize = window.addEventListener("resize", () => {
+      shellProcess.resize({
+        cols: terminal.cols,
+        rows: terminal.rows,
+      });
+    });
+  }
+
   /**
    * I guess node -e blablabla does not work well
    * So instead we create a single file containing all the chokidar codes (compiled by @vercel/ncc)
@@ -101,41 +136,6 @@ export class WebContainerInterface {
     //     },
     //   })
     // )
-  }
-
-  async relocateTerminal(terminal: Terminal) {
-    this.#shellProcess?.kill();
-    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
-    if (!this.#webcontainerInstance) return;
-
-    const shellProcess = await this.#webcontainerInstance.spawn("jsh", {
-      terminal: {
-        // give a bit of spaces
-        cols: terminal.cols - 1,
-        rows: terminal.rows,
-      },
-    });
-    shellProcess.output.pipeTo(
-      new WritableStream({
-        write: (data) => {
-          terminal.write(data);
-        },
-      })
-    );
-    const input = shellProcess.input.getWriter();
-    terminal.onData((data) => {
-      input.write(data);
-    });
-
-    this.#shellProcess = shellProcess;
-    this.#terminal = terminal;
-
-    this.#terminalResize = window.addEventListener("resize", () => {
-      shellProcess.resize({
-        cols: terminal.cols,
-        rows: terminal.rows,
-      });
-    });
   }
 
   #processFileEventsChokidar(events: string[]) {

@@ -14,7 +14,7 @@ interface EntryInterface {
 }
 
 const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, level }) => {
-  const isExpanded = useSignal(true);
+  const isExpanded = useSignal(level > 0 ? false : true);
   const indent = 12 * (level + 1);
 
   return (
@@ -55,8 +55,9 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
           class={`flex cursor-pointer items-center gap-1 hover:bg-dark-down`}
           style={{ paddingLeft: indent }}
           onClick$={async () => {
-            const nonBinaryData = await addToStage(entry);
+            if (entry.isBinary) return;
 
+            const nonBinaryData = await addToStage(entry);
             openStagedFile(entry, nonBinaryData);
           }}
         >
@@ -78,7 +79,7 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
   const selectedEntry = useStore({ level: -1, entryIndex: -1 });
 
   return (
-    <div class="h-full w-[250px] bg-black  text-xs text-background-light-gray">
+    <div class="h-full w-[250px] border border-dark bg-black  text-xs text-background-light-gray">
       {entries.map((entry, idx) => (
         <Entry
           key={`entry-${idx}`}

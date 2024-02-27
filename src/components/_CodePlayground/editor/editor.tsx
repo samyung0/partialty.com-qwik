@@ -1,12 +1,17 @@
 import type { NoSerialize, PropFunction, Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
+import { DisplayOutputContext } from "~/routes/[lang.]/(wrapper)/codeplaygroundv2";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
 import FileStructure from "../fileStructure/fileStructure";
+import Terminal from "../terminal/terminal";
+import FileTab from "./fileTab";
 import type { IStandaloneCodeEditor } from "./monaco";
 import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
+
 export default component$((props: Props) => {
   const hostRef = useSignal<Element>();
+  const outputRef = useContext(DisplayOutputContext);
   const editorStore = useStore<EditorStore>({
     editor: undefined,
     onChangeSubscription: undefined,
@@ -219,46 +224,30 @@ export default component$((props: Props) => {
   // });
   return (
     <div class="flex">
-      <div class="">
+      <div>
         <FileStructure
           entries={props.fileStore.entries}
           addToStage={addToStage}
           openStagedFile={openStagedFile}
         />
       </div>
-      <div class="w-[1000px] flex-col">
-        <Helper openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
-        <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
+      <div class="flex-col">
+        <div class="flex">
+          <div class="w-[1000px] flex-col">
+            <FileTab openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
+            <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
+          </div>
+          <div>
+            <iframe ref={outputRef}></iframe>
+          </div>
+        </div>
+        <div>
+          <Terminal />
+        </div>
       </div>
     </div>
   );
 });
-
-export const Helper = component$(
-  ({
-    openedFiles,
-    openStagedFile,
-  }: {
-    openedFiles: Entry[];
-    openStagedFile: PropFunction<(entry: Entry, nonBinaryData: string) => any>;
-  }) => {
-    return (
-      <>
-        {openedFiles.map((entry) => (
-          <button
-            class="daisyui-btn"
-            key={entry.path}
-            onClick$={() => {
-              if (!entry.isBinary) openStagedFile(entry, entry.data as string);
-            }}
-          >
-            {entry.name}
-          </button>
-        ))}
-      </>
-    );
-  }
-);
 
 interface Props {
   fileStore: FileStore;
