@@ -243,7 +243,7 @@ const app = new Elysia()
               })
             );
           }
-          const user = (await getUser(userId)).rows[0];
+          const user = (await getUser(userId.split("###")[0])).rows[0];
           if (!user)
             return ws.send(
               JSON.stringify({
