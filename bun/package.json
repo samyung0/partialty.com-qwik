@@ -7,24 +7,24 @@
     "bun-types": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.8.0",
     "@elysiajs/cron": "^0.8.0",
     "@getbrevo/brevo": "^2.0.0-beta.4",
-    "@libsql/client": "^0.4.0",
+    "@libsql/client": "0.5.2",
     "@upstash/qstash": "^2.3.0",
-    "cloudinary": "^1.41.3",
-    "elysia": "^0.8.8",
+    "cloudinary": "2.0.1",
+    "elysia": "^0.8.17",
     "elysia-compression": "^0.0.7",
-    "elysia-helmet": "^1.0.1",
+    "elysia-helmet": "^1.0.2",
     "elysia-rate-limit": "^2.0.1",
     "eta": "^3.2.0",
     "jsonwebtoken": "^9.0.2",
     "octokit": "^3.1.2",
     "resend": "^2.1.0",
-    "stripe": "^14.16.0",
+    "stripe": "^14.18.0",
     "uuid": "^9.0.1"
   }
 }

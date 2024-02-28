@@ -4,8 +4,8 @@ import { turso } from "../turso";
 
 const wsContentArr = new Map<string, any>();
 const userIdToAccessibleCourses = new Map<string, string[]>();
-const wsContentArrClear = new Map<string, NodeJS.Timeout>();
-const uuidToUserId = new Map<number, string>();
+const wsContentArrClear = new Map<string, any>();
+const uuidToUserId = new Map<string, string>();
 const uploadUrlMapUserId = new Map<string, { userId: string; filename: string }>();
 const uploadIdMapUploadUrl = new Map<string, string>();
 const courseIdToUserId = new Map<string, [string, string]>();
@@ -814,7 +814,7 @@ const app = new Elysia()
       }
     },
     open(ws) {
-      ws.id = Date.now();
+      ws.id = Date.now().toString();
     },
     close(ws) {
       const userId = uuidToUserId.get(ws.id);
