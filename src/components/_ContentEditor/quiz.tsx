@@ -49,7 +49,7 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
         {children}
         <button
           contentEditable={false}
-          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg"
+          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark"
         >
           Check
         </button>
@@ -128,7 +128,9 @@ export const CenterQuizBlockSettings = ({
               id="QuizTitle"
               name="QuizTitle"
               type="text"
-              className={"block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2"}
+              className={
+                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+              }
             />
           </div>
         </div>
@@ -142,7 +144,9 @@ export const CenterQuizBlockSettings = ({
               value={quizAns}
               onChange={(e) => setQuizAns(e.target.value)}
               id="QuizAnswer"
-              className={"block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2"}
+              className={
+                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+              }
             >
               {Array.from(Array(noOfOptions)).map((_, index) => (
                 <option key={`quizBlockSettingsOption${index}`} value={(index + 1).toString()}>
@@ -241,21 +245,21 @@ export const HoveringQuizBlock = ({
       {isBlockActive(editor, "quizBlock", "type") && (
         <div
           ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start bg-light-yellow shadow-xl"
+          className="absolute z-[60] flex flex-col items-center justify-start shadow-xl"
           role="group"
         >
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => setShowQuizBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Settings
             </button>
             <button
               onClick={() => toggleQuizBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>

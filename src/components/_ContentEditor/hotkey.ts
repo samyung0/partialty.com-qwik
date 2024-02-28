@@ -87,6 +87,42 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
     }
   }
 
+  if (isHotkey("mod+enter", event)) {
+    if (!editor.selection) return;
+    event.preventDefault();
+    const after = Editor.after(editor, editor.selection, { unit: "block" });
+    if (!after) return;
+    Transforms.insertNodes(
+      editor,
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+      {
+        mode: "highest",
+        at: [after.path[0]],
+      }
+    );
+  }
+
+  if (isHotkey("mod+shift+enter", event)) {
+    if (!editor.selection) return;
+    event.preventDefault();
+    const after = Editor.before(editor, editor.selection, { unit: "block" });
+    if (!after) return;
+    Transforms.insertNodes(
+      editor,
+      {
+        type: "paragraph",
+        children: [{ text: "" }],
+      },
+      {
+        mode: "highest",
+        at: [after.path[0]],
+      }
+    );
+  }
+
   onKeyDown(editor, event);
 };
 

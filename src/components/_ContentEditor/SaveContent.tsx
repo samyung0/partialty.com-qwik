@@ -13,6 +13,7 @@ export default ({
   setIsPreviewing,
   saveBeforePreview,
   setSaveBeforePreview,
+  isEditing,
 }: {
   hasChanged: boolean;
   saveChanges: (
@@ -36,6 +37,7 @@ export default ({
   setIsPreviewing: (t: boolean) => any;
   saveBeforePreview: boolean;
   setSaveBeforePreview: (t: boolean) => any;
+  isEditing: boolean;
 }) => {
   const editor = useSlateStatic();
   const [isSaving, setIsSaving] = useState(false);
@@ -61,6 +63,7 @@ export default ({
     }
   }, [saveBeforePreview]);
   const save = async () => {
+    if (!isEditing) return;
     if (!hasChanged || isSaving) return;
 
     setIsSaving(true);
@@ -89,6 +92,7 @@ export default ({
     <button
       disabled={!hasChanged || isSaving}
       onClick={async () => {
+        console.log(editor.children);
         console.log(await serialize(editor.children, true));
         save();
       }}

@@ -66,7 +66,7 @@ export const QuizCodeInput = ({ attributes, children, element }: RenderElementPr
         ref={ref}
       >
         <input
-          className="w-[calc(100%-8px)] whitespace-pre border-inherit bg-inherit px-2 text-inherit outline-none"
+          className="w-[calc(100%-8px)] whitespace-nowrap border-inherit bg-inherit px-2 text-inherit outline-none"
           type="text"
         />
         {children}
@@ -162,7 +162,7 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
         </button>
         <div
           style={{ width: `${width}px` }}
-          className="overflow-hidden whitespace-nowrap rounded-sm border-2 border-primary-dark-gray bg-inherit p-2 align-middle text-inherit [resize:horizontal] dark:border-highlight-dark"
+          className="overflow-hidden whitespace-pre rounded-sm border-2 border-primary-dark-gray bg-inherit p-2 align-middle text-inherit [resize:horizontal] dark:border-highlight-dark"
           ref={ref}
         >
           {isCode ? (
@@ -412,14 +412,15 @@ export const CenterQuizCodeBlockSettings = ({
             <>
               <div className="flex gap-4">
                 <h3 className="font-mosk text-2xl font-bold tracking-wider">Answer</h3>
-
-                <button
-                  type="button"
-                  onClick={() => setShowAst(true)}
-                  className="text-base underline decoration-wavy underline-offset-4"
-                >
-                  Switch to AST
-                </button>
+                {isCode && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAst(true)}
+                    className="text-base underline decoration-wavy underline-offset-4"
+                  >
+                    Switch to AST
+                  </button>
+                )}
               </div>
               <div
                 style={{
@@ -614,21 +615,21 @@ export const HoveringQuizCodeBlock = ({
       {isBlockActive(editor, "quizCodeBlock", "type") && (
         <div
           ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start bg-light-yellow shadow-xl"
+          className="absolute z-[60] flex flex-col items-center justify-start text-inherit shadow-xl"
           role="group"
         >
-          <div className="inline-flex rounded-md" role="group">
+          <div className="inline-flex rounded-md text-inherit" role="group">
             <button
               onClick={() => setShowQuizCodeBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Settings
             </button>
             <button
               onClick={() => toggleQuizCodeBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>

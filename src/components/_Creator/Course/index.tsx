@@ -1013,10 +1013,18 @@ export default component$(
       }
     });
 
-    const handleEditChapter = $((chapterId: string) => {
+    const handleEditChapter = $((chapterId: string, courseId: string) => {
       if (courseIdToEditingUser[chapterId]) {
         return alert("Someone is already editing this chapter!");
       }
+      if (
+        courses[courseId].is_locked &&
+        user.role !== "admin" &&
+        courses[courseId].author !== user.userId
+      ) {
+        return alert("This course is locked!");
+      }
+      window.open(`/contenteditor?courseId=${courseId}&chapterId=${chapterId}`);
     });
 
     return (
@@ -1153,9 +1161,15 @@ export default component$(
                                       />
                                     </span>
                                   )}
-                                  <button class="rounded-lg bg-primary-dark-gray px-6 py-3 text-background-light-gray shadow-md">
+                                  <a
+                                    class="rounded-lg bg-primary-dark-gray px-6 py-3 text-background-light-gray shadow-md"
+                                    href={`/contenteditor?courseId=${currentCourse.id}&chapterId=${
+                                      courses[currentCourse.id].chapter_order[0]
+                                    }`}
+                                    target="_blank"
+                                  >
                                     Edit Content
-                                  </button>
+                                  </a>
                                 </div>
                               )}
                               <button class="p-2">
@@ -1582,7 +1596,12 @@ export default component$(
                                                     </span>
                                                   )}
                                                   <button
-                                                    onClick$={() => handleEditChapter(chapter.id)}
+                                                    onClick$={() =>
+                                                      handleEditChapter(
+                                                        chapter.id,
+                                                        currentCourse.id
+                                                      )
+                                                    }
                                                     class="p-1"
                                                   >
                                                     <FaPenToSquareRegular />

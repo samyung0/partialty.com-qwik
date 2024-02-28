@@ -261,6 +261,10 @@ export default component$(() => {
               audio_track_playback_id: string | undefined,
               audio_track_asset_id: string | undefined
             ) => {
+              if (!isEditing.value) {
+                console.error("Cannot save!");
+                return "";
+              }
               renderedHTML.value = renderedHTML2;
               const ret = (await saveContentServer(
                 chapterId.value,

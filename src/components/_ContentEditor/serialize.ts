@@ -549,8 +549,11 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       letter-spacing: 0.025em;
       margin-top: 1.25em;
       margin-bottom: 1.25em;
+      background-color: inherit;
+    color: inherit;
       ">
-      <h3 style="margin-bottom: 0.75rem; margin-top: 0px;">
+      <h3 style="margin-bottom: 0.75rem; margin-top: 0px; background-color: inherit;
+      color: inherit;">
         ${node.quizTitle}
       </h3>
       <form
@@ -561,10 +564,17 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         flex-direction: column;
         align-items: flex-start;
         gap: 0.75rem;
+        background-color: inherit;
+    color: inherit;
         "
         class="quizBlock"
       >
         ${children}
+        <style>
+        .dark .formCheck {
+          background-color: #2f3e52 !important;
+        }
+        </style>
         <button
           style="
           border-radius: 0.5rem;
@@ -687,7 +697,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         background-color: inherit;
         color: inherit;
         "
-        
       >
         <div
           style="
@@ -697,11 +706,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           vertical-align: middle;
           color: inherit;
           "
-        >
-          ${
-            isCode
-              ? `
-          <style>
+        >${
+          isCode
+            ? `<style>
             pre .quizCodeInput {
               background-color: rgb(247 247 247) !important;
               color: rgb(31 41 55) !important;
@@ -713,27 +720,34 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             pre > code > div:last-child {
               padding-bottom: 0 !important;
             }
-          </style>
-            <pre style="
+          </style><pre style="
             margin: 0;
             width: 100%;
             overflow: auto;
             border-color: rgb(247 247 247);
-            "><code style="border-color: inherit;">${children}</code></pre>
-          `
-              : `
-            <div style="
+            "><code style="border-color: inherit;">${children}</code></pre>`
+            : `
+              <style>
+              .dark .formBody {
+                background-color: #1f2937 !important;
+                border-color: #2f3e52 !important;
+              }
+              </style>
+              <div style="
             margin: 0;
             width: 100%;
             overflow: auto;
             border-color: rgb(31 41 55);
             background-color: rgb(247 247 247);
-            ">
+            " class="formBody">
               ${children}
-            </div>
-          `
-          }
-        </div>
+            </div>`
+        }</div>
+        <style>
+        .dark .formCheck {
+          background-color: #2f3e52 !important;
+        }
+        </style>
         <button
         style="
         border-radius: 0.5rem;

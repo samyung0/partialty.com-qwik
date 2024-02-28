@@ -44,7 +44,7 @@ import {
 } from "~/components/_ContentEditor/quizCode";
 import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
 import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
-import theme from "~/const/theme";
+import type theme from "~/const/theme";
 import type { CloudinaryPublicPic } from "~/types/Cloudinary";
 import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
@@ -359,18 +359,22 @@ const ContentEditorReact = ({
       setIsChangingContent(false);
       return;
     }
-    console.log(normalizedInitialValue);
+    console.log("rendering", normalizedInitialValue);
+    // HistoryEditor.withoutSaving(editor, () =>
+    //   Transforms.insertNodes(
+    //     editor,
+    //     { type: "paragraph", children: [{ text: "-" }] },
+    //     { at: Editor.start(editor, []), mode: "highest" }
+    //   )
+    // );
+    // HistoryEditor.withoutSaving(editor, () =>
+    //   Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
+    // );
     while (editor.children.length > 1) {
       HistoryEditor.withoutSaving(editor, () =>
         Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
       );
     }
-
-    // const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
-    // Transforms.insertNodes(editor, normalizedInitialValue[0], {
-    //   at: beforeEnd,
-    //   mode: "highest",
-    // });
     if (
       normalizedInitialValue.length === 1 &&
       normalizedInitialValue[0].type === "paragraph" &&
@@ -383,16 +387,16 @@ const ContentEditorReact = ({
         const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
         HistoryEditor.withoutSaving(editor, () =>
           Transforms.insertNodes(editor, normalizedInitialValue[i], {
-            at: beforeEnd,
+            at: beforeEnd || [0],
             mode: "highest",
           })
         );
       }
+      // HistoryEditor.withoutSaving(editor, () =>
+      //   Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
+      // );
       HistoryEditor.withoutSaving(editor, () =>
-        Transforms.removeNodes(editor, { at: Editor.start(editor, []) })
-      );
-      HistoryEditor.withoutSaving(editor, () =>
-        Transforms.removeNodes(editor, { at: Editor.end(editor, []) })
+        Transforms.removeNodes(editor, { at: Editor.end(editor, []), mode: "highest" })
       );
     }
 
@@ -456,7 +460,7 @@ const ContentEditorReact = ({
                 setChangingValue(changingValue + 1);
               }}
               editor={editor}
-              initialValue={normalizedInitialValue}
+              initialValue={[{ type: "paragraph", children: [{ text: "" }] }]}
             >
               <SaveContent
                 setSaveBeforePreview={setSaveBeforePreview}
@@ -467,6 +471,7 @@ const ContentEditorReact = ({
                 hasChanged={hasChanged}
                 saveChanges={saveChanges}
                 chapterName={chapterName}
+                isEditing={isEditing}
               />
               {shikiji && <SetNodeToDecorations shikiji={shikiji} />}
               {showAudioChooser && (
@@ -592,6 +597,82 @@ const ContentEditorReact = ({
                 customer@partialty.com
               </a>
             </p>
+            <br />
+            <div className="mx-auto flex flex-col items-start gap-4">
+              <div className="flex gap-4">
+                <p className="w-[200px]">
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Ctrl
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Z
+                  </kbd>{" "}
+                  :
+                </p>
+                <p>Undo</p>
+              </div>
+              <div className="flex gap-4">
+                <p className="w-[200px]">
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Ctrl
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Shift
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Z
+                  </kbd>{" "}
+                  :
+                </p>
+                <p>Redo</p>
+              </div>
+              <div className="flex gap-4">
+                <p className="w-[200px]">
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Shift
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Enter
+                  </kbd>{" "}
+                  :
+                </p>
+                <p>Soft Break</p>
+              </div>
+              <div className="flex gap-4">
+                <p className="w-[200px]">
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Ctrl
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Enter
+                  </kbd>{" "}
+                  :
+                </p>
+                <p>Hard Break (bottom)</p>
+              </div>
+              <div className="flex gap-4">
+                <p className="w-[200px]">
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Ctrl
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Shift
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
+                    Enter
+                  </kbd>{" "}
+                  :
+                </p>
+                <p>Hard Break (top)</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

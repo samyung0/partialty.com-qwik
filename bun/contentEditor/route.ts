@@ -40,9 +40,15 @@ const getUser = (id: string) =>
     args: [id],
   });
 
-const getContentIndex = (id: string) =>
+const getContentIndexAuthor = (id: string) =>
   turso.execute({
     sql: "SELECT author FROM content_index WHERE id = ? LIMIT 1",
+    args: [id],
+  });
+
+const getContentIndexLocked = (id: string) =>
+  turso.execute({
+    sql: "SELECT author, is_locked FROM content_index WHERE id = ? LIMIT 1",
     args: [id],
   });
 
@@ -234,6 +240,34 @@ const app = new Elysia()
               JSON.stringify({
                 type: "openContentError",
                 message: "User ID, Content ID or Avatar url is empty!",
+              })
+            );
+          }
+          const user = (await getUser(userId)).rows[0];
+          if (!user)
+            return ws.send(
+              JSON.stringify({
+                type: "openContentError",
+                message: "Badly formatted request",
+              })
+            );
+          const isLocked = (await getContentIndexLocked(courseId)).rows[0];
+          if (!isLocked)
+            return ws.send(
+              JSON.stringify({
+                type: "openContentError",
+                message: "Badly formatted request",
+              })
+            );
+          if (
+            (isLocked.author as string) !== userId &&
+            !!isLocked.is_locked &&
+            user.role !== "admin"
+          ) {
+            return ws.send(
+              JSON.stringify({
+                type: "openContentError",
+                message: "Content is locked!",
               })
             );
           }
@@ -549,7 +583,7 @@ const app = new Elysia()
           if (!contentId || !courseId || !userId) {
             return;
           }
-          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
@@ -585,7 +619,7 @@ const app = new Elysia()
           if (!_contentId || !courseId || !userId) {
             return;
           }
-          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
@@ -624,7 +658,7 @@ const app = new Elysia()
           if (!contentId || !courseId || !userId) {
             return;
           }
-          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }
@@ -651,7 +685,7 @@ const app = new Elysia()
           if (!_contentId || !courseId || !userId) {
             return;
           }
-          const contentIndex = (await getContentIndex(courseId)).rows[0];
+          const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
             return;
           }

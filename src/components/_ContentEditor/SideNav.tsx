@@ -1,16 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { NoSerialize, QRL, Signal } from "@builder.io/qwik";
-import { $, component$, useComputed$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { server$, useNavigate } from "@builder.io/qwik-city";
+import {
+  $,
+  component$,
+  useComputed$,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
+import { server$, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { isServer } from "@builder.io/qwik/build";
 import { IoCaretDown } from "@qwikest/icons/ionicons";
 import LoadingSVG from "~/components/LoadingSVG";
-import { useAccessibleCourseWriteResolved } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
+import {
+  useAccessibleCourseWrite,
+  useAccessibleCourseWriteResolved,
+} from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
 import { content, type Content } from "../../../drizzle_turso/schema/content";
 
 import { eq } from "drizzle-orm";
 import SmallNav from "~/components/SmallNav";
 import { getChapters } from "~/components/_Creator/Course";
+import { useVerifyChapter } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor/layout";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 export { getChapters };
@@ -45,8 +57,13 @@ export default component$(
     chapterName: Signal<string>;
     timeStamp: Signal<string>;
   }) => {
+    const initialCourseId = useLocation().url.searchParams.get("courseId");
+    const initialChapterId = useLocation().url.searchParams.get("chapterId");
+    const verifyChapter = useVerifyChapter();
+
     const user = useUserLoader().value;
     const nav = useNavigate();
+    const userAccessibleCourseWrite = useAccessibleCourseWrite();
     const userAccessibleCourseWriteResolved = useAccessibleCourseWriteResolved();
     const courses = useStore(() =>
       Object.fromEntries(
@@ -157,6 +174,20 @@ export default component$(
             clearTimeout(isRequestingChapterTimeout.value);
             return;
           }
+          if (d.type === "forceCloseContent") {
+            alert("Owner locked the content!");
+            if (user.role === "admin" || courses[courseId.value].author === user.userId) return;
+            contentWS.value?.send(
+              JSON.stringify({
+                type: "closeContent",
+                userId: user.userId + "###" + timeStamp.value,
+                courseId: courseId.value,
+                contentId: chapterId.value,
+              })
+            );
+            isEditing.value = false;
+            return;
+          }
         } catch (e) {
           console.error(e);
         }
@@ -177,6 +208,67 @@ export default component$(
       courses[id].chapters = chapters;
       courses[id].isLoadingChapter = false;
       courses[id].hasLoadedChapter = true;
+    });
+
+    useVisibleTask$(async ({ track }) => {
+      track(contentWS);
+      if (!verifyChapter) return;
+      if (!initialCourseId || !initialChapterId || !courses[initialCourseId]) return;
+      if (!contentWS.value) return;
+
+      if (
+        (userAccessibleCourseWrite.value[0] !== "*" &&
+          !userAccessibleCourseWrite.value.includes(initialCourseId)) ||
+        (courses[initialCourseId].is_locked &&
+          user.userId !== courses[initialCourseId].author &&
+          user.role !== "admin")
+      )
+        return alert("No permission to edit the course!");
+
+      if (!courses[initialCourseId].is_single_page) {
+        courses[initialCourseId].isOpen = true;
+        refreshChapters(initialCourseId);
+      }
+      isRequestingChapterCallback.value = $(async () => {
+        const val = (await getChapterSingle(initialChapterId))[0];
+        contentEditorValue.value = val.content_slate ? JSON.parse(val.content_slate) : undefined;
+        renderedHTML.value = val.renderedHTML || undefined;
+        chapterId.value = initialChapterId;
+        courseId.value = initialCourseId;
+        if (val.audio_track_asset_id) audioAssetId.value = val.audio_track_asset_id;
+        isEditing.value = true;
+        isRequestingChapter.value = "";
+        chapterName.value = val.name;
+
+        if (oldChapter.value)
+          contentWS.value?.send(
+            JSON.stringify({
+              type: "closeContent",
+              userId: user.userId,
+              courseId: initialCourseId,
+              contentId: oldChapter.value,
+            })
+          );
+        oldChapter.value = initialChapterId;
+      });
+
+      contentWS.value!.send(
+        JSON.stringify({
+          type: "openContent",
+          userId: user.userId + "###" + timeStamp.value,
+          contentId: initialChapterId,
+          courseId: initialCourseId,
+          avatar_url: user.avatar_url,
+        })
+      );
+
+      isRequestingChapter.value = initialChapterId;
+
+      isRequestingChapterTimeout.value = setTimeout(() => {
+        alert("Server Timeout! Server might be down!");
+        isRequestingChapter.value = "";
+        isRequestingChapterCallback.value = undefined;
+      }, 7000);
     });
 
     return (
@@ -203,6 +295,14 @@ export default component$(
                             if (isRequestingChapter.value !== "") {
                               return;
                             }
+                            if (
+                              (userAccessibleCourseWrite.value[0] !== "*" &&
+                                !userAccessibleCourseWrite.value.includes(currentCourse.id)) ||
+                              (courses[currentCourse.id].is_locked &&
+                                user.userId !== courses[currentCourse.id].author &&
+                                user.role !== "admin")
+                            )
+                              return alert("No permission to edit the course!");
                             const chapters = await getChapters(currentCourse.id);
                             if (chapters.length === 0)
                               return alert(
@@ -343,6 +443,16 @@ export default component$(
                                           if (isRequestingChapter.value !== "") {
                                             return;
                                           }
+                                          if (
+                                            (userAccessibleCourseWrite.value[0] !== "*" &&
+                                              !userAccessibleCourseWrite.value.includes(
+                                                currentCourse.id
+                                              )) ||
+                                            (courses[currentCourse.id].is_locked &&
+                                              user.userId !== courses[currentCourse.id].author &&
+                                              user.role !== "admin")
+                                          )
+                                            return alert("No permission to edit the course!");
                                           if (oldChapter.value) {
                                             if (
                                               hasChanged.value &&
