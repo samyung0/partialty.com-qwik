@@ -8,7 +8,7 @@ import Dragndrop from "~/components/_Signup/dragndrop";
 import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
 
 import LoadingSVG from "~/components/LoadingSVG";
-import type Lang from "../../../lang";
+import Lang from "../../../lang";
 import { displayNamesLang } from "../../../lang";
 
 export default component$(() => {
@@ -165,7 +165,7 @@ export default component$(() => {
                 <option value="dark">Dark</option>
               </select>
             </div> */}
-            <div class="flex flex-col gap-2">
+            {/* <div class="flex flex-col gap-2">
               <label for="lang" class="text-md cursor-pointer font-bold">
                 Preferred Language
               </label>
@@ -184,7 +184,7 @@ export default component$(() => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <button
               disabled={isUpdating.value}
               class="self-start rounded-xl bg-primary-dark-gray px-6 py-3 text-white shadow-xl dark:bg-highlight-dark"
