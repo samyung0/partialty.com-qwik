@@ -3,10 +3,6 @@ import generateJWTForGithub from "./generateJWTForGithub";
 import passwordToHash from "./passwordToHash";
 import verifyHash from "./verifyHash";
 
-import { createAppAuth } from "@octokit/auth-app";
-import path from "node:path";
-import { Octokit } from "octokit";
-
 const app = new Elysia().group("/auth", (app) => {
   return app
     .post(

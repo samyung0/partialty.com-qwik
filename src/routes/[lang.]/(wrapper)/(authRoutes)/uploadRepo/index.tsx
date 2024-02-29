@@ -1,13 +1,5 @@
-import {
-  $,
-  component$,
-  useContext,
-  useSignal,
-  useVisibleTask$,
-  type NoSerialize,
-} from "@builder.io/qwik";
+import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Link, z } from "@builder.io/qwik-city";
-import { globalContext } from "~/context/globalContext";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import getToken from "~/utils/github/getToken";
 import { test, uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";

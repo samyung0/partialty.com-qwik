@@ -1,12 +1,4 @@
-FROM ubuntu
-
-#Install git
-RUN apt-get update      
-RUN apt-get install -y git
-RUN apt-get install -y curl
-RUN apt-get install -y unzip
-RUN curl -fsSL https://bun.sh/install | bash
-RUN source /root/.bashrc
+FROM oven/bun
 
 WORKDIR /usr/src/app
 
