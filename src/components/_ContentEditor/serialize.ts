@@ -301,9 +301,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   };background-color:inherit;color:inherit;` as const;
   switch (node.type) {
     case "paragraph":
-      return `<p style="${style}">
-          ${children}
-        </p>`;
+      return `<p style="${style}">${children}</p>`;
     case "block-quote":
       return `<blockquote style="${style}">
           ${children}
@@ -864,9 +862,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         /></div></div>`;
     }
     default:
-      return `<p style="${style}">
-          ${children}
-        </p>`;
+      return `<p style="${style}">${children}</p>`;
   }
 };
 

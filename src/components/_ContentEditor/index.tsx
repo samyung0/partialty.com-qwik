@@ -561,7 +561,7 @@ const ContentEditorReact = ({
             <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
               <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
-              <div className="h-[90vh] overflow-auto">
+              <div className="overflow-auto" style={{ height: audioTrack ? "90vh" : "100vh" }}>
                 <Prose children={<></>} innerHTML={renderedHTML || ""} />
               </div>
               <SyncAudio audioTrack={audioTrack} />

@@ -9,13 +9,16 @@ import type { CustomMarkFormat } from "~/components/_ContentEditor/types";
 export const MarkButton = ({
   format,
   children,
+  title
 }: {
   format: CustomMarkFormat;
   children: React.ReactNode;
+  title?: string
 }) => {
   const editor = useSlate();
   return (
     <button
+      title={title}
       className={
         isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint`
@@ -46,6 +49,7 @@ export const BackgroundMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
+      title={"Background"}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
@@ -108,6 +112,7 @@ export const UnderlineMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
+      title={"Underline"}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
@@ -170,6 +175,7 @@ export const ColorMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
+      title={"Color"}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
@@ -242,6 +248,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
   const [showSelection, setShowSelection] = useState(false);
   return (
     <div
+      title={"Font"}
       className={
         (isMarkActive(editor, "fontSize") || isMarkActive(editor, "fontFamily")
           ? `border-b-2 border-black dark:border-light-mint `

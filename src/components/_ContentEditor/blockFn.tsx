@@ -15,13 +15,16 @@ import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/_ContentEditor/types"
 export const BlockButton = ({
   format,
   children,
+  title
 }: {
   format: BlockFormat;
   children: React.ReactNode;
+  title?: string
 }) => {
   const editor = useSlate();
   return (
     <button
+      title={title}
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -40,7 +43,7 @@ export const BlockButton = ({
 
 export const LinkButton = ({
   format,
-  children,
+  children
 }: {
   format: BlockFormat;
   children: React.ReactNode;
@@ -48,6 +51,7 @@ export const LinkButton = ({
   const editor = useSlate();
   return (
     <button
+      title={"Link"}
       className={
         isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -74,6 +78,7 @@ export const EmbedButton = ({
   const editor = useSlate();
   return (
     <button
+      title={"Embed"}
       className={
         isBlockActive(editor, format, "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -115,6 +120,7 @@ export const ImageButton = ({
   const editor = useSlate();
   return (
     <button
+      title={"Image"}
       className={
         isBlockActive(editor, format, "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -143,6 +149,7 @@ export const CodeBlockButton = ({
   const editor = useSlate();
   return (
     <button
+      title={"Code Block"}
       className={
         isBlockActive(editor, format, "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -176,6 +183,7 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
   const editor = useSlate();
   return (
     <button
+      title={"Multiple Choice Quiz"}
       className={
         isBlockActive(editor, "quizBlock", "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
@@ -224,6 +232,7 @@ export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode })
   const editor = useSlate();
   return (
     <button
+      title={"Quiz (Code/Fill in the Blanks)"}
       className={
         isBlockActive(editor, "quizCodeBlock", "type")
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `

@@ -66,7 +66,7 @@ const ColorChooser = ({
     setAnimateState(!!mark.animate);
   }, [JSON.stringify(mark)]);
   return (
-    <div className="flex cursor-context-menu flex-col rounded-md border-2 border-primary-dark-gray bg-white dark:bg-primary-dark-gray ">
+    <div className="flex cursor-context-menu flex-col rounded-md border-2 border-primary-dark-gray bg-white dark:border-disabled-dark dark:bg-primary-dark-gray">
       <ul className="grid grid-cols-6 gap-3 p-6">
         {Object.entries(PredefinedColorList).map((color) => (
           <li

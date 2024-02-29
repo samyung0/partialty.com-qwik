@@ -21,7 +21,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
     <section
       // SHOULD add a background
       className="prose mx-auto h-[80vh] 
-  max-h-[80vh] w-full max-w-[unset] overflow-auto bg-background-light-gray text-lg
+  max-h-[80vh] w-full max-w-[unset] overflow-auto bg-background-light-gray py-12 text-lg
   prose-a:decoration-wavy prose-a:underline-offset-4
   prose-blockquote:pr-[1em]
   prose-strong:tracking-wider
