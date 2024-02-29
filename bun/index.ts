@@ -17,15 +17,6 @@ const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost
 import simpleGit from "simple-git"
 import { readdirSync } from "node:fs";
 
-
-simpleGit()
-.clone(`https://github.com/samyung0/Template_react_1`)
-.then(async () => {
-     const dir = readdirSync("./Template_react_1")
-     console.log(dir)
-   })
-   .catch((err) => console.error('failed: ', err));
-
 const app = new Elysia()
   // .use(ip())
   .use(
