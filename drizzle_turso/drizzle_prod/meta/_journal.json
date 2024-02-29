@@ -316,6 +316,20 @@
       "when": 1708954822192,
       "tag": "0044_fast_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1709191833366,
+      "tag": "0045_spicy_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "5",
+      "when": 1709192007708,
+      "tag": "0046_curved_blob",
+      "breakpoints": true
     }
   ]
 }

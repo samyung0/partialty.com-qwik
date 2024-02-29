@@ -1,13 +1,23 @@
-import { $, component$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useContext,
+  useSignal,
+  useVisibleTask$,
+  type NoSerialize,
+} from "@builder.io/qwik";
 import { Link, z } from "@builder.io/qwik-city";
 import { globalContext } from "~/context/globalContext";
+import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import getToken from "~/utils/github/getToken";
 import { test, uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
 
+export { getToken };
+
 export default component$(() => {
+  const user = useUserLoader().value;
   const message = useSignal("");
   const imgRef = useSignal<any>();
-
-  const context = useContext(globalContext);
 
   useVisibleTask$(() => {
     // console.log(context);
@@ -51,8 +61,10 @@ export default component$(() => {
     });
   });
 
-  useVisibleTask$(() => {
-    test();
+  useVisibleTask$(async () => {
+    const token = await getToken(user.userId);
+    if (!token) return;
+    test(token);
   });
 
   return (

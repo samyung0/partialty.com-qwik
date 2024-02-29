@@ -40,7 +40,7 @@ export const protectedRoutes: {
   {
     path: "/uploadRepo",
     authRolesPermitted: ROLES_PERITTED_TO_UPLOAD_R2,
-    redirectTo: "/login/",
+    redirectTo: "/unauth/",
   },
 
   {

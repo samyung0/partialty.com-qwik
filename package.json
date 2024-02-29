@@ -142,6 +142,7 @@
     "fuse.js": "^7.0.0",
     "image-extensions": "^1.1.0",
     "is-hotkey": "^0.2.0",
+    "isomorphic-git": "^1.25.6",
     "js-video-url-parser": "^0.5.1",
     "jsonwebtoken": "^9.0.2",
     "lodash.isequal": "^4.5.0",

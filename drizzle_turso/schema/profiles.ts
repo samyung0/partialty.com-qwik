@@ -16,9 +16,9 @@ export const profiles = sqliteTable("profiles", {
   google_id: text("google_id"),
   nickname: text("nickname").notNull(),
   email_verified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
-  github_username: text("github_username"),
   accessible_courses: text("accessible_courses"),
   accessible_courses_read: text("accessible_courses_read"),
+  github_installation_id: text("github_installation_id")
 });
 
 export type Profiles = InferSelectModel<typeof profiles>;

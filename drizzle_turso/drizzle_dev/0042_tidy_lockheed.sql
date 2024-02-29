@@ -1,0 +1,1 @@
+ALTER TABLE profiles ADD `github_installation_id` text;

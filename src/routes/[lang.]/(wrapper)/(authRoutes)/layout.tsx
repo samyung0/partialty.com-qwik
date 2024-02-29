@@ -28,7 +28,8 @@ export const useUserLoader = routeLoader$(async (event) => {
   try {
     session = await authRequest.validate();
   } catch (e) {
-    /* empty */
+    console.error(e);
+    throw event.redirect(302, "/");
   }
 
   console.log("Time to validate session: ", performance.now() - time1);

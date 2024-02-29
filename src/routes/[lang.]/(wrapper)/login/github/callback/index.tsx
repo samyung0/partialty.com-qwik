@@ -33,7 +33,6 @@ export const onGet: RequestHandler = async (request) => {
         nickname: githubUser.login,
         email_verified: false,
         github_id: String(githubUser.id),
-        github_username: githubUser.login,
       };
       const emails = await fetch("https://api.github.com/user/emails", {
         headers: {
@@ -57,7 +56,7 @@ export const onGet: RequestHandler = async (request) => {
             await createKey(user.userId);
             await drizzle
               .update(profiles)
-              .set({ github_id: String(githubUser.id), github_username: githubUser.login })
+              .set({ github_id: String(githubUser.id) })
               .where(eq(profiles.id, user.userId));
             return user;
           } else {

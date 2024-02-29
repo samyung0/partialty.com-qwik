@@ -75,7 +75,6 @@ const _lucia = (prodInDev: boolean = false) =>
         google_id: user.google_id,
         nickname: user.nickname,
         email_verified: !!user.email_verified,
-        github_username: user.github_username,
         accessible_courses: user.accessible_courses,
         accessible_courses_read: user.accessible_courses_read,
       } as Omit<Profiles, "id">;
