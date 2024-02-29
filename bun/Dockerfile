@@ -3,13 +3,12 @@ FROM ubuntu
 #Install git
 RUN apt-get update      
 RUN apt-get install -y git
-RUN apt-get install -y curl
-RUN apt-get install -y unzip
-RUN curl -fsSL https://bun.sh/install | bash
+
+FROM oven/bun
 
 WORKDIR /usr/src/app
 
-COPY package*.json bun.lockb ./
+COPY package*.json bun.lockb ./ 
 RUN bun install
 COPY . .
 
