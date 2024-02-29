@@ -118,7 +118,9 @@ export const CenterCodeBlockSettings = ({
               id="FileName"
               name="FileName"
               type="text"
-              className={"block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2"}
+              className={
+                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+              }
             />
           </div>
         </div>
@@ -132,7 +134,9 @@ export const CenterCodeBlockSettings = ({
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               id="CodeLanguage"
-              className={"block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2"}
+              className={
+                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+              }
             >
               {languageList.map((language) => (
                 <option key={`codeBlockSettings${language}`} value={language}>
@@ -231,21 +235,21 @@ export const HoveringCodeBlock = ({
       {isBlockActive(editor, "codeBlock", "type") && (
         <div
           ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start bg-light-yellow shadow-xl"
+          className="absolute z-[60] flex flex-col items-center justify-start shadow-xl"
           role="group"
         >
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => setShowCodeBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Settings
             </button>
             <button
               onClick={() => toggleCodeBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>

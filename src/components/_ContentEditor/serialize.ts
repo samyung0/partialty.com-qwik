@@ -311,7 +311,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "infoBlock":
       return `<blockquote
           style="
-            ${style}
+
             border-color: #72cada;
             background-color: #e3f4f8;
             font-style: normal;
@@ -329,7 +329,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "cautionBlock":
       return `<blockquote
               style="
-                ${style}
                 border-color: #fcd34d;
                 background-color: #fef6db;
                 font-style: normal;
@@ -347,7 +346,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "warningBlock":
       return `<blockquote
                   style="
-                    ${style}
                     border-color: #ff6347;
                     background-color: #ffe0da;
                     font-style: normal;
@@ -438,7 +436,12 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         gap: 0.5rem
       "
       >
-        <div style="
+      <style>.dark .embedContainer{
+        border-color: #141a23 !important; 
+      }.dark .embedContainer > div:first-child {
+        background-color: #2f3e52 !important;
+      }</style>
+        <div class="embedContainer" style="
         width: 100%;
         border-width: 2px;
         border-color: rgb(114 202 218);

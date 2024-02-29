@@ -29,23 +29,34 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       );
     case "infoBlock":
       return (
-        <blockquote
-          style={{
-            ...style,
-            borderColor: "#72cada",
-            backgroundColor: "#e3f4f8",
-            fontStyle: "normal",
-            paddingTop: "1em",
-            paddingBottom: "1em",
-            borderRadius: "6px",
-          }}
-          {...attributes}
-        >
-          <div style={{ paddingBottom: "1em" }}>
-            <Lightbulb color={"#72cada"} size={24} />
-          </div>
-          {children}
-        </blockquote>
+        <>
+          {/* <style dangerouslySetInnerHTML={{ __html: `
+          .dark .infoBlock, .dark .infoBlock > div:first-child {
+            background-color: #2f3e52 !important;
+            border-color: #141a23 !important;
+            color: #f7f7f7 !important;
+          }
+        `}}>
+        </style> */}
+          <blockquote
+            style={{
+              ...style,
+              borderColor: "#72cada",
+              backgroundColor: "#e3f4f8",
+              fontStyle: "normal",
+              paddingTop: "1em",
+              paddingBottom: "1em",
+              borderRadius: "6px",
+            }}
+            className="infoBlock"
+            {...attributes}
+          >
+            <div style={{ paddingBottom: "1em", color: "#72cada" }}>
+              <Lightbulb size={24} />
+            </div>
+            {children}
+          </blockquote>
+        </>
       );
     case "cautionBlock":
       return (

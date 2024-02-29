@@ -5,5 +5,5 @@ import easeInSine from "~/utils/transition/easeInSine";
 export default {
   easeInSine,
   easeInQuart,
-  easeInQuint
+  easeInQuint,
 } as const;

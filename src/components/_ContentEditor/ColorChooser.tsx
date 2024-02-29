@@ -54,7 +54,6 @@ const ColorChooser = ({
   canAnimate?: boolean;
   removeColor: () => void;
 }) => {
-  const [showCustomize, setShowCustomize] = useState(false);
   const [syncTime, setSyncTime] = useState(!!mark.sync);
   const [timeStamp, setTimeStampState] = useState(mark.timeStamp || 0);
   const [animate, setAnimateState] = useState(!!mark.animate);
@@ -66,13 +65,13 @@ const ColorChooser = ({
     setTimeStampState(mark.timeStamp || 0);
     setAnimateState(!!mark.animate);
   }, [JSON.stringify(mark)]);
-  return !showCustomize ? (
-    <div className="flex cursor-context-menu flex-col rounded-md border-2 border-primary-dark-gray bg-white">
+  return (
+    <div className="flex cursor-context-menu flex-col rounded-md border-2 border-primary-dark-gray bg-white dark:bg-primary-dark-gray ">
       <ul className="grid grid-cols-6 gap-3 p-6">
         {Object.entries(PredefinedColorList).map((color) => (
           <li
             key={`ColorChooser${color[1]}`}
-            className="h-[30px] w-[30px] rounded-xl"
+            className="h-[30px] w-[30px] rounded-xl dark:border-2 dark:border-highlight-dark"
             style={{ background: color[1] }}
           >
             <button onClick={() => setColor(color[1])} className="h-full w-full">
@@ -81,6 +80,23 @@ const ColorChooser = ({
           </li>
         ))}
       </ul>
+      <div className="relative flex items-center px-4">
+        <span className="inline-block h-[2px] flex-1 bg-black/10 dark:bg-background-light-gray"></span>
+        <span className="px-4 tracking-wide">or</span>
+        <span className="inline-block h-[2px] flex-1 bg-black/10 dark:bg-background-light-gray"></span>
+      </div>
+      <div className="flex flex-col items-center justify-center gap-4 rounded-md border-2 border-primary-dark-gray bg-white p-6 dark:bg-primary-dark-gray">
+        <div className="flex items-center justify-center gap-3">
+          <label className="tracking-wide" htmlFor="underlineColorCustomize">
+            Customize:
+          </label>
+          <input
+            onChange={(e) => setColor(e.target.value)}
+            id="underlineColorCustomize"
+            type="color"
+          />
+        </div>
+      </div>
       {canSync && (
         <div className="mb-4 flex flex-col items-center justify-center gap-2">
           <div className="flex items-center justify-center gap-2 p-2">
@@ -123,7 +139,7 @@ const ColorChooser = ({
                     type="number"
                     step="1"
                     min="0"
-                    className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
+                    className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none dark:bg-highlight-dark dark:text-background-light-gray [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
                     id="ColorChooserTimeStamp3"
                     value={timeStamp}
                     onChange={(e) => {
@@ -197,47 +213,10 @@ const ColorChooser = ({
           </div>
         </div>
       )}
-      <div className="relative flex items-center px-4">
-        <span className="inline-block h-[2px] flex-1 bg-black/10"></span>
-        <span className="px-4 tracking-wide">or</span>
-        <span className="inline-block h-[2px] flex-1 bg-black/10"></span>
-      </div>
-      <div className="p-4 pb-0 text-center">
-        <button
-          onClick={() => setShowCustomize(true)}
-          className="p-1 tracking-wide underline decoration-wavy underline-offset-4"
-        >
-          Customize
-        </button>
-      </div>
+
       <div className="p-4 text-center">
         <button onClick={() => removeColor()} className="p-1">
           <Trash size={20} />
-        </button>
-      </div>
-    </div>
-  ) : (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-md border-2 border-primary-dark-gray bg-white p-6">
-      <div className="flex items-center justify-center gap-3">
-        <label className="tracking-wide" htmlFor="underlineColorCustomize">
-          Color:
-        </label>
-        <input
-          onChange={(e) => setColor(e.target.value)}
-          id="underlineColorCustomize"
-          type="color"
-        />
-      </div>
-      <div className="relative flex w-full items-center px-4">
-        <span className="block h-[2px] flex-1 bg-black/10"> </span>
-      </div>
-
-      <div className="text-center">
-        <button
-          onClick={() => setShowCustomize(false)}
-          className="p-1 tracking-wide underline decoration-wavy underline-offset-4"
-        >
-          Back
         </button>
       </div>
     </div>

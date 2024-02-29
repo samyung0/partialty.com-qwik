@@ -1,6 +1,7 @@
 import type { NoSerialize, Signal } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
 
+import { LuExternalLink } from "@qwikest/icons/lucide";
 import Nav from "~/components/Nav";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import type { ContentCategory } from "../../../drizzle_turso/schema/content_category";
@@ -74,6 +75,19 @@ export default component$(
                   </button>
                 </div>
               ))}
+              <div class="relative flex h-full gap-1">
+                <div class={"h-full w-[5px] rounded-lg"}></div>
+                <a
+                  class={`flex w-full items-center gap-2 rounded-md bg-light-yellow p-2 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150`}
+                  href="/contenteditor/"
+                  target="_blank"
+                >
+                  Content Editor
+                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                    <LuExternalLink />
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
           <div class="w-full ">

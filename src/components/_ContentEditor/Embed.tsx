@@ -105,13 +105,17 @@ export const HoveringEmbed = ({
   return (
     <>
       {isBlockActive(editor, "embed", "type") && (
-        <div ref={ref} className="absolute z-[60] bg-light-yellow/50 shadow-xl" role="group">
+        <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
-              <div className="flex gap-4 border-l border-r border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900">
-                <Link2 className="invert-[0.8]" strokeWidth={1.5} size={20} />
+              <div className="flex gap-4 border-l border-r border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark ">
+                <Link2
+                  className="invert-[0.8] dark:text-background-light-gray dark:invert-0"
+                  strokeWidth={1.5}
+                  size={20}
+                />
                 <input
-                  className="bg-light-yellow/50 outline-none"
+                  className="bg-light-yellow/50 outline-none dark:bg-highlight-dark"
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -135,21 +139,21 @@ export const HoveringEmbed = ({
                     ReactEditor.deselect(editor);
                   }}
                   type="button"
-                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
+                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <Check strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setUrl(initialUrl.current)}
                   type="button"
-                  className="flex flex-1 justify-center border-b border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
+                  className="flex flex-1 justify-center border-b border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <RotateCcw strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setLinkOpen(false)}
                   type="button"
-                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
+                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <ArrowLeft strokeWidth={2} size={15} />
                 </button>
@@ -160,14 +164,14 @@ export const HoveringEmbed = ({
               <button
                 onClick={() => setLinkOpen(true)}
                 type="button"
-                className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
+                className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
               >
                 Edit Link
               </button>
               <button
                 onClick={() => removeEmbed(editor)}
                 type="button"
-                className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow focus:z-10"
+                className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
               >
                 <Trash strokeWidth={1.5} size={20} />
               </button>
@@ -233,8 +237,8 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
         className="flex w-full flex-col items-center justify-center gap-2"
         contentEditable={false}
       >
-        <div className="w-full border-2 border-sea object-contain">
-          <div className="bg-light-sea p-2 font-mosk text-sm font-bold tracking-wide">
+        <div className="w-full border-2 border-sea object-contain dark:border-disabled-dark">
+          <div className="bg-light-sea p-2 font-mosk text-sm font-bold tracking-wide dark:bg-highlight-dark">
             {embedType}
           </div>
           <div className="aspect-video w-full">

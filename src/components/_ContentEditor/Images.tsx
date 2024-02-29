@@ -112,7 +112,7 @@ export const HoveringImage = ({
   return (
     <>
       {isBlockActive(editor, "image", "type") && (
-        <div ref={ref} className="absolute z-[60] bg-light-yellow shadow-xl" role="group">
+        <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => {
@@ -120,21 +120,21 @@ export const HoveringImage = ({
                 setShowImageChooser(true);
               }}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-s-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Edit Image
             </button>
             <button
               onClick={() => window.open(initialUrl.current)}
               type="button"
-              className="border-b border-t border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="border-b border-t border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <ExternalLink strokeWidth={1.5} size={20} />
             </button>
             <button
               onClick={() => toggleImageAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-gray-900 hover:bg-yellow"
+              className="rounded-e-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>

@@ -252,7 +252,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
     >
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
-        <div className="flex cursor-context-menu flex-col gap-3 rounded-md border-2 border-primary-dark-gray bg-white p-3">
+        <div className="flex cursor-context-menu flex-col gap-3 rounded-md border-2 border-primary-dark-gray bg-white p-3 dark:bg-primary-dark-gray">
           <div className="flex gap-3">
             <div className="flex cursor-pointer items-center justify-center gap-2 p-2">
               <p>Font Size: </p>
@@ -263,7 +263,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 type="number"
                 step="1"
                 min="0"
-                className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
+                className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none dark:bg-highlight-dark dark:text-background-light-gray [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
                 id="ColorChooserTimeStamp"
                 value={fontSize}
                 onChange={(e) => {
@@ -325,7 +325,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 </span>
                 {showSelection && (
                   <ul
-                    className="absolute left-0 top-[calc(100%+8px)] flex w-[120px] flex-col bg-white text-sm tracking-wide"
+                    className="absolute left-0 top-[calc(100%+8px)] flex w-[120px] flex-col bg-white text-sm tracking-wide dark:bg-highlight-dark"
                     aria-labelledby="dropdownDefaultButton"
                   >
                     <li className="border-l-2 border-r-2 border-t-2 border-primary-dark-gray p-1">
@@ -411,7 +411,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 type="number"
                 step="1"
                 min="0"
-                className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
+                className="w-[50px] border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none dark:bg-highlight-dark dark:text-background-light-gray [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]"
                 id="ColorChooserTimeStamp2"
                 value={fontSpacing}
                 onChange={(e) => {
