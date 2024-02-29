@@ -3,7 +3,7 @@ FROM ubuntu
 #Install git
 RUN apt-get update      
 RUN apt-get install -y git
-RUN apt-get install curl
+RUN apt-get install -y curl
 RUN curl -fsSL https://bun.sh/install | bash
 
 WORKDIR /usr/src/app
