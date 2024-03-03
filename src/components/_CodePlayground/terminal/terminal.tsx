@@ -24,31 +24,32 @@ export default component$(() => {
 
   const terminalStore = useContext(TerminalContext);
 
-  const refTerminal = useSignal<HTMLElement>();
+  const terminalOutputRef = useSignal<HTMLElement>();
 
   useVisibleTask$(async ({ cleanup }) => {
-    let resizeListener: any = null;
-
-    console.log("Hello");
+    const resizeListener: any = null;
 
     const terminal = new Terminal({
+      rows: 15,
       convertEol: true,
     });
+
     const fitAddon = new FitAddon();
 
-    if (refTerminal.value) {
-      terminal.loadAddon(fitAddon);
-      terminal.open(refTerminal.value);
-      fitAddon.fit();
+    if (terminalOutputRef.value) {
+      terminal.open(terminalOutputRef.value);
 
-      resizeListener = window.addEventListener("resize", () => {
-        fitAddon.fit();
-      });
+      // terminal.loadAddon(fitAddon);
+      // fitAddon.fit();
+
+      // resizeListener = window.addEventListener("resize", () => {
+      //   fitAddon.fit();
+      // });
     } else {
       console.error("Unable to initialize terminal!!");
     }
 
-    terminalStore.fitAddon = noSerialize(fitAddon);
+    // terminalStore.fitAddon = noSerialize(fitAddon);
     terminalStore.terminal = noSerialize(terminal);
 
     cleanup(() => {
@@ -56,5 +57,5 @@ export default component$(() => {
     });
   });
 
-  return <div class="h-[200px]" ref={refTerminal}></div>;
+  return <div ref={terminalOutputRef}></div>;
 });

@@ -153,12 +153,18 @@ export default component$((props: Props) => {
   });
 
   const addToStage = $(async (entry: Entry) => {
-    // for now, only file with non binary data can be open
     try {
+      // read the non binary data
       const data = await props.interfaceStore.value?.readSimpleFile(entry.path);
-      if (data === undefined) return null;
+
+      if (!data) return null;
+
+      // add if not exist in "openFiles"
       if (editorStore.openedFiles.filter((e) => e.path === entry.path).length === 0)
         editorStore.openedFiles.push({ ...entry, data });
+
+      console.log(editorStore.openedFiles);
+
       return data;
     } catch (e) {
       console.error(e);
@@ -184,6 +190,7 @@ export default component$((props: Props) => {
         })
       );
     }
+
     return () => {
       if (editorStore.editor) {
         editorStore.editor.dispose();
@@ -223,28 +230,22 @@ export default component$((props: Props) => {
   //   }
   // });
   return (
-    <div class="flex">
-      <div>
-        <FileStructure
-          entries={props.fileStore.entries}
-          addToStage={addToStage}
-          openStagedFile={openStagedFile}
-        />
+    <div class="flex h-full">
+      {/* file structure on the right side */}
+      <FileStructure
+        entries={props.fileStore.entries}
+        addToStage={addToStage}
+        openStagedFile={openStagedFile}
+      />
+
+      {/* editor and display */}
+      <div class="flex h-full flex-1 flex-col ">
+        <FileTab openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
+        <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
+        <Terminal />
       </div>
-      <div class="flex-col">
-        <div class="flex">
-          <div class="w-[1000px] flex-col">
-            <FileTab openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
-            <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
-          </div>
-          <div>
-            <iframe ref={outputRef}></iframe>
-          </div>
-        </div>
-        <div>
-          <Terminal />
-        </div>
-      </div>
+      <iframe class="w-[700px]" ref={outputRef}></iframe>
+      {/* terminal */}
     </div>
   );
 });

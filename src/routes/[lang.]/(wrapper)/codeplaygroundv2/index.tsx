@@ -71,7 +71,7 @@ export default component$(() => {
     track(() => controlStore.interfaceBooted);
 
     if (controlStore.interfaceReady) return;
-    if (terminalStore.terminal && controlStore.interfaceBooted && interfaceStore.value) {
+    if (controlStore.interfaceBooted && terminalStore.terminal && interfaceStore.value) {
       await interfaceStore.value.relocateTerminal(terminalStore.terminal);
       console.log("Hi");
 
@@ -85,26 +85,15 @@ export default component$(() => {
   });
 
   return (
-    <section>
-      {
-        <Editor
-          interfaceStore={interfaceStore}
-          onFileSave={$((path: string, data: string) => {
-            interfaceStore.value?.writeFile(path, data);
-          })}
-          fileStore={fileStore}
-          editorStyle={{ height: "300px" }}
-        />
-      }
-      {/* <Terminal terminalStore={terminalStore} />
-      <div style={{ position: "relative" }} class="preview">
-        {!controlStore.interfaceReady ? (
-          <div style={{ position: "absolute", height: "100%", width: "100%", background: "red" }}>
-            Loading...
-          </div>
-        ) : null}
-        <iframe style={{ width: "100%" }} ref={refIframe}></iframe>
-      </div> */}
+    <section class="h-screen">
+      <Editor
+        interfaceStore={interfaceStore}
+        onFileSave={$((path: string, data: string) => {
+          interfaceStore.value?.writeFile(path, data);
+        })}
+        fileStore={fileStore}
+        editorStyle={{ height: "300px" }}
+      />
     </section>
   );
 });

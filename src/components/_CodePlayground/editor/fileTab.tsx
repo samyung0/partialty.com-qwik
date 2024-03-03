@@ -11,7 +11,7 @@ interface FileTab {
 
 export default component$<FileTab>(({ openedFiles, openStagedFile }) => {
   return (
-    <div class="flex border-y border-r border-dark bg-black text-xs text-background-light-gray">
+    <div class="flex h-[35px] border-y border-r border-dark bg-black text-xs text-background-light-gray">
       {openedFiles.map((file, idx) => (
         <div
           class={`group flex items-center gap-1 border-r border-dark py-1 pl-2 pr-1 ${

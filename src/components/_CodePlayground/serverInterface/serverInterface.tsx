@@ -53,13 +53,7 @@ export class WebContainerInterface {
     if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
     if (!this.#webcontainerInstance) return;
 
-    const shellProcess = await this.#webcontainerInstance.spawn("jsh", {
-      terminal: {
-        // give a bit of spaces
-        cols: terminal.cols - 1,
-        rows: terminal.rows,
-      },
-    });
+    const shellProcess = await this.#webcontainerInstance.spawn("jsh");
     shellProcess.output.pipeTo(
       new WritableStream({
         write: (data) => {
@@ -67,11 +61,22 @@ export class WebContainerInterface {
         },
       })
     );
+
+    // allow input on the terminal
     const input = shellProcess.input.getWriter();
     terminal.onData((data) => {
       input.write(data);
+      console.log(data);
     });
 
+    // const installDependencies = await this.#webcontainerInstance.spawn("npm", ["install"]);
+    // installDependencies.output.pipeTo(
+    //   new WritableStream({
+    //     write: (data) => {
+    //       terminal.write(data);
+    //     },
+    //   })
+    // );
     this.#shellProcess = shellProcess;
     this.#terminal = terminal;
 

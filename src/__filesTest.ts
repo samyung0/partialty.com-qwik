@@ -1,29 +1,27 @@
 /** @satisfies {import('@webcontainer/api').FileSystemTree} */
 
 export default {
-  "MY-FIRST-PROJECT": {
+  a: {
     directory: {
-      a: {
+      b: {
         directory: {
-          b: {
-            directory: {
-              "testb.js": {
-                file: {
-                  contents: `const fs = require("fs")`,
-                },
-              },
-            },
-          },
-          "test.js": {
+          "testb.js": {
             file: {
               contents: `const fs = require("fs")`,
             },
           },
         },
       },
-      "index.js": {
+      "test.js": {
         file: {
-          contents: `const express = require('express');
+          contents: `const fs = require("fs")`,
+        },
+      },
+    },
+  },
+  "index.js": {
+    file: {
+      contents: `const express = require('express');
             const app = express();
             const port = 3111;
     
@@ -37,11 +35,11 @@ export default {
             app.listen(port, () => {
               console.log(\`App is live at http://localhost:\${port}\`);
             });`,
-        },
-      },
-      "package.json": {
-        file: {
-          contents: `{
+    },
+  },
+  "package.json": {
+    file: {
+      contents: `{
               "name": "example-app",
         "dependencies": {
           "express": "latest",
@@ -51,8 +49,6 @@ export default {
           "start": "nodemon --watch './' index.js"
         }
       }`,
-        },
-      },
     },
   },
 };
