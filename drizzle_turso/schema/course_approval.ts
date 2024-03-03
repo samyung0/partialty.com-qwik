@@ -7,7 +7,7 @@ export const course_approval = sqliteTable("course_approval", {
   course_id: text("course_id")
     .notNull()
     .references(() => content_index.id),
-  link: text("link").notNull(),
+  link: text("link").notNull(), // not used, defaults to ""
   ready_for_approval: integer("ready_for_approval", { mode: "boolean" }).notNull().default(false),
   added_tags: blob("added_tags").$type<string[]>().notNull(),
   added_categories: text("added_categories"),

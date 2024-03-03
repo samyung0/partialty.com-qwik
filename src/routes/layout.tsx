@@ -2,7 +2,7 @@ import { Slot, component$, useContextProvider, useStore } from "@builder.io/qwik
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
 
-import type theme from "~/const/theme";
+import theme from "~/const/theme";
 import { themeContext } from "~/context/themeContext";
 
 export const useTheme = routeLoader$((event) => {

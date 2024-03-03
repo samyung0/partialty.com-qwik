@@ -7,14 +7,14 @@ import LoadingSVG from "~/components/LoadingSVG";
 import NavCourses from "~/components/NavCourses";
 import getUser from "~/components/_Index/Nav/getUser";
 
+export { getUser };
+
 export default component$(() => {
   const login = useStore({
     isLoading: true,
     isLoggedIn: false,
     avatarUrl: "",
   });
-
-  getUser;
 
   useVisibleTask$(async () => {
     const res = await getUser();

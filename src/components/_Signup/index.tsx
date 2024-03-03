@@ -135,7 +135,9 @@ export default component$(
         bioError.wrongInfo = setBio.value?.message || "";
       }
       if (setBio.status === 200) {
-        (window as any).location = "/members/dashboard/";
+        // (window as any).location = "/members/dashboard/";
+        if (params.get("redirectedFrom")) nav(params.get("redirectedFrom")!);
+        else nav("/members/dashboard/");
       }
     });
 
