@@ -59,7 +59,11 @@ const Toolbar = ({
       <div className="flex flex-wrap items-center justify-center gap-4">
         <MarkButton title={"Bold"} format="bold" children={<Bold size={20} />} />
         <MarkButton title={"Italic"} format="italic" children={<Italic size={20} />} />
-        <MarkButton title={"Strikethrough"} format="strikethrough" children={<Strikethrough size={20} />} />
+        <MarkButton
+          title={"Strikethrough"}
+          format="strikethrough"
+          children={<Strikethrough size={20} />}
+        />
         <UnderlineMarkButton
           audioTimeStamp={audioTimeStamp}
           format="underline"
@@ -77,14 +81,22 @@ const Toolbar = ({
         />
         <TextMarkButton children={<Type size={20} />} />
         <MarkButton title={"Code"} format="code" children={<Code size={20} />} />
-        <MarkButton title={"Superscript"} format="superscript" children={<Superscript size={20} />} />
+        <MarkButton
+          title={"Superscript"}
+          format="superscript"
+          children={<Superscript size={20} />}
+        />
         <MarkButton title={"Subscript"} format="subscript" children={<Subscript size={20} />} />
         <BlockButton title={"Paragraph"} format="paragraph" children={<Pilcrow size={20} />} />
         <BlockButton title={"Heading 1"} format="heading-one" children={<Heading1 size={20} />} />
         <BlockButton title={"Heading 2"} format="heading-two" children={<Heading2 size={20} />} />
         <BlockButton title={"Heading 3"} format="heading-three" children={<Heading3 size={20} />} />
         <BlockButton title={"Heading 4"} format="heading-four" children={<Heading4 size={20} />} />
-        <BlockButton title={"Numbered List"} format="numbered-list" children={<ListOrdered size={20} />} />
+        <BlockButton
+          title={"Numbered List"}
+          format="numbered-list"
+          children={<ListOrdered size={20} />}
+        />
         <BlockButton title={"Bulleted List"} format="bulleted-list" children={<List size={20} />} />
         <BlockButton title={"Align Left"} format="left" children={<AlignLeft size={20} />} />
         <BlockButton title={"Align Center"} format="center" children={<AlignCenter size={20} />} />

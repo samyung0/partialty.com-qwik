@@ -8,9 +8,9 @@ import { rateLimit } from "elysia-rate-limit";
 import AuthRoute from "./auth/route";
 import MuxRoute from "./contentEditor/route";
 import EmailRoute from "./email/route";
+import endpoints from "./endpoints";
 import HealthRoute from "./health/route";
 import StripeRoute from "./stripe/route";
-import endpoints from "./endpoints";
 
 const port = process.env.PORT || 8080;
 const allowedDomains = [/^https:\/\/(.*\.)?partialty\.com$/, /http:\/\/localhost:.*/];

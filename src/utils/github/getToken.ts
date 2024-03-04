@@ -6,11 +6,13 @@ import { profiles } from "../../../drizzle_turso/schema/profiles";
 
 export default server$(async function (userId: string) {
   if (this.cookie.get("github_access_token")) return this.cookie.get("github_access_token")!.value;
-  const installationId = (await drizzleClient()
-    .select({ github_installation_id: profiles.github_installation_id })
-    .from(profiles)
-    .where(eq(profiles.id, userId)))[0]?.github_installation_id;
-  if(!installationId) return null;
+  const installationId = (
+    await drizzleClient()
+      .select({ github_installation_id: profiles.github_installation_id })
+      .from(profiles)
+      .where(eq(profiles.id, userId))
+  )[0]?.github_installation_id;
+  if (!installationId) return null;
   try {
     if (!this.env.get("GITHUB_REPO_APPID")) throw Error("Server Error! Please try again later");
     // console.log(this.env.get("GITHUB_REPO_ID"), this.env.get("GITHUB_REPO_SECRET"), code);

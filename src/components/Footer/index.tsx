@@ -4,13 +4,13 @@ import { Link } from "@builder.io/qwik-city";
 export default component$(() => {
   return (
     <footer class=" bg-primary-dark-gray text-background-light-gray dark:bg-black/40">
-      <div class="flex w-full items-start py-20 pt-40">
-        <div class="w-[50%] text-center">
+      <div class="flex w-full flex-col items-center justify-center py-20 pt-40 xl:flex-row xl:items-start">
+        <div class="pb-8 text-center xl:w-[50%]">
           <p class="text-[2rem] font-bold tracking-widest">Partialty.com</p>
         </div>
-        <div class="w-[50%]">
-          <ul class="flex gap-12">
-            <li class="text-lg">
+        <div class="xl:w-[50%]">
+          <ul class="grid gap-8 px-8 md:flex  md:gap-12">
+            <li class="text-base md:text-lg">
               <ul class="flex flex-col gap-3">
                 <li class="tracking-tight text-gray-400">Resources</li>
                 <li>
@@ -28,7 +28,7 @@ export default component$(() => {
                 <li></li>
               </ul>
             </li>
-            <li class="text-lg">
+            <li class="text-base md:text-lg">
               <ul class="flex flex-col gap-3">
                 <li class="tracking-tight text-gray-400">Help and Support</li>
                 <li>
@@ -42,7 +42,7 @@ export default component$(() => {
                 </li>
               </ul>
             </li>
-            <li class="text-lg">
+            <li class="text-base md:text-lg">
               <ul class="flex flex-col gap-3">
                 <li class="tracking-tight text-gray-400">Legal</li>
                 <li>

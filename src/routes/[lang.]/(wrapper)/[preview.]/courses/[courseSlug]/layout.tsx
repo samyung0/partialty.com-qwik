@@ -1,8 +1,8 @@
 import { Slot, component$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { auth, initLuciaIfNeeded } from "~/auth/lucia";
-import { LuciaSession } from "~/types/LuciaSession";
+import type { LuciaSession } from "~/types/LuciaSession";
 import drizzleClient, { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { initTursoIfNeeded } from "~/utils/tursoClient";
 import { content_index } from "../../../../../../../drizzle_turso/schema/content_index";

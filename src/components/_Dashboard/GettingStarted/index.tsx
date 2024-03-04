@@ -28,13 +28,13 @@ const guidesInfo = {
 
 export default component$(() => {
   return (
-    <article class="mx-auto w-[80%] py-4">
-      <div class="w-[70%]">
-        <h1 class="pb-1 font-mosk text-4xl font-bold tracking-wide">Getting Started</h1>
+    <article class="mx-auto w-[95%] py-4 md:w-[80%]">
+      <div class="w-[100%] lg:w-[85%] xl:w-[70%]">
+        <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-4xl">Getting Started</h1>
         <ul class="flex flex-col gap-2 py-2">
           {currentGuides.map((currentGuide) => (
             <li
-              class=" rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray"
+              class=" rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3"
               key={`currentGuides${currentGuide.slug}`}
             >
               <Link
@@ -43,26 +43,35 @@ export default component$(() => {
                 prefetch
               >
                 <div class="flex flex-col gap-1">
-                  <h2 class="text-lg tracking-wide">{guidesInfo[currentGuide.slug].name}</h2>
+                  <h2 class="text-base md:text-lg md:tracking-wide">
+                    {guidesInfo[currentGuide.slug].name}
+                  </h2>
                   <p class="flex items-center gap-1">
-                    <span class="-mt-[2px] flex items-center text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                    <span class="-mt-[2px] flex items-center text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                       <IoTimeOutline />
                     </span>
-                    <span>
+                    <span class="text-[0.75rem] md:text-[1rem]">
                       {guidesInfo[currentGuide.slug].readingTime} min
                       {guidesInfo[currentGuide.slug].readingTime > 1 ? "s" : ""} read
                     </span>
                   </p>
                 </div>
                 {currentGuide.completed ? (
-                  <p class="border-b-4 border-mint">Completed</p>
+                  <p class="whitespace-nowrap border-b-2 border-mint text-[0.875rem] md:border-b-4 md:text-[1rem]">
+                    Completed
+                  </p>
                 ) : (
-                  <p class="border-b-4 border-pink">Not Completed</p>
+                  <p class="whitespace-nowrap border-b-2 border-pink text-[0.875rem] md:border-b-4 md:text-[1rem]">
+                    Not Completed
+                  </p>
                 )}
               </Link>
             </li>
           ))}
-          <Link href="/members/dashboard/" class="p-2 text-right font-bold tracking-wide">
+          <Link
+            href="/members/dashboard/"
+            class="p-0 text-right text-[0.875rem] font-bold tracking-wide md:p-2 md:text-[1rem]"
+          >
             <p>View all guides</p>
           </Link>
         </ul>

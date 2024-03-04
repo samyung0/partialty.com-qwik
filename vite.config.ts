@@ -22,7 +22,7 @@ export default defineConfig(() => {
       qwikCity({
         allowedParams: {
           lang: config.supportedLocales.map((locale) => locale.lang),
-          preview: ["preview"]
+          preview: ["preview"],
         },
       }),
       qwikVite({

@@ -9,11 +9,11 @@ import type { CustomMarkFormat } from "~/components/_ContentEditor/types";
 export const MarkButton = ({
   format,
   children,
-  title
+  title,
 }: {
   format: CustomMarkFormat;
   children: React.ReactNode;
-  title?: string
+  title?: string;
 }) => {
   const editor = useSlate();
   return (

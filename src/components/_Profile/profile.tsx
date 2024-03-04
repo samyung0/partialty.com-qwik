@@ -8,8 +8,7 @@ import Dragndrop from "~/components/_Signup/dragndrop";
 import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
 
 import LoadingSVG from "~/components/LoadingSVG";
-import Lang from "../../../lang";
-import { displayNamesLang } from "../../../lang";
+import type Lang from "../../../lang";
 
 export default component$(() => {
   const user = useUserLoader().value;

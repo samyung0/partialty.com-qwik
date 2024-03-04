@@ -15,11 +15,11 @@ import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/_ContentEditor/types"
 export const BlockButton = ({
   format,
   children,
-  title
+  title,
 }: {
   format: BlockFormat;
   children: React.ReactNode;
-  title?: string
+  title?: string;
 }) => {
   const editor = useSlate();
   return (
@@ -43,7 +43,7 @@ export const BlockButton = ({
 
 export const LinkButton = ({
   format,
-  children
+  children,
 }: {
   format: BlockFormat;
   children: React.ReactNode;

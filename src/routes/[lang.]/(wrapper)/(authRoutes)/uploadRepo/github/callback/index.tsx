@@ -1,10 +1,9 @@
-import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
+import { type RequestHandler } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { auth } from "~/auth/lucia";
+import type { LuciaSession } from "~/types/LuciaSession";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../../../../../../drizzle_turso/schema/profiles";
-import { LuciaSession } from "~/types/LuciaSession";
-import { auth } from "~/auth/lucia";
 
 export const onGet: RequestHandler = async (request) => {
   const storedState = request.cookie.get("github_app_state")?.value;

@@ -1,5 +1,4 @@
 import { $ } from "@builder.io/qwik";
-import { server$ } from "@builder.io/qwik-city";
 import { graphql } from "@octokit/graphql";
 import { request } from "@octokit/request";
 

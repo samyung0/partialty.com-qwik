@@ -1,5 +1,5 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { RequestHandler } from "@builder.io/qwik-city";
+import type { RequestHandler } from "@builder.io/qwik-city";
 import { useSpeak } from "qwik-speak";
 
 export const onGet: RequestHandler = (request) => {

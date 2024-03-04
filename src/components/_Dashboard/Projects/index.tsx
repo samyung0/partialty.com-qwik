@@ -414,10 +414,10 @@ export default component$(() => {
   // });
 
   return (
-    <article class="mx-auto w-[80%] py-4">
-      <div class="w-[70%] pb-1">
+    <article class="mx-auto w-[95%] py-4 md:w-[80%]">
+      <div class="w-[100%] pb-1 lg:w-[85%] xl:w-[70%]">
         <div class="flex items-end justify-between">
-          <h1 class="font-mosk text-4xl font-bold tracking-wide">My Projects</h1>
+          <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-4xl">My Projects</h1>
           {/* <div class="flex gap-2">
             <img src={SearchSVG} alt="Search" width={20} height={20} />
             <input
@@ -447,19 +447,29 @@ export default component$(() => {
                   class="flex cursor-pointer items-center justify-between"
                 >
                   <div class="flex flex-col gap-1">
-                    <h2 class="text-lg tracking-wide">{coursesInfo[currentProject.slug].name}</h2>
+                    <h2 class="text-base md:text-lg md:tracking-wide">
+                      {coursesInfo[currentProject.slug].name}
+                    </h2>
+                    <div class="mb-1 block h-1.5 w-[100px] rounded-full bg-light-sea md:hidden">
+                      <div
+                        class={`h-1.5 rounded-full bg-sea`}
+                        style={{
+                          width: `${Math.round((completedChapters.length / steps.length) * 100)}%`,
+                        }}
+                      ></div>
+                    </div>
                     <p class="flex items-center gap-1">
-                      <span class="-mt-1 flex items-center text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                      <span class="-mt-1 flex items-center text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                         <IoReaderOutline />
                       </span>
-                      <span class="text-sm tracking-wide">
+                      <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
                         {completedChapters.length} / {steps.length} step
                         {steps.length > 0 ? "s" : ""} completed
                       </span>
                     </p>
                   </div>
                   <div class="flex items-center gap-2">
-                    <div class="h-1.5 w-[100px] rounded-full bg-light-sea">
+                    <div class="hidden h-1.5 w-[100px] rounded-full bg-light-sea md:block">
                       <div
                         class={`h-1.5 rounded-full bg-sea`}
                         style={{
@@ -481,23 +491,23 @@ export default component$(() => {
                     </button>
                   </div>
                 </div>
-                <Link href={currentProject.codeSpace} class="mt-6 flex gap-2 self-start">
-                  <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
+                <Link href={currentProject.codeSpace} class="mt-4 flex gap-2 self-start md:mt-6">
+                  <span class="border-b-2 border-primary-dark-gray text-[0.875rem] dark:border-background-light-gray md:text-[1rem]">
                     Go to Codespace
                   </span>
-                  <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                  <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                     <LuArrowRight />
                   </span>
                 </Link>
                 {currentProject.open ? (
                   <>
                     <div class="mt-6 flex gap-4 pb-2">
-                      <h3 class="w-[20%]">Topics:</h3>
+                      <h3 class="w-[20%] text-[0.875rem] md:text-[1rem]">Topics:</h3>
                       <ul class="flex w-[80%] flex-wrap gap-x-4 gap-y-2">
                         {coursesInfo[currentProject.slug].topics.map((topic) => (
                           <li key={`Course${currentProject.slug}Topic${topic}`}>
                             <Link
-                              class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
+                              class="border-b-2 border-primary-dark-gray text-[0.875rem]  dark:border-background-light-gray md:text-[1rem]"
                               href={topics[topic].link}
                             >
                               {topics[topic].name}
@@ -507,11 +517,11 @@ export default component$(() => {
                       </ul>
                     </div>
                     <div class="flex gap-4 pb-2">
-                      <h3 class="w-[20%]">Difficulty:</h3>
+                      <h3 class="w-[20%]  text-[0.875rem] md:text-[1rem]">Difficulty:</h3>
                       <p class={`w-[80%]`}>
                         <Link
                           href={difficulty[coursesInfo[currentProject.slug].difficulty].link}
-                          class={`border-b-2 ${
+                          class={`border-b-2  text-[0.875rem] md:text-[1rem] ${
                             coursesInfo[currentProject.slug].difficulty === "beginner"
                               ? "border-sea"
                               : coursesInfo[currentProject.slug].difficulty === "intermediate"
@@ -529,15 +539,19 @@ export default component$(() => {
                           key={`Course${currentProject.slug}Chapter${chapter}`}
                           class="flex items-center justify-between"
                         >
-                          <h2 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
+                          <h2 class="border-b-2 border-primary-dark-gray text-[0.875rem] dark:border-background-light-gray md:text-[1rem]">
                             <Link href={coursesInfo[currentProject.slug].steps[chapter].link}>
                               {coursesInfo[currentProject.slug].steps[chapter].name}
                             </Link>
                           </h2>
                           {currentProject.completed[chapter] ? (
-                            <p class="border-b-4 border-mint">Completed</p>
+                            <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">
+                              Completed
+                            </p>
                           ) : (
-                            <p class="border-b-4 border-pink">Not Completed</p>
+                            <p class="border-b-2 border-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
+                              Not Completed
+                            </p>
                           )}
                         </li>
                       ))}
@@ -549,7 +563,7 @@ export default component$(() => {
           })}
           <button
             onClick$={() => (showAll.value = !showAll.value)}
-            class="self-start p-2 font-bold tracking-wide"
+            class="md:text-[1rem self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
           >
             {showAll.value ? <p>View Less</p> : <p>View All</p>}
           </button>
