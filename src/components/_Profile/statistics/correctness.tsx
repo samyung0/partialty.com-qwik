@@ -54,7 +54,7 @@ export const Correctness = component$(() => {
   });
 
   return (
-    <div class=" rounded-xl   border-2 border-black bg-white px-12 py-8 shadow-lg">
+    <div class=" w-[300px]   rounded-xl border-2 border-black bg-white px-12 py-8 shadow-lg">
       <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-4">
         <div class="flex items-center">
           <div>

@@ -11,6 +11,7 @@ import {
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { useSetBio, useSignupWithPassword } from "~/auth/signup";
 import recaptcha from "~/components/_Signup/recaptcha";
+export { recaptcha };
 
 import GithubIcon from "~/assets/svg/logo-github.svg";
 import GoogleIcon from "~/assets/svg/logo-google.svg";
@@ -20,7 +21,7 @@ import type { CloudinaryDefaultPic } from "~/types/Cloudinary";
 import RandomAvatar from "~/assets/svg/shuffle-outline.svg";
 import DeleteAvatar from "~/assets/svg/trash-outline.svg";
 
-import Dragndrop from "~/components/_Signup/dragndrop";
+import DragndropLarge from "~/components/_Signup/dragndropLarge";
 import LoadingSVG from "~/components/LoadingSVG";
 
 export default component$(
@@ -29,8 +30,6 @@ export default component$(
   }: {
     cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[] | null | undefined>;
   }) => {
-    recaptcha;
-
     const params = useLocation().url.searchParams;
     const setBio = useSetBio();
     const signupWithPassword = useSignupWithPassword();
@@ -58,7 +57,7 @@ export default component$(
       wrongInfo: "",
     });
     const nav = useNavigate();
-    const isSetBio = useSignal(false);
+    const isSetBio = useSignal(true);
     const originalAvatar = useComputed$(() =>
       cloudinaryDefaultPics.value
         ? cloudinaryDefaultPics.value[
@@ -236,20 +235,24 @@ export default component$(
 
     return (
       <section class="flex h-[100vh] items-center justify-center bg-sherbet">
-        <div class="w-[50vw] min-w-[400px] max-w-[600px]  overflow-hidden ">
-          <div class="flex w-[100vw] min-w-[800px] max-w-[1200px] justify-start overflow-hidden">
+        <div class="w-[95vw] overflow-hidden md:w-[50vw] md:min-w-[500px]  md:max-w-[600px] ">
+          <div class="flex w-[190vw] items-center justify-start overflow-hidden md:w-[100vw] md:min-w-[1000px] md:max-w-[1200px]">
             <div
               class={
-                "flex w-[50vw] min-w-[400px] max-w-[600px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 transition-transform " +
-                (isSetBio.value ? "translate-x-[-100%]" : "")
+                " max-h-[95vh] w-[95vw] overflow-auto rounded-lg border-2 border-black bg-white transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] " +
+                (isSetBio.value ? "translate-x-[-101%]" : "")
               }
             >
-              <div class="flex flex-col items-center justify-center">
-                <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+              <div class="flex flex-col items-center justify-center py-10 md:py-16">
+                <h1 class="text-center font-mosk text-[2rem] font-bold tracking-wide md:text-[2.5rem] md:tracking-wider">
                   Sign up
                 </h1>
                 <br />
-                <form preventdefault:submit onSubmit$={handleSubmitPartOne} class="space-y-6">
+                <form
+                  preventdefault:submit
+                  onSubmit$={handleSubmitPartOne}
+                  class="space-y-3 md:space-y-6"
+                >
                   <input
                     type="text"
                     name="avatar_cloudinary_id"
@@ -267,10 +270,10 @@ export default component$(
                     value={defaultBio.nickname}
                   />
                   <div>
-                    <label for="email" class="cursor-pointer text-lg">
+                    <label for="email" class="cursor-pointer text-base md:text-lg">
                       Email address
                     </label>
-                    <div class="pt-1">
+                    <div class="md:pt-1">
                       <input
                         id="email"
                         name="email"
@@ -280,19 +283,19 @@ export default component$(
                         value={firstForm.email}
                         onInput$={(_, el) => (firstForm.email = el.value)}
                         class={
-                          "block w-[300px] rounded-md border-2 px-3 py-2 " +
+                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
                           (formError.email || formError.wrongInfo
                             ? "border-tomato"
                             : "border-black/10")
                         }
                       />
                     </div>
-                    <p class="w-[300px] pt-1 tracking-wide text-tomato">
+                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
                       {formError.email || formError.wrongInfo}
                     </p>
                   </div>
                   <div>
-                    <label for="password" class="cursor-pointer text-lg">
+                    <label for="password" class="cursor-pointer text-base md:text-lg">
                       Password
                     </label>
                     <div class="pt-1">
@@ -305,17 +308,17 @@ export default component$(
                         value={firstForm.password}
                         onInput$={(_, el) => (firstForm.password = el.value)}
                         class={
-                          "block w-[300px] rounded-md border-2 px-3 py-2 " +
+                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
                           (formError.password ? "border-tomato" : "border-black/10")
                         }
                       />
                     </div>
-                    <p class="w-[300px] pt-1 text-sm tracking-wide text-tomato">
+                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
                       {formError.password}
                     </p>
                   </div>
                   <div>
-                    <label for="rePassword" class="cursor-pointer text-lg">
+                    <label for="rePassword" class="cursor-pointer text-base md:text-lg">
                       Re-enter Password
                     </label>
                     <div class="pt-1">
@@ -328,12 +331,12 @@ export default component$(
                         value={firstForm.rePassword}
                         onInput$={(_, el) => (firstForm.rePassword = el.value)}
                         class={
-                          "block w-[300px] rounded-md border-2 px-3 py-2 " +
+                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
                           (formError.wrongRePassword ? "border-tomato" : "border-black/10")
                         }
                       />
                     </div>
-                    <p class="w-[300px] pt-1 text-sm tracking-wide text-tomato">
+                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
                       {formError.wrongRePassword || formError.error}
                     </p>
                   </div>
@@ -344,7 +347,7 @@ export default component$(
                   <button
                     type="submit"
                     class={
-                      "relative block w-full rounded-lg bg-primary-dark-gray p-4 text-background-light-gray transition-all"
+                      "relative block w-full rounded-lg bg-primary-dark-gray p-3 text-background-light-gray transition-all md:p-4"
                     }
                     disabled={isSetBio.value || loadingStepOne.value}
                   >
@@ -353,30 +356,44 @@ export default component$(
                         <LoadingSVG />
                       </span>
                     )}
-                    {!loadingStepOne.value && <span>Yup, Next</span>}
+                    {!loadingStepOne.value && (
+                      <span class="text-[0.875rem] md:text-[1rem]">Yup, Next</span>
+                    )}
                   </button>
                 </form>
 
-                <div class="relative my-10 mb-6 flex items-center self-stretch">
+                <div class="relative mx-auto my-8 mb-4 flex w-[90%] items-center self-stretch md:my-10 md:mb-6 md:w-[80%]">
                   <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
                   <span class="px-4 tracking-wide">or</span>
                   <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
                 </div>
 
-                <div class="flex items-center justify-evenly self-stretch">
+                <div class="mx-auto flex w-[60%] items-center justify-evenly self-stretch md:w-full">
                   <Link class="p-4 pt-0" aria-label="Login With Google" href="/login/google/">
-                    <img src={GoogleIcon} alt="Login With Google" width={55} height={55} />
+                    <img
+                      src={GoogleIcon}
+                      alt="Login With Google"
+                      width={55}
+                      height={55}
+                      class="h-[40px] w-[40px] md:h-[55px] md:w-[55px]"
+                    />
                   </Link>
                   <Link class="p-4 pt-0" aria-label="Login With Github" href="/login/github/">
-                    <img src={GithubIcon} alt="Login With Github" width={50} height={50} />
+                    <img
+                      src={GithubIcon}
+                      alt="Login With Github"
+                      width={50}
+                      height={50}
+                      class="h-[35px] w-[35px] md:h-[50px] md:w-[50px]"
+                    />
                   </Link>
                 </div>
 
-                <div class="pt-4 text-center">
+                <div class="text-center md:pt-4">
                   <Link
                     prefetch
                     href="/login/"
-                    class="inline-block underline decoration-wavy underline-offset-8"
+                    class="inline-block text-[0.75rem] underline decoration-wavy underline-offset-[6px] md:text-[1rem]"
                   >
                     Have an account already? Come here
                   </Link>
@@ -385,16 +402,16 @@ export default component$(
             </div>
             <div
               class={
-                "flex w-[50vw] min-w-[400px] max-w-[600px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 transition-transform " +
+                "flex w-[95vw] items-center justify-center rounded-lg border-2 border-black bg-white py-10 transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] md:py-16 " +
                 (isSetBio.value ? "translate-x-[-100%]" : "")
               }
             >
               <div class="flex flex-col items-center justify-center">
-                <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider">
+                <h1 class="pb-6 text-center font-mosk text-[1.5rem] font-bold tracking-wide md:text-[2rem] md:tracking-wider">
                   Let's make a funny profile.
                 </h1>
                 <br />
-                <form preventdefault:submit class="relative space-y-6">
+                <form preventdefault:submit class="relative space-y-3 md:space-y-6">
                   <div class="absolute right-0 top-0 flex flex-col gap-2 p-2">
                     <button type="button" onClick$={restoreOriginalAvatar}>
                       <img
@@ -415,15 +432,15 @@ export default component$(
                       />
                     </button>
                   </div>
-                  <Dragndrop
+                  <DragndropLarge
                     width={defaultBio.avatar.width}
                     height={defaultBio.avatar.height}
                     secure_url={defaultBio.avatar.secure_url}
                     handleImage={handleImage}
                     bioErrorMsg={bioError.avatar}
-                  ></Dragndrop>
+                  ></DragndropLarge>
                   <div>
-                    <label for="nickname" class="cursor-pointer text-lg">
+                    <label for="nickname" class="cursor-pointer text-base md:text-lg">
                       Nickname
                     </label>
                     <div class="pt-1">
@@ -436,14 +453,14 @@ export default component$(
                         autoComplete="off"
                         required
                         class={
-                          "block w-[300px] rounded-md border-2 px-3 py-2 " +
+                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
                           (bioError.nickname || bioError.wrongInfo
                             ? "border-tomato"
                             : "border-black/10")
                         }
                       />
                     </div>
-                    <p class="w-[300px] pt-1 text-sm tracking-wide text-tomato">
+                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
                       {bioError.nickname || bioError.wrongInfo}
                     </p>
                   </div>
@@ -468,14 +485,16 @@ export default component$(
                     }}
                     disabled={loadingStepTwo.value}
                     type="submit"
-                    class="block w-full rounded-lg bg-primary-dark-gray p-4 text-background-light-gray"
+                    class="block w-full rounded-lg bg-primary-dark-gray  p-3 text-background-light-gray md:p-4"
                   >
                     {loadingStepTwo.value && (
                       <span>
                         <LoadingSVG />
                       </span>
                     )}
-                    {!loadingStepTwo.value && <span>Sign up</span>}
+                    {!loadingStepTwo.value && (
+                      <span class="text-[0.875rem] md:text-[1rem]">Sign up</span>
+                    )}
                   </button>
                 </form>
               </div>

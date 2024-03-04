@@ -27,7 +27,7 @@ function imgDropZone({
   });
 
   return (
-    <div className="flex flex-col items-start xl:block">
+    <div className="block">
       <label
         htmlFor="avatar"
         className="flex cursor-pointer flex-col items-center justify-center text-[1rem] lg:text-lg"
@@ -61,7 +61,7 @@ function imgDropZone({
           }}
         />
       </div>
-      <p className="pt-2 text-[0.75rem] tracking-wide text-tomato lg:text-[1rem] xl:w-[300px] xl:text-center">
+      <p className="w-[250px] pt-2 text-center text-[0.75rem] tracking-wide text-tomato md:w-[300px] md:text-[1rem]">
         {bioErrorMsg}
       </p>
     </div>

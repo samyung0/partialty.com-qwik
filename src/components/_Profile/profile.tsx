@@ -91,11 +91,11 @@ export default component$(() => {
   });
 
   return (
-    <div class="mx-auto flex w-[80%] flex-col">
-      <h1 class="font-mosk text-3xl font-bold tracking-wide">Profile</h1>
-      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
+    <div class="mx-auto flex w-[90%] flex-col lg:w-[80%]">
+      <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Profile</h1>
+      <div class="mt-1 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray lg:mt-3"></div>
       <form
-        class="flex flex-col pt-10"
+        class="flex flex-col pt-6 lg:pt-10"
         preventdefault:submit
         onSubmit$={async () => {
           isUpdating.value = true;
@@ -107,10 +107,20 @@ export default component$(() => {
           isUpdating.value = false;
         }}
       >
-        <div class="flex text-lg tracking-wide">
-          <div class="flex flex-col gap-10">
+        <div class="flex flex-col items-start text-lg tracking-wide xl:flex-row">
+          <div class="flex flex-col items-start gap-2 pb-4 lg:pb-10 xl:hidden">
+            <label class="font-mosk text-lg font-bold lg:text-xl">Customize Avatar</label>
+            <Dragndrop
+              width={formData.avatar.width}
+              height={formData.avatar.height}
+              secure_url={formData.avatar.secure_url}
+              handleImage={handleImage}
+              bioErrorMsg={bioError.avatar}
+            />
+          </div>
+          <div class="flex flex-col gap-4 text-base lg:gap-10 lg:text-lg">
             <div class="flex flex-col gap-2">
-              <label for="nickname" class="text-md cursor-pointer font-bold">
+              <label for="nickname" class="cursor-pointer font-bold">
                 Nickname
               </label>
               <div>
@@ -118,36 +128,36 @@ export default component$(() => {
                   id="nickname"
                   name="nickname"
                   class={
-                    "text-md w-[400px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20" +
+                    "w-[250px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 lg:w-[400px]" +
                     (bioError.nickname || bioError.wrongInfo ? "border-tomato" : "border-black/10")
                   }
                   value={formData.nickname}
                   onInput$={(e, eventTarget) => (formData.nickname = eventTarget.value)}
                 />
-                <p class="pt-1 text-sm tracking-wide text-tomato">
+                <p class="pt-1 text-xs tracking-wide text-tomato lg:text-sm">
                   {bioError.nickname || bioError.wrongInfo}
                 </p>
               </div>
             </div>
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-4">
-                <label class="text-md  font-bold">Password</label>
+                <label class=" font-bold">Password</label>
                 <Link
-                  class="text-base underline decoration-wavy underline-offset-4 "
+                  class="text-sm underline decoration-wavy underline-offset-4 lg:text-base "
                   href={"/profile/resetPassword"}
                 >
                   Change
                 </Link>
               </div>
               <input
-                class="text-md w-[400px] rounded-md border-2 px-3 py-1 disabled:bg-gray-200 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20"
+                class="w-[250px] rounded-md border-2 px-3 py-1 disabled:bg-gray-200 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20 lg:w-[400px]"
                 value={"●●●●●●"}
                 readOnly
                 disabled
               />
             </div>
             {/* <div class="flex flex-col gap-2">
-              <label for="theme" class="text-md cursor-pointer font-bold">
+              <label for="theme" class="cursor-pointer font-bold">
                 Theme
               </label>
               <select
@@ -158,14 +168,14 @@ export default component$(() => {
                     | "dark")
                 }
                 id="theme"
-                class="text-md w-[400px] rounded-md border-2 px-3 py-1"
+                class="w-[400px] rounded-md border-2 px-3 py-1"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
               </select>
             </div> */}
             {/* <div class="flex flex-col gap-2">
-              <label for="lang" class="text-md cursor-pointer font-bold">
+              <label for="lang" class="cursor-pointer font-bold">
                 Preferred Language
               </label>
               <select
@@ -175,7 +185,7 @@ export default component$(() => {
                     .value as keyof typeof displayNamesLang)
                 }
                 id="lang"
-                class="text-md w-[400px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20"
+                class="w-[400px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20"
               >
                 {Object.entries(displayNamesLang).map(([lang, name]) => (
                   <option key={`language${lang}`} value={lang}>
@@ -186,7 +196,7 @@ export default component$(() => {
             </div> */}
             <button
               disabled={isUpdating.value}
-              class="self-start rounded-xl bg-primary-dark-gray px-6 py-3 text-white shadow-xl dark:bg-highlight-dark"
+              class="self-start rounded-xl bg-primary-dark-gray px-4 py-2 text-white shadow-xl dark:bg-highlight-dark lg:px-6 lg:py-3"
               type="submit"
             >
               {isUpdating.value ? (
@@ -197,17 +207,17 @@ export default component$(() => {
                 "Save"
               )}
             </button>
-            <p>
+            <p class="text-[0.875rem] lg:text-[1rem]">
               Need help? Contact us at{" "}
               <a
                 href={"mailto://customer@partialty.com"}
-                class="tracking-wide underline decoration-wavy underline-offset-[6px]"
+                class="underline decoration-wavy underline-offset-[6px] lg:tracking-wide"
               >
                 customer@partialty.com
               </a>
             </p>
           </div>
-          <div class="ml-10 flex w-[300px] flex-col items-center gap-2">
+          <div class="ml-10 hidden w-[300px] flex-col items-center gap-2 xl:flex">
             <label class="font-mosk text-xl font-bold">Customize Avatar</label>
             <Dragndrop
               width={formData.avatar.width}

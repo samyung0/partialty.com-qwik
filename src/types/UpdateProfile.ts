@@ -2,7 +2,7 @@ import { z } from "@builder.io/qwik-city";
 import { CloudinaryDefaultPicSchema } from "~/types/Cloudinary";
 
 export const updateProfile = z.object({
-  nickname: z.string().min(1).max(50, "Nickname is too long"),
+  nickname: z.string().trim().min(1).max(50, "Nickname is too long"),
   avatar: CloudinaryDefaultPicSchema,
   userId: z.string().min(1),
 });

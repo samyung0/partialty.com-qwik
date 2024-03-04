@@ -20,9 +20,9 @@ export default component$(() => {
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={user} />
-      <div class="mx-auto flex max-w-[80%] pt-6">
-        <div class="flex w-[20%] flex-col gap-4">
-          <div class="self-center">
+      <div class="mx-auto flex w-[95%] flex-col md:w-[80%] lg:flex-row lg:pt-6">
+        <div class="flex w-full flex-col gap-4 lg:w-[20%]">
+          <div class="hidden self-center lg:block">
             <img
               class="h-[100px] w-[100px] rounded-full object-cover"
               src={user.avatar_url}
@@ -31,13 +31,13 @@ export default component$(() => {
             />
             <p class="p-1 text-center font-mosk text-lg tracking-wide">{user.nickname}</p>
           </div>
-          <div class="flex flex-col">
+          <div class="flex w-full flex-row flex-wrap gap-2 lg:flex-col lg:flex-nowrap lg:gap-0">
             {tabs.map((tab, idx) => (
               <div class="relative flex h-full gap-1" key={`tab-${idx}`}>
                 {/* {idx === displayIdx.value && ( */}
                 <div
                   class={
-                    "h-full w-[5px] rounded-lg " +
+                    "hidden h-full w-[5px] rounded-lg lg:block " +
                     (idx === displayIdx.value
                       ? "bg-yellow"
                       : "bg-light-yellow dark:bg-primary-dark-gray")
@@ -46,7 +46,7 @@ export default component$(() => {
                 {/* )} */}
 
                 <button
-                  class={`w-full rounded-md bg-light-yellow p-2 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150 ${
+                  class={`w-full rounded-md bg-light-yellow p-3 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150 lg:p-2 ${
                     idx === displayIdx.value && "brightness-90 dark:brightness-150"
                   }`}
                   onClick$={() => {

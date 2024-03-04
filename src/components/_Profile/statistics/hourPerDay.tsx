@@ -99,7 +99,7 @@ export const HourPerDay = component$(() => {
   });
 
   return (
-    <div class="w-[60%]  rounded-xl border-2 border-black bg-white px-12 py-8 shadow-lg">
+    <div class=" overflow-auto rounded-xl border-2 border-black bg-white px-12 py-8 shadow-lg">
       <div class="mb-4 flex items-center justify-between border-b border-gray-200 pb-4">
         <div class="flex items-center">
           <div>
@@ -138,7 +138,7 @@ export const HourPerDay = component$(() => {
         </dl>
       </div>
 
-      <div id={chartElementId} class="font-mosk"></div>
+      <div id={chartElementId} class="w-[500px] min-w-[500px] font-mosk"></div>
     </div>
   );
 });

@@ -4,11 +4,11 @@ import { HourPerDay } from "./statistics/hourPerDay";
 
 export default component$(() => {
   return (
-    <div class="mx-auto flex w-[80%] flex-col ">
-      <h1 class="font-mosk text-3xl font-bold tracking-wide">Statistics</h1>
-      <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
-      <div class="mt-3 flex flex-col gap-9 pt-12">
-        <div class="flex h-[340px] gap-4 ">
+    <div class="mx-auto flex w-[90%] flex-col overflow-hidden lg:w-[80%]">
+      <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Statistics</h1>
+      <div class="mt-1 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray lg:mt-3"></div>
+      <div class="flex flex-col gap-9 py-6 lg:py-12">
+        <div class="flex flex-wrap gap-4">
           <HourPerDay />
           <Correctness />
         </div>

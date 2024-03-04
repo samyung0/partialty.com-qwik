@@ -13,5 +13,6 @@ export default [
   "https://www.partialty.com/creator/",
   "https://www.partialty.com/members/dashboard/",
   "https://www.partialty.com/profile/",
+  "https://www.partialty.com/profile/resetPassword/",
   "https://www.partialty.com/uploadRepo/",
 ];
