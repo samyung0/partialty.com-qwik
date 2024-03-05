@@ -3,7 +3,7 @@ import { Link } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
-    <footer class=" bg-primary-dark-gray text-background-light-gray dark:bg-black/40">
+    <footer class=" bg-primary-dark-gray text-background-light-gray dark:bg-disabled-dark">
       <div class="flex w-full flex-col items-center justify-center py-20 pt-40 xl:flex-row xl:items-start">
         <div class="pb-8 text-center xl:w-[50%]">
           <p class="text-[2rem] font-bold tracking-widest">Partialty.com</p>

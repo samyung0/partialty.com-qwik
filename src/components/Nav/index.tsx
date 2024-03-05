@@ -48,8 +48,8 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
     nav("/");
   });
   const login = useStore({
-    isLoading: !!props.user,
-    isLoggedIn: !props.user,
+    isLoading: props.user === undefined,
+    isLoggedIn: props.user !== undefined,
     user: props.user,
   });
   useVisibleTask$(async () => {
@@ -342,7 +342,8 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
 
                 <span
                   class={
-                    "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
+                    "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform " +
+                    (!props.disableTheme ? " dark:text-background-light-gray" : "")
                   }
                 >
                   <IoCaretDown />
