@@ -205,8 +205,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       }
        </style>
        `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
-          <span style="position:relative;background:transparent;color:inherit;z-index:2">${string}</span>
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;">
+          <span style="position:relative;background:transparent;color:inherit;z-index:2;white-space:nowrap;">${string}</span>
           <span id="${uuid}lower">${combinedHighlightSVGString}</span>
           <span ${
             node.sync &&

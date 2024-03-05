@@ -8,7 +8,7 @@ import ContentAudio from "~/components/_Index/ContentAudio";
 import ContentInteractive from "~/components/_Index/ContentInteractive";
 import ContentVarieties from "~/components/_Index/ContentVarieties";
 import Hero from "~/components/_Index/Hero";
-import Nav from "~/components/_Index/Nav";
+import IndexNav from "~/components/_Index/Nav";
 
 export default component$(() => {
   const params = useLocation().url.searchParams;
@@ -29,7 +29,7 @@ export default component$(() => {
   //     console.log(a);
   //   }, 1000);
   // });
-  return import.meta.env.MODE === "production" ? (
+  return import.meta.env.MODE === "production" && !params.get("preview") ? (
     <main class="flex h-[100vh] items-center justify-center overflow-hidden">
       <img
         src={UnderConstruction}
@@ -57,7 +57,9 @@ export default component$(() => {
     </main>
   ) : (
     <main class="relative min-h-[100vh] bg-background-light-gray">
-      <Nav />
+      <div class="hidden 2xl:block">
+        <IndexNav />
+      </div>
       <Hero />
       <ContentVarieties />
       <ContentInteractive />

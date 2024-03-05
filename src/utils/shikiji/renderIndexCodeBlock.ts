@@ -9,10 +9,10 @@ export default async ({ code }: { code: string }) => {
     transformers: [
       {
         pre(node) {
-          addClassToHast(node, `w-[100%] text-lg`);
+          addClassToHast(node, `w-[100%] lg:text-lg text-base`);
         },
         line(node) {
-          addClassToHast(node, `font-bold leading-8`);
+          addClassToHast(node, `font-bold lg:leading-8 leading-6`);
         },
       },
     ],

@@ -57,7 +57,7 @@ export default component$(
       wrongInfo: "",
     });
     const nav = useNavigate();
-    const isSetBio = useSignal(true);
+    const isSetBio = useSignal(false);
     const originalAvatar = useComputed$(() =>
       cloudinaryDefaultPics.value
         ? cloudinaryDefaultPics.value[
@@ -244,159 +244,161 @@ export default component$(
               }
             >
               <div class="flex flex-col items-center justify-center py-10 md:py-16">
-                <h1 class="text-center font-mosk text-[2rem] font-bold tracking-wide md:text-[2.5rem] md:tracking-wider">
-                  Sign up
-                </h1>
-                <br />
-                <form
-                  preventdefault:submit
-                  onSubmit$={handleSubmitPartOne}
-                  class="space-y-3 md:space-y-6"
-                >
-                  <input
-                    type="text"
-                    name="avatar_cloudinary_id"
-                    hidden
-                    class="hidden"
-                    aria-hidden
-                    value={defaultBio.avatar.public_id}
-                  />
-                  <input
-                    type="text"
-                    name="nickname"
-                    hidden
-                    class="hidden"
-                    aria-hidden
-                    value={defaultBio.nickname}
-                  />
-                  <div>
-                    <label for="email" class="cursor-pointer text-base md:text-lg">
-                      Email address
-                    </label>
-                    <div class="md:pt-1">
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={firstForm.email}
-                        onInput$={(_, el) => (firstForm.email = el.value)}
-                        class={
-                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                          (formError.email || formError.wrongInfo
-                            ? "border-tomato"
-                            : "border-black/10")
-                        }
-                      />
+                <div>
+                  <h1 class="text-center font-mosk text-[2rem] font-bold tracking-wide md:text-[2.5rem] md:tracking-wider">
+                    Sign up
+                  </h1>
+                  <br />
+                  <form
+                    preventdefault:submit
+                    onSubmit$={handleSubmitPartOne}
+                    class="space-y-3 md:space-y-6"
+                  >
+                    <input
+                      type="text"
+                      name="avatar_cloudinary_id"
+                      hidden
+                      class="hidden"
+                      aria-hidden
+                      value={defaultBio.avatar.public_id}
+                    />
+                    <input
+                      type="text"
+                      name="nickname"
+                      hidden
+                      class="hidden"
+                      aria-hidden
+                      value={defaultBio.nickname}
+                    />
+                    <div>
+                      <label for="email" class="cursor-pointer text-base md:text-lg">
+                        Email address
+                      </label>
+                      <div class="md:pt-1">
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          autoComplete="email"
+                          required
+                          value={firstForm.email}
+                          onInput$={(_, el) => (firstForm.email = el.value)}
+                          class={
+                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
+                            (formError.email || formError.wrongInfo
+                              ? "border-tomato"
+                              : "border-black/10")
+                          }
+                        />
+                      </div>
+                      <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
+                        {formError.email || formError.wrongInfo}
+                      </p>
                     </div>
-                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
-                      {formError.email || formError.wrongInfo}
-                    </p>
-                  </div>
-                  <div>
-                    <label for="password" class="cursor-pointer text-base md:text-lg">
-                      Password
-                    </label>
-                    <div class="pt-1">
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        autoComplete="off"
-                        required
-                        value={firstForm.password}
-                        onInput$={(_, el) => (firstForm.password = el.value)}
-                        class={
-                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                          (formError.password ? "border-tomato" : "border-black/10")
-                        }
-                      />
+                    <div>
+                      <label for="password" class="cursor-pointer text-base md:text-lg">
+                        Password
+                      </label>
+                      <div class="pt-1">
+                        <input
+                          id="password"
+                          name="password"
+                          type="password"
+                          autoComplete="off"
+                          required
+                          value={firstForm.password}
+                          onInput$={(_, el) => (firstForm.password = el.value)}
+                          class={
+                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
+                            (formError.password ? "border-tomato" : "border-black/10")
+                          }
+                        />
+                      </div>
+                      <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
+                        {formError.password}
+                      </p>
                     </div>
-                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
-                      {formError.password}
-                    </p>
-                  </div>
-                  <div>
-                    <label for="rePassword" class="cursor-pointer text-base md:text-lg">
-                      Re-enter Password
-                    </label>
-                    <div class="pt-1">
-                      <input
-                        id="rePassword"
-                        name="rePassword"
-                        type="password"
-                        autoComplete="off"
-                        required
-                        value={firstForm.rePassword}
-                        onInput$={(_, el) => (firstForm.rePassword = el.value)}
-                        class={
-                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                          (formError.wrongRePassword ? "border-tomato" : "border-black/10")
-                        }
-                      />
+                    <div>
+                      <label for="rePassword" class="cursor-pointer text-base md:text-lg">
+                        Re-enter Password
+                      </label>
+                      <div class="pt-1">
+                        <input
+                          id="rePassword"
+                          name="rePassword"
+                          type="password"
+                          autoComplete="off"
+                          required
+                          value={firstForm.rePassword}
+                          onInput$={(_, el) => (firstForm.rePassword = el.value)}
+                          class={
+                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
+                            (formError.wrongRePassword ? "border-tomato" : "border-black/10")
+                          }
+                        />
+                      </div>
+                      <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
+                        {formError.wrongRePassword || formError.error}
+                      </p>
                     </div>
-                    <p class="w-[250px] pt-1 text-[0.75rem] tracking-normal text-tomato md:w-[300px] md:text-[1rem] md:tracking-wide">
-                      {formError.wrongRePassword || formError.error}
-                    </p>
-                  </div>
-                  {/* <div class="g-recaptcha" data-sitekey={"6LcrulQpAAAAAEaVgoLxOZRbQMwIFYBDwHj0VAXG"}>
+                    {/* <div class="g-recaptcha" data-sitekey={"6LcrulQpAAAAAEaVgoLxOZRbQMwIFYBDwHj0VAXG"}>
                     Submit
                   </div> */}
-                  <br />
-                  <button
-                    type="submit"
-                    class={
-                      "relative block w-full rounded-lg bg-primary-dark-gray p-3 text-background-light-gray transition-all md:p-4"
-                    }
-                    disabled={isSetBio.value || loadingStepOne.value}
-                  >
-                    {loadingStepOne.value && (
-                      <span>
-                        <LoadingSVG />
-                      </span>
-                    )}
-                    {!loadingStepOne.value && (
-                      <span class="text-[0.875rem] md:text-[1rem]">Yup, Next</span>
-                    )}
-                  </button>
-                </form>
+                    <br />
+                    <button
+                      type="submit"
+                      class={
+                        "relative block w-full rounded-lg bg-primary-dark-gray p-3 text-background-light-gray transition-all md:p-4"
+                      }
+                      disabled={isSetBio.value || loadingStepOne.value}
+                    >
+                      {loadingStepOne.value && (
+                        <span>
+                          <LoadingSVG />
+                        </span>
+                      )}
+                      {!loadingStepOne.value && (
+                        <span class="text-[0.875rem] md:text-[1rem]">Yup, Next</span>
+                      )}
+                    </button>
+                  </form>
 
-                <div class="relative mx-auto my-8 mb-4 flex w-[90%] items-center self-stretch md:my-10 md:mb-6 md:w-[80%]">
-                  <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
-                  <span class="px-4 tracking-wide">or</span>
-                  <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
-                </div>
+                  <div class="relative mx-auto my-8 mb-4 flex items-center self-stretch md:my-10 md:mb-6">
+                    <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+                    <span class="px-4 tracking-wide">or</span>
+                    <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+                  </div>
 
-                <div class="mx-auto flex w-[60%] items-center justify-evenly self-stretch md:w-full">
-                  <Link class="p-4 pt-0" aria-label="Login With Google" href="/login/google/">
-                    <img
-                      src={GoogleIcon}
-                      alt="Login With Google"
-                      width={55}
-                      height={55}
-                      class="h-[40px] w-[40px] md:h-[55px] md:w-[55px]"
-                    />
-                  </Link>
-                  <Link class="p-4 pt-0" aria-label="Login With Github" href="/login/github/">
-                    <img
-                      src={GithubIcon}
-                      alt="Login With Github"
-                      width={50}
-                      height={50}
-                      class="h-[35px] w-[35px] md:h-[50px] md:w-[50px]"
-                    />
-                  </Link>
-                </div>
+                  <div class="mx-auto flex w-[60%] items-center justify-evenly self-stretch md:w-full">
+                    <Link class="p-4 pt-0" aria-label="Login With Google" href="/login/google/">
+                      <img
+                        src={GoogleIcon}
+                        alt="Login With Google"
+                        width={55}
+                        height={55}
+                        class="h-[40px] w-[40px] md:h-[55px] md:w-[55px]"
+                      />
+                    </Link>
+                    <Link class="p-4 pt-0" aria-label="Login With Github" href="/login/github/">
+                      <img
+                        src={GithubIcon}
+                        alt="Login With Github"
+                        width={50}
+                        height={50}
+                        class="h-[35px] w-[35px] md:h-[50px] md:w-[50px]"
+                      />
+                    </Link>
+                  </div>
 
-                <div class="text-center md:pt-4">
-                  <Link
-                    prefetch
-                    href="/login/"
-                    class="inline-block text-[0.75rem] underline decoration-wavy underline-offset-[6px] md:text-[1rem]"
-                  >
-                    Have an account already? Come here
-                  </Link>
+                  <div class="text-center md:pt-4">
+                    <Link
+                      prefetch
+                      href="/login/"
+                      class="inline-block text-[0.75rem] underline decoration-wavy underline-offset-[6px] md:text-[1rem]"
+                    >
+                      Have an account already? Come here
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

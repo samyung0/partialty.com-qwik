@@ -32,7 +32,7 @@ export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTim
   });
 
   return (
-    <div class="border-1 flex w-[60%]  items-center self-center  rounded-xl border-2 border-black p-3 ">
+    <div class="border-1 flex min-h-[40px] w-full max-w-[300px]  items-center justify-center self-center rounded-xl border-2  border-black px-3 md:min-h-[50px] md:w-[80%] md:max-w-[unset] lg:w-[60%] lg:p-3">
       <button
         onClick$={() => {
           isPlaying.value = !isPlaying.value;
@@ -43,7 +43,7 @@ export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTim
           alt="playIcon"
           width={40}
           height={40}
-          class="rounded-full p-1 hover:bg-primary-dark-gray/10 "
+          class="h-[25px] w-[25px] min-w-[25px] rounded-full p-1 hover:bg-primary-dark-gray/10 md:h-[40px] md:w-[40px]"
         />
       </button>
       <input
@@ -55,7 +55,7 @@ export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTim
         onInput$={(e: Event, currentTarget: HTMLInputElement) => {
           jumpTo.value = Number(currentTarget.value);
         }}
-        class=" mx-6 h-1 w-96 rounded-lg"
+        class=" mx-3 h-1 w-[200px] rounded-lg md:mx-6 md:w-96"
       />
 
       <audio

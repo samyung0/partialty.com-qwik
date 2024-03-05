@@ -8,6 +8,7 @@ import codeBlock from "~/components/_Index/codeBlock";
 import blankChar from "~/components/_Index/codeBlock/blankChar";
 
 import { Link } from "@builder.io/qwik-city";
+import Nav from "~/components/Nav";
 import styles from "./index.module.css";
 
 export default component$(() => {
@@ -55,13 +56,16 @@ export default component$(() => {
   let blankCharSum = 0,
     currentCharWithoutNewLine = typeWriter.currentChar + 1;
   return (
-    <section class="relative h-[100vh] bg-background-light-gray after:absolute after:right-0 after:top-0 after:z-0 after:h-[100%] after:w-[70%] after:bg-sea">
-      <div class="relative z-10 flex h-[100vh] justify-center">
-        <div class="flex w-[50%] items-center justify-end pr-[6vw]">
-          <div class="relative flex h-[400px] w-[600px] items-start justify-stretch overflow-hidden bg-code-editor-one-dark-pro p-8 shadow-2xl">
+    <section class="relative h-[100vh] bg-sea 2xl:bg-background-light-gray 2xl:after:absolute 2xl:after:right-0 2xl:after:top-0 2xl:after:z-0 2xl:after:h-[100%] 2xl:after:w-[70%] 2xl:after:bg-sea">
+      <div class="absolute z-[100] block w-full 2xl:hidden">
+        <Nav disableTheme />
+      </div>
+      <div class="relative z-10 flex h-[100vh] flex-col items-center justify-center pt-12 md:pt-0 2xl:flex-row">
+        <div class=" flex items-center justify-center overflow-auto [order:1] xl:w-[50%] 2xl:justify-end 2xl:pr-[6vw] 2xl:[order:0]">
+          <div class="relative flex h-[300px] w-[500px] max-w-[95vw] items-start justify-stretch overflow-auto bg-code-editor-one-dark-pro p-4 shadow-2xl lg:h-[400px] lg:w-[600px] lg:p-8">
             <div dangerouslySetInnerHTML={codeDisplay.value}></div>
-            <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
-              <pre class="text-lg font-bold leading-8">
+            <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-4 lg:p-8">
+              <pre class="text-base font-bold leading-6 lg:text-lg lg:leading-8">
                 {typeWriter.blankCharArr.map((blankCount, index) => {
                   currentCharWithoutNewLine--;
                   return [
@@ -102,8 +106,16 @@ export default component$(() => {
             </div>
           </div>
         </div>
-        <div class="flex w-[50%] flex-col items-start justify-center ">
-          <h1 class="max-w-[600px] pb-16 font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
+        <div class="flex flex-col items-center justify-center px-2 [order:0] xl:w-[50%] 2xl:items-start 2xl:[order:1]">
+          <h1>
+            <Link
+              href="/"
+              class="font-mosk text-[1.5rem] font-[900] leading-[3rem] lg:text-[2rem] lg:leading-[3.5rem]"
+            >
+              Partialty.com
+            </Link>
+          </h1>
+          <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] lg:pb-8 lg:text-[2.5rem] lg:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
             Learn{" "}
             <span class="relative inline-block p-1">
               <span
@@ -115,11 +127,11 @@ export default component$(() => {
               <span class="relative z-10">Web Development</span>
             </span>{" "}
             like you have <i>never</i> before.
-          </h1>
+          </h2>
           <Link
             href="/signup/"
             prefetch
-            class="rounded-lg bg-primary-dark-gray px-8 py-4 text-background-light-gray shadow-2xl"
+            class="mb-6 rounded-lg bg-primary-dark-gray px-6 py-3 text-[0.875rem] text-background-light-gray shadow-2xl lg:mb-8 lg:px-8 lg:py-4 lg:text-[1rem] 2xl:mb-0"
           >
             Get Started
           </Link>

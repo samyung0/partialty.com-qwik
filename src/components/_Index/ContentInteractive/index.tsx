@@ -126,16 +126,16 @@ export default component$(() => {
 
   return (
     <section class="h-[100vh] bg-mint">
-      <div class="flex h-[100vh] flex-col items-center justify-center overflow-hidden">
-        <div class="flex h-[40%] items-center justify-center">
-          <h1 class="text-center font-mosk text-[2.5rem] font-[900] leading-[3.5rem]">
+      <div class="flex h-[100vh] flex-col items-center justify-center gap-6 overflow-hidden md:gap-12">
+        <div class="flex items-center justify-center">
+          <h1 class="p-2 text-center font-mosk text-lg font-[900] md:text-3xl lg:text-[2rem] lg:leading-[3rem] xl:text-[2.5rem] xl:leading-[3.5rem]">
             Enhance your learning experience with the help of the
             <br />
             built-in interactive code playground.
           </h1>
         </div>
-        <div class="relative flex h-[60%] items-start justify-between gap-[8em]">
-          <div class=" flex h-[500px] w-[650px] overflow-hidden rounded-xl bg-code-editor-one-dark-pro">
+        <div class="relative flex w-full flex-col items-center justify-evenly gap-2 lg:flex-row lg:gap-6 lg:p-6">
+          <div class=" flex max-h-[40vh] w-[500px] max-w-[95vw] overflow-auto rounded-xl bg-code-editor-one-dark-pro lg:h-[450px] lg:w-[650px] lg:max-w-[50vw] xl:h-[500px]">
             <div class=" flex flex-col gap-2 bg-primary-dark-gray px-2 pt-2">
               <div class="h-[15px] w-[15px] rounded-full bg-red-500"></div>
               <div class="h-[15px] w-[15px] rounded-full bg-yellow"></div>
@@ -146,10 +146,10 @@ export default component$(() => {
                 <img src={TypeScriptIcon} alt="typescript-icon" width={14} height={14} />
                 <p class="text-xs text-background-light-gray">file.tsx</p>
               </div>
-              <div class="relative flex h-full w-full items-start justify-stretch overflow-hidden bg-code-editor-one-dark-pro p-8 ">
+              <div class="relative flex h-full w-full items-start justify-stretch bg-code-editor-one-dark-pro p-3 xl:p-8 ">
                 <div dangerouslySetInnerHTML={codeDisplay.value}></div>
-                <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-8 ">
-                  <pre class="text-lg font-bold leading-8">
+                <div class="absolute left-0 top-0 flex items-start justify-stretch p-3 xl:p-8">
+                  <pre class="text-base font-bold leading-6 lg:text-lg lg:leading-8">
                     {blankCharArr.value.map((blankCount, row) => [
                       <span key={`blankline-${row}`}>
                         {Array.from(Array(blankCount)).map((char, charIdx) => (
@@ -172,8 +172,10 @@ export default component$(() => {
               </div>
             </div>
           </div>
-          <div class="h-[500px] w-[800px] overflow-hidden rounded-lg border-2 border-black bg-background-light-gray">
-            {codeSnippets[codeOutputIdx.value]}
+          <div class="max-h-[40vh] max-w-[95vw] overflow-auto  rounded-lg border-2 border-black bg-background-light-gray lg:max-w-[50vw]">
+            <div class="h-[300px] w-[500px] lg:h-[440px] lg:w-[600px] xl:h-[500px] xl:w-[800px]">
+              {codeSnippets[codeOutputIdx.value]}
+            </div>
           </div>
         </div>
       </div>

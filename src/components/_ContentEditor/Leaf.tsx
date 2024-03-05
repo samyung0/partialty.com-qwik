@@ -39,14 +39,14 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 
   if (leaf.background) {
     children = (
-      <span style={style} className="relative px-[4px]">
+      <span style={style} className="relative whitespace-nowrap px-[4px]">
         <span
           className={`absolute left-[-4px] top-[-2px] z-0 h-[calc(100%+4px)] w-[calc(100%+8px)]`}
           style={{ ...style, fill: leaf.background, pointerEvents: "none" }}
         >
           <HighlightSVG />
         </span>
-        <span style={style} className="relative z-10">
+        <span style={style} className="relative z-10 whitespace-nowrap">
           {children}
         </span>
       </span>

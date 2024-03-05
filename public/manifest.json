@@ -1,9 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "qwik-project-name",
-  "short_name": "Welcome to Qwik",
+  "name": "Partialty.com",
+  "short_name": "Partialty.com",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "A Qwik project app."
+  "description": "Partialty is an e-learning platform that teaches web development in simple words and includes frameworks such as React, Vue, Next JS and much more. The biggest difference that sets aside us and the other learning platform is the addition of audio that explains alongside the text.",
+  "orientation": "portrait"
 }
