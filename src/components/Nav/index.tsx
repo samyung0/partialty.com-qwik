@@ -53,6 +53,7 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
     user: props.user,
   });
   useVisibleTask$(async () => {
+    if (login.isLoggedIn) return;
     const res = await getUser();
     login.isLoading = false;
     if (res) {
@@ -312,7 +313,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               <LoadingSVG />
             </span>
           ) : login.isLoggedIn && login.user ? (
-            <li class="relative ml-auto flex gap-3 px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
+            <li
+              class={
+                (props.disableTheme ? "ml-auto  " : "") +
+                "relative flex gap-3 px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex"
+              }
+            >
               <div class={"flex gap-2"}>
                 <span class="relative">
                   <img
@@ -382,7 +388,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               </div>
             </li>
           ) : (
-            <li class="ml-auto rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md">
+            <li
+              class={
+                (props.disableTheme ? "ml-auto " : "") +
+                " rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md"
+              }
+            >
               <Link prefetch href={"/login"} class="whitespace-nowrap">
                 Login | Signup
               </Link>
