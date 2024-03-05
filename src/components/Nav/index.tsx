@@ -71,12 +71,18 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
         >
           <button
             onClick$={() => (showSideNav.value = false)}
-            class="absolute right-5 top-5 text-[20px] text-primary-dark-gray dark:text-background-light-gray"
+            class={
+              "absolute right-5 top-5 text-[20px] text-primary-dark-gray " +
+              (!props.disableTheme ? " dark:text-background-light-gray" : "")
+            }
           >
             <LuX />
           </button>
           <div
-            class="w-[80%] border-r-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+            class={
+              "w-[80%] border-r-2 border-primary-dark-gray bg-background-light-gray" +
+              (!props.disableTheme ? " dark:bg-primary-dark-gray" : "")
+            }
             onClick$={(e) => e.stopPropagation()}
           >
             <ul class="mx-auto flex w-[90%] flex-col gap-6 py-6">
@@ -143,7 +149,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               <li>
                 <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
                   Home
-                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                  <span
+                    class={
+                      "text-[20px] text-primary-dark-gray" +
+                      (!props.disableTheme ? "  dark:text-background-light-gray" : "")
+                    }
+                  >
                     <LuHome />
                   </span>
                 </Link>
@@ -151,7 +162,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               <li>
                 <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
                   Courses
-                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                  <span
+                    class={
+                      "text-[20px] text-primary-dark-gray" +
+                      (!props.disableTheme ? "  dark:text-background-light-gray" : "")
+                    }
+                  >
                     <LuFileText />
                   </span>
                 </Link>
@@ -159,7 +175,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               <li>
                 <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
                   Projects
-                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                  <span
+                    class={
+                      "text-[20px] text-primary-dark-gray" +
+                      (!props.disableTheme ? "  dark:text-background-light-gray" : "")
+                    }
+                  >
                     <LuFile />
                   </span>
                 </Link>
@@ -167,7 +188,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
               <li>
                 <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
                   Playground
-                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                  <span
+                    class={
+                      "text-[20px] text-primary-dark-gray" +
+                      (!props.disableTheme ? "  dark:text-background-light-gray" : "")
+                    }
+                  >
                     <LuFileTerminal />
                   </span>
                 </Link>
@@ -207,13 +233,16 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
           </div>
         </nav>
       )}
-      <nav class="dark:text-background-light-gray">
+      <nav class={!props.disableTheme ? "dark:text-background-light-gray" : ""}>
         <div class="mx-auto flex w-[95%] items-center justify-between py-6 text-[25px]  md:w-[80%] lg:hidden">
           <h1 class="font-mosk text-3xl font-bold tracking-wide">
             <Link href="/members/dashboard/">Partialty.com</Link>
           </h1>
           <button
-            class="p-2 text-primary-dark-gray dark:text-background-light-gray"
+            class={
+              "p-2 text-primary-dark-gray" +
+              (!props.disableTheme ? " dark:text-background-light-gray" : "")
+            }
             onClick$={() => (showSideNav.value = !showSideNav.value)}
           >
             <LuAlignJustify />
@@ -223,7 +252,12 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
           <li class="px-2 py-2">
             <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
               Home
-              <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+              <span
+                class={
+                  "text-[20px] text-primary-dark-gray" +
+                  (!props.disableTheme ? "  dark:text-background-light-gray" : "")
+                }
+              >
                 <LuHome />
               </span>
             </Link>
