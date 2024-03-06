@@ -60,12 +60,13 @@ export const AddTag = component$(
     createdTags: Signal<Tag[]>;
   }) => {
     const userRole = useUserLoader().value.role;
-    const formData = useStore<NewTag>({
+    const formData = useStore<Tag>({
       id: uuidv4(),
       name: "",
       slug: "",
       link: "/catalog?tag=",
       content_index_id: [],
+      approved: false
     });
     const formError = useStore({
       name: "",

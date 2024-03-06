@@ -72,12 +72,13 @@ export const AddCategory = component$(
     createdCategory: Signal<ContentCategory | undefined>;
   }) => {
     const userRole = useUserLoader().value.role;
-    const formData = useStore<NewTag>({
+    const formData = useStore<ContentCategory>({
       id: uuidv4(),
       name: "",
       slug: "",
       link: "/catalog?category=",
       content_index_id: [],
+      approved: false
     });
     const formError = useStore({
       name: "",

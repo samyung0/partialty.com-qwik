@@ -1202,7 +1202,8 @@ export default component$(
                             </div>
                           </div>
                           <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
-                            {!courses[currentCourse.id].courseApproval.ready_for_approval && (
+                            {!courses[currentCourse.id].courseApproval.ready_for_approval &&
+                              courses[currentCourse.id].courseApproval.status === "pending" && (
                               <span class="inline-flex items-center gap-2">
                                 <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                   <LuInfo />
@@ -1247,8 +1248,7 @@ export default component$(
                                 </span>
                               )}
 
-                            {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                              courses[currentCourse.id].courseApproval.status === "approved" && (
+                            {courses[currentCourse.id].courseApproval.status === "approved" && (
                                 <span class="inline-flex items-center gap-2">
                                   <span class=" text-[16px] text-mint-down lg:text-[20px]">
                                     <LuCheck />
@@ -1270,8 +1270,7 @@ export default component$(
                                 </span>
                               )}
 
-                            {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                              courses[currentCourse.id].courseApproval.status === "rejected" && (
+                            {courses[currentCourse.id].courseApproval.status === "rejected" && (
                                 <span class="inline-flex items-center gap-2 text-tomato">
                                   <span class=" text-[16px] lg:text-[20px]">
                                     <LuBan />
@@ -1280,8 +1279,7 @@ export default component$(
                                 </span>
                               )}
 
-                            {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                              courses[currentCourse.id].courseApproval.status ===
+                            {courses[currentCourse.id].courseApproval.status ===
                                 "need_amendment" && (
                                 <span class="inline-flex items-center gap-2 text-tomato">
                                   <span class=" text-[16px] lg:text-[20px]">
@@ -1426,26 +1424,29 @@ export default component$(
                                   </div>
                                 )}
 
-                                {courses[currentCourse.id].tags && (
-                                  <div class="flex gap-4 pb-2">
-                                    <h3 class="w-[30%]">Tags:</h3>
-                                    <ul class="flex w-[70%] flex-wrap gap-x-4 gap-y-2">
-                                      {(courses[currentCourse.id].tags || [])
-                                        .filter((tag) => tags.find((tag2) => tag2.id === tag))
-                                        .map((tag) => (
-                                          <li key={`Course${currentCourse.id}Tag${tag}`}>
-                                            <a
-                                              target="_blank"
-                                              class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
-                                              href={tags.find((tag2) => tag2.id === tag)!.link}
-                                            >
-                                              {tags.find((tag2) => tag2.id === tag)!.name}
-                                            </a>
-                                          </li>
-                                        ))}
-                                    </ul>
-                                  </div>
-                                )}
+                                {courses[currentCourse.id].tags &&
+                                  courses[currentCourse.id].tags!.filter((tag) =>
+                                    tags.find((tag2) => tag2.id === tag)
+                                  ).length > 0 && (
+                                    <div class="flex gap-4 pb-2">
+                                      <h3 class="w-[30%]">Tags:</h3>
+                                      <ul class="flex w-[70%] flex-wrap gap-x-4 gap-y-2">
+                                        {(courses[currentCourse.id].tags || [])
+                                          .filter((tag) => tags.find((tag2) => tag2.id === tag))
+                                          .map((tag) => (
+                                            <li key={`Course${currentCourse.id}Tag${tag}`}>
+                                              <a
+                                                target="_blank"
+                                                class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
+                                                href={tags.find((tag2) => tag2.id === tag)!.link}
+                                              >
+                                                {tags.find((tag2) => tag2.id === tag)!.name}
+                                              </a>
+                                            </li>
+                                          ))}
+                                      </ul>
+                                    </div>
+                                  )}
 
                                 <div
                                   class="mt-4 flex gap-4 pb-2 lg:mt-6"

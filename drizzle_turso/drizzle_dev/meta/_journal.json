@@ -302,6 +302,13 @@
       "when": 1709192004320,
       "tag": "0042_tidy_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1709722115703,
+      "tag": "0043_abandoned_power_man",
+      "breakpoints": true
     }
   ]
 }

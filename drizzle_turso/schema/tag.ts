@@ -1,5 +1,5 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { blob, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { blob, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const tag = sqliteTable("tag", {
   id: text("id").notNull().primaryKey(),
@@ -7,6 +7,7 @@ export const tag = sqliteTable("tag", {
   name: text("name").notNull(),
   link: text("link").notNull(),
   content_index_id: blob("content_index_id", { mode: "json" }).$type<string[]>().notNull(),
+  approved: integer("approved", { mode: "boolean" }).notNull().default(true),
 });
 
 export type Tag = InferSelectModel<typeof tag>;

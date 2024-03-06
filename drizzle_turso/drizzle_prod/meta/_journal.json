@@ -330,6 +330,13 @@
       "when": 1709192007708,
       "tag": "0046_curved_blob",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1709722123759,
+      "tag": "0047_lean_tyger_tiger",
+      "breakpoints": true
     }
   ]
 }

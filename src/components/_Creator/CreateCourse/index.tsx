@@ -1,6 +1,8 @@
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
-import { eq } from "drizzle-orm";
+import { ResultSet } from "@libsql/client/.";
+import { ExtractTablesWithRelations, eq } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import { v4 as uuidv4 } from "uuid";
 import Step1 from "~/components/_Creator/CreateCourse/step1";
 import Step2 from "~/components/_Creator/CreateCourse/step2";
@@ -14,35 +16,99 @@ import drizzleClient from "~/utils/drizzleClient";
 import useWS from "~/utils/useWS";
 import type { NewContent } from "../../../../drizzle_turso/schema/content";
 import { content } from "../../../../drizzle_turso/schema/content";
-import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
+import {
+  content_category,
+  type ContentCategory,
+} from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
 import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
 import { profiles } from "../../../../drizzle_turso/schema/profiles";
-import type { Tag } from "../../../../drizzle_turso/schema/tag";
+import { tag, type Tag } from "../../../../drizzle_turso/schema/tag";
+import schemaExport from "../../../../drizzle_turso/schemaExport";
 
-const insertCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
-  await drizzleClient().insert(course_approval).values(courseApproval);
+type Tx = SQLiteTransaction<
+  "async",
+  ResultSet,
+  typeof schemaExport,
+  ExtractTablesWithRelations<typeof schemaExport>
+>;
+
+const insertCourseApproval = server$(async (tx: Tx, courseApproval: NewCourseApproval) => {
+  await tx.insert(course_approval).values(courseApproval);
 });
 
-const insertCourse = server$(async (course: NewContentIndex) => {
-  await drizzleClient().insert(content_index).values(course);
+const insertCourse = server$(async (tx: Tx, course: NewContentIndex) => {
+  await tx.insert(content_index).values(course);
 });
 
-const insertChapter = server$(async (chapter: NewContent) => {
-  await drizzleClient().insert(content).values(chapter);
+const insertChapter = server$(async (tx: Tx, chapter: NewContent) => {
+  await tx.insert(content).values(chapter);
+});
+
+const insertTag = server$(async (tx: Tx, _tag: Tag) => {
+  await tx.insert(tag).values(_tag);
+});
+
+const insertContentCategory = server$(async (tx: Tx, category: ContentCategory) => {
+  await tx.insert(content_category).values(category);
 });
 
 const setCourseServer = server$(
-  async (accessible_courses: string, accessible_courses_read: string, userId: string) => {
-    await drizzleClient()
+  async (tx: Tx, accessible_courses: string, accessible_courses_read: string, userId: string) => {
+    await tx
       .update(profiles)
       .set({
         accessible_courses: accessible_courses,
         accessible_courses_read: accessible_courses_read,
       })
       .where(eq(profiles.id, userId));
+  }
+);
+
+const insertCourseHandler = server$(
+  async (
+    courseData: NewContentIndex,
+    chapter: NewContent,
+    courseApproval: NewCourseApproval,
+    _accessible_courses: string | null,
+    _accessible_courses_read: string | null,
+    userId: string,
+    category: ContentCategory | undefined,
+    _tag: Tag[]
+  ) => {
+    return await drizzleClient().transaction(async (tx) => {
+      await insertCourse(tx, courseData);
+      await insertCourseApproval(tx, courseApproval); // insert after course due to fk constraint
+      if (courseData.is_single_page) await insertChapter(tx, chapter); // insert after course due to fk constraint
+
+      if (category) await insertContentCategory(tx, category);
+      if (_tag.length > 0) await Promise.all(_tag.map((tag) => insertTag(tx, tag)));
+
+      let accessible_courses: string[];
+      try {
+        accessible_courses = JSON.parse(_accessible_courses || "[]");
+      } catch (e) {
+        console.error(e);
+        accessible_courses = [];
+      }
+      accessible_courses.push(courseData.id);
+      let accessible_courses_read: string[];
+      try {
+        accessible_courses_read = JSON.parse(_accessible_courses_read || "[]");
+      } catch (e) {
+        console.error(e);
+        accessible_courses_read = [];
+      }
+      accessible_courses_read.push(courseData.id);
+      await setCourseServer(
+        tx,
+        JSON.stringify(accessible_courses),
+        JSON.stringify(accessible_courses_read),
+        userId
+      );
+    });
   }
 );
 
@@ -130,32 +196,16 @@ export default component$(() => {
       if (courseData.is_single_page) {
         courseData.chapter_order.push(newContent.id);
       }
-      await insertCourse(courseData);
-      await insertCourseApproval(courseApproval); // insert after course due to fk constraint
-      if (courseData.is_single_page) await insertChapter(newContent); // insert after course due to fk constraint
-
-      let accessible_courses: string[];
-      try {
-        accessible_courses = JSON.parse(user.accessible_courses || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses = [];
-      }
-      accessible_courses.push(courseData.id);
-      let accessible_courses_read: string[];
-      try {
-        accessible_courses_read = JSON.parse(user.accessible_courses_read || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses_read = [];
-      }
-      accessible_courses_read.push(courseData.id);
-      await setCourseServer(
-        JSON.stringify(accessible_courses),
-        JSON.stringify(accessible_courses_read),
-        user.userId
+      await insertCourseHandler(
+        courseData,
+        newContent,
+        courseApproval,
+        user.accessible_courses,
+        user.accessible_courses_read,
+        user.userId,
+        createdCategory.value,
+        createdTags.value
       );
-      console.log(ws.value);
       ws.value?.send(
         JSON.stringify({
           type: "createContent",
