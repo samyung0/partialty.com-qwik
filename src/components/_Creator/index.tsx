@@ -40,9 +40,9 @@ export default component$(
     return (
       <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
         <Nav user={user} />
-        <div class="mx-auto flex max-w-[80%] pt-6">
-          <div class="flex w-[20%] flex-col gap-4">
-            <div class="self-center">
+        <div class="mx-auto flex w-[95%] flex-col md:w-[80%] lg:flex-row lg:pt-6">
+          <div class="flex w-full flex-col gap-4 lg:w-[20%]">
+            <div class="hidden self-center lg:block">
               <img
                 class="h-[100px] w-[100px] rounded-full object-cover"
                 src={user.avatar_url}
@@ -51,12 +51,12 @@ export default component$(
               />
               <p class="p-1 text-center font-mosk text-lg tracking-wide">{user.nickname}</p>
             </div>
-            <div class="flex flex-col">
+            <div class="flex w-full flex-row flex-wrap items-center gap-2 lg:flex-col lg:flex-nowrap  lg:items-stretch lg:gap-0">
               {tabs.map((tab, idx) => (
                 <div class="relative flex h-full gap-1" key={`tab-${idx}`}>
                   <div
                     class={
-                      "h-full w-[5px] rounded-lg " +
+                      "hidden h-full w-[5px] rounded-lg lg:block " +
                       (idx === tabIndex.value
                         ? "bg-yellow"
                         : "bg-light-yellow dark:bg-primary-dark-gray")
@@ -90,7 +90,7 @@ export default component$(
               </div>
             </div>
           </div>
-          <div class="w-full ">
+          <div class="mt-[30px]  w-full ">
             {tabIndex.value === 0 && (
               <Course
                 ws={ws}

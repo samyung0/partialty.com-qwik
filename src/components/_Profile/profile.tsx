@@ -128,7 +128,7 @@ export default component$(() => {
                   id="nickname"
                   name="nickname"
                   class={
-                    "w-[250px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 lg:w-[400px]" +
+                    "w-[250px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 lg:w-[400px] " +
                     (bioError.nickname || bioError.wrongInfo ? "border-tomato" : "border-black/10")
                   }
                   value={formData.nickname}

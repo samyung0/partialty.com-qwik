@@ -1071,31 +1071,31 @@ export default component$(
               courseSlug={showEditCourseSlug}
             />
           )}
-        <div class="mx-auto flex w-[80%] flex-col">
-          <h1 class="font-mosk text-3xl font-bold tracking-wide">Your Courses</h1>
+        <div class="mx-auto flex w-full flex-col md:w-[90%] lg:w-[80%]">
+          <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Your Courses</h1>
           <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
-          <div class="mt-6">
+          <div class="mt-3 lg:mt-6">
             <a
               target="_blank"
               href={"/creator/create-course/"}
-              class="inline-block rounded-lg bg-primary-dark-gray px-6 py-3 text-background-light-gray shadow-lg dark:bg-highlight-dark "
+              class="inline-block rounded-lg bg-primary-dark-gray px-4 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark lg:px-6 lg:py-3 "
             >
               Create New Course
             </a>
           </div>
           <section>
             {!ws.value && (
-              <span class="mt-6 inline-block">
+              <span class="mt-3 inline-block lg:mt-6">
                 <LoadingSVG />
               </span>
             )}
             {ws.value && (
               <>
                 {displayCourses.value.length === 0 && (
-                  <p class="mt-6">You have not created any courses yet. ヾ(•ω•`)o</p>
+                  <p class="mt-3 lg:mt-6">You have not created any courses yet. ヾ(•ω•`)o</p>
                 )}
                 {displayCourses.value.length > 0 && (
-                  <ul class="flex flex-col gap-2 py-6">
+                  <ul class="flex flex-col gap-2 py-3 lg:py-6">
                     {displayCourses.value.map((currentCourse) => {
                       const displayChapters = courses[currentCourse.id].chapter_order.filter(
                         (chapter) => {
@@ -1108,7 +1108,7 @@ export default component$(
                       return (
                         <li
                           class={
-                            "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray"
+                            "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3"
                           }
                           key={`currentCourses${currentCourse.slug}`}
                         >
@@ -1120,12 +1120,12 @@ export default component$(
                             }}
                             class="flex cursor-pointer items-center justify-between"
                           >
-                            <div class="flex flex-col gap-1">
+                            <div class="flex flex-col lg:gap-1">
                               <h2 class="text-lg font-bold tracking-wide">
                                 {courses[currentCourse.id].name}
                               </h2>
                               <p class="flex items-center gap-2">
-                                <span class="text-sm tracking-wide">
+                                <span class="text-xs tracking-wide lg:text-sm">
                                   {new Date(courses[currentCourse.id].updated_at).toDateString()},{" "}
                                   {
                                     displayNamesLang[
@@ -1140,14 +1140,27 @@ export default component$(
                                     alt=""
                                     width={20}
                                     height={20}
-                                    class="rounded-full"
+                                    class="h-[16px] w-[16px] rounded-full lg:h-[20px] lg:w-[20px]"
                                   />
                                 </span>
+                                {currentCourse.is_single_page && (
+                                  <div class="inline-block items-center gap-3 pl-3 md:hidden">
+                                    <a
+                                      class="rounded-lg bg-primary-dark-gray px-3 py-1 text-[0.875rem] text-background-light-gray shadow-md md:px-6 md:py-3 lg:text-[1rem]"
+                                      href={`/contenteditor?courseId=${
+                                        currentCourse.id
+                                      }&chapterId=${courses[currentCourse.id].chapter_order[0]}`}
+                                      target="_blank"
+                                    >
+                                      Edit Content
+                                    </a>
+                                  </div>
+                                )}
                               </p>
                             </div>
                             <div class="flex items-center gap-2">
                               {currentCourse.is_single_page && (
-                                <div class="flex items-center gap-3">
+                                <div class="hidden items-center gap-3 md:flex">
                                   {!!courseIdToEditingUser[currentCourse.chapter_order[0]] && (
                                     <span>
                                       <img
@@ -1157,12 +1170,12 @@ export default component$(
                                         alt=""
                                         width={30}
                                         height={30}
-                                        class="rounded-full"
+                                        class="h-[25px] w-[25px] rounded-full lg:h-[30px] lg:w-[30px]"
                                       />
                                     </span>
                                   )}
                                   <a
-                                    class="rounded-lg bg-primary-dark-gray px-6 py-3 text-background-light-gray shadow-md"
+                                    class="rounded-lg bg-primary-dark-gray px-4 py-2 text-[0.875rem] text-background-light-gray shadow-md md:px-6 md:py-3 lg:text-[1rem]"
                                     href={`/contenteditor?courseId=${currentCourse.id}&chapterId=${
                                       courses[currentCourse.id].chapter_order[0]
                                     }`}
@@ -1172,7 +1185,7 @@ export default component$(
                                   </a>
                                 </div>
                               )}
-                              <button class="p-2">
+                              <button class="p-1 md:p-2">
                                 <span
                                   style={{
                                     transform: courses[currentCourse.id].isOpen
@@ -1188,22 +1201,22 @@ export default component$(
                               </button>
                             </div>
                           </div>
-                          <p class="mt-4 flex flex-col gap-3">
+                          <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
                             {!courses[currentCourse.id].courseApproval.ready_for_approval && (
                               <span class="inline-flex items-center gap-2">
-                                <span class="mt-[-2px] inline-block text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                   <LuInfo />
                                 </span>
                                 Not Published
                                 {courses[currentCourse.id].isPublishing && (
-                                  <span class="ml-6">
+                                  <span class="ml-3 lg:ml-6">
                                     <LoadingSVG />
                                   </span>
                                 )}
                                 {!courses[currentCourse.id].isPublishing && (
                                   <button
                                     onClick$={() => handlePublish(currentCourse.id)}
-                                    class="ml-6 underline decoration-wavy underline-offset-[6px]"
+                                    class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                   >
                                     <span>Publish</span>
                                   </button>
@@ -1214,19 +1227,19 @@ export default component$(
                             {courses[currentCourse.id].courseApproval.ready_for_approval &&
                               courses[currentCourse.id].courseApproval.status === "pending" && (
                                 <span class="inline-flex items-center gap-2">
-                                  <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                  <span class=" text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                     <LuHourglass />
                                   </span>
                                   Pending for Approval
                                   {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-6">
+                                    <span class="ml-3 lg:ml-6">
                                       <LoadingSVG />
                                     </span>
                                   )}
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
                                       onClick$={() => handleUnpublish(currentCourse.id)}
-                                      class="ml-6 underline decoration-wavy underline-offset-[6px]"
+                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                     >
                                       <span>Cancel Publish</span>
                                     </button>
@@ -1237,19 +1250,19 @@ export default component$(
                             {courses[currentCourse.id].courseApproval.ready_for_approval &&
                               courses[currentCourse.id].courseApproval.status === "approved" && (
                                 <span class="inline-flex items-center gap-2">
-                                  <span class="text-[20px] text-mint-down">
+                                  <span class=" text-[16px] text-mint-down lg:text-[20px]">
                                     <LuCheck />
                                   </span>
                                   Published
                                   {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-6">
+                                    <span class="ml-3 lg:ml-6">
                                       <LoadingSVG />
                                     </span>
                                   )}
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
                                       onClick$={() => handleUnpublish(currentCourse.id)}
-                                      class="ml-6 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md"
+                                      class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
                                     >
                                       <span>Unpublish</span>
                                     </button>
@@ -1260,7 +1273,7 @@ export default component$(
                             {courses[currentCourse.id].courseApproval.ready_for_approval &&
                               courses[currentCourse.id].courseApproval.status === "rejected" && (
                                 <span class="inline-flex items-center gap-2 text-tomato">
-                                  <span class="text-[20px]">
+                                  <span class=" text-[16px] lg:text-[20px]">
                                     <LuBan />
                                   </span>
                                   Unable to Publish
@@ -1271,19 +1284,19 @@ export default component$(
                               courses[currentCourse.id].courseApproval.status ===
                                 "need_amendment" && (
                                 <span class="inline-flex items-center gap-2 text-tomato">
-                                  <span class="text-[20px]">
+                                  <span class=" text-[16px] lg:text-[20px]">
                                     <LuAlertTriangle />
                                   </span>
                                   Amendment Needed
                                   {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-6">
+                                    <span class="ml-3 lg:ml-6">
                                       <LoadingSVG />
                                     </span>
                                   )}
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
                                       onClick$={() => handleAmendment(currentCourse.id)}
-                                      class="ml-6 underline decoration-wavy underline-offset-[6px]"
+                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                     >
                                       <span>Re-Publish</span>
                                     </button>
@@ -1291,16 +1304,16 @@ export default component$(
                                 </span>
                               )}
                           </p>
-                          <div class="mt-4 flex items-center gap-3">
+                          <div class="mt-3 flex items-center gap-3 text-[0.875rem] md:mt-4 lg:text-[1rem]">
                             <a
                               target="_blank"
                               href={`/creator/edit-course/${currentCourse.id}/`}
-                              class="flex gap-2 self-start"
+                              class="flex gap-1 self-start lg:gap-2"
                             >
                               <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                                 Edit Details
                               </span>
-                              <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                              <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray lg:text-[15px]">
                                 <LuArrowRight />
                               </span>
                             </a>
@@ -1308,12 +1321,12 @@ export default component$(
                               <a
                                 target="_blank"
                                 href={courses[currentCourse.id].link!}
-                                class="flex gap-2 self-start"
+                                class="flex gap-1 self-start lg:gap-2"
                               >
                                 <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                                   View Course
                                 </span>
-                                <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                                <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray lg:text-[15px]">
                                   <LuArrowRight />
                                 </span>
                               </a>
@@ -1321,12 +1334,12 @@ export default component$(
                           </div>
                           {courses[currentCourse.id].isOpen ? (
                             courses[currentCourse.id].isLoadingChapter ? (
-                              <span class="mt-6">
+                              <span class="mt-4 lg:mt-6">
                                 <LoadingSVG />
                               </span>
                             ) : (
-                              <>
-                                <div class="mt-6 flex gap-4 pb-2">
+                              <div class="text-[0.875rem] lg:text-[1rem]">
+                                <div class="mt-4 flex items-center pb-2 lg:mt-6">
                                   <h3 class="w-[30%]">Author:</h3>
                                   <p class={`w-[70%]`}>
                                     <span class="flex items-center gap-2">
@@ -1336,7 +1349,7 @@ export default component$(
                                           alt=""
                                           width={30}
                                           height={30}
-                                          class="rounded-full"
+                                          class="h-[25px] w-[25px] rounded-full lg:h-[30px] lg:w-[30px]"
                                         />
                                       </span>
                                       <span>{currentCourse.profile.nickname}</span>
@@ -1435,17 +1448,17 @@ export default component$(
                                 )}
 
                                 <div
-                                  class="mt-6 flex gap-4 pb-2"
+                                  class="mt-4 flex gap-4 pb-2 lg:mt-6"
                                   title="Checks if the course is visible to everyone."
                                 >
                                   <p class="flex items-center gap-2">
                                     {courses[currentCourse.id].is_private && (
-                                      <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                      <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                         <LuEyeOff />
                                       </span>
                                     )}
                                     {!courses[currentCourse.id].is_private && (
-                                      <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                      <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                         <LuEye />
                                       </span>
                                     )}
@@ -1465,7 +1478,7 @@ export default component$(
                                     <p class="flex items-center gap-2">
                                       <span
                                         class={
-                                          "text-[20px] " +
+                                          "text-[15px] lg:text-[20px] " +
                                           (courses[currentCourse.id].is_premium
                                             ? "text-tomato"
                                             : "text-gray-300")
@@ -1483,7 +1496,7 @@ export default component$(
                                 )}
 
                                 <div
-                                  class="flex gap-4 pb-2"
+                                  class="flex gap-4"
                                   title="If a course is locked, the content cannot be edited."
                                 >
                                   <p class="flex items-center gap-2">
@@ -1507,15 +1520,15 @@ export default component$(
                                       onClick$={() =>
                                         handleLockUnlockCourse(currentCourse.id, user.userId)
                                       }
-                                      class="ml-6 inline-block underline decoration-wavy underline-offset-[6px]"
+                                      class="ml-3 inline-block underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                     >
                                       {courses[currentCourse.id].is_locked ? "unlock" : "lock"}
                                     </button>
                                   </p>
                                 </div>
 
-                                <div class="mt-6 flex gap-4 py-2">
-                                  <h3 class="w-[30%]">Description:</h3>
+                                <div class="mt-4 flex items-start gap-4 py-2 lg:mt-6">
+                                  <h3 class="w-[30%] leading-5">Description:</h3>
                                   <p class={`w-[80%] whitespace-pre leading-5`}>
                                     {courses[currentCourse.id].description}
                                   </p>
@@ -1537,7 +1550,7 @@ export default component$(
                                             showAddChapter.value = true;
                                             showAddCourseId.value = currentCourse.id;
                                           }}
-                                          class="pl-6 text-[15px] text-primary-dark-gray underline decoration-wavy underline-offset-[6px] dark:text-background-light-gray"
+                                          class="pl-3 text-[0.75rem] text-primary-dark-gray underline decoration-wavy underline-offset-[6px] dark:text-background-light-gray lg:pl-6 lg:text-[15px]"
                                         >
                                           add chapter
                                         </button>
@@ -1548,7 +1561,7 @@ export default component$(
                                         </p>
                                       )}
                                       {displayChapters.length > 0 && (
-                                        <ul class="flex flex-col gap-4 pb-4">
+                                        <ul class="flex flex-col gap-3 pb-4 lg:gap-4">
                                           {displayChapters.map((_chapterId) => {
                                             const chapter = courses[currentCourse.id].chapters.find(
                                               (c) => c.id === _chapterId
@@ -1559,7 +1572,7 @@ export default component$(
                                                 key={`Course${currentCourse.id}Chapter${chapter.id}`}
                                                 class="flex items-center justify-between"
                                               >
-                                                <div class="flex items-center gap-2">
+                                                <div class="flex items-center gap-1 lg:gap-2">
                                                   <h4 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                                                     <a
                                                       target="_blank"
@@ -1572,7 +1585,7 @@ export default component$(
                                                     <p class="flex items-center gap-2">
                                                       <span
                                                         class={
-                                                          "text-[18px] " +
+                                                          "text-[14px] lg:text-[18px] " +
                                                           (chapter.is_premium
                                                             ? "text-tomato"
                                                             : "text-gray-300")
@@ -1583,7 +1596,7 @@ export default component$(
                                                     </p>
                                                   )}
                                                 </div>
-                                                <div class="flex items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                                                <div class="flex items-center gap-2 text-[15px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                                   {!!courseIdToEditingUser[chapter.id] && (
                                                     <span>
                                                       <img
@@ -1644,7 +1657,7 @@ export default component$(
                                                         currentCourse.id
                                                       );
                                                     }}
-                                                    class="rounded-sm bg-tomato p-2 text-[16px] text-background-light-gray"
+                                                    class="rounded-sm bg-tomato p-1 text-[13px] text-background-light-gray lg:p-2 lg:text-[16px]"
                                                   >
                                                     {courses[currentCourse.id].chaptersMap[
                                                       chapter.id
@@ -1666,11 +1679,11 @@ export default component$(
                                   onClick$={() => {
                                     handleDeleteContentIndex(currentCourse.id);
                                   }}
-                                  class="rounded-lg bg-tomato px-6 py-3 text-background-light-gray shadow-lg"
+                                  class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
                                 >
                                   Delete Course
                                 </button>
-                              </>
+                              </div>
                             )
                           ) : null}
                         </li>

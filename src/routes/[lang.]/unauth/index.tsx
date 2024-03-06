@@ -15,15 +15,15 @@ export default component$(() => {
   const search = useLocation().url.search;
   return (
     <section class="flex h-[100vh] flex-col items-center justify-center bg-tomato/20">
-      <h1 class="font-mosk text-[3em] font-bold tracking-wide">401</h1>
-      <p class="pt-4 text-lg tracking-wide">
+      <h1 class="font-mosk text-[2rem] font-bold tracking-wide lg:text-[3em]">401</h1>
+      <p class="p-4 text-center text-base tracking-wide lg:text-lg">
         {t(
           "pageUnauth.body@@You have wandered into a private territory without permission. Please return to safety."
         )}
       </p>
       <Link
         href={"/login/" + search}
-        class="pt-4 text-lg tracking-wide underline decoration-wavy underline-offset-8"
+        class="p-4 pt-0 text-center text-base tracking-wide underline decoration-wavy underline-offset-8 lg:text-lg"
       >
         {t("pageUnauth.login@@Please login or signup first.")}
       </Link>

@@ -14,8 +14,8 @@ export default component$(() => {
   const t = inlineTranslate();
   return (
     <section class="flex h-[100vh] flex-col items-center justify-center bg-tomato/20">
-      <h1 class="font-mosk text-[3em] font-bold tracking-wide">404</h1>
-      <p class="pt-4 text-lg tracking-wide">
+      <h1 class="font-mosk text-[2rem] font-bold tracking-wide lg:text-[3em]">404</h1>
+      <p class="p-4 text-center text-base tracking-wide lg:text-lg">
         {t("page404.body@@You have wandered into an unkown territory. Please return to safety.")}
       </p>
     </section>
