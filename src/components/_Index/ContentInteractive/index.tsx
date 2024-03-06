@@ -135,7 +135,7 @@ export default component$(() => {
           </h1>
         </div>
         <div class="relative flex w-full flex-col items-center justify-evenly gap-2 lg:flex-row lg:gap-6 lg:p-6">
-          <div class=" flex max-h-[40vh] w-[500px] max-w-[95vw] overflow-auto rounded-xl bg-code-editor-one-dark-pro lg:h-[450px] lg:w-[650px] lg:max-w-[50vw] xl:h-[500px]">
+          <div class=" flex max-h-[40vh] lg:max-h-[100vh] w-[500px] max-w-[95vw] overflow-auto rounded-xl bg-code-editor-one-dark-pro lg:h-[500px] lg:w-[650px] lg:max-w-[50vw] xl:h-[500px]">
             <div class=" flex flex-col gap-2 bg-primary-dark-gray px-2 pt-2">
               <div class="h-[15px] w-[15px] rounded-full bg-red-500"></div>
               <div class="h-[15px] w-[15px] rounded-full bg-yellow"></div>
@@ -172,8 +172,8 @@ export default component$(() => {
               </div>
             </div>
           </div>
-          <div class="max-h-[40vh] max-w-[95vw] overflow-auto  rounded-lg border-2 border-black bg-background-light-gray lg:max-w-[50vw]">
-            <div class="h-[300px] w-[500px] lg:h-[440px] lg:w-[600px] xl:h-[500px] xl:w-[800px]">
+          <div class="max-h-[40vh] lg:max-h-[100vh] max-w-[95vw] overflow-auto  rounded-lg border-2 border-black bg-background-light-gray lg:max-w-[50vw]">
+            <div class="h-[300px] w-[500px] lg:h-[500px] lg:w-[600px] xl:h-[500px] xl:w-[800px]">
               {codeSnippets[codeOutputIdx.value]}
             </div>
           </div>
