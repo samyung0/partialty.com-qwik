@@ -30,6 +30,7 @@
     "db:prod": "drizzle-kit studio --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:generate": "drizzle-kit generate:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:migrate": "cd ./drizzle_turso && bun migrate.prod.ts",
+    "db:prod:drop": "drizzle-kit drop --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "deploy": "vercel deploy",
     "dev": "concurrently -c \"auto\" --handle-input \"vite --mode ssr\" \"bun --hot bun/index.ts\"",
