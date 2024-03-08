@@ -2,7 +2,7 @@ import type { Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { LuArrowLeft, LuTrash, LuX } from "@qwikest/icons/lucide";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSVG from "~/components/LoadingSVG";
 import { useCategories } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
@@ -34,14 +34,14 @@ const checkExistingCategory = server$(async (slug: string) => {
   return await drizzleClient()
     .select({ id: content_category.id })
     .from(content_category)
-    .where(eq(content_category.slug, slug));
+    .where(and(eq(content_category.slug, slug), eq(content_category.approved, true)));
 });
 
 const checkExistingCategoryLink = server$(async (link: string) => {
   return await drizzleClient()
     .select({ id: content_category.id })
     .from(content_category)
-    .where(eq(content_category.link, link));
+    .where(and(eq(content_category.link, link), eq(content_category.approved, true)));
 });
 
 const addCategorySchema = z.object({
@@ -66,10 +66,12 @@ export const AddCategory = component$(
     showAddCategory,
     categories,
     createdCategory,
+    courseData,
   }: {
     showAddCategory: Signal<boolean>;
     categories: ContentCategory[];
     createdCategory: Signal<ContentCategory | undefined>;
+    courseData: NewContentIndex;
   }) => {
     const userRole = useUserLoader().value.role;
     const formData = useStore<ContentCategory>({
@@ -78,7 +80,7 @@ export const AddCategory = component$(
       slug: "",
       link: "/catalog?category=",
       content_index_id: [],
-      approved: false
+      approved: false,
     });
     const formError = useStore({
       name: "",
@@ -126,6 +128,7 @@ export const AddCategory = component$(
       createdCategory.value = formData;
       loading.value = false;
       showAddCategory.value = false;
+      if (!courseData.category) courseData.category = formData.id;
     });
     return (
       <div class="absolute left-0 top-0 z-10 flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
@@ -257,8 +260,10 @@ export default component$(
     createdCategory: Signal<ContentCategory | undefined>;
     formSteps: Signal<number>;
   }) => {
-    const _categories = useCategories().value;
-    const categories = useStore(() => _categories);
+    const _categories = useCategories().value.filter((cat) => cat.approved);
+    const categories = useStore(() =>
+      createdCategory.value ? [..._categories, createdCategory.value] : _categories
+    );
     const loading = useSignal(false);
     const showAddCategory = useSignal(false);
 
@@ -270,6 +275,7 @@ export default component$(
       //   );
       // }
       // await deleteCategoryAction(id);
+      if (courseData.category === id) courseData.category = "";
       const index = categories.findIndex((category) => category.id === id);
       createdCategory.value = undefined;
       categories.splice(index, 1);
@@ -283,6 +289,7 @@ export default component$(
             createdCategory={createdCategory}
             showAddCategory={showAddCategory}
             categories={categories}
+            courseData={courseData}
           />
         )}
         <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">

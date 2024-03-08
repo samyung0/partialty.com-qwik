@@ -80,11 +80,28 @@ const insertCourseHandler = server$(
   ) => {
     return await drizzleClient().transaction(async (tx) => {
       await insertCourse(tx, courseData);
+      if (category && courseData.category !== category.id) courseApproval.added_categories = null;
+      if (courseData.tags && courseApproval.added_tags) {
+        for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
+          if (!courseData.tags!.includes(courseApproval.added_tags![i]))
+            courseApproval.added_tags!.splice(i, 1);
+        }
+      }
       await insertCourseApproval(tx, courseApproval); // insert after course due to fk constraint
       if (courseData.is_single_page) await insertChapter(tx, chapter); // insert after course due to fk constraint
 
-      if (category) await insertContentCategory(tx, category);
-      if (_tag.length > 0) await Promise.all(_tag.map((tag) => insertTag(tx, tag)));
+      if (category && category.id === courseData.category) {
+        category.content_index_id.push(courseData.id);
+        await insertContentCategory(tx, category);
+      }
+      if (_tag.length > 0)
+        await Promise.all(
+          _tag.map(async (tag) => {
+            if(!courseData.tags?.includes(tag.id)) return;
+            tag.content_index_id.push(courseData.id);
+            return await insertTag(tx, tag);
+          })
+        );
 
       let accessible_courses: string[];
       try {
@@ -127,7 +144,7 @@ export default component$(() => {
   });
   const ws = contentWS.contentWS;
   const formSteps = useSignal(0);
-  const createdTags = useSignal<Tag[]>([]);
+  const createdTags = useStore<Tag[]>([]);
   const createdCategory = useSignal<ContentCategory>();
   const courseData = useStore<NewContentIndex>({
     id: uuidv4(),
@@ -170,54 +187,50 @@ export default component$(() => {
   });
   useTask$(({ track }) => {
     track(createdTags);
-    courseApproval.added_tags = createdTags.value.map((tag) => tag.id);
+    courseApproval.added_tags = createdTags.map((tag) => tag.id);
   });
   useTask$(({ track }) => {
     track(createdCategory);
     if (createdCategory.value) courseApproval.added_categories = createdCategory.value.id;
+    else courseApproval.added_categories = null;
   });
 
   const handleSubmit = $(async () => {
-    try {
-      const newContent = {
-        id: uuidv4(),
-        name: courseData.name,
-        slug: courseData.slug,
-        link: `/courses/${courseData.slug}/chapters/${courseData.slug}/`,
-        index_id: courseData.id,
-        renderedHTML: null,
-        content_slate: null,
-        is_locked: false,
-        is_premium: false,
-        audio_track_playback_id: null,
-        audio_track_asset_id: null,
-      } as NewContent;
+    const newContent = {
+      id: uuidv4(),
+      name: courseData.name,
+      slug: courseData.slug,
+      link: `/courses/${courseData.slug}/chapters/${courseData.slug}/`,
+      index_id: courseData.id,
+      renderedHTML: null,
+      content_slate: null,
+      is_locked: false,
+      is_premium: false,
+      audio_track_playback_id: null,
+      audio_track_asset_id: null,
+    } as NewContent;
 
-      if (courseData.is_single_page) {
-        courseData.chapter_order.push(newContent.id);
-      }
-      await insertCourseHandler(
-        courseData,
-        newContent,
-        courseApproval,
-        user.accessible_courses,
-        user.accessible_courses_read,
-        user.userId,
-        createdCategory.value,
-        createdTags.value
-      );
-      ws.value?.send(
-        JSON.stringify({
-          type: "createContent",
-          courseId: courseData.id,
-          details: courseData,
-        })
-      );
-      // window.close();
-    } catch (e) {
-      console.error(e);
-      alert("Something went wrong! Please try again later or contact support.");
+    if (courseData.is_single_page) {
+      courseData.chapter_order.push(newContent.id);
     }
+    await insertCourseHandler(
+      courseData,
+      newContent,
+      courseApproval,
+      user.accessible_courses,
+      user.accessible_courses_read,
+      user.userId,
+      createdCategory.value,
+      createdTags
+    );
+    ws.value?.send(
+      JSON.stringify({
+        type: "createContent",
+        courseId: courseData.id,
+        details: courseData,
+      })
+    );
+    // window.close();
   });
 
   return (

@@ -1,6 +1,6 @@
 import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import Step1 from "~/components/_Creator/CreateCourse/step1";
 import Step2 from "~/components/_Creator/CreateCourse/step2";
 import Step3 from "~/components/_Creator/CreateCourse/step3";
@@ -9,34 +9,108 @@ import Step5 from "~/components/_Creator/CreateCourse/step5";
 import Step6 from "~/components/_Creator/CreateCourse/step6";
 import Step7 from "~/components/_Creator/CreateCourse/step7";
 import { useLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/edit-course/[id]/layout";
+import { useCategories, useTags } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import useWS from "~/utils/useWS";
-import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
+import {
+  content_category,
+  type ContentCategory,
+} from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
 import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
-import type { Tag } from "../../../../drizzle_turso/schema/tag";
+import { tag, type Tag } from "../../../../drizzle_turso/schema/tag";
 
-const insertCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
-  await drizzleClient().insert(course_approval).values(courseApproval);
-});
+import { ResultSet } from "@libsql/client/.";
+import { ExtractTablesWithRelations } from "drizzle-orm";
+import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
+import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
+import schemaExport from "../../../../drizzle_turso/schemaExport";
 
-const updateCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
-  await drizzleClient()
+type Tx = SQLiteTransaction<
+  "async",
+  ResultSet,
+  typeof schemaExport,
+  ExtractTablesWithRelations<typeof schemaExport>
+>;
+
+const updateCourseApproval = server$(async (tx: Tx, courseApproval: NewCourseApproval) => {
+  await tx
     .update(course_approval)
     .set(courseApproval)
     .where(eq(course_approval.id, courseApproval.id));
 });
 
-const updateCourse = server$(async (course: NewContentIndex) => {
-  await drizzleClient().update(content_index).set(course).where(eq(content_index.id, course.id));
+const updateCourse = server$(async (tx: Tx, course: NewContentIndex) => {
+  await tx.update(content_index).set(course).where(eq(content_index.id, course.id));
 });
 
-const deleteCourseApproval = server$(async (courseApproval: NewCourseApproval) => {
-  await drizzleClient().delete(course_approval).where(eq(course_approval.id, courseApproval.id));
+const deleteTag = server$(async (tx: Tx, _tag: Tag) => {
+  await tx.delete(tag).where(and(eq(tag.id, _tag.id), eq(tag.approved, false)));
 });
+
+const insertTag = server$(async (tx: Tx, _tag: Tag) => {
+  await tx.insert(tag).values(_tag);
+});
+
+const deleteCategory = server$(async (tx: Tx, _category: ContentCategory) => {
+  await tx
+    .delete(content_category)
+    .where(and(eq(content_category.id, _category.id), eq(content_category.approved, false)));
+});
+
+const handleCourseUpdate = server$(
+  async (
+    courseApproval: NewCourseApproval,
+    prevCourseApproval: NewCourseApproval,
+    course: NewContentIndex,
+    category: ContentCategory | undefined,
+    tags: Tag[],
+    prevCategory: ContentCategory | undefined,
+    prevTags: Tag[]
+  ) => {
+    return await drizzleClient().transaction(async (tx) => {
+      if (category && course.category !== category.id) courseApproval.added_categories = null;
+      if (course.tags && courseApproval.added_tags) {
+        for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
+          if (!course.tags!.includes(courseApproval.added_tags![i]))
+            courseApproval.added_tags!.splice(i, 1);
+        }
+      }
+      await updateCourseApproval(tx, { ...courseApproval, updated_at: getSQLTimeStamp() });
+      if (prevCategory && prevCourseApproval.added_categories !== courseApproval.added_categories) {
+        await deleteCategory(tx, prevCategory);
+      }
+      if (
+        category &&
+        courseApproval.added_categories &&
+        course.category === category.id &&
+        prevCourseApproval.added_categories !== courseApproval.added_categories
+      ) {
+        await tx.insert(content_category).values(category);
+      }
+      for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
+        if (
+          !course.tags!.includes(prevCourseApproval.added_tags![i]) &&
+          prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])
+        ) {
+          await deleteTag(tx, prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])!);
+        }
+      }
+      for (let i = 0; i < courseApproval.added_tags!.length; i++) {
+        if (
+          !prevCourseApproval.added_tags!.includes(courseApproval.added_tags![i]) &&
+          tags.find((t) => t.id === courseApproval.added_tags![i])
+        ) {
+          await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
+        }
+      }
+      return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
+    });
+  }
+);
 
 export default component$(() => {
   const user = useUserLoader().value;
@@ -53,11 +127,25 @@ export default component$(() => {
   });
   const ws = contentWS.contentWS;
   const { course, approval } = useLoader().value;
+  const tags = useTags().value;
+  const categories = useCategories().value;
   const formSteps = useSignal(0);
-  const createdTags = useSignal<Tag[]>([]);
-  const createdCategory = useSignal<ContentCategory>();
+  const createdTags = useStore<Tag[]>(() =>
+    approval[0].added_tags
+      ? (approval[0].added_tags
+          .map((tagId) => tags.find((t) => t.id === tagId))
+          .filter((x) => x) as Tag[])
+      : []
+  );
+  const prevCreatedTags = useSignal(JSON.parse(JSON.stringify(createdTags)));
+  const createdCategory = useSignal<ContentCategory | undefined>(() =>
+    approval[0].added_categories === course[0].category
+      ? categories.find((tag) => tag.id === course[0].category)
+      : undefined
+  );
+  const prevCreatedCategory = useSignal(createdCategory.value);
   const courseApproval = useStore<NewCourseApproval>(() => approval[0]);
-  const prevCourseApproval = useSignal(!!approval);
+  const prevCourseApproval = useSignal(JSON.parse(JSON.stringify(courseApproval)));
   const courseData = useStore<NewContentIndex>(() => course[0]);
   const courseDataError = useStore({
     name: "",
@@ -70,20 +158,25 @@ export default component$(() => {
   });
   useTask$(({ track }) => {
     track(createdTags);
-    courseApproval.added_tags = createdTags.value.map((tag) => tag.id);
+    courseApproval.added_tags = createdTags.map((tag) => tag.id);
   });
   useTask$(({ track }) => {
     track(createdCategory);
     if (createdCategory.value) courseApproval.added_categories = createdCategory.value.id;
+    else courseApproval.added_categories = null;
   });
 
   const handleSubmit = $(async () => {
     try {
-      if (!courseData.is_private) {
-        if (!prevCourseApproval.value) await insertCourseApproval(courseApproval);
-        else await updateCourseApproval(courseApproval);
-      } else if (prevCourseApproval.value) await deleteCourseApproval(courseApproval);
-      await updateCourse(courseData);
+      await handleCourseUpdate(
+        courseApproval,
+        prevCourseApproval.value,
+        courseData,
+        createdCategory.value,
+        createdTags,
+        prevCreatedCategory.value,
+        prevCreatedTags.value
+      );
     } catch (e) {
       console.error(e);
       alert("Something went wrong! Please try again later or contact support.");
@@ -95,7 +188,7 @@ export default component$(() => {
         details: courseData,
       })
     );
-    window.close();
+    // window.close();
   });
 
   return (

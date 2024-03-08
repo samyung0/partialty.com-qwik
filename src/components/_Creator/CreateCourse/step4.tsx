@@ -2,7 +2,7 @@ import type { Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { LuArrowLeft, LuTrash, LuX } from "@qwikest/icons/lucide";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSVG from "~/components/LoadingSVG";
 import { useTags } from "~/routes/[lang.]/(wrapper)/(authRoutes)/creator/layout";
@@ -25,11 +25,17 @@ const addTagAction = server$(async (formData: NewTag) => {
 });
 
 const checkExistingTag = server$(async (slug: string) => {
-  return await drizzleClient().select({ id: tag.id }).from(tag).where(eq(tag.slug, slug));
+  return await drizzleClient()
+    .select({ id: tag.id })
+    .from(tag)
+    .where(and(eq(tag.slug, slug), eq(tag.approved, true)));
 });
 
 const checkExistingTagLink = server$(async (link: string) => {
-  return await drizzleClient().select({ id: tag.id }).from(tag).where(eq(tag.link, link));
+  return await drizzleClient()
+    .select({ id: tag.id })
+    .from(tag)
+    .where(and(eq(tag.link, link), eq(tag.approved, true)));
 });
 
 const addTagSchema = z.object({
@@ -54,10 +60,12 @@ export const AddTag = component$(
     showAddTag,
     tags,
     createdTags,
+    courseData,
   }: {
     showAddTag: Signal<boolean>;
     tags: Tag[];
-    createdTags: Signal<Tag[]>;
+    createdTags: Tag[];
+    courseData: NewContentIndex;
   }) => {
     const userRole = useUserLoader().value.role;
     const formData = useStore<Tag>({
@@ -66,7 +74,7 @@ export const AddTag = component$(
       slug: "",
       link: "/catalog?tag=",
       content_index_id: [],
-      approved: false
+      approved: false,
     });
     const formError = useStore({
       name: "",
@@ -98,28 +106,25 @@ export const AddTag = component$(
         return;
       }
       const dup = await checkExistingTag(formData.slug);
-      if (
-        dup.length > 0 ||
-        createdTags.value.filter((tag) => tag.slug === formData.slug).length > 0
-      ) {
+      if (dup.length > 0 || createdTags.filter((tag) => tag.slug === formData.slug).length > 0) {
         formError.slug = "Slug already exists!";
         loading.value = false;
         return;
       }
       const dup2 = await checkExistingTagLink(formData.link);
-      if (
-        dup2.length > 0 ||
-        createdTags.value.filter((tag) => tag.link === formData.link).length > 0
-      ) {
+      if (dup2.length > 0 || createdTags.filter((tag) => tag.link === formData.link).length > 0) {
         formError.link = "Link already exists!";
         loading.value = false;
         return;
       }
       // const ret = await addTagAction(formData);
       tags.push(formData);
-      createdTags.value.push(formData);
+      createdTags.push(formData);
       loading.value = false;
       showAddTag.value = false;
+      if (courseData.tags!.length < 5) {
+        courseData.tags!.push(formData.id);
+      }
     });
     return (
       <div class="absolute left-0 top-0 z-10 flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
@@ -241,10 +246,10 @@ export default component$(
   }: {
     courseData: NewContentIndex;
     formSteps: Signal<number>;
-    createdTags: Signal<Tag[]>;
+    createdTags: Tag[];
   }) => {
-    const _tags = useTags().value;
-    const tags = useStore(() => _tags);
+    const _tags = useTags().value.filter((_tag) => _tag.approved);
+    const tags = useStore(() => [..._tags, ...createdTags]);
     const loading = useSignal(false);
     const showAddTag = useSignal(false);
 
@@ -254,9 +259,10 @@ export default component$(
       //   return alert("Course(s) with tag exists! Please remove all courses with this tag first.");
       // }
       // await deleteTagAction(id);
+      if (courseData.tags!.includes(id)) courseData.tags!.splice(courseData.tags!.indexOf(id), 1);
       const index = tags.findIndex((tag) => tag.id === id);
-      const index2 = createdTags.value.findIndex((tag) => tag.id === id);
-      createdTags.value.splice(index2, 1);
+      const index2 = createdTags.findIndex((tag) => tag.id === id);
+      createdTags.splice(index2, 1);
       tags.splice(index, 1);
       // return shouldAlert && alert("Tag deleted successfully.");
     });
@@ -264,7 +270,12 @@ export default component$(
     return (
       <div class="relative h-[100vh] w-[80vw]">
         {showAddTag.value && (
-          <AddTag createdTags={createdTags} showAddTag={showAddTag} tags={tags} />
+          <AddTag
+            createdTags={createdTags}
+            showAddTag={showAddTag}
+            tags={tags}
+            courseData={courseData}
+          />
         )}
         <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
           <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
@@ -301,11 +312,11 @@ export default component$(
                           (courseData.tags!.includes(tag.id)
                             ? " bg-primary-dark-gray text-background-light-gray  dark:!bg-background-light-gray dark:!text-tomato "
                             : "") +
-                          (createdTags.value.find((tag2) => tag2.id === tag.id) && " pr-12")
+                          (createdTags.find((tag2) => tag2.id === tag.id) && " pr-12")
                         }
                       >
                         <span>{tag.name}</span>
-                        {createdTags.value.find((tag2) => tag2.id === tag.id) && (
+                        {createdTags.find((tag2) => tag2.id === tag.id) && (
                           <span
                             onClick$={(e) => {
                               e.stopPropagation();

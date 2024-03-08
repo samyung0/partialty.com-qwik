@@ -309,6 +309,34 @@
       "when": 1709722115703,
       "tag": "0043_abandoned_power_man",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "5",
+      "when": 1709727366174,
+      "tag": "0044_futuristic_tiger_shark",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1709727470721,
+      "tag": "0045_true_havok",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "5",
+      "when": 1709727565888,
+      "tag": "0046_colossal_lady_bullseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1709727618571,
+      "tag": "0047_great_komodo",
+      "breakpoints": true
     }
   ]
 }

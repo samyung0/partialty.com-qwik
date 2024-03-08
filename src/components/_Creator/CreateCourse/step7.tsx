@@ -22,7 +22,7 @@ export default component$(
     courseData: NewContentIndex;
     formSteps: Signal<number>;
     createdCategory: Signal<ContentCategory | undefined>;
-    createdTags: Signal<Tag[]>;
+    createdTags: Tag[];
     handleSubmit: QRL<() => void>;
     isEditing?: boolean;
   }) => {
@@ -34,12 +34,12 @@ export default component$(
     return (
       <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
         <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
-          <div
+          <button
             class="absolute left-6 top-6 text-[25px] text-primary-dark-gray dark:text-background-light-gray"
             onClick$={() => formSteps.value--}
           >
             <LuArrowLeft />
-          </div>
+          </button>
           <div>
             <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
               Course Details
@@ -61,9 +61,12 @@ export default component$(
                   <p class="flex w-full items-center justify-between gap-5 text-lg">
                     <span>Category:</span>{" "}
                     <span>
-                      {categories.find((category) => category.id === courseData.category)?.name ||
-                        ""}{" "}
-                      {createdCategory.value?.id === courseData.category ? "(new)" : ""}
+                      {courseData.category
+                        ? createdCategory.value && createdCategory.value.id === courseData.category
+                          ? `${createdCategory.value.name} (new)`
+                          : categories.find((category) => category.id === courseData.category)
+                              ?.name || ""
+                        : ""}
                     </span>
                   </p>
                 </div>
@@ -73,12 +76,17 @@ export default component$(
                   <div class="flex w-full items-center justify-between gap-5 text-lg">
                     <span>Tags:</span>{" "}
                     <ul class="flex max-w-[300px] flex-wrap gap-2">
-                      {courseData.tags!.map((tag) => (
-                        <li key={`CourseReview${tag}`}>
-                          {tags.find((tag2) => tag2.id === tag)?.name || ""}{" "}
-                          {createdTags.value.find((tag2) => tag2.id === tag) ? "(new)" : ""}
-                        </li>
-                      ))}
+                      {courseData.tags!.map((tag) => {
+                        const cTag = createdTags.find((tag2) => tag2.id === tag);
+                        if (cTag) {
+                          return <li key={`CourseReview${tag}`}>{cTag.name} (new)</li>;
+                        }
+                        return (
+                          <li key={`CourseReview${tag}`}>
+                            {tags.find((tag2) => tag2.id === tag)?.name || ""}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -138,10 +146,15 @@ export default component$(
                 onClick$={async () => {
                   if (loading.value) return;
                   loading.value = true;
-                  await handleSubmit();
-                  loading.value = false;
-                  window.close();
-                  nav("/creator/", { forceReload: true });
+                  try {
+                    await handleSubmit();
+                    loading.value = false;
+                    // window.close();
+                    // nav("/creator/", { forceReload: true });
+                  } catch (e) {
+                    console.error(e);
+                    alert("Something went wrong! Please try again later or contact support.");
+                  }
                 }}
                 class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
               >

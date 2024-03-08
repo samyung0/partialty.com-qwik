@@ -9,7 +9,7 @@ export const course_approval = sqliteTable("course_approval", {
     .references(() => content_index.id),
   link: text("link").notNull(), // not used, defaults to ""
   ready_for_approval: integer("ready_for_approval", { mode: "boolean" }).notNull().default(false),
-  added_tags: blob("added_tags").$type<string[]>().notNull(),
+  added_tags: blob("added_tags", { mode: "json" }).$type<string[]>(),
   added_categories: text("added_categories"),
   status: text("status", { enum: ["pending", "approved", "rejected", "need_amendment"] }).notNull(),
   description: text("description").notNull(),
