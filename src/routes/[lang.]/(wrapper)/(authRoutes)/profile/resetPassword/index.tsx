@@ -69,13 +69,13 @@ export default component$(() => {
         <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider md:text-[2.5rem]">
           Reset Password
         </h1>
-        {/* {!canResetPassword && (
+        {!canResetPassword && (
           <>
             <p class="block lg:w-[500px] lg:px-12 px-8 lg:pb-6 pb-4 text-center text-tomato md:text-[1rem] text-[0.875rem]">
               You did not sign up with email and password and is not allowed to reset your password.
             </p>
           </>
-        )} */}
+        )}
         <div>
           <form
             preventdefault:submit
