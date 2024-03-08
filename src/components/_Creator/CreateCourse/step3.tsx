@@ -132,19 +132,19 @@ export const AddCategory = component$(
     });
     return (
       <div class="absolute left-0 top-0 z-10 flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
-        <div class="relative flex w-[40vw] min-w-[400px] max-w-[600px] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+        <div class="relative flex w-[40vw] min-w-[350px] max-w-[600px] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
           <button
             onClick$={() => (showAddCategory.value = false)}
-            class="absolute right-5 top-5 block p-1 text-[20px] text-primary-dark-gray dark:text-background-light-gray"
+            class="absolute right-5 top-5 block p-1 text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]"
           >
             <LuX />
           </button>
-          <h2 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider">
+          <h2 class="pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem]">
             Add Category
           </h2>
           <div>
             <div>
-              <label for="categoryName" class="cursor-pointer text-lg">
+              <label for="categoryName" class="cursor-pointer text-base md:text-lg">
                 Name
               </label>
               <div class="pt-1">
@@ -163,17 +163,17 @@ export const AddCategory = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.name ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.name}
               </p>
             </div>
             <div>
-              <label for="categorySlug" class="cursor-pointer text-lg">
+              <label for="categorySlug" class="cursor-pointer text-base md:text-lg">
                 Slug
               </label>
               <div class="pt-1">
@@ -189,17 +189,17 @@ export const AddCategory = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.slug ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.slug}
               </p>
             </div>
             <div>
-              <label for="categorLink" class="cursor-pointer text-lg">
+              <label for="categorLink" class="cursor-pointer text-base md:text-lg">
                 Link
               </label>
               <div class="pt-1">
@@ -215,12 +215,12 @@ export const AddCategory = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.link ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.link}
               </p>
             </div>
@@ -228,7 +228,7 @@ export const AddCategory = component$(
             <button
               type="button"
               onClick$={handleSubmit}
-              class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+              class="block w-[250px] rounded-lg bg-primary-dark-gray p-2 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px] md:p-4"
             >
               {loading.value && (
                 <span>
@@ -283,7 +283,7 @@ export default component$(
     });
 
     return (
-      <div class="relative h-[100vh] w-[80vw]">
+      <div class="relative h-[100vh] w-[95vw] md:w-[80vw]">
         {showAddCategory.value && !createdCategory.value && (
           <AddCategory
             createdCategory={createdCategory}
@@ -292,16 +292,16 @@ export default component$(
             courseData={courseData}
           />
         )}
-        <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
-          <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+        <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
+          <div class="relative flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
             <div
-              class="absolute left-6 top-6 cursor-pointer text-[25px] text-primary-dark-gray dark:text-background-light-gray"
+              class="absolute left-3 top-3 cursor-pointer text-[20px] text-primary-dark-gray dark:text-background-light-gray md:left-6 md:top-6 md:text-[25px]"
               onClick$={() => formSteps.value--}
             >
               <LuArrowLeft />
             </div>
             <div>
-              <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+              <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
                 Choose a category
               </h1>
               <br />
@@ -309,13 +309,13 @@ export default component$(
                 {!createdCategory.value && (
                   <button
                     onClick$={() => (showAddCategory.value = true)}
-                    class="w-[300px] rounded-md bg-primary-dark-gray px-6 py-2 text-background-light-gray"
+                    class="w-[250px] rounded-md bg-primary-dark-gray px-4 py-2 text-[0.875rem] text-background-light-gray md:w-[300px] md:px-6 md:text-[1rem]"
                   >
                     Add New Category
                   </button>
                 )}
                 {categories.length > 0 && (
-                  <ul class="flex max-w-[500px] flex-wrap gap-2">
+                  <ul class="flex max-w-[500px] flex-wrap gap-2 px-6">
                     {categories.map((category) => (
                       <li
                         onClick$={() => {
@@ -324,13 +324,13 @@ export default component$(
                         }}
                         key={`Category${category.id}`}
                         class={
-                          "relative cursor-pointer rounded-lg border-2 border-primary-dark-gray bg-background-light-gray px-4 py-3 transition-all hover:bg-primary-dark-gray hover:text-background-light-gray dark:bg-primary-dark-gray dark:hover:bg-background-light-gray dark:hover:text-primary-dark-gray " +
+                          "relative cursor-pointer rounded-lg border-2 border-primary-dark-gray bg-background-light-gray px-3 py-2 text-[0.875rem] transition-all hover:bg-primary-dark-gray hover:text-background-light-gray dark:bg-primary-dark-gray dark:hover:bg-background-light-gray dark:hover:text-primary-dark-gray md:px-4 md:py-3 md:text-[1rem] " +
                           (courseData.category === category.id
                             ? " bg-primary-dark-gray text-background-light-gray  dark:!bg-background-light-gray dark:!text-tomato "
                             : "") +
                           (createdCategory.value &&
                             createdCategory.value.id === category.id &&
-                            " pr-12")
+                            " pr-10 md:pr-12")
                         }
                       >
                         <span>{category.name}</span>
@@ -340,7 +340,7 @@ export default component$(
                               e.stopPropagation();
                               handleDeleteCategory(category.id);
                             }}
-                            class="absolute right-[6px] top-[50%] block translate-y-[-50%] rounded-md bg-tomato p-1 text-[15px] text-background-light-gray"
+                            class="absolute right-[6px] top-[50%] block translate-y-[-50%] rounded-md bg-tomato p-1 text-[12px] text-background-light-gray md:text-[15px]"
                           >
                             <LuTrash />
                           </span>
@@ -353,7 +353,7 @@ export default component$(
                 <div class="flex flex-col items-center justify-center gap-3">
                   <button
                     onClick$={() => formSteps.value++}
-                    class="text-base underline decoration-wavy underline-offset-[6px]"
+                    class="text-sm underline decoration-wavy underline-offset-[6px] md:text-base"
                   >
                     Skip for now
                   </button>
@@ -362,14 +362,14 @@ export default component$(
                       formSteps.value++;
                     }}
                     type="button"
-                    class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+                    class="block w-[250px] rounded-lg bg-primary-dark-gray p-2 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px] md:p-4"
                   >
                     {loading.value && (
                       <span>
                         <LoadingSVG />
                       </span>
                     )}
-                    {!loading.value && <span>Next</span>}
+                    {!loading.value && <span class="text-[0.875rem] md:text-[1rem]">Next</span>}
                   </button>
                 </div>
               </div>

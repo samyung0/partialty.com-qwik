@@ -39,16 +39,16 @@ export default component$(
     const loading = useSignal(false);
     const ref = useSignal<HTMLInputElement>();
     return (
-      <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
-        <div class="flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+      <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
+        <div class="flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
           <div>
-            <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+            <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
               What is your course called
             </h1>
             <br />
             <div class="flex flex-col items-center justify-center space-y-6">
               <div>
-                <label for="name" class="cursor-pointer text-lg">
+                <label for="name" class="cursor-pointer text-base md:text-lg">
                   Name
                 </label>
                 <div class="pt-1">
@@ -65,17 +65,19 @@ export default component$(
                     }}
                     required
                     class={
-                      "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                      "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-black/20 md:w-[300px] " +
                       (courseDataError.name
                         ? "border-tomato dark:border-tomato"
                         : "border-black/10")
                     }
                   />
                 </div>
-                <p class="w-[300px] pt-1 tracking-wide text-tomato">{courseDataError.name}</p>
+                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">
+                  {courseDataError.name}
+                </p>
               </div>
               <div>
-                <label for="slug" class="cursor-pointer text-lg">
+                <label for="slug" class="cursor-pointer text-base md:text-lg">
                   Slug
                 </label>
                 <div class="pt-1">
@@ -89,7 +91,7 @@ export default component$(
                     value={courseData.slug}
                     required
                     class={
-                      "w-[300px] rounded-md border-2 px-3 py-2 disabled:bg-gray-300  dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark "
+                      "w-[250px] rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray  dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] "
                     }
                   />
                 </div>
@@ -118,14 +120,14 @@ export default component$(
                   loading.value = false;
                 }}
                 type="button"
-                class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+                class="block w-[250px] rounded-lg bg-primary-dark-gray p-2 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px] md:p-4"
               >
                 {loading.value && (
                   <span>
                     <LoadingSVG />
                   </span>
                 )}
-                {!loading.value && <span>Next</span>}
+                {!loading.value && <span class="text-[0.875rem] md:text-[1rem]">Next</span>}
               </button>
             </div>
           </div>

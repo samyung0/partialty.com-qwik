@@ -18,16 +18,16 @@ export default component$(
   }) => {
     const user = useUserLoader().value;
     return (
-      <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
-        <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+      <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
+        <div class="relative flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
           <div
-            class="absolute left-6 top-6 cursor-pointer text-[25px] text-primary-dark-gray dark:text-background-light-gray"
+            class="absolute left-3 top-3 cursor-pointer text-[20px] text-primary-dark-gray dark:text-background-light-gray md:left-6 md:top-6 md:text-[25px]"
             onClick$={() => formSteps.value--}
           >
             <LuArrowLeft />
           </div>
           <div>
-            <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+            <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
               Other settings
             </h1>
             <br />
@@ -36,7 +36,7 @@ export default component$(
                 <label
                   title="Sets the difficulty of the course"
                   for="difficulty"
-                  class="flex cursor-pointer items-center gap-5 text-lg"
+                  class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
                 >
                   <span class="flex items-center gap-2">Difficulty</span>
                   <select
@@ -62,10 +62,10 @@ export default component$(
                 <label
                   title="A course can only be viewed through invite codes if it is set to private, and will not be listed in the course catalog."
                   for="isPrivate"
-                  class="flex cursor-pointer items-center gap-5   text-lg"
+                  class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
                 >
                   <span class="flex items-center gap-2">
-                    <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                    <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
                       <LuEyeOff />
                     </span>
                     Private
@@ -85,10 +85,10 @@ export default component$(
                 <label
                   title="The option should be left empty if you are creating a blog or guide that has only a single page. Check this if you think it is better to split the course into multiple chapters. You CANNOT change this after creating the course."
                   for="multipleChapters"
-                  class="flex cursor-pointer items-center gap-5   text-lg"
+                  class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
                 >
                   <span class="flex items-center gap-2">
-                    <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                    <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
                       <LuFiles />
                     </span>
                     Multiple chapters
@@ -111,10 +111,10 @@ export default component$(
                   <label
                     title="The course is only accessible to subscribed users if checked."
                     for="subscriptionRequired"
-                    class="flex cursor-pointer items-center gap-5   text-lg"
+                    class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
                   >
                     <span class="flex items-center gap-2">
-                      <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
+                      <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
                         <LuGem />
                       </span>
                       Subscription Required
@@ -131,21 +131,19 @@ export default component$(
                   </label>
                 </div>
               )}
-              <br />
-              <p class="max-w-[400px] text-base text-tomato">
+              <p class="max-w-[250px] text-sm text-tomato md:max-w-[400px] md:text-base">
                 Setting the course private will disable all the category and tags for the course!
               </p>
-              <br />
-              <p class="max-w-[400px] text-base">
+              <p class="max-w-[250px] text-sm md:max-w-[400px]  md:text-base">
                 Once you have submitted a non-private course, you need to mark it as ready for
                 review and a few days are required before the course is approved and published.
               </p>
               <br />
               <button
                 onClick$={() => formSteps.value++}
-                class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+                class="block w-[250px] rounded-lg bg-primary-dark-gray p-2 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px] md:p-4"
               >
-                <span>Review Course Info</span>
+                <span class="text-[0.875rem] md:text-[1rem]">Review Course Info</span>
               </button>
             </div>
           </div>

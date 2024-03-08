@@ -30,22 +30,22 @@ export default component$(
     const loading = useSignal(false);
     const ref = useSignal<HTMLTextAreaElement>();
     return (
-      <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
-        <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+      <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
+        <div class="relative flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
           <div
-            class="absolute left-6 top-6 cursor-pointer text-[25px] text-primary-dark-gray dark:text-background-light-gray"
+            class="absolute left-3 top-3 cursor-pointer text-[20px] text-primary-dark-gray dark:text-background-light-gray md:left-6 md:top-6 md:text-[25px]"
             onClick$={() => formSteps.value--}
           >
             <LuArrowLeft />
           </div>
           <div>
-            <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+            <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
               Give your course a description
             </h1>
             <br />
             <div class="flex flex-col items-center justify-center space-y-6">
               <div>
-                <label for="description" class="cursor-pointer text-lg">
+                <label for="description" class="cursor-pointer text-base md:text-lg">
                   Description (chars: {courseData.description?.length ?? 0}/5000)
                 </label>
                 <div class="pt-1">
@@ -59,14 +59,14 @@ export default component$(
                       if (ref.value) ref.value.value = courseData.description;
                     }}
                     class={
-                      "h-[300px] w-[500px] rounded-md border-2 px-3 py-2 text-lg dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20 " +
+                      "h-[300px] w-[80vw] min-w-[200px] rounded-md border-2 px-3 py-2 text-base dark:border-background-light-gray dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20  md:w-[400px] md:text-lg xl:w-[500px] " +
                       (courseDataError.description
                         ? "border-tomato dark:border-tomato"
                         : "border-black/10")
                     }
                   />
                 </div>
-                <p class="w-[300px] pt-1 tracking-wide text-tomato">
+                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">
                   {courseDataError.description}
                 </p>
               </div>
@@ -85,14 +85,14 @@ export default component$(
                   loading.value = false;
                 }}
                 type="button"
-                class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+                class="block w-[250px] rounded-lg bg-primary-dark-gray p-2 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px] md:p-4"
               >
                 {loading.value && (
                   <span>
                     <LoadingSVG />
                   </span>
                 )}
-                {!loading.value && <span>Next</span>}
+                {!loading.value && <span class="text-[0.875rem] md:text-[1rem]">Next</span>}
               </button>
             </div>
           </div>

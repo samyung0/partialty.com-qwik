@@ -32,33 +32,33 @@ export default component$(
     const loading = useSignal(false);
     const nav = useNavigate();
     return (
-      <section class="flex h-[100vh] w-[80vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray">
-        <div class="relative flex w-[50vw] min-w-[400px] max-w-[700px] items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+      <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
+        <div class="relative flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
           <button
-            class="absolute left-6 top-6 text-[25px] text-primary-dark-gray dark:text-background-light-gray"
+            class="absolute left-3 top-3 cursor-pointer text-[20px] text-primary-dark-gray dark:text-background-light-gray md:left-6 md:top-6 md:text-[25px]"
             onClick$={() => formSteps.value--}
           >
             <LuArrowLeft />
           </button>
           <div>
-            <h1 class="pb-6 text-center font-mosk text-[2.5rem] font-bold tracking-wider">
+            <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
               Course Details
             </h1>
             <br />
-            <div class="flex w-[400px] flex-col items-center justify-center space-y-6">
+            <div class="flex w-full flex-col items-center justify-center space-y-6 px-6 md:w-[400px] md:px-0">
               <div class="w-full">
-                <p class="flex w-full items-center justify-between gap-5 text-lg">
+                <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Name:</span> <span>{courseData.name}</span>
                 </p>
               </div>
               <div class="w-full">
-                <p class="flex w-full items-center justify-between gap-5 text-lg">
+                <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Description:</span> <span>{courseData.description}</span>
                 </p>
               </div>
               {!courseData.is_private && (
                 <div class="w-full">
-                  <p class="flex w-full items-center justify-between gap-5 text-lg">
+                  <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                     <span>Category:</span>{" "}
                     <span>
                       {courseData.category
@@ -73,9 +73,9 @@ export default component$(
               )}
               {!courseData.is_private && (
                 <div class="w-full">
-                  <div class="flex w-full items-center justify-between gap-5 text-lg">
+                  <div class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                     <span>Tags:</span>{" "}
-                    <ul class="flex max-w-[300px] flex-wrap gap-2">
+                    <ul class="flex max-w-[250px] flex-wrap gap-2 md:max-w-[300px]">
                       {courseData.tags!.map((tag) => {
                         const cTag = createdTags.find((tag2) => tag2.id === tag);
                         if (cTag) {
@@ -92,7 +92,7 @@ export default component$(
                 </div>
               )}
               <div class="w-full">
-                <p class="flex w-full items-center justify-between gap-5 text-lg">
+                <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Language:</span>{" "}
                   <span>
                     {listSupportedLang.find((lang) => lang.value === courseData.lang)?.label || ""}
@@ -100,7 +100,7 @@ export default component$(
                 </p>
               </div>
               <div class="w-full">
-                <p class="flex w-full items-center justify-between gap-5 text-lg">
+                <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Private:</span>{" "}
                   <input
                     type="checkbox"
@@ -111,7 +111,7 @@ export default component$(
                 </p>
               </div>
               <div class="w-full">
-                <p class="flex w-full items-center justify-between gap-5 text-lg">
+                <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Multiple Chapters:</span>{" "}
                   <input
                     type="checkbox"
@@ -123,7 +123,7 @@ export default component$(
               </div>
               {user.role === "admin" && (
                 <div class="w-full">
-                  <p class="flex w-full items-center justify-between gap-5 text-lg">
+                  <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                     <span>Subscription Required:</span>{" "}
                     <input
                       type="checkbox"
@@ -136,7 +136,7 @@ export default component$(
               )}
               {!courseData.is_private && (
                 <div class="w-full text-center">
-                  <p class="flex items-center justify-between gap-5 text-base">
+                  <p class="flex items-center justify-between gap-3 text-base md:gap-5">
                     A course approval is needed before it is published.
                   </p>
                 </div>
@@ -156,14 +156,18 @@ export default component$(
                     alert("Something went wrong! Please try again later or contact support.");
                   }
                 }}
-                class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+                class="block w-[250px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px]"
               >
                 {loading.value && (
                   <span>
                     <LoadingSVG />
                   </span>
                 )}
-                {!loading.value && <span>{isEditing ? "Update Course" : "Submit Course"}</span>}
+                {!loading.value && (
+                  <span class="text-[0.875rem] md:text-[1rem]">
+                    {isEditing ? "Update Course" : "Submit Course"}
+                  </span>
+                )}
               </button>
             </div>
           </div>

@@ -1,4 +1,12 @@
-import { $, component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useOnWindow,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { and, eq } from "drizzle-orm";
 import Step1 from "~/components/_Creator/CreateCourse/step1";
@@ -23,11 +31,11 @@ import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
 import { tag, type Tag } from "../../../../drizzle_turso/schema/tag";
 
-import { ResultSet } from "@libsql/client/.";
-import { ExtractTablesWithRelations } from "drizzle-orm";
-import { SQLiteTransaction } from "drizzle-orm/sqlite-core";
+import type { ResultSet } from "@libsql/client/.";
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+import type { SQLiteTransaction } from "drizzle-orm/sqlite-core";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
-import schemaExport from "../../../../drizzle_turso/schemaExport";
+import type schemaExport from "../../../../drizzle_turso/schemaExport";
 
 type Tx = SQLiteTransaction<
   "async",
@@ -190,14 +198,37 @@ export default component$(() => {
     );
     // window.close();
   });
+  const ref = useSignal<HTMLDivElement>();
+  useVisibleTask$(({ track }) => {
+    track(formSteps);
+    track(ref);
+    if (ref.value) {
+      ref.value.style.transform = `translate3d(-${
+        formSteps.value * (window.innerWidth < 768 ? 95 : 80)
+      }vw, 0, 0)`;
+    }
+  });
+  useOnWindow(
+    "resize",
+    $(() => {
+      if (ref.value) {
+        ref.value.style.transform = `translate3d(-${
+          formSteps.value * (window.innerWidth < 768 ? 95 : 80)
+        }vw, 0, 0)`;
+      }
+    })
+  );
 
   return (
     <main class="flex h-[100vh] items-center justify-center overflow-hidden bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray">
-      <div class="w-[80vw] overflow-hidden">
+      <div class="w-[95vw] overflow-hidden md:w-[80vw]">
         <div>
           <div
-            class="flex w-[560vw] transition-transform"
-            style={{ transform: `translate3d(-${formSteps.value * 80}vw, 0, 0)` }}
+            class="flex w-[665vw] transition-transform md:w-[560vw]"
+            style={{
+              transform: `translate3d(0, 0, 0)`,
+            }}
+            ref={ref}
           >
             <Step1
               courseData={courseData}

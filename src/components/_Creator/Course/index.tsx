@@ -454,20 +454,24 @@ export const EditChapter = component$(
       }
     });
     return (
-      <div class="z-100 fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
-        <div class="relative flex w-[40vw] min-w-[400px] max-w-[600px] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark">
+      <div class="fixed left-0 top-0 z-[100] flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
+        <div class="relative flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80vw] lg:w-[50vw] lg:min-w-[400px] lg:max-w-[600px]">
           <button
             onClick$={() => (showEditChapter.value = false)}
             class="absolute right-5 top-5 block p-1 text-[20px] text-primary-dark-gray dark:text-background-light-gray"
           >
             <LuX />
           </button>
-          <h2 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider">
+          <h2 class="pb-4 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem]">
             Edit Chapter
           </h2>
-          <form preventdefault:submit onsubmit$={() => handleSubmit()}>
+          <form
+            preventdefault:submit
+            onsubmit$={() => handleSubmit()}
+            class="flex flex-col gap-2 md:gap-3"
+          >
             <div>
-              <label for="categoryName" class="cursor-pointer text-lg">
+              <label for="categoryName" class="cursor-pointer text-base md:text-lg">
                 Name
               </label>
               <div class="pt-1">
@@ -486,17 +490,17 @@ export const EditChapter = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.name ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.name}
               </p>
             </div>
             <div>
-              <label for="categorySlug" class="cursor-pointer text-lg">
+              <label for="categorySlug" class="cursor-pointer text-base md:text-lg">
                 Slug
               </label>
               <div class="pt-1">
@@ -512,17 +516,17 @@ export const EditChapter = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.slug ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.slug}
               </p>
             </div>
             <div>
-              <label for="categorLink" class="cursor-pointer text-lg">
+              <label for="categorLink" class="cursor-pointer text-base md:text-lg">
                 Link
               </label>
               <div class="pt-1">
@@ -538,55 +542,49 @@ export const EditChapter = component$(
                   }}
                   required
                   class={
-                    "w-[300px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark " +
+                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
                     (formError.link ? "border-tomato dark:border-tomato" : "border-black/10")
                   }
                 />
               </div>
-              <p class="w-[300px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato">
+              <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.link}
               </p>
             </div>
             {user.role === "admin" && (
-              <>
-                <br />
-                <div>
-                  <label
-                    title="The course is only accessible to subscribed users if checked."
-                    for="subscriptionRequired"
-                    class="flex cursor-pointer items-center gap-5   text-lg"
-                  >
-                    <span class="flex items-center gap-2">
-                      <span class="text-[20px] text-primary-dark-gray dark:text-background-light-gray">
-                        <LuGem />
-                      </span>
-                      Subscription Required
+              <div>
+                <label
+                  title="The course is only accessible to subscribed users if checked."
+                  for="subscriptionRequired"
+                  class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
+                      <LuGem />
                     </span>
-                    <input
-                      id="subscriptionRequired"
-                      type="checkbox"
-                      class="h-4 w-4"
-                      checked={formData.is_premium}
-                      onChange$={(e, currentTarget) =>
-                        (formData.is_premium = currentTarget.checked)
-                      }
-                    />
-                  </label>
-                </div>
-                <br />
-              </>
+                    Subscription Required
+                  </span>
+                  <input
+                    id="subscriptionRequired"
+                    type="checkbox"
+                    class="h-4 w-4"
+                    checked={formData.is_premium}
+                    onChange$={(e, currentTarget) => (formData.is_premium = currentTarget.checked)}
+                  />
+                </label>
+              </div>
             )}
             <br />
             <button
               type="submit"
-              class="block w-[300px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray"
+              class="block w-[250px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px]"
             >
               {loading.value && (
                 <span>
                   <LoadingSVG />
                 </span>
               )}
-              {!loading.value && <span>Save</span>}
+              {!loading.value && <span class="text-[0.875rem] md:text-[1rem]">Save</span>}
             </button>
           </form>
         </div>
@@ -1143,10 +1141,12 @@ export default component$(
                                     class="h-[16px] w-[16px] rounded-full lg:h-[20px] lg:w-[20px]"
                                   />
                                 </span>
-                                {currentCourse.is_single_page && (
-                                  <div class="inline-block items-center gap-3 pl-3 md:hidden">
+                              </p>
+                              {currentCourse.is_single_page && (
+                                <p class="-ml-1 mt-2 md:hidden">
+                                  <span class="items-center gap-3">
                                     <a
-                                      class="rounded-lg bg-primary-dark-gray px-3 py-1 text-[0.875rem] text-background-light-gray shadow-md md:px-6 md:py-3 lg:text-[1rem]"
+                                      class="whitespace-nowrap rounded-lg bg-primary-dark-gray px-3 py-1 text-[0.875rem] text-background-light-gray md:px-6 md:py-3 md:shadow-md lg:text-[1rem]"
                                       href={`/contenteditor?courseId=${
                                         currentCourse.id
                                       }&chapterId=${courses[currentCourse.id].chapter_order[0]}`}
@@ -1154,9 +1154,9 @@ export default component$(
                                     >
                                       Edit Content
                                     </a>
-                                  </div>
-                                )}
-                              </p>
+                                  </span>
+                                </p>
+                              )}
                             </div>
                             <div class="flex items-center gap-2">
                               {currentCourse.is_single_page && (
@@ -1204,26 +1204,26 @@ export default component$(
                           <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
                             {!courses[currentCourse.id].courseApproval.ready_for_approval &&
                               courses[currentCourse.id].courseApproval.status === "pending" && (
-                              <span class="inline-flex items-center gap-2">
-                                <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
-                                  <LuInfo />
-                                </span>
-                                Not Published
-                                {courses[currentCourse.id].isPublishing && (
-                                  <span class="ml-3 lg:ml-6">
-                                    <LoadingSVG />
+                                <span class="inline-flex items-center gap-2">
+                                  <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
+                                    <LuInfo />
                                   </span>
-                                )}
-                                {!courses[currentCourse.id].isPublishing && (
-                                  <button
-                                    onClick$={() => handlePublish(currentCourse.id)}
-                                    class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                  >
-                                    <span>Publish</span>
-                                  </button>
-                                )}
-                              </span>
-                            )}
+                                  Not Published
+                                  {courses[currentCourse.id].isPublishing && (
+                                    <span class="ml-3 lg:ml-6">
+                                      <LoadingSVG />
+                                    </span>
+                                  )}
+                                  {!courses[currentCourse.id].isPublishing && (
+                                    <button
+                                      onClick$={() => handlePublish(currentCourse.id)}
+                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                    >
+                                      <span>Publish</span>
+                                    </button>
+                                  )}
+                                </span>
+                              )}
 
                             {courses[currentCourse.id].courseApproval.ready_for_approval &&
                               courses[currentCourse.id].courseApproval.status === "pending" && (
@@ -1249,58 +1249,58 @@ export default component$(
                               )}
 
                             {courses[currentCourse.id].courseApproval.status === "approved" && (
-                                <span class="inline-flex items-center gap-2">
-                                  <span class=" text-[16px] text-mint-down lg:text-[20px]">
-                                    <LuCheck />
-                                  </span>
-                                  Published
-                                  {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-3 lg:ml-6">
-                                      <LoadingSVG />
-                                    </span>
-                                  )}
-                                  {!courses[currentCourse.id].isPublishing && (
-                                    <button
-                                      onClick$={() => handleUnpublish(currentCourse.id)}
-                                      class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
-                                    >
-                                      <span>Unpublish</span>
-                                    </button>
-                                  )}
+                              <span class="inline-flex items-center gap-2">
+                                <span class=" text-[16px] text-mint-down lg:text-[20px]">
+                                  <LuCheck />
                                 </span>
-                              )}
+                                Published
+                                {courses[currentCourse.id].isPublishing && (
+                                  <span class="ml-3 lg:ml-6">
+                                    <LoadingSVG />
+                                  </span>
+                                )}
+                                {!courses[currentCourse.id].isPublishing && (
+                                  <button
+                                    onClick$={() => handleUnpublish(currentCourse.id)}
+                                    class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
+                                  >
+                                    <span>Unpublish</span>
+                                  </button>
+                                )}
+                              </span>
+                            )}
 
                             {courses[currentCourse.id].courseApproval.status === "rejected" && (
-                                <span class="inline-flex items-center gap-2 text-tomato">
-                                  <span class=" text-[16px] lg:text-[20px]">
-                                    <LuBan />
-                                  </span>
-                                  Unable to Publish
+                              <span class="inline-flex items-center gap-2 text-tomato">
+                                <span class=" text-[16px] lg:text-[20px]">
+                                  <LuBan />
                                 </span>
-                              )}
+                                Unable to Publish
+                              </span>
+                            )}
 
                             {courses[currentCourse.id].courseApproval.status ===
-                                "need_amendment" && (
-                                <span class="inline-flex items-center gap-2 text-tomato">
-                                  <span class=" text-[16px] lg:text-[20px]">
-                                    <LuAlertTriangle />
-                                  </span>
-                                  Amendment Needed
-                                  {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-3 lg:ml-6">
-                                      <LoadingSVG />
-                                    </span>
-                                  )}
-                                  {!courses[currentCourse.id].isPublishing && (
-                                    <button
-                                      onClick$={() => handleAmendment(currentCourse.id)}
-                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                    >
-                                      <span>Re-Publish</span>
-                                    </button>
-                                  )}
+                              "need_amendment" && (
+                              <span class="inline-flex items-center gap-2 text-tomato">
+                                <span class=" text-[16px] lg:text-[20px]">
+                                  <LuAlertTriangle />
                                 </span>
-                              )}
+                                Amendment Needed
+                                {courses[currentCourse.id].isPublishing && (
+                                  <span class="ml-3 lg:ml-6">
+                                    <LoadingSVG />
+                                  </span>
+                                )}
+                                {!courses[currentCourse.id].isPublishing && (
+                                  <button
+                                    onClick$={() => handleAmendment(currentCourse.id)}
+                                    class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                  >
+                                    <span>Re-Publish</span>
+                                  </button>
+                                )}
+                              </span>
+                            )}
                           </p>
                           <div class="mt-3 flex items-center gap-3 text-[0.875rem] md:mt-4 lg:text-[1rem]">
                             <a
@@ -1503,7 +1503,7 @@ export default component$(
                                   <p class="flex items-center gap-2">
                                     <span
                                       class={
-                                        "text-[20px] text-primary-dark-gray dark:text-background-light-gray"
+                                        "text-[15px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]"
                                       }
                                     >
                                       {courses[currentCourse.id].is_locked ? (
@@ -1571,7 +1571,7 @@ export default component$(
                                             return (
                                               <li
                                                 key={`Course${currentCourse.id}Chapter${chapter.id}`}
-                                                class="flex items-center justify-between"
+                                                class="flex items-center justify-between gap-2"
                                               >
                                                 <div class="flex items-center gap-1 lg:gap-2">
                                                   <h4 class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
@@ -1616,7 +1616,7 @@ export default component$(
                                                         currentCourse.id
                                                       )
                                                     }
-                                                    class="p-1"
+                                                    class="md:p-1"
                                                   >
                                                     <FaPenToSquareRegular />
                                                   </button>
@@ -1626,13 +1626,14 @@ export default component$(
                                                       showEditChapterId.value = chapter.id;
                                                       showEditCourseId.value = currentCourse.id;
                                                     }}
-                                                    class="p-1"
+                                                    class="md:p-1"
                                                   >
                                                     <FaSlidersSolid />
                                                   </button>
                                                   {user.userId ===
                                                     courses[currentCourse.id].profile.id && (
                                                     <button
+                                                      class="md:p-1"
                                                       onClick$={() =>
                                                         handleLockUnlockChapter(
                                                           chapter.id,

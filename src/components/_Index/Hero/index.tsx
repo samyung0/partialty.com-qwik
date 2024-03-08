@@ -106,7 +106,7 @@ export default component$(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center justify-center px-2 [order:0] xl:w-[50%] 2xl:items-start 2xl:[order:1]  pt-0 lg:pt-12 xl:pt-0">
+        <div class="flex flex-col items-center justify-center px-2 pt-0 [order:0] lg:pt-12 xl:w-[50%]  xl:pt-0 2xl:items-start 2xl:[order:1]">
           <h1>
             <Link
               href="/"

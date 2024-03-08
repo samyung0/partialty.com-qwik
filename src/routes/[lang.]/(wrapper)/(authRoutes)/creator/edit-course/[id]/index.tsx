@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import EditCourse from "~/components/_Creator/EditCourse";
 
 export default component$(() => {
@@ -15,4 +15,3 @@ export const head: DocumentHead = {
     },
   ],
 };
-

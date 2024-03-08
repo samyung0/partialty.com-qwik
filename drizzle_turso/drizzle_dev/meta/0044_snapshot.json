@@ -262,12 +262,8 @@
           "name": "content_user_quiz_user_id_profiles_id_fk",
           "tableFrom": "content_user_quiz",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -275,12 +271,8 @@
           "name": "content_user_quiz_content_index_id_content_index_id_fk",
           "tableFrom": "content_user_quiz",
           "tableTo": "content_index",
-          "columnsFrom": [
-            "content_index_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_index_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -288,23 +280,15 @@
           "name": "content_user_quiz_content_id_content_id_fk",
           "tableFrom": "content_user_quiz",
           "tableTo": "content",
-          "columnsFrom": [
-            "content_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["content_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "content_user_quiz_user_id_content_index_id_content_id_pk": {
-          "columns": [
-            "content_id",
-            "content_index_id",
-            "user_id"
-          ],
+          "columns": ["content_id", "content_index_id", "user_id"],
           "name": "content_user_quiz_user_id_content_index_id_content_id_pk"
         }
       },
@@ -423,12 +407,8 @@
           "name": "content_index_id_content_index_id_fk",
           "tableFrom": "content",
           "tableTo": "content_index",
-          "columnsFrom": [
-            "index_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["index_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -526,12 +506,8 @@
           "name": "course_approval_course_id_content_index_id_fk",
           "tableFrom": "course_approval",
           "tableTo": "content_index",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -570,12 +546,8 @@
           "name": "email_verification_token_user_id_profiles_id_fk",
           "tableFrom": "email_verification_token",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -614,12 +586,8 @@
           "name": "mux_assets_user_id_profiles_id_fk",
           "tableFrom": "mux_assets",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -742,9 +710,7 @@
       "indexes": {
         "profiles_email_unique": {
           "name": "profiles_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -843,12 +809,8 @@
           "name": "user_key_user_id_profiles_id_fk",
           "tableFrom": "user_key",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -902,12 +864,8 @@
           "name": "user_session_user_id_profiles_id_fk",
           "tableFrom": "user_session",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

@@ -351,7 +351,14 @@ export default component$((props: { user?: LuciaSession["user"]; disableTheme?: 
                 </span>
               </div>
               <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
-                <div class={"flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray " + (!props.disableTheme ? " dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray" : "")}>
+                <div
+                  class={
+                    "flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray " +
+                    (!props.disableTheme
+                      ? " dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray"
+                      : "")
+                  }
+                >
                   <ul class="flex flex-col p-2 [&>li]:p-2">
                     <li>
                       <Link prefetch href="/members/dashboard/" class="flex items-center gap-3">
