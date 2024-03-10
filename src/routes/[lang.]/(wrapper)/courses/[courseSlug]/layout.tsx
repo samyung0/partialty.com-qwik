@@ -65,7 +65,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
     .select()
     .from(content)
     .where(and(eq(content.index_id, course.content_index.id), eq(content.is_deleted, false)));
-  if (chapters.length < 1) throw event.redirect(302, "/notfound/");
+  // if (chapters.length < 1) throw event.redirect(302, "/notfound/");
 
   if (
     course.course_approval.status !== "approved" &&

@@ -51,6 +51,10 @@ export const deleteCourse = server$(async (courseId: string) => {
     .update(content_index)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content_index.id, courseId));
+  await drizzleClient()
+    .update(content)
+    .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+    .where(eq(content.index_id, courseId));
   // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
 });
 
