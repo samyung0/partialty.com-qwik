@@ -87,7 +87,6 @@ export default component$(() => {
   useVisibleTask$(async () => {
     if (!userNullable) return;
     const favourite = await getFavourite(userNullable.userId);
-    console.log(favourite);
     if (favourite.includes(course.content_index.id)) {
       isFavourite.value = true;
       setFavouriteCookie(course.content_index.id);
@@ -137,7 +136,7 @@ export default component$(() => {
             </span>
           </p>
         </section>
-        <section class="mx-auto flex w-full flex-col gap-3 md:w-[90%] md:flex-row md:gap-6 lg:gap-12">
+        <section class="mx-auto flex flex-col gap-3 w-[90%] md:flex-row md:gap-6 lg:gap-12">
           <div class="order-2 flex flex-1 flex-col gap-3 pb-12 md:order-1 md:gap-4">
             <div class="flex flex-col gap-1 md:gap-2">
               <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
@@ -193,8 +192,8 @@ export default component$(() => {
               Last Edited On: {course.content_index.updated_at.toString().split(" ")[0]}
             </p>
           </div>
-          <div class="order-1 flex w-full flex-col gap-3 text-sm md:order-2 md:w-[250px] md:text-base">
-            <div class="flex flex-col gap-3 p-3 md:gap-4 md:p-4">
+          <div class="order-1 flex w-full flex-col gap-3 text-sm md:order-2 md:w-[280px] md:text-base">
+            <div class="flex flex-col gap-3 p-3 px-0 md:gap-4 md:p-4">
               <div class="flex gap-2 md:gap-3">
                 <span>Category:</span>
                 <p class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
@@ -233,7 +232,7 @@ export default component$(() => {
             <button class="rounded-lg bg-primary-dark-gray p-2 text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base">
               Start Course Now :D
             </button>
-            <div class="flex flex-col gap-3 p-3 pt-0 md:gap-4 md:p-4 md:pt-0">
+            <div class="flex flex-col gap-3 p-3 pt-0 md:gap-4 md:p-4 md:pt-0 px-0">
               <button
                 onClick$={toggleFavourite}
                 class="flex items-center justify-center text-sm tracking-wide underline decoration-wavy underline-offset-4 md:text-base lg:underline-offset-[6px]"
