@@ -31,6 +31,7 @@ export default component$(
       name: string;
       chapter_order: string;
       description: string;
+      short_description: string;
     };
     formSteps: Signal<number>;
     isEditing?: boolean;

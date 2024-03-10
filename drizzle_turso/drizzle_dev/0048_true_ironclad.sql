@@ -1,0 +1,1 @@
+ALTER TABLE content_index ADD `short_description` text DEFAULT '' NOT NULL;

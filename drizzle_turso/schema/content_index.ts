@@ -26,6 +26,7 @@ export const content_index = sqliteTable("content_index", {
   lang: text("lang").notNull(),
   supported_lang: blob("supported_lang", { mode: "json" }).$type<string[]>().notNull(),
   description: text("description").notNull().default(""),
+  short_description: text("short_description").notNull().default(""),
   is_deleted: integer("is_deleted", { mode: "boolean" }).notNull().default(false),
   difficulty: text("difficulty", { enum: difficulty }).notNull().default("easy"),
 });

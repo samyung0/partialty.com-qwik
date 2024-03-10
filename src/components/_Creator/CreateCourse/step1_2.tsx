@@ -6,11 +6,11 @@ import LoadingSVG from "~/components/LoadingSVG";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 
 const schema = z.object({
-  description: z
+  short_description: z
     .string()
     .trim()
-    .min(2, "A long description is required")
-    .max(5000, "Description is too long (max. 5000 chars)"),
+    .min(2, "A short description is required")
+    .max(200, "Description is too long (max. 200 chars)"),
 });
 
 export default component$(
@@ -41,44 +41,44 @@ export default component$(
           </div>
           <div>
             <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
-              Give your course a long description
+              Give your course a short description
             </h1>
             <br />
             <div class="flex flex-col items-center justify-center space-y-6">
               <div>
                 <label for="description" class="cursor-pointer text-base md:text-lg">
-                  Description (chars: {courseData.description?.length ?? 0}/5000)
+                  Description (chars: {courseData.description?.length ?? 0}/200)
                 </label>
                 <div class="pt-1">
                   <textarea
                     ref={ref}
-                    name="description"
+                    name="short_description"
                     id="description"
-                    value={courseData.description}
+                    value={courseData.short_description}
                     onInput$={(e, eventTarget) => {
-                      courseData.description = eventTarget.value.slice(0, 5000);
-                      if (ref.value) ref.value.value = courseData.description;
+                      courseData.short_description = eventTarget.value.slice(0, 200);
+                      if (ref.value) ref.value.value = courseData.short_description;
                     }}
                     class={
                       "h-[300px] w-[80vw] min-w-[200px] rounded-md border-2 px-3 py-2 text-base dark:border-background-light-gray dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20  md:w-[400px] md:text-lg xl:w-[500px] " +
-                      (courseDataError.description
+                      (courseDataError.short_description
                         ? "border-tomato dark:border-tomato"
                         : "border-black/10")
                     }
                   />
                 </div>
                 <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">
-                  {courseDataError.description}
+                  {courseDataError.short_description}
                 </p>
               </div>
               <br />
               <button
                 onClick$={async () => {
-                  courseDataError.description = "";
+                  courseDataError.short_description = "";
                   loading.value = true;
                   const result = schema.safeParse(courseData);
                   if (!result.success) {
-                    courseDataError.description = result.error.issues[0].message;
+                    courseDataError.short_description = result.error.issues[0].message;
                     loading.value = false;
                     return;
                   }

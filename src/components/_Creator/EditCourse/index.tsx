@@ -10,6 +10,7 @@ import {
 import { server$ } from "@builder.io/qwik-city";
 import { and, eq } from "drizzle-orm";
 import Step1 from "~/components/_Creator/CreateCourse/step1";
+import Step1_2 from "~/components/_Creator/CreateCourse/step1_2";
 import Step2 from "~/components/_Creator/CreateCourse/step2";
 import Step3 from "~/components/_Creator/CreateCourse/step3";
 import Step4 from "~/components/_Creator/CreateCourse/step4";
@@ -159,6 +160,7 @@ export default component$(() => {
     name: "",
     chapter_order: "",
     description: "",
+    short_description: ""
   });
   useTask$(({ track }) => {
     track(() => courseData.slug);
@@ -224,7 +226,7 @@ export default component$(() => {
       <div class="w-[95vw] overflow-hidden md:w-[80vw]">
         <div>
           <div
-            class="flex w-[665vw] transition-transform md:w-[560vw]"
+            class="flex w-[760vw] transition-transform md:w-[640vw]"
             style={{
               transform: `translate3d(0, 0, 0)`,
             }}
@@ -235,6 +237,11 @@ export default component$(() => {
               courseDataError={courseDataError}
               formSteps={formSteps}
               isEditing={true}
+            />
+            <Step1_2
+              courseData={courseData}
+              courseDataError={courseDataError}
+              formSteps={formSteps}
             />
             <Step2
               courseData={courseData}
