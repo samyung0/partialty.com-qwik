@@ -47,7 +47,7 @@ export default component$(
             <div class="flex flex-col items-center justify-center space-y-6">
               <div>
                 <label for="description" class="cursor-pointer text-base md:text-lg">
-                  Description (chars: {courseData.description?.length ?? 0}/200)
+                  Description (chars: {courseData.short_description?.length ?? 0}/200)
                 </label>
                 <div class="pt-1">
                   <textarea

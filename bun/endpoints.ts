@@ -11,6 +11,7 @@ export default [
   "https://www.partialty.com/codeplayground/",
   "https://www.partialty.com/contenteditor/",
   "https://www.partialty.com/creator/",
+  "https://www.partialty.com/creator/create-course/",
   "https://www.partialty.com/members/dashboard/",
   "https://www.partialty.com/profile/",
   "https://www.partialty.com/profile/resetPassword/",
