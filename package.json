@@ -111,7 +111,7 @@
     "@elysiajs/eden": "^0.8.1",
     "@getbrevo/brevo": "^2.0.0-beta.4",
     "@libsql/client": "^0.5.3",
-    "@lucia-auth/adapter-sqlite": "^3.0.1",
+    "@lucia-auth/adapter-sqlite": "^2.0.1",
     "@lucia-auth/oauth": "^3.5.0",
     "@mux/mux-player-react": "^2.3.2",
     "@mux/upchunk": "^3.3.1",

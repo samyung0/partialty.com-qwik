@@ -1,0 +1,1 @@
+ALTER TABLE profiles ADD `favourite_courses` blob;
