@@ -65,6 +65,30 @@ const insertContentCategory = server$(async (tx: Tx, category: ContentCategory) 
   await tx.insert(content_category).values(category);
 });
 
+const addTagContentIndex = server$(async (tx: Tx, contentIndexId: string, tagId: string) => {
+  const content_index_id = (
+    await tx.select({ content_index_id: tag.content_index_id }).from(tag).where(eq(tag.id, tagId))
+  )[0].content_index_id;
+  content_index_id.push(contentIndexId);
+  await tx.update(tag).set({ content_index_id: content_index_id }).where(eq(tag.id, tagId));
+});
+
+const addCategoryContentIndex = server$(
+  async (tx: Tx, contentIndexId: string, categoryId: string) => {
+    const content_index_id = (
+      await tx
+        .select({ content_index_id: content_category.content_index_id })
+        .from(content_category)
+        .where(eq(content_category.id, categoryId))
+    )[0].content_index_id;
+    content_index_id.push(contentIndexId);
+    await tx
+      .update(content_category)
+      .set({ content_index_id: content_index_id })
+      .where(eq(content_category.id, categoryId));
+  }
+);
+
 const setCourseServer = server$(
   async (tx: Tx, accessible_courses: string, accessible_courses_read: string, userId: string) => {
     await tx
@@ -104,12 +128,22 @@ const insertCourseHandler = server$(
         category.content_index_id.push(courseData.id);
         await insertContentCategory(tx, category);
       }
+      if (courseData.category && courseData.category !== courseApproval.added_categories){
+        await addCategoryContentIndex(tx, courseData.id, courseData.category);
+      }
       if (_tag.length > 0)
         await Promise.all(
           _tag.map(async (tag) => {
             if (!courseData.tags?.includes(tag.id)) return;
             tag.content_index_id.push(courseData.id);
             return await insertTag(tx, tag);
+          })
+        );
+      if (courseData.tags)
+        await Promise.all(
+          courseData.tags.map(async (tag) => {
+            if (!courseApproval.added_tags!.includes(tag)) return;
+            return await addTagContentIndex(tx, courseData.id, tag);
           })
         );
 
@@ -175,7 +209,7 @@ export default component$(() => {
     description: "",
     is_deleted: false,
     difficulty: "easy",
-    short_description: ""
+    short_description: "",
   });
   const courseApproval = useStore<NewCourseApproval>({
     id: uuidv4(),
@@ -191,7 +225,7 @@ export default component$(() => {
     name: "",
     chapter_order: "",
     description: "",
-    short_description: ""
+    short_description: "",
   });
   useTask$(({ track }) => {
     track(() => courseData.slug);

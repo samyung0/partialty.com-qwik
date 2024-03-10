@@ -26,7 +26,7 @@ import {
   content_category,
   type ContentCategory,
 } from "../../../../drizzle_turso/schema/content_category";
-import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
+import type { ContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
 import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
@@ -52,7 +52,7 @@ const updateCourseApproval = server$(async (tx: Tx, courseApproval: NewCourseApp
     .where(eq(course_approval.id, courseApproval.id));
 });
 
-const updateCourse = server$(async (tx: Tx, course: NewContentIndex) => {
+const updateCourse = server$(async (tx: Tx, course: ContentIndex) => {
   await tx.update(content_index).set(course).where(eq(content_index.id, course.id));
 });
 
@@ -70,11 +70,62 @@ const deleteCategory = server$(async (tx: Tx, _category: ContentCategory) => {
     .where(and(eq(content_category.id, _category.id), eq(content_category.approved, false)));
 });
 
+const addTagContentIndex = server$(async (tx: Tx, contentIndexId: string, tagId: string) => {
+  const content_index_id = (
+    await tx.select({ content_index_id: tag.content_index_id }).from(tag).where(eq(tag.id, tagId))
+  )[0].content_index_id;
+  content_index_id.push(contentIndexId);
+  await tx.update(tag).set({ content_index_id: content_index_id }).where(eq(tag.id, tagId));
+});
+
+const removeTagContentIndex = server$(async (tx: Tx, contentIndexId: string, tagId: string) => {
+  const content_index_id = (
+    await tx.select({ content_index_id: tag.content_index_id }).from(tag).where(eq(tag.id, tagId))
+  )[0].content_index_id;
+  const index = content_index_id.indexOf(contentIndexId);
+  if (index >= 0) content_index_id.splice(index, 1);
+  await tx.update(tag).set({ content_index_id: content_index_id }).where(eq(tag.id, tagId));
+});
+
+const addCategoryContentIndex = server$(
+  async (tx: Tx, contentIndexId: string, categoryId: string) => {
+    const content_index_id = (
+      await tx
+        .select({ content_index_id: content_category.content_index_id })
+        .from(content_category)
+        .where(eq(content_category.id, categoryId))
+    )[0].content_index_id;
+    content_index_id.push(contentIndexId);
+    await tx
+      .update(content_category)
+      .set({ content_index_id: content_index_id })
+      .where(eq(content_category.id, categoryId));
+  }
+);
+
+const removeCategoryContentIndex = server$(
+  async (tx: Tx, contentIndexId: string, categoryId: string) => {
+    const content_index_id = (
+      await tx
+        .select({ content_index_id: content_category.content_index_id })
+        .from(content_category)
+        .where(eq(content_category.id, categoryId))
+    )[0].content_index_id;
+    const index = content_index_id.indexOf(contentIndexId);
+    if (index >= 0) content_index_id.splice(index, 1);
+    await tx
+      .update(content_category)
+      .set({ content_index_id: content_index_id })
+      .where(eq(content_category.id, categoryId));
+  }
+);
+
 const handleCourseUpdate = server$(
   async (
     courseApproval: NewCourseApproval,
     prevCourseApproval: NewCourseApproval,
-    course: NewContentIndex,
+    course: ContentIndex,
+    prevCourse: ContentIndex,
     category: ContentCategory | undefined,
     tags: Tag[],
     prevCategory: ContentCategory | undefined,
@@ -93,12 +144,26 @@ const handleCourseUpdate = server$(
         await deleteCategory(tx, prevCategory);
       }
       if (
+        prevCourse.category &&
+        prevCourse.category !== prevCourseApproval.added_categories &&
+        prevCourse.category !== course.category
+        ) {
+        await removeCategoryContentIndex(tx, course.id, prevCourse.category);
+      }
+      if (
         category &&
         courseApproval.added_categories &&
         course.category === category.id &&
         prevCourseApproval.added_categories !== courseApproval.added_categories
       ) {
         await tx.insert(content_category).values(category);
+      }
+      if (
+        course.category &&
+        courseApproval.added_categories !== course.category &&
+        prevCourse.category !== course.category
+      ) {
+        await addCategoryContentIndex(tx, course.id, course.category);
       }
       for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
         if (
@@ -114,6 +179,24 @@ const handleCourseUpdate = server$(
           tags.find((t) => t.id === courseApproval.added_tags![i])
         ) {
           await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
+        }
+      }
+      for (let i = 0; i < prevCourse.tags!.length; i++) {
+        if (
+          !course.tags!.includes(prevCourse.tags![i]) &&
+          !prevTags.find((t) => t.id === prevCourse.tags![i]) &&
+          !prevCourseApproval.added_tags!.find((t) => t === prevCourse.tags![i])
+        ) {
+          await removeTagContentIndex(tx, course.id, prevCourse.tags![i]);
+        }
+      }
+      for (let i = 0; i < course.tags!.length; i++) {
+        if (
+          !prevCourse.tags!.includes(course.tags![i]) &&
+          !tags.find((t) => t.id === course.tags![i]) &&
+          !courseApproval.added_tags!.find((t) => t === course.tags![i])
+        ) {
+          await addTagContentIndex(tx, course.id, course.tags![i]);
         }
       }
       return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
@@ -155,12 +238,13 @@ export default component$(() => {
   const prevCreatedCategory = useSignal(createdCategory.value);
   const courseApproval = useStore<NewCourseApproval>(() => approval[0]);
   const prevCourseApproval = useSignal(JSON.parse(JSON.stringify(courseApproval)));
-  const courseData = useStore<NewContentIndex>(() => course[0]);
+  const courseData = useStore<ContentIndex>(() => course[0]);
+  const prevCourseData = useSignal(JSON.parse(JSON.stringify(courseData)));
   const courseDataError = useStore({
     name: "",
     chapter_order: "",
     description: "",
-    short_description: ""
+    short_description: "",
   });
   useTask$(({ track }) => {
     track(() => courseData.slug);
@@ -182,6 +266,7 @@ export default component$(() => {
         courseApproval,
         prevCourseApproval.value,
         courseData,
+        prevCourseData.value,
         createdCategory.value,
         createdTags,
         prevCreatedCategory.value,
