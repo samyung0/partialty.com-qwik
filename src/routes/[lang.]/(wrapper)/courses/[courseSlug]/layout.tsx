@@ -36,14 +36,11 @@ export const useUserLoaderNullable = routeLoader$(async (event) => {
 });
 
 export const useTagLoader = routeLoader$(async () => {
-  return await drizzleClient().select().from(tag).where(eq(tag.approved, true));
+  return await drizzleClient().select().from(tag);
 });
 
 export const useCategoryLoader = routeLoader$(async () => {
-  return await drizzleClient()
-    .select()
-    .from(content_category)
-    .where(eq(content_category.approved, true));
+  return await drizzleClient().select().from(content_category);
 });
 
 export const useCourseLoader = routeLoader$(async (event) => {
