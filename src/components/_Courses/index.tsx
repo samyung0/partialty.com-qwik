@@ -2,6 +2,7 @@ import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Link, server$, useNavigate } from "@builder.io/qwik-city";
 import { IoReaderOutline, IoRocketOutline } from "@qwikest/icons/ionicons";
 import { eq } from "drizzle-orm";
+import Footer from "~/components/Footer";
 import HeartSVG from "~/components/HeartSVG";
 import Nav from "~/components/Nav";
 import { difficultyLabels } from "~/const/difficulty";
@@ -99,7 +100,7 @@ export default component$(() => {
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={userNullable} />
-      <article class="mx-auto flex w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
+      <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <section class="flex flex-col gap-3 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:bg-highlight-dark dark:text-background-light-gray  md:gap-4 md:p-6 lg:p-8">
           <h1 class="font-mosk text-xl tracking-wider md:text-2xl lg:text-3xl">
             {course.content_index.name}
@@ -136,7 +137,7 @@ export default component$(() => {
             </span>
           </p>
         </section>
-        <section class="mx-auto flex flex-col gap-3 w-[90%] md:flex-row md:gap-6 lg:gap-12">
+        <section class="mx-auto flex w-[90%] flex-col gap-3 md:flex-row md:gap-6 lg:gap-12">
           <div class="order-2 flex flex-1 flex-col gap-3 pb-12 md:order-1 md:gap-4">
             <div class="flex flex-col gap-1 md:gap-2">
               <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
@@ -232,7 +233,7 @@ export default component$(() => {
             <button class="rounded-lg bg-primary-dark-gray p-2 text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base">
               Start Course Now :D
             </button>
-            <div class="flex flex-col gap-3 p-3 pt-0 md:gap-4 md:p-4 md:pt-0 px-0">
+            <div class="flex flex-col gap-3 p-3 px-0 pt-0 md:gap-4 md:p-4 md:pt-0">
               <button
                 onClick$={toggleFavourite}
                 class="flex items-center justify-center text-sm tracking-wide underline decoration-wavy underline-offset-4 md:text-base lg:underline-offset-[6px]"
@@ -251,6 +252,7 @@ export default component$(() => {
           </div>
         </section>
       </article>
+      <Footer />
     </section>
   );
 });
