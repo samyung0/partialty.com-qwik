@@ -149,8 +149,8 @@ export default component$(
                   try {
                     await handleSubmit();
                     loading.value = false;
-                    window.close();
-                    nav("/creator/", { forceReload: true });
+                    // window.close();
+                    // nav("/creator/", { forceReload: true });
                   } catch (e) {
                     console.error(e);
                     alert("Something went wrong! Please try again later or contact support.");
