@@ -11,7 +11,7 @@ export default component$(() => {
 export const head: DocumentHead = ({ resolveValue }) => {
   const {course} = resolveValue(useCourseLoader);
   return {
-    title: `Course ${course.content_index.name}`,
+    title: `${course.content_index.name}`,
     meta: [
       {
         name: "description",

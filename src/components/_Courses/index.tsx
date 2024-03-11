@@ -1,6 +1,7 @@
 import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { Link, server$, useNavigate } from "@builder.io/qwik-city";
 import { IoReaderOutline, IoRocketOutline } from "@qwikest/icons/ionicons";
+import { LuArrowRight, LuGem } from "@qwikest/icons/lucide";
 import { eq } from "drizzle-orm";
 import Footer from "~/components/Footer";
 import HeartSVG from "~/components/HeartSVG";
@@ -77,10 +78,16 @@ export default component$(() => {
     if (!userNullable) return nav("/login/");
     isFavourite.value = !isFavourite.value;
     if (isFavourite.value) {
-      setFavouriteDB(userNullable.userId, course.content_index.id);
+      setFavouriteDB(userNullable.userId, course.content_index.id).catch(() => {
+        isFavourite.value = false;
+        removeFavouriteCookie(course.content_index.id);
+      });
       setFavouriteCookie(course.content_index.id);
     } else {
-      removeFavouriteDB(userNullable.userId, course.content_index.id);
+      removeFavouriteDB(userNullable.userId, course.content_index.id).catch(() => {
+        isFavourite.value = true;
+        setFavouriteCookie(course.content_index.id);
+      });
       removeFavouriteCookie(course.content_index.id);
     }
   });
@@ -101,6 +108,15 @@ export default component$(() => {
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={userNullable} />
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
+        <Link
+          href={"/catalog/"}
+          class="ml-2 flex items-center gap-2 self-start border-b-2 border-primary-dark-gray text-sm tracking-wide dark:border-background-light-gray md:-mb-4 md:text-base"
+        >
+          <span>All courses</span>{" "}
+          <span class="-mt-[2px] block text-[15px] text-primary-dark-gray dark:text-background-light-gray md:mt-0 md:text-[20px]">
+            <LuArrowRight />
+          </span>
+        </Link>
         <section class="flex flex-col gap-3 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:bg-highlight-dark dark:text-background-light-gray  md:gap-4 md:p-6 lg:p-8">
           <h1 class="font-mosk text-xl tracking-wider md:text-2xl lg:text-3xl">
             {course.content_index.name}
@@ -139,6 +155,16 @@ export default component$(() => {
         </section>
         <section class="mx-auto flex w-[90%] flex-col gap-3 md:flex-row md:gap-6 lg:gap-12">
           <div class="order-2 flex flex-1 flex-col gap-3 pb-12 md:order-1 md:gap-4">
+            {course.content_index.is_premium && (
+              <div class="flex flex-col gap-1 md:gap-2">
+                <p class="flex items-center gap-2 text-sm text-tomato dark:text-pink md:gap-3 md:text-base">
+                  <span class="text-[15px] md:text-[20px]">
+                    <LuGem />
+                  </span>
+                  <span>Subscription Required</span>
+                </p>
+              </div>
+            )}
             <div class="flex flex-col gap-1 md:gap-2">
               <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
                 Course Description
@@ -152,17 +178,26 @@ export default component$(() => {
                 nemo cumque numquam ea hic quisquam quam exercitationem laborum. */}
               </p>
             </div>
-            <div class="flex flex-col gap-1 md:gap-2">
-              <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
-                Course Chapters
-              </h2>
+            {!course.content_index.is_single_page && (
+              <div class="flex flex-col gap-1 md:gap-2">
+                <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
+                  Course Chapters
+                </h2>
 
-              <ul class="flex flex-col gap-2 text-base md:gap-3 lg:text-lg">
-                {chapters.map((chapter) => (
-                  <li key={chapter.id}>{chapter.name}</li>
-                ))}
-              </ul>
-            </div>
+                <ul class="flex flex-col gap-2 text-base md:gap-3 lg:text-lg">
+                  {chapters.map((chapter) => (
+                    <li key={chapter.id} class="flex items-center gap-2">
+                      <span>{chapter.name}</span>
+                      {chapter.is_premium && (
+                        <span class="text-[14px] text-tomato dark:text-pink md:text-[16px] lg:text-[18px]">
+                          <LuGem />
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div class="flex flex-col gap-1 md:gap-2">
               <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Author</h2>
               <p class="flex items-center gap-2 text-sm md:gap-3 md:text-base">
@@ -189,7 +224,7 @@ export default component$(() => {
                 }
               </p>
             </div>
-            <p class="pt-3 text-xs italic text-gray-300 md:pt-6">
+            <p class="text-gary-500 pt-3 text-xs italic dark:text-gray-300 md:pt-6">
               Last Edited On: {course.content_index.updated_at.toString().split(" ")[0]}
             </p>
           </div>
@@ -239,7 +274,7 @@ export default component$(() => {
                 class="flex items-center justify-center text-sm tracking-wide underline decoration-wavy underline-offset-4 md:text-base lg:underline-offset-[6px]"
               >
                 <span class="flex items-center gap-3">
-                  <span>Add to Favourite</span>
+                  <span>{isFavourite.value ? "Remove from Favourite" : "Add to Favourite"}</span>
                   {/* <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                     <LuHeart />
                   </span> */}
