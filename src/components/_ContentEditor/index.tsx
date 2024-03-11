@@ -125,7 +125,7 @@ const ContentEditorReact = ({
   themeValue,
   openSmallCircleNav,
   toggleSmallCircleNav,
-  toggleSideNav
+  toggleSideNav,
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -567,7 +567,7 @@ const ContentEditorReact = ({
           </div>
 
           {isPreviewing && (
-            <div className={"flex h-full xl:w-[80vw] w-[100vw] flex-col overflow-hidden"}>
+            <div className={"flex h-full w-[100vw] flex-col overflow-hidden xl:w-[80vw]"}>
               <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <div className="overflow-auto" style={{ height: audioTrack ? "90vh" : "100vh" }}>
@@ -579,13 +579,14 @@ const ContentEditorReact = ({
         </>
       )}
       {!isEditing && (
-        <div className="flex h-full xl:w-[80vw] w-[100vw] items-center justify-center dark:text-background-light-gray">
-          <div className="flex flex-col lg:gap-6 md:gap-4 gap-3 px-6 max-w-[800px] text-center">
-            <h1 className="text-center font-mosk lg:text-[2rem] text-[1.5rem] font-bold">
+        <div className="flex h-full w-[100vw] items-center justify-center dark:text-background-light-gray xl:w-[80vw]">
+          <div className="flex max-w-[800px] flex-col gap-3 px-6 text-center md:gap-4 lg:gap-6">
+            <h1 className="text-center font-mosk text-[1.5rem] font-bold lg:text-[2rem]">
               Welcome to the Content Editor
             </h1>
-            <p className="md:text-base text-sm">
-              Start by selecting a course and chapter to edit in the navigation bar. You might need to click on the three dots to show it. If it is empty, go to{" "}
+            <p className="text-sm md:text-base">
+              Start by selecting a course and chapter to edit in the navigation bar. You might need
+              to click on the three dots to show it. If it is empty, go to{" "}
               <a
                 target="_blank"
                 href="/creator/"
@@ -595,7 +596,7 @@ const ContentEditorReact = ({
               </a>{" "}
               and create a course :D
             </p>
-            <p className="text-tomato md:text-base text-sm">
+            <p className="text-sm text-tomato md:text-base">
               Note: Content Editor is still in beta mode! Please kindly report any bugs and glitches
               to{" "}
               <a
@@ -607,7 +608,7 @@ const ContentEditorReact = ({
               </a>
             </p>
             <br />
-            <div className="xl:flex hidden mx-auto flex-col items-start gap-4">
+            <div className="mx-auto hidden flex-col items-start gap-4 xl:flex">
               <div className="flex gap-4">
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
