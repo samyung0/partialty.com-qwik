@@ -277,7 +277,7 @@ export default component$(
     return (
       <nav
         class={
-          "absolute left-0 top-0 z-[200] hidden h-full max-h-[100vh] w-[100vw] items-center justify-start text-primary-dark-gray backdrop-blur-sm dark:bg-primary-dark-gray dark:text-background-light-gray xl:relative xl:flex xl:w-[20vw] " +
+          "absolute left-0 top-0 z-[200] hidden h-full max-h-[100vh] w-[100vw] items-center justify-start text-primary-dark-gray backdrop-blur-sm dark:text-background-light-gray xl:relative xl:flex xl:w-[20vw] " +
           (openSideNav.value ? " !block" : "")
         }
         onClick$={() => {
@@ -288,7 +288,7 @@ export default component$(
           <LuX />
         </button>
         <div
-          class="bg-pale-yellow h-full w-[20vw] min-w-[280px] overflow-auto border-r-2 border-yellow p-4 dark:border-disabled-dark xl:w-full "
+          class="h-full w-[20vw] min-w-[280px] overflow-auto border-r-2 border-yellow bg-pale-yellow p-4 dark:border-disabled-dark dark:bg-primary-dark-gray md:min-w-[250px] xl:w-full"
           onClick$={(e) => e.stopPropagation()}
         >
           {contentWS.value ? (
@@ -353,6 +353,11 @@ export default component$(
                                 isEditing.value = true;
                                 isRequestingChapter.value = "";
                                 chapterName.value = chapter.name;
+                                window.history.replaceState(
+                                  {},
+                                  "",
+                                  `/contenteditor/?courseId=${currentCourse.id}&chapterId=${chapter.id}`
+                                );
 
                                 if (oldChapter.value)
                                   contentWS.value?.send(
@@ -497,6 +502,11 @@ export default component$(
                                               isEditing.value = true;
                                               isRequestingChapter.value = "";
                                               chapterName.value = chapter.name;
+                                              window.history.replaceState(
+                                                {},
+                                                "",
+                                                `/contenteditor/?courseId=${currentCourse.id}&chapterId=${chapter.id}`
+                                              );
 
                                               if (oldChapter.value)
                                                 contentWS.value?.send(

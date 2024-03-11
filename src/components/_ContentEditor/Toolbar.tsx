@@ -55,8 +55,8 @@ const Toolbar = ({
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   return (
-    <div className="absolute left-0 top-0 z-[100] flex h-[10vh] max-h-[10vh] w-full items-start justify-center rounded-lg border-2 border-mint bg-light-mint p-4 dark:border-disabled-dark dark:bg-primary-dark-gray dark:text-background-light-gray">
-      <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className="absolute left-0 top-0 z-[100] flex h-[10vh] max-h-[10vh] w-full items-center justify-center rounded-lg border-2 border-mint bg-light-mint p-4 dark:border-disabled-dark dark:bg-primary-dark-gray dark:text-background-light-gray md:items-start">
+      <div className="flex max-w-full items-center justify-center gap-4 overflow-auto pb-4 md:flex-wrap md:pb-0">
         <MarkButton title={"Bold"} format="bold" children={<Bold size={20} />} />
         <MarkButton title={"Italic"} format="italic" children={<Italic size={20} />} />
         <MarkButton

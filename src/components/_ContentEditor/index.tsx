@@ -458,7 +458,7 @@ const ContentEditorReact = ({
             ref={parentRef}
             id="ParentRefContainer"
             className={
-              "relative flex h-full w-[80vw] flex-col items-center justify-center px-10 dark:bg-primary-dark-gray dark:text-background-light-gray " +
+              "relative flex h-full w-[100vw] flex-col items-center justify-center dark:bg-primary-dark-gray  dark:text-background-light-gray xl:w-[80vw] " +
               (isPreviewing ? " hidden " : " block ")
             }
           >
