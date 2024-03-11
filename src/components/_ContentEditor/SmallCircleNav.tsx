@@ -26,7 +26,7 @@ export default ({
     }
   };
   return (
-    <Draggable onDrag={eventControl} onStop={eventControl} allowAnyClick bounds="parent">
+    <Draggable onDrag={eventControl} onStop={eventControl} bounds="parent">
       <div className="content block text-background-light-gray xl:hidden">
         <ul id="menu" className={openSmallCircleNav ? "menuOpened" : ""}>
           <button
@@ -78,7 +78,7 @@ export default ({
             </button>
           </li>
           <li className="menu-item bg-primary-dark-gray dark:bg-highlight-dark">
-            <button onClick={toggleSideNav}>
+            <button onClick={toggleSideNav} onTouchEnd={toggleSideNav} className="cursor-pointer">
               <span className="inline-block h-[20px] w-[20px]">
                 <EllipsisVertical size={20} />
               </span>
