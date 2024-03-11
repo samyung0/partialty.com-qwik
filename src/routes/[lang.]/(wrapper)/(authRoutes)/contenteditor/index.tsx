@@ -3,6 +3,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$, server$ } from "@builder.io/qwik-city";
 
 import { eq } from "drizzle-orm";
+import LoadingSVG from "~/components/LoadingSVG";
 import ContentEditor from "~/components/_ContentEditor";
 import SideNav from "~/components/_ContentEditor/SideNav";
 import { CLOUDINARY_NAME } from "~/const/cloudinary";
@@ -205,6 +206,8 @@ export default component$(() => {
   const hasChanged = useSignal(false);
   const isPreviewing = useSignal(false);
   const chapterName = useSignal("");
+  const openSmallCircleNav = useSignal(false);
+  const openSideNav = useSignal(false);
 
   const fetchAudio = $(async (id: string) => await fetchAudioServer(id));
 
@@ -231,9 +234,13 @@ export default component$(() => {
         hasChanged={hasChanged}
         chapterName={chapterName}
         timeStamp={wsTimeStamp}
+        openSideNav={openSideNav}
       />
       {contentWS.value && (
         <ContentEditor
+          toggleSideNav={$(() => (openSideNav.value = !openSideNav.value))}
+          openSmallCircleNav={openSmallCircleNav.value}
+          toggleSmallCircleNav={$(() => (openSmallCircleNav.value = !openSmallCircleNav.value))}
           themeValue={themeContent.value}
           saveToDBQuiz={$((isCorrect: boolean) =>
             saveToDBQuiz(isCorrect, user.userId, courseId.value, chapterId.value)
@@ -283,6 +290,11 @@ export default component$(() => {
             }
           )}
         ></ContentEditor>
+      )}
+      {!contentWS.value && (
+        <div class="flex h-full w-full items-center justify-center">
+          <LoadingSVG />
+        </div>
       )}
     </main>
   );

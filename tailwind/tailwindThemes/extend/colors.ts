@@ -9,6 +9,7 @@ export default {
     "disabled-dark": "#141a23",
     yellow: "#fcd34d",
     "middle-yellow": "#FDE594",
+    "pale-yellow": "#faf6e9",
     "light-yellow": "#fef6db",
     "bright-yellow": "#ffff43",
     "dark-yellow": "#e5ddc5",

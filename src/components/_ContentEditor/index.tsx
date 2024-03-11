@@ -50,6 +50,9 @@ import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
 import { getContentEditorHighlighter } from "~/utils/shikiji/OneDarkPro";
 
+import SmallCircleNav from "~/components/_ContentEditor/SmallCircleNav";
+import "./SmallCircleNav.css";
+
 declare module "slate" {
   interface CustomTypes {
     Editor: BaseEditor &
@@ -120,6 +123,9 @@ const ContentEditorReact = ({
   chapterName,
   saveToDBQuiz,
   themeValue,
+  openSmallCircleNav,
+  toggleSmallCircleNav,
+  toggleSideNav
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -153,6 +159,9 @@ const ContentEditorReact = ({
   chapterName: string;
   saveToDBQuiz: (isCorrect: boolean) => any;
   themeValue: (typeof theme)[number];
+  toggleSmallCircleNav: () => void;
+  openSmallCircleNav: boolean;
+  toggleSideNav: () => void;
 }) => {
   const normalizedInitialValue = initialValue ?? [
     {
@@ -558,7 +567,7 @@ const ContentEditorReact = ({
           </div>
 
           {isPreviewing && (
-            <div className={"flex h-full w-[80vw] flex-col overflow-hidden"}>
+            <div className={"flex h-full xl:w-[80vw] w-[100vw] flex-col overflow-hidden"}>
               <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <div className="overflow-auto" style={{ height: audioTrack ? "90vh" : "100vh" }}>
@@ -570,35 +579,35 @@ const ContentEditorReact = ({
         </>
       )}
       {!isEditing && (
-        <div className="flex h-full w-[80vw] items-center justify-center dark:text-background-light-gray">
-          <div className="flex flex-col gap-6">
-            <h1 className="text-center font-mosk text-[2rem] font-bold">
+        <div className="flex h-full xl:w-[80vw] w-[100vw] items-center justify-center dark:text-background-light-gray">
+          <div className="flex flex-col lg:gap-6 md:gap-4 gap-3 px-6 max-w-[800px] text-center">
+            <h1 className="text-center font-mosk lg:text-[2rem] text-[1.5rem] font-bold">
               Welcome to the Content Editor
             </h1>
-            <p>
-              Start by selecting a course and chapter to edit on the left. If it is empty, go to{" "}
+            <p className="md:text-base text-sm">
+              Start by selecting a course and chapter to edit in the navigation bar. You might need to click on the three dots to show it. If it is empty, go to{" "}
               <a
                 target="_blank"
                 href="/creator/"
-                className="underline decoration-wavy underline-offset-[6px]"
+                className="underline decoration-wavy underline-offset-4"
               >
                 Creator
               </a>{" "}
               and create a course :D
             </p>
-            <p className="text-tomato">
+            <p className="text-tomato md:text-base text-sm">
               Note: Content Editor is still in beta mode! Please kindly report any bugs and glitches
               to{" "}
               <a
                 href="mailto:customer@partialty.com"
                 target="_blank"
-                className="underline decoration-wavy underline-offset-[6px]"
+                className="underline decoration-wavy underline-offset-4"
               >
                 customer@partialty.com
               </a>
             </p>
             <br />
-            <div className="mx-auto flex flex-col items-start gap-4">
+            <div className="xl:flex hidden mx-auto flex-col items-start gap-4">
               <div className="flex gap-4">
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
@@ -676,6 +685,11 @@ const ContentEditorReact = ({
           </div>
         </div>
       )}
+      <SmallCircleNav
+        toggleSmallCircleNav={toggleSmallCircleNav}
+        openSmallCircleNav={openSmallCircleNav}
+        toggleSideNav={toggleSideNav}
+      />
     </>
   );
 };

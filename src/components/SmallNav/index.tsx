@@ -50,7 +50,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             <LuMoon />
           </label>
         </li>
-        <li class="relative flex gap-3 px-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
+        <li class="relative flex gap-3 pl-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
           <div class={"flex gap-2"}>
             <span class="relative">
               <img
@@ -73,7 +73,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             </span>
             <span
               class={
-                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
+                "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray"
               }
             >
               <IoCaretDown />

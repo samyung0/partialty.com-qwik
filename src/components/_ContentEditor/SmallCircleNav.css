@@ -1,0 +1,94 @@
+#menu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/* .menu-button {
+  opacity: 0;
+  z-index: -1;
+} */
+
+.menu-button {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background-size: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.menu-item {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* margin: -50px 0 0 -50px; */
+  border-radius: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  transition: transform 500ms;
+  z-index: -2;
+  transition: 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-item > button {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+/* .menu-item:hover {
+  opacity: 0.5;
+  box-shadow: 0 5px 10px black;
+} */
+
+.menuOpened > .menu-item:nth-child(5) {
+  transform: translate3d(-50%, -50%, 0) rotate(288deg) translateY(-80px) rotate(-288deg);
+  transition-delay: 0s;
+}
+
+.menuOpened > .menu-item:nth-child(4) {
+  transform: translate3d(-50%, -50%, 0) rotate(252deg) translateY(-80px) rotate(-252deg);
+  transition-delay: 0s;
+}
+
+.menuOpened > .menu-item:nth-child(2) {
+  transform: translate3d(-50%, -50%, 0) rotate(180deg) translateY(-80px) rotate(-180deg);
+  transition-delay: 0s;
+}
+
+.menuOpened > .menu-item:nth-child(3) {
+  transform: translate3d(-50%, -50%, 0) rotate(216deg) translateY(-80px) rotate(-216deg);
+  transition-delay: 0s;
+}
+
+.menuOpened > .menu-item:nth-child(6) {
+   transform: translate3d(-50%, -50%, 0) rotate(324deg) translateY(-80px) rotate(-324deg);
+   transition-delay: 0s;
+ }
+
+ .menuOpened > .menu-item:nth-child(7) {
+   transform: translate3d(-50%, -50%, 0) rotate(360deg) translateY(-80px) rotate(-360deg);
+   transition-delay: 0s;
+ }
+
+.content {
+  position: absolute;
+  text-align: center;
+  top: 50vh;
+  transform: translateY(-50%);
+  right: max(5vw, 25px);
+  font-size: 20px;
+  z-index: 100;
+}
