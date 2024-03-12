@@ -19,7 +19,7 @@ export default ({
         if (!isPreviewing) setSaveBeforePreview(true);
         else setIsPreviewing(false);
       }}
-      className="absolute right-4 z-[50] flex items-center justify-center rounded-lg bg-primary-dark-gray p-3 text-background-light-gray shadow-xl dark:bg-highlight-dark"
+      className="absolute right-4 z-[50] hidden items-center justify-center rounded-lg bg-primary-dark-gray p-3 text-background-light-gray shadow-xl dark:bg-highlight-dark xl:flex"
       style={{
         bottom: isPreviewing ? (hasAudioTrack ? "16px" : "calc(10vh + 16px)") : "calc(10vh + 64px)",
       }}

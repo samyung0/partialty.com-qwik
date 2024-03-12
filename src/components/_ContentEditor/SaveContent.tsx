@@ -96,7 +96,7 @@ export default ({
         console.log(await serialize(editor.children, true));
         save();
       }}
-      className="absolute bottom-[calc(10vh+16px)] right-4 z-[50] flex h-[40px] items-center justify-center rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl disabled:bg-gray-300 dark:bg-highlight-dark dark:disabled:bg-gray-300"
+      className="absolute bottom-[calc(10vh+16px)] right-4 z-[50] hidden h-[40px] items-center justify-center rounded-lg bg-primary-dark-gray px-4 py-3 text-background-light-gray shadow-xl disabled:bg-gray-300 dark:bg-highlight-dark dark:disabled:bg-gray-300 xl:flex"
     >
       {!isSaving ? (
         <span>Save</span>

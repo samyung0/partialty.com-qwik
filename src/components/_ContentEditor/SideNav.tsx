@@ -272,7 +272,7 @@ export default component$(
         isRequestingChapter.value = "";
         isRequestingChapterCallback.value = undefined;
       }, 7000);
-    });
+    }, { strategy: "document-ready" });
 
     return (
       <nav
@@ -294,7 +294,7 @@ export default component$(
           {contentWS.value ? (
             <div class="flex flex-col items-start gap-4 py-6">
               <SmallNav user={user} />
-              <ul class="flex flex-col gap-6 pt-4">
+              <ul class="flex flex-col gap-6 md:pt-4 pt-2">
                 {displayCourses.value.map((currentCourse, index) => {
                   const displayChapters = courses[currentCourse.id].chapter_order.filter(
                     (chapter) => {
@@ -452,7 +452,7 @@ export default component$(
                         !courses[currentCourse.id].is_single_page &&
                         courses[currentCourse.id].hasLoadedChapter &&
                         displayChapters.length > 0 && (
-                          <ul class="relative mt-2 flex flex-col gap-4 py-2 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray">
+                          <ul class="relative mt-2 flex flex-col gap-4 md:py-2 py-1 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray">
                             {displayChapters.map((_chapterId, chapterIndex) => {
                               const chapter = courses[currentCourse.id].chapters.find(
                                 (c) => c.id === _chapterId
