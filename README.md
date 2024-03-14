@@ -5,12 +5,10 @@
 Run
 
 ```html
-bun i
+bun i 
 ```
 
-```html
-cd bun && bun i
-```
+This will install npm packages in root (Qwik), ./bun and ./astro_embed.
 
 ```html
 cd .. && bun run dev
