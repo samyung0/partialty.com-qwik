@@ -11,7 +11,7 @@ bun i && cd bun && bun i && cd ../astro_embed && bun i && cd ..
 TODO: install as monorepo
 
 ```html
-cd .. && bun run dev
+bun run dev
 ```
 
 ### Switching Theme
