@@ -5,13 +5,13 @@
 Run
 
 ```html
-bun i 
+bun i && cd bun && bun i && cd ../astro_embed && bun i && cd ..
 ```
 
-This will install npm packages in root (Qwik), ./bun and ./astro_embed.
+TODO: install as monorepo
 
 ```html
-cd .. && bun run dev
+bun run dev
 ```
 
 ### Switching Theme
