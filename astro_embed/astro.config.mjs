@@ -20,4 +20,9 @@ export default defineConfig({
   ],
   output: "hybrid",
   adapter: vercel(),
+  vite: {
+    ssr: {
+      noExternal: ['path-to-regexp'],
+    }
+  }
 });
