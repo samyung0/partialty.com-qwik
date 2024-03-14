@@ -71,7 +71,7 @@ export default component$(() => {
         </h1>
         {!canResetPassword && (
           <>
-            <p class="block lg:w-[500px] lg:px-12 px-8 lg:pb-6 pb-4 text-center text-tomato md:text-[1rem] text-[0.875rem]">
+            <p class="block px-8 pb-4 text-center text-[0.875rem] text-tomato md:text-[1rem] lg:w-[500px] lg:px-12 lg:pb-6">
               You did not sign up with email and password and is not allowed to reset your password.
             </p>
           </>

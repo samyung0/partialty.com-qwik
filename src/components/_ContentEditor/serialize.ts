@@ -441,21 +441,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       }</style>
         <div class="embedContainer" style="
         width: 100%;
-        border-width: 2px;
-        border-color: rgb(114 202 218);
+        
         object-fit: contain;
         ">
-          <div style="
-          background-color: rgb(227 244 248);
-          padding: 0.5rem;
-          font-family: mosk, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-          font-size: 0.875rem;
-          line-height: 1.25rem;
-          font-weight: 700;
-          letter-spacing: 0.025em;
-          ">
-            ${embedType}
-          </div>
           <div style="
           aspect-ratio: 16 / 9;
           width: 100%;
@@ -467,6 +455,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
               aspect-ratio: 16 / 9;
               width: 100%;
               "
+              allowTransparency
+                allowFullScreen
                 src="${parsedUrl}?title=0&byline=0&portrait=0"
                 frameBorder="0"
               ></iframe>

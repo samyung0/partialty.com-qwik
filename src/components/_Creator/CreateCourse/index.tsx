@@ -128,7 +128,7 @@ const insertCourseHandler = server$(
         category.content_index_id.push(courseData.id);
         await insertContentCategory(tx, category);
       }
-      if (courseData.category && courseData.category !== courseApproval.added_categories){
+      if (courseData.category && courseData.category !== courseApproval.added_categories) {
         await addCategoryContentIndex(tx, courseData.id, courseData.category);
       }
       if (_tag.length > 0)

@@ -147,7 +147,7 @@ const handleCourseUpdate = server$(
         prevCourse.category &&
         prevCourse.category !== prevCourseApproval.added_categories &&
         prevCourse.category !== course.category
-        ) {
+      ) {
         await removeCategoryContentIndex(tx, course.id, prevCourse.category);
       }
       if (

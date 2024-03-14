@@ -91,13 +91,17 @@ export const HoveringEmbed = ({
         (prevSelection.current === undefined || prevSelection.current === null)) ||
       !Range.isCollapsed(selection)
     ) {
+      console.log("nah");
       setLinkOpen(false);
       el.style.display = "none";
       return;
     }
 
     el.style.display = "flex";
-    el.style.top = `${nodeY + nodeHeight + offsetY}px`;
+    el.style.top = `${Math.min(
+      nodeY + nodeHeight + offsetY,
+      window.innerHeight * 0.9 - el.offsetHeight
+    )}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });
@@ -220,6 +224,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   }
 
   const shouldDisplay = isUrl(parsedUrl);
+  console.log(shouldDisplay, parsedUrl);
 
   const [value, setValue] = useState(caption || "");
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -244,6 +249,8 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
           <div className="aspect-video w-full">
             {shouldDisplay && (
               <iframe
+                allowTransparency
+                allowFullScreen
                 className="aspect-video w-full"
                 src={`${parsedUrl}?title=0&byline=0&portrait=0`}
                 frameBorder="0"

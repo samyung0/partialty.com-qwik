@@ -213,66 +213,69 @@ export default component$(
       courses[id].hasLoadedChapter = true;
     });
 
-    useVisibleTask$(async ({ track }) => {
-      track(contentWS);
-      if (!verifyChapter) return;
-      if (!initialCourseId || !initialChapterId || !courses[initialCourseId]) return;
-      if (!contentWS.value) return;
+    useVisibleTask$(
+      async ({ track }) => {
+        track(contentWS);
+        if (!verifyChapter) return;
+        if (!initialCourseId || !initialChapterId || !courses[initialCourseId]) return;
+        if (!contentWS.value) return;
 
-      if (
-        (userAccessibleCourseWrite.value[0] !== "*" &&
-          !userAccessibleCourseWrite.value.includes(initialCourseId)) ||
-        (courses[initialCourseId].is_locked &&
-          user.userId !== courses[initialCourseId].author &&
-          user.role !== "admin")
-      )
-        return alert("No permission to edit the course!");
+        if (
+          (userAccessibleCourseWrite.value[0] !== "*" &&
+            !userAccessibleCourseWrite.value.includes(initialCourseId)) ||
+          (courses[initialCourseId].is_locked &&
+            user.userId !== courses[initialCourseId].author &&
+            user.role !== "admin")
+        )
+          return alert("No permission to edit the course!");
 
-      if (!courses[initialCourseId].is_single_page) {
-        courses[initialCourseId].isOpen = true;
-        refreshChapters(initialCourseId);
-      }
-      isRequestingChapterCallback.value = $(async () => {
-        const val = (await getChapterSingle(initialChapterId))[0];
-        contentEditorValue.value = val.content_slate ? JSON.parse(val.content_slate) : undefined;
-        renderedHTML.value = val.renderedHTML || undefined;
-        chapterId.value = initialChapterId;
-        courseId.value = initialCourseId;
-        if (val.audio_track_asset_id) audioAssetId.value = val.audio_track_asset_id;
-        isEditing.value = true;
-        isRequestingChapter.value = "";
-        chapterName.value = val.name;
+        if (!courses[initialCourseId].is_single_page) {
+          courses[initialCourseId].isOpen = true;
+          refreshChapters(initialCourseId);
+        }
+        isRequestingChapterCallback.value = $(async () => {
+          const val = (await getChapterSingle(initialChapterId))[0];
+          contentEditorValue.value = val.content_slate ? JSON.parse(val.content_slate) : undefined;
+          renderedHTML.value = val.renderedHTML || undefined;
+          chapterId.value = initialChapterId;
+          courseId.value = initialCourseId;
+          if (val.audio_track_asset_id) audioAssetId.value = val.audio_track_asset_id;
+          isEditing.value = true;
+          isRequestingChapter.value = "";
+          chapterName.value = val.name;
 
-        if (oldChapter.value)
-          contentWS.value?.send(
-            JSON.stringify({
-              type: "closeContent",
-              userId: user.userId,
-              courseId: initialCourseId,
-              contentId: oldChapter.value,
-            })
-          );
-        oldChapter.value = initialChapterId;
-      });
+          if (oldChapter.value)
+            contentWS.value?.send(
+              JSON.stringify({
+                type: "closeContent",
+                userId: user.userId,
+                courseId: initialCourseId,
+                contentId: oldChapter.value,
+              })
+            );
+          oldChapter.value = initialChapterId;
+        });
 
-      contentWS.value!.send(
-        JSON.stringify({
-          type: "openContent",
-          userId: user.userId + "###" + timeStamp.value,
-          contentId: initialChapterId,
-          courseId: initialCourseId,
-          avatar_url: user.avatar_url,
-        })
-      );
+        contentWS.value!.send(
+          JSON.stringify({
+            type: "openContent",
+            userId: user.userId + "###" + timeStamp.value,
+            contentId: initialChapterId,
+            courseId: initialCourseId,
+            avatar_url: user.avatar_url,
+          })
+        );
 
-      isRequestingChapter.value = initialChapterId;
+        isRequestingChapter.value = initialChapterId;
 
-      isRequestingChapterTimeout.value = setTimeout(() => {
-        alert("Server Timeout! Server might be down!");
-        isRequestingChapter.value = "";
-        isRequestingChapterCallback.value = undefined;
-      }, 7000);
-    }, { strategy: "document-ready" });
+        isRequestingChapterTimeout.value = setTimeout(() => {
+          alert("Server Timeout! Server might be down!");
+          isRequestingChapter.value = "";
+          isRequestingChapterCallback.value = undefined;
+        }, 7000);
+      },
+      { strategy: "document-ready" }
+    );
 
     return (
       <nav
@@ -294,7 +297,7 @@ export default component$(
           {contentWS.value ? (
             <div class="flex flex-col items-start gap-4 py-6">
               <SmallNav user={user} />
-              <ul class="flex flex-col gap-6 md:pt-4 pt-2">
+              <ul class="flex flex-col gap-6 pt-2 md:pt-4">
                 {displayCourses.value.map((currentCourse, index) => {
                   const displayChapters = courses[currentCourse.id].chapter_order.filter(
                     (chapter) => {
@@ -452,7 +455,7 @@ export default component$(
                         !courses[currentCourse.id].is_single_page &&
                         courses[currentCourse.id].hasLoadedChapter &&
                         displayChapters.length > 0 && (
-                          <ul class="relative mt-2 flex flex-col gap-4 md:py-2 py-1 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray">
+                          <ul class="relative mt-2 flex flex-col gap-4 py-1 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray md:py-2">
                             {displayChapters.map((_chapterId, chapterIndex) => {
                               const chapter = courses[currentCourse.id].chapters.find(
                                 (c) => c.id === _chapterId

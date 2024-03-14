@@ -1,4 +1,5 @@
-import { $, QRL, Signal, component$, useSignal, useStore } from "@builder.io/qwik";
+import type { QRL, Signal } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { LuGem, LuX } from "@qwikest/icons/lucide";
 import { v4 as uuidv4 } from "uuid";
 import LoadingSVG from "~/components/LoadingSVG";
@@ -10,8 +11,7 @@ import {
   saveChapter,
 } from "~/components/_Creator/Course";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
-import type { NewContent } from "../../../../drizzle_turso/schema/content";
-import { Content } from "../../../../drizzle_turso/schema/content";
+import type { Content, NewContent } from "../../../../drizzle_turso/schema/content";
 export {
   addCategorySchema,
   checkExistingChapter,
@@ -105,7 +105,7 @@ export default component$(
       }
     });
     return (
-      <div class="z-[100] fixed left-0 top-0 flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
+      <div class="fixed left-0 top-0 z-[100] flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
         <div class="relative flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80vw] lg:w-[50vw] lg:min-w-[400px] lg:max-w-[600px]">
           <button
             onClick$={() => (showAddChapter.value = false)}

@@ -1,4 +1,5 @@
-import { $, QRL, Signal, component$, useSignal, useStore } from "@builder.io/qwik";
+import type { QRL, Signal } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { LuGem, LuX } from "@qwikest/icons/lucide";
 import LoadingSVG from "~/components/LoadingSVG";
 import {
@@ -8,7 +9,7 @@ import {
   saveChapter,
 } from "~/components/_Creator/Course";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
-import { Content } from "../../../../drizzle_turso/schema/content";
+import type { Content } from "../../../../drizzle_turso/schema/content";
 export { addCategorySchema, checkExistingChapter, checkExistingChapterLink, saveChapter };
 
 export default component$(
@@ -87,7 +88,7 @@ export default component$(
         <div class="relative flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80vw] lg:w-[50vw] lg:min-w-[400px] lg:max-w-[600px]">
           <button
             onClick$={() => (showEditChapter.value = false)}
-            class="absolute right-5 top-5 block p-1 text-[15px] md:text-[20px] text-primary-dark-gray dark:text-background-light-gray"
+            class="absolute right-5 top-5 block p-1 text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]"
           >
             <LuX />
           </button>

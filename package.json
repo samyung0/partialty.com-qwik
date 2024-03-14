@@ -33,7 +33,7 @@
     "db:prod:drop": "drizzle-kit drop --config drizzle_turso/drizzle.prod.config.ts",
     "db:prod:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "deploy": "vercel deploy",
-    "dev": "concurrently -c \"auto\" --handle-input \"vite --mode ssr\" \"bun --hot bun/index.ts\"",
+    "dev": "concurrently -c \"auto\" --handle-input \"vite --mode ssr\" \"bun --hot bun/index.ts\" \"bunx astro dev --root ./astro_embed\"",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "dev:email": "email dev",
     "dev:server": "bun --watch bun/index.ts",

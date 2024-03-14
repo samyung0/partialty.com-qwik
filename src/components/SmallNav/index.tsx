@@ -50,7 +50,7 @@ export default component$(({ user }: { user: LuciaSession["user"] }) => {
             <LuMoon />
           </label>
         </li>
-        <li class="relative flex gap-3 pl-6 py-2 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
+        <li class="relative flex gap-3 py-2 pl-6 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
           <div class={"flex gap-2"}>
             <span class="relative">
               <img

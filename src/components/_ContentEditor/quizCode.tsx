@@ -300,7 +300,7 @@ export const CenterQuizCodeBlockSettings = ({
 
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
-      <div className="relative flex max-h-[80vh] lg:w-[80vw] w-[95vw] flex-wrap items-stretch justify-evenly overflow-auto rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
+      <div className="relative flex max-h-[80vh] w-[95vw] flex-wrap items-stretch justify-evenly overflow-auto rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray lg:w-[80vw]">
         <div className="flex flex-col items-start justify-center">
           <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Quiz</h2>
           <button
@@ -606,7 +606,10 @@ export const HoveringQuizCodeBlock = ({
     }
 
     el.style.display = "flex";
-    el.style.top = `${nodeY + nodeHeight + offsetY}px`;
+    el.style.top = `${Math.min(
+      nodeY + nodeHeight + offsetY,
+      window.innerHeight * 0.9 - el.offsetHeight
+    )}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });

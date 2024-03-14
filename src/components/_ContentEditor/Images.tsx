@@ -104,7 +104,10 @@ export const HoveringImage = ({
     }
 
     el.style.display = "flex";
-    el.style.top = `${nodeY + nodeHeight + offsetY}px`;
+    el.style.top = `${Math.min(
+      nodeY + nodeHeight + offsetY,
+      window.innerHeight * 0.9 - el.offsetHeight
+    )}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
     el.style.transform = "translateX(-50%)";
   });

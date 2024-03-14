@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 
 import CoursePage from "~/components/_Courses";
 import { useCourseLoader } from "~/routes/[lang.]/(wrapper)/courses/[courseSlug]/layout";
@@ -9,7 +9,7 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = ({ resolveValue }) => {
-  const {course} = resolveValue(useCourseLoader);
+  const { course } = resolveValue(useCourseLoader);
   return {
     title: `${course.content_index.name}`,
     meta: [

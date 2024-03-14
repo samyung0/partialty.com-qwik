@@ -35,6 +35,25 @@ const useWS = (
       currentTimeout.value++;
       return;
     }
+    const errorFn = () => {
+      contentWS.value = undefined;
+      clearInterval(muxWSHeartBeat.value);
+
+      failedCount.value++;
+      currentTimeout.value = 0;
+      isConnecting.value = false;
+
+      if (failedCount.value > exponentialFallback.value.length) {
+        alert("Failed to connect to server! Please try again later or contact support.");
+        clearInterval(retry);
+        return;
+      } else
+        alert(
+          "Websocket connection error! Retrying connection in " +
+            exponentialFallback.value[failedCount.value - 1] +
+            " second(s)..."
+        );
+    };
     try {
       console.log("Starting Websocket connection");
       isConnecting.value = true;
@@ -67,27 +86,20 @@ const useWS = (
 
       ws.addEventListener("message", ({ data }) => {
         onMessage$?.(ws, user.userId + "###" + timeStamp.value, data);
+
+        try {
+          const d = JSON.parse(data);
+          if (d.type === "error") {
+            errorFn();
+          }
+        } catch (e) {
+          console.error(e);
+        }
       });
 
       ws.addEventListener("error", () => {
         // error event fires with close event
-        contentWS.value = undefined;
-        clearInterval(muxWSHeartBeat.value);
-
-        failedCount.value++;
-        currentTimeout.value = 0;
-        isConnecting.value = false;
-
-        if (failedCount.value > exponentialFallback.value.length) {
-          alert("Failed to connect to server! Please try again later or contact support.");
-          clearInterval(retry);
-          return;
-        } else
-          alert(
-            "Websocket connection error! Retrying connection in " +
-              exponentialFallback.value[failedCount.value - 1] +
-              " second(s)..."
-          );
+        errorFn();
       });
 
       ws.addEventListener("close", () => {
