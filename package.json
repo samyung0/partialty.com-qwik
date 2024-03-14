@@ -13,6 +13,7 @@
   "trustedDependencies": [
     "sharp"
   ],
+  "workspaces": ["./bun", "./astro_embed"],
   "type": "module",
   "scripts": {
     "build": "qwik build",
