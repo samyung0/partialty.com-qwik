@@ -195,6 +195,7 @@ export type VideoEmbed = {
   filename?: string;
   language?: string;
   children: (CustomText | CustomElement)[];
+  embedHeight?: number;
 };
 
 export type UrlLink = {

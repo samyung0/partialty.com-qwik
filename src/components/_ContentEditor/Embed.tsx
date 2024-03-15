@@ -13,7 +13,7 @@ import { Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
 
 import { isBlockActive } from "~/components/_ContentEditor/blockFn";
-import type { UrlLink } from "~/components/_ContentEditor/types";
+import type { UrlLink, VideoEmbed } from "~/components/_ContentEditor/types";
 
 const YOUTUBE_PREFIX = "https://www.youtube.com/embed/";
 const VIMEO_PREFIX = "https://player.vimeo.com/video/";
@@ -224,10 +224,12 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   }
 
   const shouldDisplay = isUrl(parsedUrl);
-  console.log(shouldDisplay, parsedUrl);
 
   const [value, setValue] = useState(caption || "");
   const ref = useRef<HTMLTextAreaElement>(null);
+  const parentRef = useRef<any>();
+  const iframeRef = useRef<HTMLDivElement>(null);
+  const height = (element as VideoEmbed).embedHeight;
 
   useEffect(() => {
     if (ref.current) {
@@ -235,6 +237,25 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
       ref.current.style.height = `${ref.current.scrollHeight}px`;
     }
   }, []);
+  useEffect(() => {
+    parentRef.current = document.getElementById("ParentRefContainer");
+  }, []);
+  useEffect(() => {
+    if (iframeRef.current)
+      new ResizeObserver((e) => {
+        if (parentRef.current && parentRef.current.className.includes("hidden")) return;
+        if (iframeRef.current)
+          editor.setNodes(
+            {
+              embedHeight: iframeRef.current.offsetHeight,
+            },
+            {
+              match: (n) => SlateElement.isElement(n) && n.type === "embed",
+              mode: "highest",
+            }
+          );
+      }).observe(iframeRef.current);
+  }, [iframeRef.current]);
 
   return (
     <div {...attributes}>
@@ -246,12 +267,16 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
           <div className="bg-light-sea p-2 font-mosk text-sm font-bold tracking-wide dark:bg-highlight-dark">
             {embedType}
           </div>
-          <div className="aspect-video w-full">
+          <div
+            style={{ height: `${height}px` }}
+            className="aspect-video w-full overflow-hidden [resize:vertical]"
+            ref={iframeRef}
+          >
             {shouldDisplay && (
               <iframe
                 allowTransparency
                 allowFullScreen
-                className="aspect-video w-full"
+                className="size-full"
                 src={`${parsedUrl}?title=0&byline=0&portrait=0`}
                 frameBorder="0"
               />

@@ -391,6 +391,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ${children}
         </ul>`;
     case "embed": {
+      const height = node.embedHeight;
       const { url } = node;
       const caption = node.caption || "";
       let embedType = url ? (url.trim() === "" ? "Blank" : "Embed") : "Blank";
@@ -436,8 +437,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       >
       <style>.dark .embedContainer{
         border-color: #141a23 !important; 
-      }.dark .embedContainer > div:first-child {
-        background-color: #2f3e52 !important;
       }</style>
         <div class="embedContainer" style="
         width: 100%;
@@ -445,14 +444,15 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         object-fit: contain;
         ">
           <div style="
-          aspect-ratio: 16 / 9;
+          ${height ? "": "aspect-ratio: 16 / 9;"}
           width: 100%;
+          ${height ? `height: ${height}px` : ""}
           ">
             ${
               shouldDisplay
                 ? `
               <iframe style="
-              aspect-ratio: 16 / 9;
+              height: 100%;
               width: 100%;
               "
               allowTransparency
@@ -467,7 +467,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         </div>
 
         ${
-          caption &&
+          caption ?
           `<div
         style="
             width: 100%;
@@ -477,10 +477,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             line-height: 1.25rem;
             white-space: pre-line;
         "
-        >${escapeHtml(caption)}</div>`
+        >${escapeHtml(caption)}</div>` : ""
         }
       </div>
-      ${children}
     </div>`;
     }
     case "link": {

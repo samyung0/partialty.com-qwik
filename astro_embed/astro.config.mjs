@@ -18,11 +18,6 @@ export default defineConfig({
     svelte(),
     qwikdev(),
   ],
-  output: "hybrid",
+  output: "server",
   adapter: vercel(),
-  vite: {
-    ssr: {
-      noExternal: ['path-to-regexp'],
-    }
-  }
 });
