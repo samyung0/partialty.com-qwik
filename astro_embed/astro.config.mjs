@@ -4,8 +4,9 @@ import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import qwikdev from "@qwikdev/astro";
-
 import netlify from "@astrojs/netlify";
+
+import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,5 +14,7 @@ export default defineConfig({
     applyBaseStyles: false
   }), react(), solidJs(), svelte(), qwikdev()],
   output: "server",
-  adapter: netlify()
+  adapter: vercel({
+    edgeMiddleware: true,
+  })
 });
