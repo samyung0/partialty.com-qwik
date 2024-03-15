@@ -30,7 +30,7 @@ export default component$(() => {
     const resizeListener: any = null;
 
     const terminal = new Terminal({
-      rows: 15,
+      rows: 20,
       convertEol: true,
     });
 

@@ -1,10 +1,8 @@
 import type { NoSerialize, PropFunction } from "@builder.io/qwik";
-import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
-import { DisplayOutputContext } from "~/routes/[lang.]/(wrapper)/codeplayground";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
 import FileStructure from "../fileStructure/fileStructure";
-import Terminal from "../terminal/terminal";
 import FileTab from "./fileTab";
 import type { IStandaloneCodeEditor } from "./monaco";
 import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
@@ -36,7 +34,7 @@ export interface EditorStore {
 
 export default component$((props: EditorInterface) => {
   const hostRef = useSignal<Element>();
-  const outputRef = useContext(DisplayOutputContext);
+
   const editorStore = useStore<EditorStore>({
     editor: undefined,
     ready: false,
@@ -269,7 +267,7 @@ export default component$((props: EditorInterface) => {
   //   }
   // });
   return (
-    <div class="flex h-full">
+    <div class="flex h-[50%]">
       {/* file structure on the right side */}
       <FileStructure
         entries={props.fileStore.entries}
@@ -279,22 +277,13 @@ export default component$((props: EditorInterface) => {
 
       <div class="flex h-full flex-1 flex-col ">
         {/* editor and display */}
-        <div class="flex flex-1">
-          <div class="flex w-[50%] flex-col">
-            <FileTab
-              openedFiles={editorStore.openedFiles}
-              openStagedFile={openStagedFile}
-              saveOpenedFiles={saveOpenedFiles}
-            />
-            <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
-          </div>
-          <div class="flex w-[50%] flex-col">
-            <input class="h-[35px] w-full border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]" />
-            <iframe ref={outputRef}></iframe>
-          </div>
-        </div>
-        {/* terminal */}
-        <Terminal />
+
+        <FileTab
+          openedFiles={editorStore.openedFiles}
+          openStagedFile={openStagedFile}
+          saveOpenedFiles={saveOpenedFiles}
+        />
+        <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import type { NoSerialize, Signal } from "@builder.io/qwik";
+import type { NoSerialize } from "@builder.io/qwik";
 import {
   $,
   component$,
@@ -11,15 +11,14 @@ import {
 } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import playgroundDefaultFiles from "~/__filesTest";
+import { RefreshIcon } from "~/assets/icon/refreshIcon";
+import { TerminalIcon } from "~/assets/icon/terminalIcon";
 import Editor from "~/components/_CodePlayground/editor/editor";
 import { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
-import { type TerminalStore } from "~/components/_CodePlayground/terminal/terminal";
+import Terminal, { type TerminalStore } from "~/components/_CodePlayground/terminal/terminal";
 import type { FileStore } from "~/utils/fileUtil";
 
 export const TerminalContext = createContextId<TerminalStore>("docs.terminal-context");
-export const DisplayOutputContext = createContextId<Signal<HTMLIFrameElement>>(
-  "docs.displayOutput-context"
-);
 
 export default component$(() => {
   const serverInterface = useStore<{
@@ -42,8 +41,9 @@ export default component$(() => {
     entries: [],
     discrepancy: false,
   });
-  const refIframe = useSignal<HTMLIFrameElement>(); // for displaying user output
-  useContextProvider(DisplayOutputContext, refIframe);
+
+  const selectedDisplay = useSignal(0);
+  const outputRef = useSignal<HTMLIFrameElement>(); // for displaying user output
   const terminalStore = useStore<TerminalStore>({
     fitAddon: null,
     terminal: null,
@@ -55,7 +55,7 @@ export default component$(() => {
     if (type === "open") {
       console.log("Trigger");
 
-      if (refIframe.value) refIframe.value.src = url;
+      if (outputRef.value) outputRef.value.src = url;
     }
   });
 
@@ -90,13 +90,38 @@ export default component$(() => {
   });
 
   return (
-    <section class="h-screen">
+    <section class="flex h-screen flex-col">
       <Editor
         serverInterface={serverInterface}
         saveServerFile={saveServerFile}
         fileStore={fileStore}
-        editorStyle={{ height: "300px" }}
+        editorStyle={{ height: "200px" }}
       />
+      <div class="flex flex-col">
+        {/* control set */}
+        <div class="flex items-center border-b border-black">
+          {/* refresh button */}
+          <div class="m-2 rounded-lg hover:bg-dark/10">
+            <RefreshIcon width={25} height={25} />
+          </div>
+          {/* input field for entering url */}
+          <input class="my-1 h-[25px] w-full rounded-full border border-dark bg-background-light-gray   pl-2  text-sm tracking-wide text-primary-dark-gray outline-none" />
+          {/* toggle button for the terminal */}
+          <input id="terminal-toggle" type="checkbox" class="peer sr-only relative" checked />
+          <label
+            for="terminal-toggle"
+            class="m-2 inline-block rounded-lg transition-transform duration-500 hover:bg-dark/10 peer-checked:left-64 peer-checked:bg-yellow"
+          >
+            <TerminalIcon width={25} height={25} />
+          </label>
+          <div class="fixed bottom-0 z-20 w-full translate-y-full transform bg-white shadow-lg transition-all duration-500 peer-checked:translate-y-0">
+            <Terminal />
+          </div>
+          {/* <TerminalIcon onClick$={() => }/> */}
+        </div>
+        {/* display window */}
+        <iframe ref={outputRef}></iframe>
+      </div>
     </section>
   );
 });

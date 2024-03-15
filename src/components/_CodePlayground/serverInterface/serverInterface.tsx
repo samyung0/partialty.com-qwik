@@ -151,6 +151,7 @@ export class WebContainerInterface {
     for (let i = 0; i < events.length; i++) {
       const command = events[i].slice(0, events[i].indexOf(" "));
       const path = events[i].slice(events[i].indexOf(" ") + 1).trim();
+
       if (path === "") continue;
       if (command === "add") addFileTree(this.fileStore.entries, this.fileStore.path + path);
       else if (command === "addDir" && path[0] !== ".")
@@ -160,6 +161,7 @@ export class WebContainerInterface {
       else if (command === "unlink")
         removeFileTree(this.fileStore.entries, this.fileStore.path + path);
     }
+    console.log("Hi");
   }
 
   async mountFiles(files: Tree) {

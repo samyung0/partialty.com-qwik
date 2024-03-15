@@ -83,7 +83,7 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
   const selectedEntry = useStore({ level: -1, entryIndex: -1 });
 
   return (
-    <div class="h-full w-[250px] border border-dark bg-black  text-xs text-background-light-gray">
+    <div class="h-full min-w-[200px] border border-dark bg-black  text-xs text-background-light-gray">
       <div
         class={`relative flex cursor-pointer items-center gap-1  hover:bg-dark-down`}
         onClick$={() => (projectExpanded.value = !projectExpanded.value)}
