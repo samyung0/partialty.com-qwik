@@ -1,7 +1,7 @@
-import type { NoSerialize, PropFunction, Signal } from "@builder.io/qwik";
+import type { NoSerialize, PropFunction } from "@builder.io/qwik";
 import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
-import { DisplayOutputContext } from "~/routes/[lang.]/(wrapper)/codeplaygroundv2";
+import { DisplayOutputContext } from "~/routes/[lang.]/(wrapper)/codeplayground";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
 import FileStructure from "../fileStructure/fileStructure";
 import Terminal from "../terminal/terminal";
@@ -9,11 +9,37 @@ import FileTab from "./fileTab";
 import type { IStandaloneCodeEditor } from "./monaco";
 import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
 
-export default component$((props: Props) => {
+interface EditorInterface {
+  fileStore: FileStore;
+  saveServerFile: PropFunction<(path: string, nonBinaryData: string) => any>;
+  editorClass?: string;
+  editorStyle?: Record<string, string>;
+  structureClass?: string;
+  structureStyle?: Record<string, string>;
+  stagedClass?: string;
+  stagedStyle?: Record<string, string>;
+  serverInterface: {
+    server: NoSerialize<WebContainerInterface>;
+    booted: boolean;
+    ready: boolean;
+  };
+}
+
+export interface EditorStore {
+  editor: NoSerialize<IStandaloneCodeEditor>;
+  ready: boolean;
+  // onChangeDebounce: NoSerialize<any>;
+  onChangeSubscription: NoSerialize<any>;
+  viewStates: Record<string, NoSerialize<ICodeEditorViewState>>;
+  openedFiles: Entry[];
+}
+
+export default component$((props: EditorInterface) => {
   const hostRef = useSignal<Element>();
   const outputRef = useContext(DisplayOutputContext);
   const editorStore = useStore<EditorStore>({
     editor: undefined,
+    ready: false,
     onChangeSubscription: undefined,
     viewStates: {}, // uses fsPath
     openedFiles: [], // !!! will store a file snapshot
@@ -21,6 +47,7 @@ export default component$((props: Props) => {
   });
 
   const __getEntryFromPath$ = {} as any;
+
   __getEntryFromPath$._getEntryFromPath$ = $(
     async (pathSegment: string[], currentEntry: Entry | FileStore): Promise<Entry | null> => {
       for (let i = 0; i < currentEntry.entries.length; i++) {
@@ -40,6 +67,7 @@ export default component$((props: Props) => {
       return null;
     }
   );
+
   __getEntryFromPath$.getEntryFromPath$ = $(
     (path: string, currentEntry: Entry | FileStore): Promise<Entry | null> =>
       __getEntryFromPath$._getEntryFromPath$(path.split("/").slice(1), currentEntry)
@@ -52,16 +80,18 @@ export default component$((props: Props) => {
     // file should be in fileStore
     // Entry should be in opened files
     // file should be in system
+    console.log(await getEntryFromPath$(path, props.fileStore));
+
     return (
       (await getEntryFromPath$(path, props.fileStore)) !== null &&
       editorStore.openedFiles.filter((entry: Entry) => entry.path === path).length === 1 &&
-      (await props.interfaceStore.value?.readFile(path)) !== undefined
+      (await props.serverInterface.server?.readFile(path)) !== undefined
     );
   });
 
   const verifyFileUnchanged = $(async (path: string) => {
     // non binary data file only
-    const data = await props.interfaceStore.value?.readSimpleFile(path);
+    const data = await props.serverInterface.server?.readSimpleFile(path);
     if (data === undefined) return false;
     // entry.discrepancy already checks
     // we just do a double check by retrieving the file from fs
@@ -104,20 +134,7 @@ export default component$((props: Props) => {
     }
   });
 
-  const openStagedFile = $((entry: Entry, nonBindaryData: string) => {
-    /** If the file data in file system is different than the openedFiles one
-     * then a file change has occured and we handle it accordingly
-     */
-
-    // Do not display binary files such as images/videos
-    if (!entry.isBinary && !entry.isFolder) {
-      openFile(editorStore, entry.path, nonBindaryData);
-    }
-
-    /** When closing file, warn user about any unsaved changes and discard model */
-  });
-
-  const saveOpenedFile = $(async () => {
+  const saveOpenedFiles = $(async () => {
     const currentModel = editorStore.editor?.getModel();
     if (currentModel) {
       const path = currentModel.uri.path;
@@ -145,7 +162,7 @@ export default component$((props: Props) => {
         return;
       }
 
-      props.onFileSave(path, nonBinaryData);
+      props.saveServerFile(path, nonBinaryData);
       updateNonBinaryData$(path, nonBinaryData);
       console.log("updated", editorStore.openedFiles);
       // viewState data (if any) is now identical to fileStore and fileSnapshot
@@ -154,22 +171,35 @@ export default component$((props: Props) => {
 
   const addToStage = $(async (entry: Entry) => {
     try {
-      // read the non binary data
-      const data = await props.interfaceStore.value?.readSimpleFile(entry.path);
+      const targetEntry = editorStore.openedFiles.find((e) => e.path === entry.path);
 
-      if (!data) return null;
+      // if not in display list
+      if (!targetEntry) {
+        const data = await props.serverInterface.server?.readSimpleFile(entry.path);
 
-      // add if not exist in "openFiles"
-      if (editorStore.openedFiles.filter((e) => e.path === entry.path).length === 0)
-        editorStore.openedFiles.push({ ...entry, data });
-
-      console.log(editorStore.openedFiles);
-
-      return data;
+        if (data) {
+          editorStore.openedFiles.push({ ...entry, data });
+          return data;
+        }
+      }
     } catch (e) {
       console.error(e);
+
       return null;
     }
+  });
+
+  const openStagedFile = $((entry: Entry, nonBindaryData: string) => {
+    /** If the file data in file system is different than the openedFiles one
+     * then a file change has occured and we handle it accordingly
+     */
+
+    // Do not display binary files such as images/videos
+    if (!entry.isBinary && !entry.isFolder) {
+      openFile(editorStore, entry.path, nonBindaryData);
+    }
+
+    /** When closing file, warn user about any unsaved changes and discard model */
   });
 
   /**
@@ -179,8 +209,12 @@ export default component$((props: Props) => {
   // fileStore.entries.forEach((entry) => addToStage(entry));
   // });
 
-  useVisibleTask$(async () => {
-    if (!editorStore.editor) {
+  useVisibleTask$(async ({ track }) => {
+    track(() => props.serverInterface.ready);
+    track(() => props.fileStore.entries.length);
+
+    if (props.serverInterface.ready && props.fileStore.entries.length > 0) {
+      // initiate monaco editor
       await initMonacoEditor(
         hostRef.value,
         editorStore,
@@ -189,6 +223,11 @@ export default component$((props: Props) => {
           // console.log(path, code);
         })
       );
+
+      const openedEntry = props.fileStore.entries[0];
+
+      const nonBinaryData = await addToStage(openedEntry);
+      openStagedFile(openedEntry, nonBinaryData as string);
     }
 
     return () => {
@@ -238,34 +277,25 @@ export default component$((props: Props) => {
         openStagedFile={openStagedFile}
       />
 
-      {/* editor and display */}
       <div class="flex h-full flex-1 flex-col ">
-        <FileTab openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
-        <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
+        {/* editor and display */}
+        <div class="flex flex-1">
+          <div class="flex w-[50%] flex-col">
+            <FileTab
+              openedFiles={editorStore.openedFiles}
+              openStagedFile={openStagedFile}
+              saveOpenedFiles={saveOpenedFiles}
+            />
+            <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
+          </div>
+          <div class="flex w-[50%] flex-col">
+            <input class="h-[35px] w-full border-b-2 border-primary-dark-gray pl-2 text-sm tracking-wide text-primary-dark-gray outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:hidden [&::-webkit-inner-spin-button]:[-webkit-appearance:none] [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:hidden [&::-webkit-outer-spin-button]:[-webkit-appearance:none]" />
+            <iframe ref={outputRef}></iframe>
+          </div>
+        </div>
+        {/* terminal */}
         <Terminal />
       </div>
-      <iframe class="w-[700px]" ref={outputRef}></iframe>
-      {/* terminal */}
     </div>
   );
 });
-
-interface Props {
-  fileStore: FileStore;
-  onFileSave: PropFunction<(path: string, nonBinaryData: string) => any>;
-  editorClass?: string;
-  editorStyle?: Record<string, string>;
-  structureClass?: string;
-  structureStyle?: Record<string, string>;
-  stagedClass?: string;
-  stagedStyle?: Record<string, string>;
-  interfaceStore: Signal<NoSerialize<WebContainerInterface> | null>;
-}
-
-export interface EditorStore {
-  editor: NoSerialize<IStandaloneCodeEditor>;
-  // onChangeDebounce: NoSerialize<any>;
-  onChangeSubscription: NoSerialize<any>;
-  viewStates: Record<string, NoSerialize<ICodeEditorViewState>>;
-  openedFiles: Entry[];
-}

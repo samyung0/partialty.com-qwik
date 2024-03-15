@@ -53,6 +53,9 @@ export class WebContainerInterface {
     if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
     if (!this.#webcontainerInstance) return;
 
+    // install necessary dependency
+    await this.#webcontainerInstance.spawn("npm", ["install"]);
+
     const shellProcess = await this.#webcontainerInstance.spawn("jsh");
     shellProcess.output.pipeTo(
       new WritableStream({
@@ -66,7 +69,6 @@ export class WebContainerInterface {
     const input = shellProcess.input.getWriter();
     terminal.onData((data) => {
       input.write(data);
-      console.log(data);
     });
 
     // const installDependencies = await this.#webcontainerInstance.spawn("npm", ["install"]);
@@ -116,8 +118,8 @@ export class WebContainerInterface {
             // omit chokidar file events RISKY AGAIN
             if (data.includes(filename)) return;
 
-            console.log(data);
             this.#fileEventsQueue.push(data);
+
             if (this.#debounceFileEvents) clearTimeout(this.#debounceFileEvents);
             this.#debounceFileEvents = setTimeout(() => {
               console.log("process");

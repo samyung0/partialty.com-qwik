@@ -10,7 +10,7 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import filesF from "~/__filesTest";
+import playgroundDefaultFiles from "~/__filesTest";
 import Editor from "~/components/_CodePlayground/editor/editor";
 import { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import { type TerminalStore } from "~/components/_CodePlayground/terminal/terminal";
@@ -22,75 +22,78 @@ export const DisplayOutputContext = createContextId<Signal<HTMLIFrameElement>>(
 );
 
 export default component$(() => {
-  const interfaceStore = useSignal<NoSerialize<WebContainerInterface> | null>(null);
-  const controlStore = useStore({
-    interfaceReady: false,
-    interfaceBooted: false,
+  const serverInterface = useStore<{
+    server: NoSerialize<WebContainerInterface>;
+    booted: boolean;
+    ready: boolean;
+  }>({
+    server: undefined,
+    booted: false,
+    ready: false,
   });
 
   // !!! file data is not stored in fileStore, it is fetched everytime when opening or saving
   const fileStore = useStore<FileStore>({
-    entries: [],
     name: "",
-    // root path
-    path: "/",
+    path: "/", // root path
     data: "",
-    discrepancy: false,
     isBinary: false,
     isFolder: true,
+    entries: [],
+    discrepancy: false,
   });
-
+  const refIframe = useSignal<HTMLIFrameElement>(); // for displaying user output
+  useContextProvider(DisplayOutputContext, refIframe);
   const terminalStore = useStore<TerminalStore>({
     fitAddon: null,
     terminal: null,
   });
   useContextProvider(TerminalContext, terminalStore);
 
-  const refIframe = useSignal<HTMLIFrameElement>(); // for displaying user output
-  useContextProvider(DisplayOutputContext, refIframe);
-
   const onPortOpen = $((port: number, type: "open" | "close", url: string) => {
     console.log(port, type, url);
     if (type === "open") {
+      console.log("Trigger");
+
       if (refIframe.value) refIframe.value.src = url;
     }
+  });
+
+  const saveServerFile = $((path: string, data: string) => {
+    serverInterface.server?.writeFile(path, data);
   });
 
   useVisibleTask$(async () => {
     // initiate the interface
     const webContainer = new WebContainerInterface(fileStore);
     await webContainer.init();
-    controlStore.interfaceBooted = true;
 
     // assign the interface
-    interfaceStore.value = noSerialize(webContainer);
+    serverInterface.server = noSerialize(webContainer);
+    serverInterface.booted = true;
   });
 
   useVisibleTask$(async ({ track }) => {
     track(() => terminalStore.terminal);
-    track(() => controlStore.interfaceBooted);
+    track(() => serverInterface.booted);
 
-    if (controlStore.interfaceReady) return;
-    if (controlStore.interfaceBooted && terminalStore.terminal && interfaceStore.value) {
-      await interfaceStore.value.relocateTerminal(terminalStore.terminal);
-      console.log("Hi");
-
-      await interfaceStore.value.mountFiles(filesF);
-      await interfaceStore.value.watchFiles();
+    if (serverInterface.booted && terminalStore.terminal) {
+      await serverInterface.server?.relocateTerminal(terminalStore.terminal);
+      await serverInterface.server?.mountFiles(playgroundDefaultFiles);
+      await serverInterface.server?.watchFiles();
       // await interfaceStore.value.loadGithub("samyung0", "Template_react_1");
 
-      interfaceStore.value.onPort(onPortOpen);
-      controlStore.interfaceReady = true;
+      serverInterface.server?.onPort(onPortOpen);
+      serverInterface.ready = true;
+      console.log("Server Interface is ready");
     }
   });
 
   return (
     <section class="h-screen">
       <Editor
-        interfaceStore={interfaceStore}
-        onFileSave={$((path: string, data: string) => {
-          interfaceStore.value?.writeFile(path, data);
-        })}
+        serverInterface={serverInterface}
+        saveServerFile={saveServerFile}
         fileStore={fileStore}
         editorStyle={{ height: "300px" }}
       />

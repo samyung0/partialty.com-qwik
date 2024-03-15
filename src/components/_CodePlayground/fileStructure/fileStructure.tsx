@@ -8,14 +8,14 @@ import { Entry } from "~/utils/fileUtil";
 
 interface EntryInterface {
   entry: Entry;
-  level: number; // start from 0 (top level)
+  level: number; // start from 1 (top level)
   addToStage: PropFunction<(entry: Entry) => any>;
   openStagedFile: PropFunction<(entry: Entry, nonBinaryData: string) => any>;
 }
 
 const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, level }) => {
-  const isExpanded = useSignal(level > 0 ? false : true);
-  const indent = 12 * (level + 1);
+  const isExpanded = useSignal(true);
+  const indent = 4 + 12 * (level + 1);
 
   return (
     <>
@@ -26,14 +26,16 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
             class={`relative flex cursor-pointer items-center gap-1  hover:bg-dark-down`}
             onClick$={() => (isExpanded.value = !isExpanded.value)}
           >
-            <div class="absolute left-0" style={{ paddingLeft: level > 0 ? indent - 12 : 4 }}>
+            <div class="absolute left-0" style={{ paddingLeft: indent - 12 }}>
               {isExpanded.value ? (
-                <RightArrow width="0.75em" transform="rotate(90)" />
+                <RightArrow width="0.75em" height="0.75em" transform="rotate(90)" />
               ) : (
-                <RightArrow width="0.75em" />
+                <RightArrow width="0.75em" height="0.75em" />
               )}
             </div>
-            <div style={{ paddingLeft: indent }}>{level > 0 && <FolderIcon />}</div>
+            <div style={{ paddingLeft: indent }}>
+              <FolderIcon />
+            </div>
             <span class="">{entry.name}</span>
           </div>
           {/* there are one or more file in a folder */}
@@ -76,19 +78,36 @@ interface FileStructureInterface {
 }
 
 export default component$<FileStructureInterface>(({ entries, addToStage, openStagedFile }) => {
+  const projectName = "code playground";
+  const projectExpanded = useSignal(true);
   const selectedEntry = useStore({ level: -1, entryIndex: -1 });
 
   return (
     <div class="h-full w-[250px] border border-dark bg-black  text-xs text-background-light-gray">
-      {entries.map((entry, idx) => (
-        <Entry
-          key={`entry-${idx}`}
-          entry={entry}
-          level={0}
-          addToStage={addToStage}
-          openStagedFile={openStagedFile}
-        />
-      ))}
+      <div
+        class={`relative flex cursor-pointer items-center gap-1  hover:bg-dark-down`}
+        onClick$={() => (projectExpanded.value = !projectExpanded.value)}
+      >
+        <div class="" style={{ paddingLeft: 4 }}>
+          {projectExpanded.value ? (
+            <RightArrow width="0.75em" transform="rotate(90)" />
+          ) : (
+            <RightArrow width="0.75em" />
+          )}
+        </div>
+        <span class="font-bold">{projectName}</span>
+      </div>
+      <div class={`${!projectExpanded.value && "hidden"}`}>
+        {entries.map((entry, idx) => (
+          <Entry
+            key={`entry-${idx}`}
+            entry={entry}
+            level={1}
+            addToStage={addToStage}
+            openStagedFile={openStagedFile}
+          />
+        ))}
+      </div>
     </div>
   );
 });
