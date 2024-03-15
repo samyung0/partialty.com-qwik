@@ -22,7 +22,7 @@ export default component$(() => {
           color: themeStore.value === "dark" ? "#72cada" : "#72cada",
         }}
       />
-      <div class={themeStore.value}>
+      <div id="darkThemeDiv" class={themeStore.value}>
         <Slot />
       </div>
     </>

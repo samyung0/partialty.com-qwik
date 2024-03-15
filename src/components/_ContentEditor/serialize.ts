@@ -455,6 +455,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
               height: 100%;
               width: 100%;
               "
+              class="iframeEmbed"
               allowTransparency
                 allowFullScreen
                 src="${parsedUrl}?title=0&byline=0&portrait=0"

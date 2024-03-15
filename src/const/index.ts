@@ -7,3 +7,5 @@ export const BUN_API_ENDPOINT = "https://api.partialty.com";
 export const BUN_API_ENDPOINT_WS = "wss://api.partialty.com";
 export const BUN_API_ENDPOINT_WS_DEV = "ws://localhost:8080";
 export const PROD_FILES_URL = "https://files.partialty.com";
+
+export const EMBED_URL = "https://partialty-embed.vercel.app" 

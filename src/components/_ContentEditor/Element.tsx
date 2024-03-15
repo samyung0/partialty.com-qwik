@@ -13,7 +13,11 @@ import {
 } from "~/components/_ContentEditor/quizCode";
 
 export const Element = ({ attributes, children, element }: RenderElementProps) => {
-  const style = { textAlign: element.align || "left" } as const;
+  const style = {
+    textAlign: element.align || "left",
+    backgroundColor: "inherit",
+    color: "inherit",
+  } as const;
   switch (element.type) {
     case "paragraph":
       return (

@@ -14,6 +14,7 @@ import { useFocused, useSlate } from "slate-react";
 
 import { isBlockActive } from "~/components/_ContentEditor/blockFn";
 import type { UrlLink, VideoEmbed } from "~/components/_ContentEditor/types";
+import { EMBED_URL } from "~/const";
 
 const YOUTUBE_PREFIX = "https://www.youtube.com/embed/";
 const VIMEO_PREFIX = "https://player.vimeo.com/video/";
@@ -231,6 +232,11 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   const iframeRef = useRef<HTMLDivElement>(null);
   const height = (element as VideoEmbed).embedHeight;
 
+  const darkThemeDivRef = useRef<any>();
+  const darkThemeDivInterval = useRef<any>();
+
+  const [isDark, setIsDark] = useState(false);
+
   useEffect(() => {
     if (ref.current) {
       ref.current.style.height = "auto";
@@ -239,6 +245,15 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   }, []);
   useEffect(() => {
     parentRef.current = document.getElementById("ParentRefContainer");
+    darkThemeDivRef.current = document.getElementById("darkThemeDiv");
+    darkThemeDivInterval.current = setInterval(() => {
+      const dark = darkThemeDivRef.current.className;
+      if (dark === "dark" && !isDark) {
+        setIsDark(true);
+      } else if (dark !== "dark" && isDark) {
+        setIsDark(false);
+      }
+    }, 100);
   }, []);
   useEffect(() => {
     if (iframeRef.current)
@@ -277,7 +292,11 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
                 allowTransparency
                 allowFullScreen
                 className="size-full"
-                src={`${parsedUrl}?title=0&byline=0&portrait=0`}
+                src={`${
+                  parsedUrl && parsedUrl.startsWith(EMBED_URL) && isDark
+                    ? `${parsedUrl}?dark=1`
+                    : parsedUrl
+                }?title=0&byline=0&portrait=0`}
                 frameBorder="0"
               />
             )}
