@@ -14,7 +14,7 @@ export default component$(({ player }: { player: PlayerAPI }) => {
       aria-label={player.playing ? "Pause" : "Play"}
     >
       <div class="absolute -inset-3 md:hidden" />
-      <Icon class="h-5 w-5 fill-white group-active:fill-white/80 md:h-7 md:w-7" />
+      <Icon class="h-5 w-5 fill-white group-active:fill-white/80 md:h-6 md:w-6" />
     </button>
   );
 });
