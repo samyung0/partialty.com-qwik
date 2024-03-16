@@ -61,7 +61,7 @@ export default component$(() => {
           <nav class="max-h-[100vh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:w-[30%] 2xl:w-[40%] 2xl:pl-[10%]">
             <div class="flex flex-col items-start gap-4 py-6">
               <SmallNav user={userNullable} />
-              <div class="flex flex-col gap-2 py-2 lg:gap-4 lg:py-4  ">
+              <div class="flex flex-col gap-2 py-2 lg:gap-3 lg:py-4  ">
                 <div class="flex flex-col">
                   <Link
                     href={"/catalog/"}
@@ -77,9 +77,9 @@ export default component$(() => {
                       Preview Mode
                     </p>
                   )}
-                  <p class="text-base tracking-wide lg:text-lg">{course.content_index.name}</p>
+                  <p class="text-base lg:text-lg">{course.content_index.name}</p>
                 </div>
-                <ul class="flex flex-col gap-3 border-l-2 border-middle-yellow py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
+                <ul class="flex flex-col gap-3 border-l-2 border-gray-300 py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
                   {course.content_index.chapter_order.map((chapterId) => {
                     const chapter = chapters.find((c) => c.id === chapterId);
                     if (!chapter) return null;

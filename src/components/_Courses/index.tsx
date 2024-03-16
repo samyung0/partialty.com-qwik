@@ -110,7 +110,7 @@ export default component$(() => {
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <Link
           href={"/catalog/"}
-          class="ml-2 flex items-center gap-2 self-start border-b-2 border-primary-dark-gray text-sm tracking-wide dark:border-background-light-gray md:-mb-4 md:text-base"
+          class="ml-2 flex items-center gap-2 self-start  text-sm tracking-wide  md:-mb-4 md:text-base"
         >
           <span>All courses</span>{" "}
           <span class="-mt-[2px] block text-[15px] text-primary-dark-gray dark:text-background-light-gray md:mt-0 md:text-[20px]">

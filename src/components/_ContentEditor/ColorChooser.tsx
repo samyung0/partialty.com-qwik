@@ -85,7 +85,7 @@ const ColorChooser = ({
         <span className="px-4 tracking-wide">or</span>
         <span className="inline-block h-[2px] flex-1 bg-black/10 dark:bg-background-light-gray"></span>
       </div>
-      <div className="flex flex-col items-center justify-center gap-4 rounded-md border-2 border-primary-dark-gray bg-white p-6 dark:bg-primary-dark-gray">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-md border-primary-dark-gray bg-white p-6 dark:bg-primary-dark-gray">
         <div className="flex items-center justify-center gap-3">
           <label className="tracking-wide" htmlFor="underlineColorCustomize">
             Customize:

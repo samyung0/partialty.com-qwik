@@ -140,7 +140,7 @@ export default component$(
     );
 
     return (
-      <div class="flex h-[10vh] w-full items-center justify-center gap-6 bg-white/90 px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
+      <div class="flex h-[10vh] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
         {audioTrack && (
           <>
             <div class="hidden md:block">
@@ -206,24 +206,6 @@ export default component$(
               muted={player.muted}
               playbackRate={player.playbackRateNumber}
             />
-            {/* <audio
-              ref={playerRef}
-              onPlay={() => dispatch({ type: ActionKind.PLAY })}
-              onPause={() => dispatch({ type: ActionKind.PAUSE })}
-              onTimeUpdate={(event) => {
-                dispatch({
-                  type: ActionKind.SET_CURRENT_TIME,
-                  payload: Math.floor(event.currentTarget.currentTime),
-                });
-              }}
-              onDurationChange={(event) => {
-                dispatch({
-                  type: ActionKind.SET_DURATION,
-                  payload: Math.floor(event.currentTarget.duration),
-                });
-              }}
-              muted={state.muted}
-            /> */}
           </>
         )}
         {!audioTrack && (
