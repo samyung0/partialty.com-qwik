@@ -50,9 +50,9 @@ import type { LuciaSession } from "~/types/LuciaSession";
 import type Mux from "~/types/Mux";
 import { getContentEditorHighlighter } from "~/utils/shikiji/OneDarkPro";
 
+import EmbedHydrate from "~/components/Prose/EmbedHydrate";
 import SmallCircleNav from "~/components/_ContentEditor/SmallCircleNav";
 import "./SmallCircleNav.css";
-import EmbedHydrate from "~/components/Prose/EmbedHydrate";
 
 declare module "slate" {
   interface CustomTypes {

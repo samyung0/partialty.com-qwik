@@ -444,7 +444,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         object-fit: contain;
         ">
           <div style="
-          ${height ? "": "aspect-ratio: 16 / 9;"}
+          ${height ? "" : "aspect-ratio: 16 / 9;"}
           width: 100%;
           ${height ? `height: ${height}px` : ""}
           ">
@@ -468,8 +468,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         </div>
 
         ${
-          caption ?
-          `<div
+          caption
+            ? `<div
         style="
             width: 100%;
             padding: 0.25rem;
@@ -478,7 +478,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             line-height: 1.25rem;
             white-space: pre-line;
         "
-        >${escapeHtml(caption)}</div>` : ""
+        >${escapeHtml(caption)}</div>`
+            : ""
         }
       </div>
     </div>`;

@@ -65,7 +65,13 @@ export const useCourseLoader = routeLoader$(async (event) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, "/notfound/");
   const chapters = await drizzleClient()
-    .select()
+    .select({
+      id: content.id,
+      name: content.name,
+      is_premium: content.is_premium,
+      slug: content.slug,
+      link: content.link,
+    })
     .from(content)
     .where(and(eq(content.index_id, course.content_index.id), eq(content.is_deleted, false)));
   // if (chapters.length < 1) throw event.redirect(302, "/notfound/");
@@ -75,6 +81,19 @@ export const useCourseLoader = routeLoader$(async (event) => {
     (!_user || (_user.userId !== course.content_index.author && _user.role !== "admin"))
   )
     throw event.redirect(302, "/notfound/");
+
+  if (!_user && course.content_index.is_private) throw event.redirect(302, "/notfound/");
+
+  try {
+    if (_user && course.content_index.is_private) {
+      const accessible_course_read: string[] = JSON.parse(_user.accessible_courses_read || "[]");
+      if (!accessible_course_read.includes(course.content_index.id))
+        throw event.redirect(302, "/notfound/");
+    }
+  } catch (e) {
+    console.error(e);
+    throw event.redirect(302, "/notfound/");
+  }
 
   const isFavourited = event.cookie.get("favourite" + course.content_index.id) !== null;
 

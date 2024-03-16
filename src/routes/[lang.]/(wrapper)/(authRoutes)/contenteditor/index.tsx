@@ -25,7 +25,7 @@ import { mux_assets } from "../../../../../../drizzle_turso/schema/mux_assets";
 
 export { useAccessibleCourseWrite, useAccessibleCourseWriteResolved };
 
-const fetchAudioServer = server$(async function (id: string) {
+export const fetchAudioServer = server$(async function (id: string) {
   const audio = (await fetch("https://api.mux.com/video/v1/assets/" + id, {
     method: "GET",
     headers: {

@@ -21,6 +21,7 @@ export default {
     lilac: "#ae8fdb",
     "middle-lilac": "#CFBCEA",
     "light-lilac": "#efe9f8",
+    "deep-sea": "#34afc5",
     sea: "#72cada",
     "middle-sea": "#ABDFE9",
     "light-sea": "#e3f4f8",

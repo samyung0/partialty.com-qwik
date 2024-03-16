@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
 
 import { qwikify$ } from "@builder.io/qwik-react";
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 import { EMBED_URL } from "~/const";
 
 export const EmbedHydrate = () => {
@@ -10,10 +10,10 @@ export const EmbedHydrate = () => {
   useEffect(() => {
     const iframeEmbed = Array.from(document.getElementsByClassName("iframeEmbed"));
     const darkThemeDiv = document.getElementById("darkThemeDiv");
-    if(!darkThemeDiv) return;
+    if (!darkThemeDiv) return;
     iframeEmbed.forEach((iframe) => {
       const iframeSrc = iframe.getAttribute("src");
-      if(iframeSrc && iframeSrc.startsWith(EMBED_URL)) {
+      if (iframeSrc && iframeSrc.startsWith(EMBED_URL)) {
         interval.current = setInterval(() => {
           const dark = darkThemeDiv.className;
           if (dark === "dark" && !isDark.current) {
@@ -27,12 +27,12 @@ export const EmbedHydrate = () => {
             url.searchParams.delete("dark");
             (iframe as HTMLIFrameElement).src = url.toString();
           }
-        }, 100)
+        }, 100);
       }
-    })
+    });
   }, []);
   return null;
-}
+};
 
 export default EmbedHydrate;
-export const QwikEmbedHydrate = qwikify$(EmbedHydrate); 
+export const QwikEmbedHydrate = qwikify$(EmbedHydrate, { eagerness: "load" });
