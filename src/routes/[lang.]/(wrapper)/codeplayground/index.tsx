@@ -42,8 +42,9 @@ export default component$(() => {
     discrepancy: false,
   });
 
-  const selectedDisplay = useSignal(0);
-  const outputRef = useSignal<HTMLIFrameElement>(); // for displaying user output
+  const displayBaseUrl = useSignal("");
+  const route = useSignal("/");
+  const displayRef = useSignal<HTMLIFrameElement>(); // for displaying user output
   const terminalStore = useStore<TerminalStore>({
     fitAddon: null,
     terminal: null,
@@ -53,9 +54,12 @@ export default component$(() => {
   const onPortOpen = $((port: number, type: "open" | "close", url: string) => {
     console.log(port, type, url);
     if (type === "open") {
-      console.log("Trigger");
+      if (displayRef.value) {
+        displayBaseUrl.value = url;
 
-      if (outputRef.value) outputRef.value.src = url;
+        // set display screen
+        displayRef.value.src = url;
+      }
     }
   });
 
@@ -105,7 +109,17 @@ export default component$(() => {
             <RefreshIcon width={25} height={25} />
           </div>
           {/* input field for entering url */}
-          <input class="my-1 h-[25px] w-full rounded-full border border-dark bg-background-light-gray   pl-2  text-sm tracking-wide text-primary-dark-gray outline-none" />
+          <input
+            value={route.value}
+            class="my-1 h-[25px] w-full rounded-full border border-dark bg-background-light-gray   pl-2  text-sm tracking-wide text-primary-dark-gray outline-none"
+            onInput$={(e, eventTarget) => (route.value = eventTarget.value)}
+            onKeyPress$={(e) => {
+              if (e.code === "Enter" && displayRef.value) {
+                console.log(displayBaseUrl.value + route.value);
+                displayRef.value.src = displayBaseUrl.value + route.value;
+              }
+            }}
+          />
           {/* toggle button for the terminal */}
           <input id="terminal-toggle" type="checkbox" class="peer sr-only relative" checked />
           <label
@@ -120,7 +134,7 @@ export default component$(() => {
           {/* <TerminalIcon onClick$={() => }/> */}
         </div>
         {/* display window */}
-        <iframe ref={outputRef}></iframe>
+        <iframe ref={displayRef}></iframe>
       </div>
     </section>
   );

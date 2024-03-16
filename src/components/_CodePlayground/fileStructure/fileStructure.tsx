@@ -2,6 +2,7 @@ import type { PropFunction } from "@builder.io/qwik";
 import { component$, useSignal, useStore } from "@builder.io/qwik";
 import { FileIcon } from "~/assets/icon/fileIcon";
 import { FolderIcon } from "~/assets/icon/folderIcon";
+import { FolderOpenIcon } from "~/assets/icon/folderOpenIcon";
 import { RightArrow } from "~/assets/icon/rightArrow";
 
 import { Entry } from "~/utils/fileUtil";
@@ -23,7 +24,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
         // if the entry is a folder
         <>
           <div
-            class={`relative flex cursor-pointer items-center gap-1  hover:bg-dark-down`}
+            class={`relative flex cursor-pointer items-center gap-1 py-[1px]  hover:bg-dark-down`}
             onClick$={() => (isExpanded.value = !isExpanded.value)}
           >
             <div class="absolute left-0" style={{ paddingLeft: indent - 12 }}>
@@ -34,7 +35,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
               )}
             </div>
             <div style={{ paddingLeft: indent }}>
-              <FolderIcon />
+              {isExpanded.value ? <FolderOpenIcon /> : <FolderIcon />}
             </div>
             <span class="">{entry.name}</span>
           </div>
@@ -54,7 +55,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
       ) : (
         // if the entry is a file
         <div
-          class={`flex cursor-pointer items-center gap-1 hover:bg-dark-down`}
+          class={`flex cursor-pointer items-center gap-1 py-[1px] hover:bg-dark-down`}
           style={{ paddingLeft: indent }}
           onClick$={async () => {
             if (entry.isBinary) return;
@@ -78,17 +79,17 @@ interface FileStructureInterface {
 }
 
 export default component$<FileStructureInterface>(({ entries, addToStage, openStagedFile }) => {
-  const projectName = "code playground";
+  const projectName = "course-assignment-1";
   const projectExpanded = useSignal(true);
   const selectedEntry = useStore({ level: -1, entryIndex: -1 });
 
   return (
-    <div class="h-full min-w-[200px] border border-dark bg-black  text-xs text-background-light-gray">
+    <div class="h-full min-w-[200px] border border-dark bg-black   pt-1 text-xs text-background-light-gray">
       <div
-        class={`relative flex cursor-pointer items-center gap-1  hover:bg-dark-down`}
+        class={`relative flex cursor-pointer items-center gap-1 py-1   hover:bg-dark-down`}
         onClick$={() => (projectExpanded.value = !projectExpanded.value)}
       >
-        <div class="" style={{ paddingLeft: 4 }}>
+        <div class="" style={{ paddingLeft: 8 }}>
           {projectExpanded.value ? (
             <RightArrow width="0.75em" transform="rotate(90)" />
           ) : (

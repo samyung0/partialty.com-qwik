@@ -207,6 +207,16 @@ export default component$((props: EditorInterface) => {
   // fileStore.entries.forEach((entry) => addToStage(entry));
   // });
 
+  // useVisibleTask$(async({track}) => {
+  //   let editorInput = false
+  //   const save = () => {
+
+  //     setTimeout()
+  //   };
+
+  //   save();
+  // });
+
   useVisibleTask$(async ({ track }) => {
     track(() => props.serverInterface.ready);
     track(() => props.fileStore.entries.length);

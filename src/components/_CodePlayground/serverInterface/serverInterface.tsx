@@ -102,6 +102,8 @@ export class WebContainerInterface {
     this.#isWatchFilesActive = true;
     const filename = "chokidar" + Date.now().toString();
     await this.#webcontainerInstance.fs.writeFile(filename, chokidarStandalone);
+
+    // create a process for watching the file changes
     this.#watchFilesProcess = await this.#webcontainerInstance.spawn("node", [filename]);
     await new Promise<void>((res) =>
       this.#watchFilesProcess!.output.pipeTo(
@@ -112,6 +114,7 @@ export class WebContainerInterface {
               this.#watchFilesChokidarHasRemoved = true;
               res();
             }
+            console.log("Process wateched");
 
             // file events
             if (!this.#isWatchFilesActive) return;
@@ -161,7 +164,6 @@ export class WebContainerInterface {
       else if (command === "unlink")
         removeFileTree(this.fileStore.entries, this.fileStore.path + path);
     }
-    console.log("Hi");
   }
 
   async mountFiles(files: Tree) {
