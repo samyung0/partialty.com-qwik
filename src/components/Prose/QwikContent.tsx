@@ -4,6 +4,7 @@ import { QwikEmbedHydrate } from "~/components/Prose/EmbedHydrate";
 import { QwikQuizCodeHydrate } from "~/components/Prose/QuizCodeHydrate";
 import { QwikQuizHydrate } from "~/components/Prose/QuizHydrate";
 import QwikProse from "~/components/Prose/qwik-prose";
+import { cn } from "~/utils/cn";
 
 export default component$(
   ({
@@ -26,15 +27,17 @@ export default component$(
     saveToDBQuiz: (isCorrect: boolean) => any;
     isPreview: boolean;
   }) => (
-    <div class="flex h-full flex-col overflow-hidden">
+    <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
       <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
       <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
       <QwikEmbedHydrate />
-      <div class="overflow-auto" style={{ height: hasAudioTrack ? "90vh" : "100vh" }}>
+      <div class={cn("max-h-full overflow-auto", hasAudioTrack ? "lg:h-[90vh]" : "lg:h-[100vh]")}>
         <QwikProse innerHTML={innerHTML || ""} />
       </div>
       {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
-      <AudioPlayer audioTrack={audioTrack} />
+      <div class="mt-auto">
+        <AudioPlayer audioTrack={audioTrack} />
+      </div>
     </div>
   )
 );

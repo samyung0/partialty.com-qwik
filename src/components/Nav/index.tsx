@@ -66,7 +66,7 @@ export default component$(
       <>
         {showSideNav.value && (
           <nav
-            class="fixed left-0 top-0 z-[9999] flex h-[100vh] w-[100vw] justify-start backdrop-blur-md"
+            class="fixed left-0 top-0 z-[9999] flex h-[100vh] w-[100vw] justify-start backdrop-blur-md lg:hidden"
             onClick$={() => {
               showSideNav.value = false;
             }}
@@ -82,8 +82,8 @@ export default component$(
             </button>
             <div
               class={
-                "w-[80%] border-r-2 border-primary-dark-gray bg-background-light-gray" +
-                (!props.disableTheme ? " dark:bg-primary-dark-gray" : "")
+                "w-[80%] overflow-auto border-r-2 border-primary-dark-gray bg-background-light-gray " +
+                (!props.disableTheme ? " dark:border-gray-300 dark:bg-primary-dark-gray" : "")
               }
               onClick$={(e) => e.stopPropagation()}
             >
@@ -236,7 +236,7 @@ export default component$(
           </nav>
         )}
         <nav class={!props.disableTheme ? "dark:text-background-light-gray" : ""}>
-          <div class="mx-auto flex w-[95%] items-center justify-between py-6 text-[25px]  md:w-[80%] lg:hidden">
+          <div class="mx-auto flex w-[90%] items-center justify-between py-6 text-[25px]  md:w-[80%] lg:hidden">
             <h1 class="font-mosk text-3xl font-bold tracking-wide">
               <Link href="/members/dashboard/">Partialty.com</Link>
             </h1>
