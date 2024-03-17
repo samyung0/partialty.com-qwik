@@ -20,6 +20,7 @@ import { content } from "../../../../../../../../drizzle_turso/schema/content";
 import {
   LuAlignJustify,
   LuArrowRight,
+  LuCheck,
   LuFile,
   LuFileTerminal,
   LuFileText,
@@ -32,10 +33,13 @@ import {
   LuUser2,
   LuX,
 } from "@qwikest/icons/lucide";
+import { v4 } from "uuid";
 import CrownPNG from "~/assets/img/crown.png";
 import { logout } from "~/auth/logout";
 import { themeContext } from "~/context/themeContext";
 import { cn } from "~/utils/cn";
+import type { ContentUserProgress } from "../../../../../../../../drizzle_turso/schema/content_user_progress";
+import { content_user_progress } from "../../../../../../../../drizzle_turso/schema/content_user_progress";
 
 export const useCurrentChapter = routeLoader$(async (event) => {
   const _user = await event.resolveValue(useUserLoaderNullable);
@@ -72,6 +76,29 @@ export const useCurrentChapter = routeLoader$(async (event) => {
   return ret;
 });
 
+export const useDBLoader = routeLoader$(async (event) => {
+  const _user = await event.resolveValue(useUserLoaderNullable);
+  const { course, chapters } = await event.resolveValue(useCourseLoader);
+  const { subscriptionNeeded, loaded, currentChapter } = await event.resolveValue(
+    useCurrentChapter
+  );
+  if (!loaded || !currentChapter || !_user) return;
+  let newUserProgress: ContentUserProgress | null = course.content_user_progress;
+  if (!course.content_user_progress)
+    newUserProgress = (
+      await drizzleClient()
+        .insert(content_user_progress)
+        .values({
+          id: v4(),
+          user_id: _user.userId,
+          index_id: course.content_index.id,
+          progress: [],
+        })
+        .returning()
+    )[0];
+  return newUserProgress;
+});
+
 const setThemeCookie = server$(function (theme: "light" | "dark") {
   this.cookie.set("theme", theme, {
     path: "/",
@@ -88,6 +115,7 @@ export default component$(() => {
   const { course, preview, chapters } = useCourseLoader().value;
   const { currentChapter, loaded, subscriptionNeeded } = useCurrentChapter().value;
   const chapterSlug = useLocation().params.chapterSlug;
+  const userProgress = useDBLoader().value;
 
   const nav = useNavigate();
   const theme = useContext(themeContext);
@@ -123,26 +151,35 @@ export default component$(() => {
                   )}
                   <p class="text-base lg:text-lg">{course.content_index.name}</p>
                 </div>
-                <ul class="flex flex-col gap-3 border-l-2 border-gray-300 py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
-                  {course.content_index.chapter_order.map((chapterId) => {
-                    const chapter = chapters.find((c) => c.id === chapterId);
-                    if (!chapter) return null;
-                    const isActive = chapter.slug === chapterSlug;
-                    return (
-                      <li
-                        key={chapter.id}
-                        class={cn(
-                          "relative pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px]",
-                          isActive && "text-deep-sea after:block after:bg-sea dark:text-sea"
-                        )}
-                      >
-                        <Link prefetch href={chapter.link || undefined}>
-                          {chapter.name}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
+                {!course.content_index.is_single_page && (
+                  <ul class="flex flex-col gap-3 border-l-2 border-gray-300 py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
+                    {course.content_index.chapter_order.map((chapterId) => {
+                      const chapter = chapters.find((c) => c.id === chapterId);
+                      if (!chapter) return null;
+                      const isActive = chapter.slug === chapterSlug;
+                      return (
+                        <li
+                          key={chapter.id}
+                          class={cn(
+                            "relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ",
+                            isActive && "text-deep-sea after:block after:bg-sea dark:text-sea",
+                            userProgress?.progress.includes(chapter.id) &&
+                              "text-mint-down after:block after:bg-mint dark:text-mint"
+                          )}
+                        >
+                          <Link prefetch href={chapter.link || undefined}>
+                            {chapter.name}
+                          </Link>
+                          {userProgress?.progress.includes(chapter.id) && (
+                            <span class="text-[15px] text-mint-down dark:text-mint">
+                              <LuCheck />
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </div>
             </div>
           </nav>
@@ -309,26 +346,35 @@ export default component$(() => {
                       )}
                       <p class="text-base lg:text-lg">{course.content_index.name}</p>
                     </div>
-                    <ul class="flex flex-col gap-3 border-l-2 border-gray-300 py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
-                      {course.content_index.chapter_order.map((chapterId) => {
-                        const chapter = chapters.find((c) => c.id === chapterId);
-                        if (!chapter) return null;
-                        const isActive = chapter.slug === chapterSlug;
-                        return (
-                          <li
-                            key={chapter.id}
-                            class={cn(
-                              "relative pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px]",
-                              isActive && "text-deep-sea after:block after:bg-sea dark:text-sea"
-                            )}
-                          >
-                            <Link prefetch href={chapter.link || undefined}>
-                              {chapter.name}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                    {!course.content_index.is_single_page && (
+                      <ul class="flex flex-col gap-3 border-l-2 border-gray-300 py-2 text-sm text-gray-400 dark:border-gray-500 dark:text-gray-500 lg:text-base">
+                        {course.content_index.chapter_order.map((chapterId) => {
+                          const chapter = chapters.find((c) => c.id === chapterId);
+                          if (!chapter) return null;
+                          const isActive = chapter.slug === chapterSlug;
+                          return (
+                            <li
+                              key={chapter.id}
+                              class={cn(
+                                "relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ",
+                                isActive && "text-deep-sea after:block after:bg-sea dark:text-sea",
+                                userProgress?.progress.includes(chapter.id) &&
+                                  "text-mint-down after:block after:bg-mint dark:text-mint"
+                              )}
+                            >
+                              <Link prefetch href={chapter.link || undefined}>
+                                {chapter.name}
+                              </Link>
+                              {userProgress?.progress.includes(chapter.id) && (
+                                <span class="text-[15px] text-mint-down dark:text-mint">
+                                  <LuCheck />
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </li>
                 </ul>
               </div>

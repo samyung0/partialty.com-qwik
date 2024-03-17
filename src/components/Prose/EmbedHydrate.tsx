@@ -8,8 +8,13 @@ export const EmbedHydrate = () => {
   const interval = useRef<any>();
   const isDark = useRef<boolean>(false);
   useEffect(() => {
+    console.log("hydrate embed");
     const iframeEmbed = Array.from(document.getElementsByClassName("iframeEmbed"));
     const darkThemeDiv = document.getElementById("darkThemeDiv");
+    console.log(iframeEmbed, darkThemeDiv);
+    darkThemeDiv!.onload = () => {
+      console.log(Array.from(document.getElementsByClassName("iframeEmbed")));
+    };
     if (!darkThemeDiv) return;
     iframeEmbed.forEach((iframe) => {
       const iframeSrc = iframe.getAttribute("src");
@@ -35,4 +40,4 @@ export const EmbedHydrate = () => {
 };
 
 export default EmbedHydrate;
-export const QwikEmbedHydrate = qwikify$(EmbedHydrate, { eagerness: "load" });
+export const QwikEmbedHydrate = qwikify$(EmbedHydrate);

@@ -104,6 +104,17 @@ export default component$(() => {
     }
   });
 
+  const nextCourseLink = course.content_user_progress
+    ? chapters.find(
+        (chapter) =>
+          chapter.id ===
+          course.content_index.chapter_order.filter(
+            (id) => !course.content_user_progress!.progress.includes(id)
+          )[0]
+      )?.link ||
+      chapters.find((chapter) => chapter.id === course.content_index.chapter_order[0])!.link!
+    : "";
+
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={userNullable} />
@@ -265,9 +276,27 @@ export default component$(() => {
                 </ul>
               </div>
             </div>
-            <button class="rounded-lg bg-primary-dark-gray p-2 text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base">
-              Start Course Now :D
-            </button>
+            {!course.content_user_progress && (
+              <Link
+                href={
+                  chapters.find((chapter) => course.content_index.chapter_order[0] === chapter.id)
+                    ?.link || undefined
+                }
+                prefetch
+                class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
+              >
+                Start Course Now :D
+              </Link>
+            )}
+            {course.content_user_progress !== null && (
+              <Link
+                href={nextCourseLink}
+                prefetch
+                class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
+              >
+                Continue Course :D
+              </Link>
+            )}
             <div class="flex flex-col gap-3 p-3 px-0 pt-0 md:gap-4 md:p-4 md:pt-0">
               <button
                 onClick$={toggleFavourite}

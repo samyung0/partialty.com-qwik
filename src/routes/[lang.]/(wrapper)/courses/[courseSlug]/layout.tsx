@@ -8,6 +8,7 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 import { content } from "../../../../../../drizzle_turso/schema/content";
 import { content_category } from "../../../../../../drizzle_turso/schema/content_category";
 import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
+import { content_user_progress } from "../../../../../../drizzle_turso/schema/content_user_progress";
 import { course_approval } from "../../../../../../drizzle_turso/schema/course_approval";
 import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
 import { tag } from "../../../../../../drizzle_turso/schema/tag";
@@ -61,6 +62,13 @@ export const useCourseLoader = routeLoader$(async (event) => {
       .limit(1)
       .innerJoin(course_approval, eq(course_approval.course_id, content_index.id))
       .innerJoin(profiles, eq(profiles.id, content_index.author))
+      .leftJoin(
+        content_user_progress,
+        and(
+          eq(content_user_progress.index_id, content_index.id),
+          eq(profiles.id, content_user_progress.user_id)
+        )
+      )
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, "/notfound/");
