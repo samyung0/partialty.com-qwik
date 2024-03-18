@@ -74,6 +74,14 @@ export default component$(() => {
       notFinished
     );
   });
+  const a =
+    chapters.find(
+      (chapter) =>
+        chapter.id ===
+        course.content_index.chapter_order[
+          course.content_index.chapter_order.indexOf(currentChapter!.id) - 1
+        ]
+    )?.link || undefined;
   return currentChapter ? (
     <QwikContent
       innerHTML={currentChapter.renderedHTML || undefined}
@@ -82,6 +90,24 @@ export default component$(() => {
       isPreview={preview}
       hasAudioTrack={!!currentChapter.audio_track_asset_id}
       saveProress={saveProress}
+      prevChapter={
+        chapters.find(
+          (chapter) =>
+            chapter.id ===
+            course.content_index.chapter_order[
+              course.content_index.chapter_order.indexOf(currentChapter.id) - 1
+            ]
+        )?.link || undefined
+      }
+      nextChapter={
+        chapters.find(
+          (chapter) =>
+            chapter.id ===
+            course.content_index.chapter_order[
+              course.content_index.chapter_order.indexOf(currentChapter.id) + 1
+            ]
+        )?.link || undefined
+      }
     />
   ) : null;
 });

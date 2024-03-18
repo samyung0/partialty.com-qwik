@@ -1,201 +1,30 @@
 import { component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
+import { useDBLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/members/dashboard/layout";
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";
 
-type CourseInfo = {
-  name: string;
-  chapterOrder: string[];
-  chapters: Record<string, { name: string; link: string }>;
-  link: string;
-};
-
-type CurrentCourse = {
-  slug: string;
-  completed: Record<string, boolean>;
-  lastAccessed: number;
-  open: boolean;
-  highlight: Record<string, boolean>;
-};
-
-const coursesInfo: Record<string, CourseInfo> = {
-  HTML: {
-    name: "HTML Course",
-    chapterOrder: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5"],
-    chapters: {
-      chapter1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-    },
-    link: "/members/dashboard/",
-  },
-  JS: {
-    name: "JS Course",
-    chapterOrder: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5"],
-    chapters: {
-      chapter1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-    },
-    link: "/members/dashboard/",
-  },
-  React: {
-    name: "React Course",
-    chapterOrder: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5"],
-    chapters: {
-      chapter1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-    },
-    link: "/members/dashboard/",
-  },
-  Astro: {
-    name: "Astro Course",
-    chapterOrder: ["chapter1", "chapter2", "chapter3", "chapter4", "chapter5"],
-    chapters: {
-      chapter1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-      chapter5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
-      },
-    },
-    link: "/members/dashboard/",
-  },
-};
-
 export default component$(() => {
-  const currentCourses = useStore<CurrentCourse[]>(
-    [
-      {
-        slug: "HTML",
-        completed: {
-          chapter1: false,
-          chapter2: true,
-          chapter3: false,
-          chapter4: false,
-          chapter5: true,
-        },
-        lastAccessed: 1705468275501,
-        open: false,
-        highlight: {},
-      },
-      {
-        slug: "Astro",
-        completed: {
-          chapter1: true,
-          chapter2: true,
-          chapter3: false,
-          chapter4: false,
-          chapter5: true,
-        },
-        open: false,
-        highlight: {},
-        lastAccessed: 1705468275500,
-      },
-      {
-        slug: "JS",
-        completed: {
-          chapter1: true,
-          chapter2: true,
-          chapter3: false,
-          chapter4: false,
-          chapter5: true,
-        },
-        open: false,
-        highlight: {},
-        lastAccessed: 1705468275503,
-      },
-      {
-        slug: "React",
-        completed: {
-          chapter1: false,
-          chapter2: false,
-          chapter3: false,
-          chapter4: false,
-          chapter5: false,
-        },
-        open: false,
-        highlight: {},
-        lastAccessed: 1705468275505,
-      },
-    ].toSorted((a, b) => b.lastAccessed - a.lastAccessed)
-  );
-  // const coursesObj = useSignal(() =>
-  //   Object.keys(coursesInfo).map((key) => ({ slug: key, ...coursesInfo[key] }))
-  // );
+  const { data, chapters } = useDBLoader().value;
+  const courseObj = useStore(() => {
+    const obj: Record<string, { opened: boolean }> = {};
+    for (const i of data) obj[i.content_index.id] = { opened: false };
+    return obj;
+  });
   // const fuseCourse = useSignal<any>();
   // const searchCourse = useSignal("");
   const showAll = useSignal(false);
+  const sortedCourses = useComputed$(() =>
+    data.toSorted(
+      (a, b) =>
+        new Date(b.content_user_progress.started_date).getTime() -
+        new Date(a.content_user_progress.started_date).getTime()
+    )
+  );
   const displayCourses = useComputed$(() =>
-    showAll.value ? currentCourses : currentCourses.slice(0, 3)
+    showAll.value ? sortedCourses.value : sortedCourses.value.slice(0, 3)
   );
 
   // useVisibleTask$(() => {
@@ -239,10 +68,13 @@ export default component$(() => {
           </div> */}
         </div>
         <ul class="flex flex-col gap-2 py-2">
-          {displayCourses.value.map((currentCourse) => {
-            const chapters = Object.values(coursesInfo[currentCourse.slug].chapters);
-            const currentChapters = Object.entries(currentCourse.completed);
-            const completedChapters = currentChapters.filter((entry) => entry[1]);
+          {displayCourses.value.map((data) => {
+            const currentCourse = data.content_index;
+            const currentChapters = data.content_index.chapter_order
+              .map((id) => chapters.find((chapter) => chapter.id === id)!)
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              .filter((x) => x !== undefined);
+            const completedChapters = data.content_user_progress.progress;
             return (
               <li
                 class={
@@ -252,20 +84,18 @@ export default component$(() => {
               >
                 <div
                   onClick$={() => {
-                    currentCourse.open = !currentCourse.open;
+                    courseObj[currentCourse.id].opened = !courseObj[currentCourse.id].opened;
                   }}
                   class="flex cursor-pointer items-center justify-between"
                 >
                   <div class="flex flex-col gap-1">
-                    <h2 class="text-base md:text-lg md:tracking-wide">
-                      {coursesInfo[currentCourse.slug].name}
-                    </h2>
+                    <h2 class="text-base md:text-lg md:tracking-wide">{currentCourse.name}</h2>
                     <div class="mb-1 block h-1.5  w-[100px] rounded-full bg-light-lilac md:hidden">
                       <div
                         class={`h-1.5 rounded-full bg-lilac`}
                         style={{
                           width: `${Math.round(
-                            (completedChapters.length / chapters.length) * 100
+                            (completedChapters.length / currentChapters.length) * 100
                           )}%`,
                         }}
                       ></div>
@@ -275,8 +105,8 @@ export default component$(() => {
                         <IoReaderOutline />
                       </span>
                       <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
-                        {completedChapters.length} / {chapters.length} chapter
-                        {chapters.length > 0 ? "s" : ""} completed
+                        {completedChapters.length} / {currentChapters.length} chapter
+                        {currentChapters.length > 1 ? "s" : ""} completed
                       </span>
                     </p>
                   </div>
@@ -294,7 +124,7 @@ export default component$(() => {
                     <button class="p-2">
                       <span
                         style={{
-                          transform: currentCourse.open ? "rotateZ(180deg)" : "",
+                          transform: courseObj[currentCourse.id].opened ? "rotateZ(180deg)" : "",
                         }}
                         class={
                           "inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray"
@@ -305,19 +135,17 @@ export default component$(() => {
                     </button>
                   </div>
                 </div>
-                {currentCourse.open ? (
+                {courseObj[currentCourse.id].opened ? (
                   <ul class="flex flex-col gap-4 py-4">
-                    {coursesInfo[currentCourse.slug].chapterOrder.map((chapter) => (
+                    {currentChapters.map((chapter) => (
                       <li
-                        key={`Course${currentCourse.slug}Chapter${chapter}`}
+                        key={`Course${currentCourse.slug}Chapter${chapter.id}`}
                         class="flex items-center justify-between"
                       >
                         <h2 class="border-b-2 border-primary-dark-gray text-[0.875rem] dark:border-background-light-gray md:text-[1rem]">
-                          <Link href={coursesInfo[currentCourse.slug].chapters[chapter].link}>
-                            {coursesInfo[currentCourse.slug].chapters[chapter].name}
-                          </Link>
+                          <Link href={chapter.link || undefined}>{chapter.name}</Link>
                         </h2>
-                        {currentCourse.completed[chapter] ? (
+                        {completedChapters.indexOf(chapter.id) !== -1 ? (
                           <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">
                             Completed
                           </p>

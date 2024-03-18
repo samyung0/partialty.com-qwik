@@ -32,6 +32,7 @@ import {
 } from "../../../../drizzle_turso/schema/content_category";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
+import { content_user_progress } from "../../../../drizzle_turso/schema/content_user_progress";
 import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
 import { profiles } from "../../../../drizzle_turso/schema/profiles";
@@ -169,6 +170,13 @@ const insertCourseHandler = server$(
         JSON.stringify(accessible_courses_read),
         userId
       );
+
+      await tx.insert(content_user_progress).values({
+        id: uuidv4(),
+        user_id: userId,
+        index_id: courseData.id,
+        progress: [],
+      });
     });
   }
 );
@@ -210,6 +218,7 @@ export default component$(() => {
     is_deleted: false,
     difficulty: "easy",
     short_description: "",
+    is_guide: false,
   });
   const courseApproval = useStore<NewCourseApproval>({
     id: uuidv4(),

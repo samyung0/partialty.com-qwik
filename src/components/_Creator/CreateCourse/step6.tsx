@@ -1,6 +1,6 @@
 import type { Signal } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
-import { LuArrowLeft, LuEyeOff, LuFiles, LuGem } from "@qwikest/icons/lucide";
+import { LuArrowLeft, LuEyeOff, LuFiles, LuGem, LuScrollText } from "@qwikest/icons/lucide";
 import type difficulty from "~/const/difficulty";
 import { difficultyLabels } from "~/const/difficulty";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
@@ -58,6 +58,31 @@ export default component$(
                   </select>
                 </label>
               </div>
+              {user.role === "admin" && (
+                <div>
+                  <label
+                    title="Shows up in the guides section"
+                    for="isGuide"
+                    class="flex cursor-pointer items-center gap-3 text-base md:gap-5 md:text-lg"
+                  >
+                    <span class="flex items-center gap-2">
+                      <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
+                        <LuScrollText />
+                      </span>
+                      Guide
+                    </span>
+                    <input
+                      id="isGuide"
+                      type="checkbox"
+                      class="h-4 w-4"
+                      checked={courseData.is_guide}
+                      onChange$={(e, currentTarget) =>
+                        (courseData.is_guide = currentTarget.checked)
+                      }
+                    />
+                  </label>
+                </div>
+              )}
               <div>
                 <label
                   title="A course can only be viewed through invite codes if it is set to private, and will not be listed in the course catalog."
