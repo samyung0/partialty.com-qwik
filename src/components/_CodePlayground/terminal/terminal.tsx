@@ -27,10 +27,10 @@ export default component$(() => {
   const terminalOutputRef = useSignal<HTMLElement>();
 
   useVisibleTask$(async ({ cleanup }) => {
-    const resizeListener: any = null;
+    let resizeListener: any = null;
 
     const terminal = new Terminal({
-      rows: 20,
+      rows: 12,
       convertEol: true,
     });
 
@@ -39,12 +39,12 @@ export default component$(() => {
     if (terminalOutputRef.value) {
       terminal.open(terminalOutputRef.value);
 
-      // terminal.loadAddon(fitAddon);
-      // fitAddon.fit();
+      terminal.loadAddon(fitAddon);
+      fitAddon.fit();
 
-      // resizeListener = window.addEventListener("resize", () => {
-      //   fitAddon.fit();
-      // });
+      resizeListener = window.addEventListener("resize", () => {
+        fitAddon.fit();
+      });
     } else {
       console.error("Unable to initialize terminal!!");
     }

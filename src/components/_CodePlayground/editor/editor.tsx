@@ -2,7 +2,7 @@ import type { NoSerialize, PropFunction } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
-import FileStructure from "../fileStructure/fileStructure";
+import FileStructureLargeScreen from "../fileStructure/fileStructureLargeScreen";
 import FileTab from "./fileTab";
 import type { IStandaloneCodeEditor } from "./monaco";
 import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
@@ -43,6 +43,7 @@ export default component$((props: EditorInterface) => {
     openedFiles: [], // !!! will store a file snapshot
     // openedEntriesModels: Entry
   });
+  const saveTimerRunning = useSignal(false);
 
   const __getEntryFromPath$ = {} as any;
 
@@ -207,14 +208,15 @@ export default component$((props: EditorInterface) => {
   // fileStore.entries.forEach((entry) => addToStage(entry));
   // });
 
-  // useVisibleTask$(async({track}) => {
-  //   let editorInput = false
+  // useVisibleTask$(async ({ track }) => {
+  //   track(() => editorStore.editor?.getModel()?.getValue());
+  //   // let editorInput = false;
   //   const save = () => {
-
-  //     setTimeout()
+  //     setTimeout();
   //   };
-
-  //   save();
+  //   if (!saveTimerRunning.value) {
+  //     setTimeout(save, 3000);
+  //   }
   // });
 
   useVisibleTask$(async ({ track }) => {
@@ -278,22 +280,24 @@ export default component$((props: EditorInterface) => {
   // });
   return (
     <div class="flex h-[50%]">
-      {/* file structure on the right side */}
-      <FileStructure
+      {/* file structure on the right side in larger screen*/}
+      <FileStructureLargeScreen
         entries={props.fileStore.entries}
         addToStage={addToStage}
         openStagedFile={openStagedFile}
       />
 
-      <div class="flex h-full flex-1 flex-col ">
+      <div class="flex h-full w-full flex-1 flex-col">
         {/* editor and display */}
 
         <FileTab
+          entries={props.fileStore.entries}
           openedFiles={editorStore.openedFiles}
+          addToStage={addToStage}
           openStagedFile={openStagedFile}
           saveOpenedFiles={saveOpenedFiles}
         />
-        <div class="flex-1 " style={props.editorStyle} ref={hostRef} />
+        <div class="z-10 flex-1" style={props.editorStyle} ref={hostRef} />
       </div>
     </div>
   );

@@ -50,6 +50,9 @@ const component = (addComponents: AddComponents, theme: Theme) => {
       margin: "-2px -6px",
       padding: "2px  6px",
     },
+    ".drawer-open": {
+      transform: "translateY(-100%)",
+    },
   });
 };
 
