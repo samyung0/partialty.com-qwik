@@ -41,6 +41,38 @@ export const BlockButton = ({
   );
 };
 
+export const LineBreakButton = ({
+  format,
+  children,
+  title,
+}: {
+  format: BlockFormat;
+  children: React.ReactNode;
+  title?: string;
+}) => {
+  const editor = useSlate();
+  return (
+    <button
+      title={title}
+      className={
+        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+          ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
+          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+      }
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={(event) => {
+        event.preventDefault();
+        editor.insertNode({
+          type: "line-break",
+          children: [{ text: "" }],
+        });
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
 export const LinkButton = ({
   format,
   children,

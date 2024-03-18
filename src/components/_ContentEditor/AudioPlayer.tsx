@@ -289,7 +289,7 @@ export default ({
   const [paused, setPaused] = useState(true);
   const muxRef = useRef<any>();
   return (
-    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 border-t-2 border-sea bg-light-sea px-8 dark:border-disabled-dark dark:bg-primary-dark-gray">
+    <div className="absolute bottom-0 left-0 z-50 grid h-[10vh] w-full grid-cols-1 bg-background-light-gray px-8 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:border-disabled-dark dark:bg-primary-dark-gray">
       <MuxPlayer
         ref={muxRef}
         className="hidden"
@@ -315,7 +315,7 @@ export default ({
                   <button
                     data-tooltip-target="tooltip-pause"
                     type="button"
-                    className="group mx-2 inline-flex items-center justify-center rounded-full bg-sea p-2.5 font-medium focus:outline-none dark:bg-highlight-dark"
+                    className="group mx-2 inline-flex items-center justify-center rounded-full bg-primary-dark-gray p-2.5 font-medium focus:outline-none dark:bg-highlight-dark"
                     onClick={() => setPaused(!paused)}
                   >
                     {paused ? (
@@ -351,7 +351,7 @@ export default ({
                       style={{
                         background:
                           themeValue === "light"
-                            ? `linear-gradient(90deg,rgb(114,202,218) ${
+                            ? `linear-gradient(90deg,#2f3e52 ${
                                 (timeStamp / audioTrack.duration) * 100
                               }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`
                             : `linear-gradient(90deg,#2f3e52 ${
@@ -359,7 +359,7 @@ export default ({
                               }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
                       }}
                       className={`m-0 h-1.5 w-full cursor-pointer appearance-none rounded-full
-               bg-background-light-gray p-0 accent-sea dark:accent-highlight-dark`}
+               bg-background-light-gray p-0 accent-primary-dark-gray dark:accent-highlight-dark`}
                     />
                   </label>
                   <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">

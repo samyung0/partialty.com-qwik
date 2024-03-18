@@ -20,6 +20,7 @@ import {
   Link2,
   List,
   ListOrdered,
+  Minus,
   PaintBucket,
   Pilcrow,
   Rows3,
@@ -35,6 +36,7 @@ import {
   CodeBlockButton,
   EmbedButton,
   ImageButton,
+  LineBreakButton,
   LinkButton,
   QuizBlockButton,
   QuizCodeBlockButton,
@@ -55,7 +57,7 @@ const Toolbar = ({
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   return (
-    <div className="absolute left-0 top-0 z-[100] flex h-[10vh] max-h-[10vh] w-full items-center justify-center rounded-lg border-2 border-mint bg-light-mint p-4 dark:border-disabled-dark dark:bg-primary-dark-gray dark:text-background-light-gray md:items-start">
+    <div className="absolute left-0 top-0 z-[100] flex h-[10vh] max-h-[10vh] w-full items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:border-disabled-dark dark:bg-primary-dark-gray dark:text-background-light-gray ">
       <div className="flex max-w-full items-center justify-center gap-4 pb-4 md:flex-wrap md:pb-0">
         <MarkButton title={"Bold"} format="bold" children={<Bold size={20} />} />
         <MarkButton title={"Italic"} format="italic" children={<Italic size={20} />} />
@@ -101,6 +103,7 @@ const Toolbar = ({
         <BlockButton title={"Align Left"} format="left" children={<AlignLeft size={20} />} />
         <BlockButton title={"Align Center"} format="center" children={<AlignCenter size={20} />} />
         <BlockButton title={"Align Right"} format="right" children={<AlignRight size={20} />} />
+        <LineBreakButton title={"Line Break"} format="line-break" children={<Minus size={20} />} />
         <LinkButton format="link" children={<Link2 size={20} />} />
         <ImageButton
           setShowImageChooser={setShowImageChooser}

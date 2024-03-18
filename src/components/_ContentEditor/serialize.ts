@@ -302,6 +302,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   switch (node.type) {
     case "paragraph":
       return `<p style="${style}">${children}</p>`;
+    case "line-break": return `<hr />`;
     case "block-quote":
       return `<blockquote style="${style}">
           ${children}

@@ -25,6 +25,13 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
           {children}
         </p>
       );
+    case "line-break":
+      return (
+        <div {...attributes} contentEditable={false}>
+          <hr />
+          <div className="hidden">{children}</div>
+        </div>
+      );
     case "block-quote":
       return (
         <blockquote style={style} {...attributes}>

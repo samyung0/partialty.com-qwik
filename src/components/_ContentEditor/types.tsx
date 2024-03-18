@@ -16,6 +16,18 @@ export type ParagraphElement = {
   children: (CustomText | CustomElement)[];
 };
 
+export type LineBreakElement = {
+  type: "line-break";
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+};
+
 export type CodeElement = {
   type: "code";
   align?: Align;
@@ -349,7 +361,8 @@ export type CustomElement =
   | QuizOptionElement
   | QuizCodeBlockElement
   | QuizCodeInputElement
-  | QuizCodePragraphElement;
+  | QuizCodePragraphElement
+  | LineBreakElement;
 
 export type BlockFormat = Align | List | CustomElement["type"];
 export type CustomElementType = CustomElement["type"];

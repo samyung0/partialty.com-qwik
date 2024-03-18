@@ -108,8 +108,8 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
   if (isHotkey("mod+shift+enter", event)) {
     if (!editor.selection) return;
     event.preventDefault();
-    const after = Editor.before(editor, editor.selection, { unit: "block" });
-    if (!after) return;
+    const before = Editor.before(editor, editor.selection, { unit: "block" });
+    if (!before) return;
     Transforms.insertNodes(
       editor,
       {
@@ -118,7 +118,7 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
       },
       {
         mode: "highest",
-        at: [after.path[0]],
+        at: [before.path[0]],
       }
     );
   }

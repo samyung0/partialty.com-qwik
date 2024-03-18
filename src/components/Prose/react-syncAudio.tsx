@@ -54,7 +54,7 @@ const audioTrack = ({
   }, []);
   return (
     audioTrack && (
-      <div className="mt-auto grid h-[10vh] w-full grid-cols-1 border-t border-sea bg-light-sea px-8">
+      <div className="mt-auto grid h-[10vh] w-full grid-cols-1 bg-background-light-gray px-8 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm">
         <MuxPlayer
           ref={muxRef}
           className="hidden"
@@ -76,7 +76,7 @@ const audioTrack = ({
               <button
                 data-tooltip-target="tooltip-pause"
                 type="button"
-                className="group mx-2 inline-flex items-center justify-center rounded-full bg-sea p-2.5 font-medium focus:outline-none"
+                className="group mx-2 inline-flex items-center justify-center rounded-full bg-primary-dark-gray p-2.5 font-medium focus:outline-none"
                 onClick={() => setPaused(!paused)}
               >
                 {paused ? (
@@ -110,12 +110,12 @@ const audioTrack = ({
                   min="0"
                   max={audioTrack.duration}
                   style={{
-                    background: `linear-gradient(90deg,rgb(114,202,218) ${
+                    background: `linear-gradient(90deg,#1f2937 ${
                       (timeStamp / audioTrack.duration) * 100
                     }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
                   }}
                   className={`m-0 h-1.5 w-full cursor-pointer appearance-none rounded-full
-           bg-background-light-gray p-0 accent-sea`}
+           bg-background-light-gray p-0 accent-primary-dark-gray`}
                 />
               </label>
               <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">

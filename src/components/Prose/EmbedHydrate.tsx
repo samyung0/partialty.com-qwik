@@ -11,10 +11,6 @@ export const EmbedHydrate = () => {
     console.log("hydrate embed");
     const iframeEmbed = Array.from(document.getElementsByClassName("iframeEmbed"));
     const darkThemeDiv = document.getElementById("darkThemeDiv");
-    console.log(iframeEmbed, darkThemeDiv);
-    darkThemeDiv!.onload = () => {
-      console.log(Array.from(document.getElementsByClassName("iframeEmbed")));
-    };
     if (!darkThemeDiv) return;
     iframeEmbed.forEach((iframe) => {
       const iframeSrc = iframe.getAttribute("src");
