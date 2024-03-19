@@ -27,7 +27,7 @@ export default defineConfig(() => {
       }),
       qwikVite({
         entryStrategy: {
-          type: "component",
+          type: "smart",
         },
       }),
       qwikSpeakInline({
