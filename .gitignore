@@ -50,3 +50,6 @@ tmp
 
 .react-email
 package-lock.json
+
+# Netlify
+.netlify
