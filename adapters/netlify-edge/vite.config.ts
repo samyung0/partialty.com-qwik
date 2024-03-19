@@ -11,6 +11,12 @@ export default extendConfig(baseConfig, () => {
       },
       outDir: ".netlify/edge-functions/entry.netlify-edge",
     },
-    plugins: [netlifyEdgeAdapter()],
+    plugins: [netlifyEdgeAdapter({
+      ssg: {
+        include: ['/*'],
+        origin: 'https://www.partialty.com',
+        sitemapOutFile: 'sitemap.xml',
+      }
+    })],
   };
 });
