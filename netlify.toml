@@ -2,8 +2,8 @@
 publish = "dist"
 command = "npm run build"
 
-[[redirects]]
-from = "https://partialty.com"
-to = "https://www.partialty.com"
-status = 200
-force = true
+# [[redirects]]
+# from = "https://partialty.com"
+# to = "https://www.partialty.com"
+# status = 200
+# force = true
