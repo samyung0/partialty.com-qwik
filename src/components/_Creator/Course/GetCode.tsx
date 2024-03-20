@@ -4,6 +4,8 @@ import { LuX } from "@qwikest/icons/lucide";
 import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
 
+export { generateContentShareToken };
+
 export const serverCode = server$(async (contentId: string) => {
   return await generateContentShareToken(contentId);
 });

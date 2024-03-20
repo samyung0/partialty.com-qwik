@@ -6,7 +6,7 @@ import { content_share_token } from "../../drizzle_turso/schema/content_share_to
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 
-export default server$(() => async (contentId: string) => {
+export default server$(async (contentId: string) => {
   const drizzle = drizzleClient();
   const storedUserTokens = await drizzle
     .select()
