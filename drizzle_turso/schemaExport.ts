@@ -1,6 +1,7 @@
 import { content } from "./schema/content";
 import { content_category } from "./schema/content_category";
 import { content_index } from "./schema/content_index";
+import { content_share_token } from "./schema/content_share_token";
 import { content_user_progress } from "./schema/content_user_progress";
 import { content_user_quiz } from "./schema/content_user_quiz";
 import { course_approval } from "./schema/course_approval";
@@ -24,4 +25,5 @@ export default {
   content_category,
   course_approval,
   content_user_progress,
+  content_share_token
 };

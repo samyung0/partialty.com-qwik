@@ -7,8 +7,7 @@ import { content_share_token } from "../../drizzle_turso/schema/content_share_to
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 
 export default server$(async (contentId: string) => {
-  const drizzle = drizzleClient();
-  const storedUserTokens = await drizzle
+  const storedUserTokens = await drizzleClient()
     .select()
     .from(content_share_token)
     .where(eq(content_share_token.index_id, contentId));
@@ -22,11 +21,13 @@ export default server$(async (contentId: string) => {
   }
   const token = generateRandomString(7);
 
-  await drizzle.insert(content_share_token).values({
-    id: token,
-    expires: BigInt(new Date().getTime() + EXPIRES_IN),
-    index_id: contentId,
-  });
+  await drizzleClient()
+    .insert(content_share_token)
+    .values({
+      id: token,
+      expires: BigInt(new Date().getTime() + EXPIRES_IN),
+      index_id: contentId,
+    });
 
   return token;
 });
