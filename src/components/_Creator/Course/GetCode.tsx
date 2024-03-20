@@ -2,7 +2,7 @@ import { component$, Signal, useSignal } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { LuX } from "@qwikest/icons/lucide";
 import { eq } from "drizzle-orm";
-import { isWithinExpiration, generateRandomString } from "lucia/utils";
+import { generateRandomString, isWithinExpiration } from "lucia/utils";
 // import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
 import drizzleClient from "~/utils/drizzleClient";
@@ -10,6 +10,7 @@ import { content_share_token } from "../../../../drizzle_turso/schema/content_sh
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateContentShareToken = server$(async (contentId: string) => {
+  if(!drizzleClient()) throw new Error("wtf");
   const storedUserTokens = await drizzleClient()
     .select()
     .from(content_share_token)
