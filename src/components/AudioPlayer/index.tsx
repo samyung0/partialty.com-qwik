@@ -134,7 +134,7 @@ export default component$(
     useVisibleTask$(
       () => {
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
-        sync();
+        // sync();
       },
       { strategy: "document-ready" }
     );

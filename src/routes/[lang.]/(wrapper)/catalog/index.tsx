@@ -5,7 +5,7 @@ import {
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
-import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { DocumentHead, Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { LuGem, LuRocket, LuTags } from "@qwikest/icons/lucide";
 import Footer from "~/components/Footer";
 import LoadingSVG from "~/components/LoadingSVG";
@@ -259,29 +259,34 @@ export default component$(() => {
                           class="flex w-full items-center justify-between  px-2 py-3 text-gray-400 hover:text-gray-500 dark:bg-primary-dark-gray"
                           aria-controls="filter-section-mobile-0"
                           aria-expanded="false"
+                          onClick$={() => (categoryOpened.value = !categoryOpened.value)}
                         >
                           <span class="font-medium ">Category</span>
                           <span class="ml-6 flex items-center">
-                            <svg
-                              class="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg>
-                            <svg
-                              class="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
+                            {!categoryOpened.value && (
+                              <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                              </svg>
+                            )}
+                            {categoryOpened.value && (
+                              <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                            )}
                           </span>
                         </button>
                       </h3>
@@ -322,29 +327,34 @@ export default component$(() => {
                           class="flex w-full items-center justify-between  px-2 py-3 text-gray-400 hover:text-gray-500 dark:bg-primary-dark-gray"
                           aria-controls="filter-section-mobile-1"
                           aria-expanded="false"
+                          onClick$={() => (tagOpened.value = !tagOpened.value)}
                         >
                           <span class="font-medium ">Tag</span>
                           <span class="ml-6 flex items-center">
-                            <svg
-                              class="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg>
-                            <svg
-                              class="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
+                            {!tagOpened.value && (
+                              <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                              </svg>
+                            )}
+                            {tagOpened.value && (
+                              <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                            )}
                           </span>
                         </button>
                       </h3>
@@ -930,3 +940,13 @@ export default component$(() => {
     </section>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Catalog",
+  meta: [
+    {
+      name: "description",
+      content: "Browse all the courses and projects available.",
+    },
+  ],
+};

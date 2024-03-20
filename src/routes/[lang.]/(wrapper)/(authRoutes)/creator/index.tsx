@@ -28,6 +28,19 @@ export const useAccessibleCourseWrite = routeLoader$(async (event) => {
   return courses;
 });
 
+export const useAccessibleCourseRead = routeLoader$(async (event) => {
+  const userVal = await event.resolveValue(useUserLoader);
+  if (userVal.role === "admin") return ["*"];
+  let courses: string[];
+  try {
+    courses = JSON.parse(userVal.accessible_courses_read || "[]");
+  } catch (e) {
+    console.error(e);
+    courses = [];
+  }
+  return courses;
+});
+
 export const useAccessibleCourseWriteResolved = routeLoader$(async (event) => {
   const accessibleCourseWrite = await event.resolveValue(useAccessibleCourseWrite);
   if (accessibleCourseWrite.length === 0) return [];
@@ -61,6 +74,7 @@ export const useAccessibleCourseWriteResolved = routeLoader$(async (event) => {
 export default component$(() => {
   const user = useUserLoader().value;
   const userAccessibleCourseWrite = useAccessibleCourseWrite();
+  const userAccessibleCourseRead = useAccessibleCourseRead();
   const userAccessibleCourseWriteResolved = useAccessibleCourseWriteResolved();
   const tags = useTags().value;
   const catgories = useCategories().value;
@@ -109,6 +123,7 @@ export default component$(() => {
       <Creator
         ws={contentWS}
         userAccessibleCourseWrite={userAccessibleCourseWrite}
+        userAccessibleCourseRead={userAccessibleCourseRead}
         userAccessibleCourseWriteResolved={userAccessibleCourseWriteResolved}
         tags={tags}
         categories={catgories}

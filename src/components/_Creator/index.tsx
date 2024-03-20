@@ -18,12 +18,14 @@ export default component$(
     ws,
     userAccessibleCourseWrite,
     userAccessibleCourseWriteResolved,
+    userAccessibleCourseRead,
     tags,
     categories,
     courseIdToEditingUser,
   }: {
     ws: Signal<NoSerialize<WebSocket>>;
     userAccessibleCourseWrite: Signal<string[]>;
+    userAccessibleCourseRead: Signal<string[]>;
     userAccessibleCourseWriteResolved: Signal<
       {
         content_index: ContentIndex;
@@ -40,7 +42,7 @@ export default component$(
     return (
       <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
         <Nav user={user} />
-        <div class="mx-auto flex w-[95%] flex-col md:w-[80%] lg:flex-row lg:pt-6">
+        <div class="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:flex-row lg:pt-6">
           <div class="flex w-full flex-col gap-4 lg:w-[20%]">
             <div class="hidden self-center lg:block">
               <img
@@ -95,6 +97,7 @@ export default component$(
               <Course
                 ws={ws}
                 userAccessibleCourseWrite={userAccessibleCourseWrite}
+                userAccessibleCourseRead={userAccessibleCourseRead}
                 userAccessibleCourseWriteResolved={userAccessibleCourseWriteResolved}
                 tags={tags}
                 categories={categories}

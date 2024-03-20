@@ -69,7 +69,7 @@ export default component$(() => {
             </li>
           ))}
           <Link
-            href="/members/dashboard/"
+            href="/catalog/?type=guide"
             class="p-0 text-right text-[0.875rem] font-bold tracking-wide md:p-2 md:text-[1rem]"
           >
             <p>View all guides</p>

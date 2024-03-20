@@ -1,11 +1,17 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { RequestHandler, routeLoader$ } from "@builder.io/qwik-city";
 import { and, eq } from "drizzle-orm";
-import drizzleClient from "~/utils/drizzleClient";
+import drizzleClient, { initDrizzleIfNeeded } from "~/utils/drizzleClient";
 import { content_category } from "../../../../../drizzle_turso/schema/content_category";
 import { content_index } from "../../../../../drizzle_turso/schema/content_index";
 import { course_approval } from "../../../../../drizzle_turso/schema/course_approval";
 import { tag } from "../../../../../drizzle_turso/schema/tag";
+import { initTursoIfNeeded } from "~/utils/tursoClient";
+
+export const onRequest: RequestHandler = ({ env, cacheControl }) => {
+  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+};
 
 export const useCourseLoader = routeLoader$(async () => {
   return await drizzleClient()

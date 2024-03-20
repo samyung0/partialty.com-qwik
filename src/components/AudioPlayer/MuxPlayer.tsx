@@ -30,6 +30,7 @@ export const MuxAudio = ({
       playbackRate={playbackRate}
       muted={muted}
       onTimeUpdate={(e) => {
+        console.log("update")
         if (!e.target) return;
         setTimeStamp((e.target as HTMLVideoElement).currentTime);
         clearTimeout(interval.current);

@@ -87,7 +87,7 @@ export default component$(
               onClick$={(e) => e.stopPropagation()}
             >
               <ul class="mx-auto flex w-[90%] flex-col gap-6 py-6">
-                <li class="flex gap-6">
+                <li class="flex items-center gap-6">
                   {!props.disableTheme && (
                     <label class="flex cursor-pointer items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
                       <LuSun />
@@ -212,14 +212,16 @@ export default component$(
                         </span>
                       </Link>
                     </li>
-                    <li>
-                      <Link prefetch href="/creator/" class="flex items-center gap-4">
-                        <span class="whitespace-nowrap">Creator</span>
-                        <span class="text-[20px]">
-                          <LuPencilLine />
-                        </span>
-                      </Link>
-                    </li>
+                    {login.user.role !== "free" && (
+                      <li>
+                        <Link prefetch href="/creator/" class="flex items-center gap-4">
+                          <span class="whitespace-nowrap">Creator</span>
+                          <span class="text-[20px]">
+                            <LuPencilLine />
+                          </span>
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button onClick$={handleLogout} class="flex items-center gap-4">
                         <span>Logout</span>
@@ -352,7 +354,7 @@ export default component$(
                     <IoCaretDown />
                   </span>
                 </div>
-                <div class="absolute left-[50%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2">
+                <div class="absolute 2xl:left-[50%] left-[30%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2">
                   <div
                     class={
                       "flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray " +
@@ -378,14 +380,16 @@ export default component$(
                           <span class="whitespace-nowrap">My Profile</span>
                         </Link>
                       </li>
-                      <li>
-                        <Link prefetch href="/creator/" class="flex items-center gap-3">
-                          <span class="text-[25px]">
-                            <LuPencilLine />
-                          </span>
-                          <span class="whitespace-nowrap">Creator</span>
-                        </Link>
-                      </li>
+                      {login.user.role !== "free" && (
+                        <li>
+                          <Link prefetch href="/creator/" class="flex items-center gap-3">
+                            <span class="text-[25px]">
+                              <LuPencilLine />
+                            </span>
+                            <span class="whitespace-nowrap">Creator</span>
+                          </Link>
+                        </li>
+                      )}
                       <li>
                         <button onClick$={handleLogout} class="flex items-center gap-3">
                           <span class="text-[25px]">

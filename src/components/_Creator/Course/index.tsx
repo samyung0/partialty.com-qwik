@@ -26,9 +26,11 @@ import {
 import { and, eq } from "drizzle-orm";
 
 import { isServer } from "@builder.io/qwik/build";
+import verifyContentShareToken from "~/auth/verifyContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
 import AddChapter from "~/components/_Creator/Course/AddChapter";
 import EditChapter from "~/components/_Creator/Course/EditChapter";
+import GetCode from "~/components/_Creator/Course/GetCode";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
@@ -38,9 +40,32 @@ import type { ContentCategory } from "../../../../drizzle_turso/schema/content_c
 import { content_index, type ContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import type { CourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
-import { type Profiles } from "../../../../drizzle_turso/schema/profiles";
+import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
+
+export const addEditableCourse = server$(
+  async (
+    code: string,
+    accessible_courses: string[],
+    accessible_courses_read: string[],
+    userId: string
+  ) => {
+    try {
+      const contentId = await verifyContentShareToken(code);
+      await drizzleClient()
+        .update(profiles)
+        .set({
+          accessible_courses: JSON.stringify([...accessible_courses, contentId]),
+          accessible_courses_read: JSON.stringify([...accessible_courses_read, contentId]),
+        })
+        .where(eq(profiles.id, userId));
+      return { success: true, userId };
+    } catch (e) {
+      return { success: false, error: e };
+    }
+  }
+);
 
 export const getChapters = server$(async (courseId: string) => {
   return await drizzleClient().select().from(content).where(eq(content.index_id, courseId));
@@ -165,12 +190,14 @@ export default component$(
     ws,
     userAccessibleCourseWrite,
     userAccessibleCourseWriteResolved,
+    userAccessibleCourseRead,
     tags,
     categories,
     courseIdToEditingUser,
   }: {
     ws: Signal<NoSerialize<WebSocket>>;
     userAccessibleCourseWrite: Signal<string[]>;
+    userAccessibleCourseRead: Signal<string[]>;
     userAccessibleCourseWriteResolved: Signal<
       {
         content_index: ContentIndex;
@@ -264,6 +291,9 @@ export default component$(
     const isDeletingChapterIndex = useSignal("");
     const isDeletingChapterIndexCallback = useSignal<QRL<() => any> | undefined>(undefined);
     const isDeletingChapterIndexTimeout = useSignal<any>();
+
+    const showGetCode = useSignal(false);
+    const showGetCodeCourseId = useSignal("");
 
     const showAddChapter = useSignal(false);
     const showAddCourseId = useSignal("");
@@ -594,6 +624,9 @@ export default component$(
 
     return (
       <>
+        {showGetCodeCourseId.value && showGetCode.value && (
+          <GetCode showGetCode={showGetCode} contentId={showGetCodeCourseId.value} />
+        )}
         {showAddChapter.value && showAddCourseId.value && (
           <AddChapter
             showAddChapter={showAddChapter}
@@ -639,14 +672,36 @@ export default component$(
         <div class="mx-auto flex w-full flex-col md:w-[90%] lg:w-[80%]">
           <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Your Courses</h1>
           <div class="mt-3 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray"></div>
-          <div class="mt-3 lg:mt-6">
-            <a
-              target="_blank"
-              href={"/creator/create-course/"}
-              class="inline-block rounded-lg bg-primary-dark-gray px-4 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark lg:px-6 lg:py-3 "
-            >
-              Create New Course
-            </a>
+          <div class="mt-3 flex items-center gap-3 lg:mt-6">
+            <div>
+              <a
+                target="_blank"
+                href={"/creator/create-course/"}
+                class="inline-block rounded-lg bg-primary-dark-gray px-4 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark lg:px-6 lg:py-3 "
+              >
+                Create New Course
+              </a>
+            </div>
+
+            <div>
+              <button
+                onClick$={async () => {
+                  const code = window.prompt("Plz enter the code. Courses Only!");
+                  if (!code) return;
+                  const ret = await addEditableCourse(
+                    code,
+                    userAccessibleCourseWrite.value,
+                    userAccessibleCourseRead.value,
+                    user.userId
+                  );
+                  if (!ret.success) return alert("Unable to add course. Please contact support!");
+                  await nav();
+                }}
+                class="inline-block rounded-lg bg-primary-dark-gray px-4 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark lg:px-6 lg:py-3 "
+              >
+                Enter Code
+              </button>
+            </div>
           </div>
           <section>
             {!ws.value && (
@@ -1244,14 +1299,28 @@ export default component$(
                                       )}
                                     </>
                                   )}
-                                <button
-                                  onClick$={() => {
-                                    handleDeleteContentIndex(currentCourse.id);
-                                  }}
-                                  class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
-                                >
-                                  Delete Course
-                                </button>
+                                <div class="flex w-full flex-col items-start justify-start gap-3 lg:flex-row lg:items-center">
+                                  <button
+                                    onClick$={() => {
+                                      handleDeleteContentIndex(currentCourse.id);
+                                    }}
+                                    class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
+                                  >
+                                    Delete Course
+                                  </button>
+
+                                  {user.userId === courses[currentCourse.id].profile.id && (
+                                    <button
+                                      onClick$={() => {
+                                        showGetCode.value = true;
+                                        showGetCodeCourseId.value = currentCourse.id;
+                                      }}
+                                      class="rounded-lg bg-primary-dark-gray px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
+                                    >
+                                      Get Shareable Code
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             )
                           ) : null}

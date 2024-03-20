@@ -83,7 +83,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           width: 100%;
           background: inherit;
           z-index: 1;
-          ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;`}
+          ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
       }
        </style>
        `;
@@ -201,7 +201,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       width: calc(100% + 8px);
       background: inherit;
       z-index: 1;
-        ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;`}
+        ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
       }
        </style>
        `;
