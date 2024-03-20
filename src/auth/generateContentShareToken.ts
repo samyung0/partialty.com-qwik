@@ -1,12 +1,12 @@
+import { server$ } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
 import { generateRandomString, isWithinExpiration } from "lucia/utils";
 import drizzleClient from "~/utils/drizzleClient";
-import { email_verification_token } from "../../drizzle_turso/schema/email_verification_token";
 import { content_share_token } from "../../drizzle_turso/schema/content_share_token";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 
-export default async (contentId: string) => {
+export default server$(() => async (contentId: string) => {
   const drizzle = drizzleClient();
   const storedUserTokens = await drizzle
     .select()
@@ -29,4 +29,4 @@ export default async (contentId: string) => {
   });
 
   return token;
-};
+});
