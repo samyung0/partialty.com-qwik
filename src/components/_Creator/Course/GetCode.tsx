@@ -6,10 +6,6 @@ import LoadingSVG from "~/components/LoadingSVG";
 
 export { generateContentShareToken };
 
-export const serverCode = server$(async (contentId: string) => {
-  return await generateContentShareToken(contentId);
-});
-
 export default component$(
   ({ showGetCode, contentId }: { showGetCode: Signal<boolean>; contentId: string }) => {
     const isGeneratingCode = useSignal(false);
@@ -32,7 +28,7 @@ export default component$(
                 if (isGeneratingCode.value) return;
                 isGeneratingCode.value = true;
                 try {
-                  const code = await serverCode(contentId);
+                  const code = await generateContentShareToken(contentId);
                   generatedCode.value = code;
                 } catch (e) {
                   console.error(e);
