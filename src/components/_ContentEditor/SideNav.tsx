@@ -291,7 +291,7 @@ export default component$(
           <LuX />
         </button>
         <div
-          class="h-full w-[20vw] min-w-[280px] overflow-auto bg-pale-yellow p-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:border-disabled-dark dark:bg-primary-dark-gray md:min-w-[250px] xl:bg-pale-yellow/50 xl:w-full"
+          class="h-full w-[20vw] min-w-[280px] overflow-auto bg-pale-yellow p-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:border-disabled-dark dark:bg-primary-dark-gray md:min-w-[250px] xl:w-full xl:bg-pale-yellow/50"
           onClick$={(e) => e.stopPropagation()}
         >
           {contentWS.value ? (

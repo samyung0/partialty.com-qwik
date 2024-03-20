@@ -20,7 +20,7 @@ export default component$(() => {
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={user} />
-      <div class="mx-auto flex w-[95%] flex-col md:w-[80%] lg:flex-row lg:pt-6">
+      <div class="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 lg:flex-row lg:px-8 lg:pt-6">
         <div class="flex w-full flex-col gap-4 lg:w-[20%]">
           <div class="hidden self-center lg:block">
             <img

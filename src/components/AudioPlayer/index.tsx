@@ -140,7 +140,7 @@ export default component$(
     );
 
     return (
-      <div class="flex h-[10vh] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
+      <div class="flex h-[10vh] min-h-[90px] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
         {audioTrack && (
           <>
             <div class="hidden md:block">

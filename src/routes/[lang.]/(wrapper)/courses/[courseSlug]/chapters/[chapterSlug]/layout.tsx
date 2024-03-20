@@ -130,7 +130,7 @@ export default component$(() => {
     <>
       <section class="flex min-h-[100vh] flex-col bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
         <div class="flex max-h-[100vh] flex-1 flex-col lg:flex-row">
-          <nav class="hidden max-h-[100vh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:w-[40%] 2xl:pl-[10%]">
+          <nav class="hidden max-h-[100vh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
             <div class="flex flex-col items-start gap-4 py-6">
               <SmallNav user={userNullable} />
               <div class="flex flex-col gap-2 py-2 lg:gap-3 lg:py-4  ">

@@ -21,7 +21,6 @@ import { themeContext } from "~/context/themeContext";
 
 import { IoCaretDown } from "@qwikest/icons/ionicons";
 import CrownPNG from "~/assets/img/crown.png";
-import NavCourses from "~/components/NavCourses";
 
 import getUser from "~/components/_Index/Nav/getUser";
 import LoadingSVG from "~/components/LoadingSVG";
@@ -162,7 +161,7 @@ export default component$(
                   </Link>
                 </li>
                 <li>
-                  <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
+                  <Link prefetch href={"/catalog/"} class="flex items-center gap-4">
                     Courses
                     <span
                       class={
@@ -175,7 +174,7 @@ export default component$(
                   </Link>
                 </li>
                 <li>
-                  <Link prefetch href={"/members/dashboard/"} class="flex items-center gap-4">
+                  <Link prefetch href={"/catalog/?type=project"} class="flex items-center gap-4">
                     Projects
                     <span
                       class={
@@ -236,7 +235,7 @@ export default component$(
           </nav>
         )}
         <nav class={!props.disableTheme ? "dark:text-background-light-gray" : ""}>
-          <div class="mx-auto flex w-[90%] items-center justify-between py-6 text-[25px]  md:w-[80%] lg:hidden">
+          <div class=" mx-auto flex max-w-7xl items-center justify-between px-4 py-6 text-[25px] sm:px-6 lg:hidden lg:px-8">
             <h1 class="font-mosk text-3xl font-bold tracking-wide">
               <Link href="/members/dashboard/">Partialty.com</Link>
             </h1>
@@ -250,7 +249,7 @@ export default component$(
               <LuAlignJustify />
             </button>
           </div>
-          <ul class="m-auto hidden w-[80%] items-center gap-6 py-6 text-base font-bold tracking-wide lg:flex">
+          <ul class="mx-auto hidden max-w-7xl items-center gap-6 px-4 py-6 text-base font-bold tracking-wide sm:px-6 lg:flex lg:px-8">
             <li class="px-2 py-2">
               <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
                 Home
@@ -264,24 +263,24 @@ export default component$(
                 </span>
               </Link>
             </li>
-            <li class="relative py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
-              <div class={"flex gap-2"}>
+            <li class="relative py-2">
+              <Link prefetch href={"/catalog/"} class={"flex gap-2"}>
                 <span>Courses</span>
-                <span
+                {/* <span
                   class={
                     "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform " +
                     (!props.disableTheme ? " dark:text-background-light-gray" : "")
                   }
                 >
                   <IoCaretDown />
-                </span>
-              </div>
-              <div class="absolute left-0 top-[100%] z-[100] hidden w-[600px] pt-3">
+                </span> */}
+              </Link>
+              {/* <div class="absolute left-0 top-[100%] z-[100] hidden w-[600px] pt-3">
                 {NavCourses}
-              </div>
+              </div> */}
             </li>
             <li class="px-2 py-2">
-              <Link prefetch href={"/"}>
+              <Link prefetch href={"/catalog/?type=project"}>
                 Projects
               </Link>
             </li>
@@ -313,7 +312,7 @@ export default component$(
               </li>
             )}
             {login.isLoading ? (
-              <span class="ml-auto">
+              <span class={props.disableTheme ? "ml-auto  " : ""}>
                 <LoadingSVG />
               </span>
             ) : login.isLoggedIn && login.user ? (
@@ -353,12 +352,12 @@ export default component$(
                     <IoCaretDown />
                   </span>
                 </div>
-                <div class="absolute left-[50%] top-[100%] hidden w-[180px] -translate-x-[50%] pt-2">
+                <div class="absolute left-[50%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2">
                   <div
                     class={
                       "flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray " +
                       (!props.disableTheme
-                        ? " dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray"
+                        ? " dark:border-disabled-dark dark:bg-highlight-dark dark:text-background-light-gray"
                         : "")
                     }
                   >

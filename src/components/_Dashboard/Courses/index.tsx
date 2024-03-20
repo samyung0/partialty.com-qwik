@@ -53,7 +53,7 @@ export default component$(() => {
   // });
 
   return (
-    <article class="mx-auto w-[95%] py-4 md:w-[80%]">
+    <article class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <div class="w-[100%] pb-1 lg:w-[85%] xl:w-[70%]">
         <div class="flex items-end justify-between">
           <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-4xl">My Courses</h1>

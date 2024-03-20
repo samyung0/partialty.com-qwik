@@ -28,7 +28,7 @@ const guidesInfo = {
 
 export default component$(() => {
   return (
-    <article class="mx-auto w-[95%] py-4 md:w-[80%]">
+    <article class="mx-auto max-w-7xl px-4 py-4 sm:px-6  lg:px-8">
       <div class="w-[100%] lg:w-[85%] xl:w-[70%]">
         <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-4xl">Getting Started</h1>
         <ul class="flex flex-col gap-2 py-2">

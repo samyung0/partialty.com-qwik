@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EMBED_URL } from "~/const";
 
 const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?: string }) => {
