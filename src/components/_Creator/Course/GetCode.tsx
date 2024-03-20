@@ -1,10 +1,39 @@
 import { component$, Signal, useSignal } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { LuX } from "@qwikest/icons/lucide";
-import generateContentShareToken from "~/auth/generateContentShareToken";
+import { eq } from "drizzle-orm";
+import { isWithinExpiration, generateRandomString } from "lucia/utils";
+// import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
+import drizzleClient from "~/utils/drizzleClient";
+import { content_share_token } from "../../../../drizzle_turso/schema/content_share_token";
 
-export { generateContentShareToken };
+const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
+export const generateContentShareToken = server$(async (contentId: string) => {
+  const storedUserTokens = await drizzleClient()
+    .select()
+    .from(content_share_token)
+    .where(eq(content_share_token.index_id, contentId));
+  if (storedUserTokens.length > 0) {
+    const reusableStoredToken = storedUserTokens.find((token) => {
+      // check if expiration is within 15 minutes
+      // and reuse the token if true
+      return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+    });
+    if (reusableStoredToken) return reusableStoredToken.id;
+  }
+  const token = generateRandomString(7);
+
+  await drizzleClient()
+    .insert(content_share_token)
+    .values({
+      id: token,
+      expires: BigInt(new Date().getTime() + EXPIRES_IN),
+      index_id: contentId,
+    });
+
+  return token;
+});
 
 export default component$(
   ({ showGetCode, contentId }: { showGetCode: Signal<boolean>; contentId: string }) => {
