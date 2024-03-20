@@ -196,7 +196,7 @@ export default component$(() => {
                   </div>
 
                   <form class="mt-4 border-t border-gray-200" preventdefault:submit>
-                    <h3 class="sr-only">Categories</h3>
+                    <h3 class="sr-only">Type</h3>
                     <ul role="list" class="px-2 py-3 font-medium ">
                       <li class="block px-2 py-3">
                         <button
@@ -290,7 +290,10 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div class="pt-6" id="filter-section-mobile-0">
+                      <div
+                        class={cn("hidden pt-6", categoryOpened.value && "block")}
+                        id="filter-section-mobile-0"
+                      >
                         <div class="space-y-6">
                           {categories.map((category) => (
                             <div key={category.id} class="flex items-center">
@@ -358,7 +361,10 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div class="pt-6" id="filter-section-mobile-1">
+                      <div
+                        class={cn("hidden pt-6", tagOpened.value && "block")}
+                        id="filter-section-mobile-1"
+                      >
                         <div class="space-y-6">
                           {tags.map((tag) => (
                             <div key={tag.id} class="flex items-center">
@@ -539,7 +545,7 @@ export default component$(() => {
 
                 <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                   <form class="hidden lg:block" preventdefault:submit>
-                    <h3 class="sr-only">Nature</h3>
+                    <h3 class="sr-only">Type</h3>
                     <ul
                       role="list"
                       class="space-y-4 border-b border-gray-300 pb-6 text-sm font-medium "
