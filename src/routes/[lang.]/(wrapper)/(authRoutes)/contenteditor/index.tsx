@@ -106,7 +106,9 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
     .catch((e) => console.error(e));
   const userMuxAssets =
     user.role === "admin"
-      ? await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(mux_assets)
+      ? await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1")
+          .select()
+          .from(mux_assets)
       : await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1")
           .select()
           .from(mux_assets)

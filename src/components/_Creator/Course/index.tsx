@@ -35,6 +35,7 @@ import GetCode from "~/components/_Creator/Course/GetCode";
 import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
+import tursoClient from "~/utils/tursoClient";
 import type { Content, NewContent } from "../../../../drizzle_turso/schema/content";
 import { content } from "../../../../drizzle_turso/schema/content";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
@@ -45,7 +46,6 @@ import { course_approval } from "../../../../drizzle_turso/schema/course_approva
 import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
-import tursoClient from "~/utils/tursoClient";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateToken = server$(async function (contentId: string) {
@@ -78,7 +78,7 @@ export const generateToken = server$(async function (contentId: string) {
   //     index_id: contentId,
   //   }).returning();
   // });
-  
+
   // idk why i cant use drizzle, it returns cannot read from undefined (reading from) in prod mode
   const client = tursoClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1");
   await client.execute({
@@ -111,7 +111,10 @@ export const addEditableCourse = server$(async function (
 });
 
 export const getChapters = server$(async function (courseId: string) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content).where(eq(content.index_id, courseId));
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .select()
+    .from(content)
+    .where(eq(content.index_id, courseId));
 });
 
 export const deleteCourse = server$(async function (courseId: string) {
@@ -138,13 +141,15 @@ export const createChapter = server$(async function (
   newChapter: NewContent,
   chapter_order: string[]
 ) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async (tx) => {
-    await tx
-      .update(content_index)
-      .set({ chapter_order, updated_at: getSQLTimeStamp() })
-      .where(eq(content_index.id, newChapter.index_id));
-    return await tx.insert(content).values(newChapter).returning();
-  });
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(
+    async (tx) => {
+      await tx
+        .update(content_index)
+        .set({ chapter_order, updated_at: getSQLTimeStamp() })
+        .where(eq(content_index.id, newChapter.index_id));
+      return await tx.insert(content).values(newChapter).returning();
+    }
+  );
 });
 
 export const saveChapter = server$(async function (newChapter: Content) {
@@ -1371,7 +1376,6 @@ export default component$(
                                   >
                                     Delete Course
                                   </button>
-
                                 </div>
                               </div>
                             )

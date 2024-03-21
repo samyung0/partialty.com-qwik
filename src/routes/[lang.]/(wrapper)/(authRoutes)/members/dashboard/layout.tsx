@@ -10,11 +10,15 @@ import { content_user_progress } from "../../../../../../../drizzle_turso/schema
 import { tag } from "../../../../../../../drizzle_turso/schema/tag";
 
 export const useTagLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .select()
+    .from(tag);
 });
 
 export const useCategoryLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content_category);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .select()
+    .from(content_category);
 });
 
 export const useDBLoader = routeLoader$(async (event) => {

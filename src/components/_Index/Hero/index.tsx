@@ -56,11 +56,11 @@ export default component$(() => {
   let blankCharSum = 0,
     currentCharWithoutNewLine = typeWriter.currentChar + 1;
   return (
-    <section class="relative h-[100vh] bg-sea 2xl:bg-background-light-gray 2xl:after:absolute 2xl:after:right-0 2xl:after:top-0 2xl:after:z-0 2xl:after:h-[100%] 2xl:after:w-[70%] 2xl:after:bg-sea">
-      <div class="absolute z-[100] block w-full 2xl:hidden">
+    <section class="relative flex min-h-[100vh] flex-col bg-sea 2xl:bg-background-light-gray 2xl:after:absolute 2xl:after:right-0 2xl:after:top-0 2xl:after:z-0 2xl:after:h-[100%] 2xl:after:w-[70%] 2xl:after:bg-sea">
+      <div class=" z-[100] block w-full 2xl:hidden">
         <Nav disableTheme />
       </div>
-      <div class="relative z-10 flex h-[100vh] flex-col items-center justify-center pt-12 md:pt-0 2xl:flex-row">
+      <div class="relative z-10 flex flex-col items-center justify-center pb-12 md:pt-0 2xl:flex-row">
         <div class=" flex items-center justify-center overflow-auto [order:1] xl:w-[50%] 2xl:justify-end 2xl:pr-[6vw] 2xl:[order:0]">
           <div class="relative flex h-[300px] w-[500px] max-w-[95vw] items-start justify-stretch overflow-auto bg-code-editor-one-dark-pro p-4 shadow-2xl lg:h-[400px] lg:w-[600px] lg:p-8">
             <div dangerouslySetInnerHTML={codeDisplay.value}></div>
@@ -106,16 +106,16 @@ export default component$(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-col items-center justify-center px-2 pt-0 [order:0] lg:pt-12 xl:w-[50%]  xl:pt-0 2xl:items-start 2xl:[order:1]">
+        <div class="flex flex-col items-center justify-center px-2 pt-0 [order:0] xl:w-[50%]  xl:pt-0 2xl:items-start 2xl:[order:1]">
           <h1>
             <Link
               href="/"
-              class="font-mosk text-[1.5rem] font-[900] leading-[3rem] lg:text-[2rem] lg:leading-[3.5rem]"
+              class="font-mosk text-[1.5rem] font-[900] leading-[3rem] xl:text-[2rem] xl:leading-[3.5rem]"
             >
               Partialty.com
             </Link>
           </h1>
-          <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] lg:pb-8 lg:text-[2.5rem] lg:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
+          <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] xl:pb-8 xl:text-[2.5rem] xl:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
             Learn{" "}
             <span class="relative inline-block p-1">
               <span

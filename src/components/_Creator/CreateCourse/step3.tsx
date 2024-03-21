@@ -15,7 +15,10 @@ import type { NewTag } from "../../../../drizzle_turso/schema/tag";
 
 const checkExistingCourseFromCategory = server$(async function (id: string) {
   return (
-    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content_category).where(eq(content_category.id, id))
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+      .select()
+      .from(content_category)
+      .where(eq(content_category.id, id))
   )[0].content_index_id;
 });
 
@@ -27,7 +30,10 @@ const deleteCategoryAction = server$(async function (id: string) {
 });
 
 const addCategoryAction = server$(async function (formData: NewTag) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").insert(content_category).values(formData).returning();
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .insert(content_category)
+    .values(formData)
+    .returning();
 });
 
 const checkExistingCategory = server$(async function (slug: string) {

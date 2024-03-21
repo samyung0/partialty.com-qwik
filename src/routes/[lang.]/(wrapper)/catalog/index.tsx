@@ -1,10 +1,4 @@
-import {
-  component$,
-  noSerialize,
-  useComputed$,
-  useSignal,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { component$, useComputed$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { LuGem, LuRocket, LuTags } from "@qwikest/icons/lucide";

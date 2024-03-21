@@ -43,14 +43,13 @@ export default component$(
             {generatedCode.value && (
               <p class="font-mosk text-xl font-bold tracking-widest">{generatedCode.value}</p>
             )}
-            {generatedCode.value && (
-              <p class="text-base">The code is valid for 30 minutes.</p>
-            )}
+            {generatedCode.value && <p class="text-base">The code is valid for 30 minutes.</p>}
           </div>
           <p class="max-w-[280px] pt-4 text-center text-sm md:max-w-[400px] md:pt-6 md:text-base">
             Anyone with this code can view and edit your courses. If you don't want other people to
             edit the course, <span class="border-b-4 border-tomato dark:border-pink">lock</span> the
-            course before sharing the code. <br /><br />
+            course before sharing the code. <br />
+            <br />
             You CANNOT revoke the access later.
           </p>
         </div>

@@ -13,16 +13,26 @@ import type { NewTag, Tag } from "../../../../drizzle_turso/schema/tag";
 import { tag } from "../../../../drizzle_turso/schema/tag";
 
 const checkExistingCourseFromTag = server$(async function (id: string) {
-  return (await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag).where(eq(tag.id, id)))[0]
-    .content_index_id;
+  return (
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+      .select()
+      .from(tag)
+      .where(eq(tag.id, id))
+  )[0].content_index_id;
 });
 
 const deleteTagAction = server$(async function (id: string) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").delete(tag).where(eq(tag.id, id)).returning();
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .delete(tag)
+    .where(eq(tag.id, id))
+    .returning();
 });
 
 const addTagAction = server$(async function (formData: NewTag) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").insert(tag).values(formData).returning();
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .insert(tag)
+    .values(formData)
+    .returning();
 });
 
 const checkExistingTag = server$(async function (slug: string) {

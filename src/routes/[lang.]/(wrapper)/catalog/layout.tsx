@@ -36,7 +36,10 @@ export const useCategories = routeLoader$(async (event) => {
 });
 
 export const useTags = routeLoader$(async (event) => {
-  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag).where(eq(tag.approved, true));
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .select()
+    .from(tag)
+    .where(eq(tag.approved, true));
 });
 
 export default component$(() => <Slot />);
