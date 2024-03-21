@@ -132,6 +132,7 @@ export default component$(() => {
                     (bioError.nickname || bioError.wrongInfo ? "border-tomato" : "border-black/10")
                   }
                   value={formData.nickname}
+                  type="text"
                   onInput$={(e, eventTarget) => (formData.nickname = eventTarget.value)}
                 />
                 <p class="pt-1 text-xs tracking-wide text-tomato lg:text-sm">

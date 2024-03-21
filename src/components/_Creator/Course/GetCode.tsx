@@ -23,15 +23,16 @@ export const generateContentShareToken = server$(async function (contentId: stri
     });
     if (reusableStoredToken) return reusableStoredToken.id;
   }
-  const token = generateRandomString(7);
+  const token = generateRandomString(6).toUpperCase();
 
-  // await drizzleClient(this.env)
-  //   .insert(content_share_token)
-  //   .values({
-  //     id: token,
-  //     expires: BigInt(new Date().getTime() + EXPIRES_IN),
-  //     index_id: contentId,
-  //   });
+  await drizzleClient(this.env)
+    .insert(content_share_token)
+    .values({
+      id: token,
+      expires: BigInt(new Date().getTime() + EXPIRES_IN),
+      index_id: contentId,
+    })
+    .returning();
 
   return token;
 });
