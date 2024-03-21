@@ -9,7 +9,7 @@ import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../drizzle_turso/schema/profiles";
 
 const getCustomerId = server$(async function (userId: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({
       customerId: profiles.stripe_id,
     })

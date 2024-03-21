@@ -27,7 +27,7 @@ const saveProgressServer = server$(async function (
   userId: string,
   notFinished: boolean
 ) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content_user_progress)
     .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
     .where(

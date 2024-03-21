@@ -19,7 +19,7 @@ export const useCanResetPasswordLoader = routeLoader$<[boolean, string]>(async (
   const emailKey = keys.filter((key) => key.providerId === "email");
   const hash =
     (
-      await drizzleClient(requestEvent.env)
+      await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1")
         .select({ hashed_password: user_key.hashed_password })
         .from(user_key)
         .where(eq(user_key.user_id, user.userId))

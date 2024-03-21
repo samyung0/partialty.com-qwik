@@ -130,7 +130,7 @@ const handleCourseUpdate = server$(async function (
   prevCategory: ContentCategory | undefined,
   prevTags: Tag[]
 ) {
-  return await drizzleClient(this.env).transaction(async (tx) => {
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async (tx) => {
     if (category && course.category !== category.id) courseApproval.added_categories = null;
     if (course.tags && courseApproval.added_tags) {
       for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {

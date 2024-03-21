@@ -15,30 +15,30 @@ import type { NewTag } from "../../../../drizzle_turso/schema/tag";
 
 const checkExistingCourseFromCategory = server$(async function (id: string) {
   return (
-    await drizzleClient(this.env).select().from(content_category).where(eq(content_category.id, id))
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content_category).where(eq(content_category.id, id))
   )[0].content_index_id;
 });
 
 const deleteCategoryAction = server$(async function (id: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .delete(content_category)
     .where(eq(content_category.id, id))
     .returning();
 });
 
 const addCategoryAction = server$(async function (formData: NewTag) {
-  return await drizzleClient(this.env).insert(content_category).values(formData).returning();
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").insert(content_category).values(formData).returning();
 });
 
 const checkExistingCategory = server$(async function (slug: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({ id: content_category.id })
     .from(content_category)
     .where(and(eq(content_category.slug, slug), eq(content_category.approved, true)));
 });
 
 const checkExistingCategoryLink = server$(async function (link: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({ id: content_category.id })
     .from(content_category)
     .where(and(eq(content_category.link, link), eq(content_category.approved, true)));

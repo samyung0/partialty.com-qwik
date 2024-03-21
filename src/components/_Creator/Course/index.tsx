@@ -26,7 +26,7 @@ import {
 import { and, eq } from "drizzle-orm";
 
 import { isServer } from "@builder.io/qwik/build";
-import { generateRandomString } from "lucia/utils";
+import { generateRandomString, isWithinExpiration } from "lucia/utils";
 import verifyContentShareToken from "~/auth/verifyContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
 import AddChapter from "~/components/_Creator/Course/AddChapter";
@@ -45,37 +45,45 @@ import { course_approval } from "../../../../drizzle_turso/schema/course_approva
 import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
+import tursoClient from "~/utils/tursoClient";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateToken = server$(async function (contentId: string) {
-  // const storedUserTokens = await drizzleClient(this.env)
-  //   .select()
-  //   .from(content_share_token)
-  //   .where(eq(content_share_token.index_id, contentId));
-  // if (storedUserTokens.length > 0) {
-  //   const reusableStoredToken = storedUserTokens.find((token) => {
-  //     // check if expiration is within 15 minutes
-  //     // and reuse the token if true
-  //     return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
-  //   });
-  //   await Promise.allSettled(
-  //     storedUserTokens
-  //       .filter((token) => token.id !== reusableStoredToken?.id || "")
-  //       .map(async (token) => {
-  //         await drizzleClient(this.env)
-  //           .delete(content_share_token)
-  //           .where(eq(content_share_token.id, token.id));
-  //       })
-  //   );
-  //   if (reusableStoredToken) return reusableStoredToken.id;
-  // }
+  const storedUserTokens = await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    .select()
+    .from(content_share_token)
+    .where(eq(content_share_token.index_id, contentId));
+  if (storedUserTokens.length > 0) {
+    const reusableStoredToken = storedUserTokens.find((token) => {
+      // check if expiration is within 15 minutes
+      // and reuse the token if true
+      return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+    });
+    await Promise.allSettled(
+      storedUserTokens
+        .filter((token) => token.id !== reusableStoredToken?.id || "")
+        .map(async (token) => {
+          await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+            .delete(content_share_token)
+            .where(eq(content_share_token.id, token.id));
+        })
+    );
+    if (reusableStoredToken) return reusableStoredToken.id;
+  }
   const token = generateRandomString(6).toUpperCase();
-  await drizzleClient(this.env).transaction(async (tx) => {
-    await tx.insert(content_share_token).values({
-      id: token,
-      expires: BigInt(new Date().getTime() + EXPIRES_IN),
-      index_id: contentId,
-    }).returning();
+  // await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async (tx) => {
+  //   await tx.insert(content_share_token).values({
+  //     id: token,
+  //     expires: BigInt(new Date().getTime() + EXPIRES_IN),
+  //     index_id: contentId,
+  //   }).returning();
+  // });
+  
+  // idk why i cant use drizzle, it returns cannot read from undefined (reading from) in prod mode
+  const client = tursoClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1");
+  await client.execute({
+    sql: "INSERT INTO content_share_token (id, index_id, expires) VALUES (?, ?, ?)",
+    args: [token, contentId, BigInt(new Date().getTime() + EXPIRES_IN)],
   });
 
   return token;
@@ -89,7 +97,7 @@ export const addEditableCourse = server$(async function (
 ) {
   try {
     const contentId = await verifyContentShareToken(this.env, code);
-    await drizzleClient(this.env)
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .update(profiles)
       .set({
         accessible_courses: JSON.stringify([...accessible_courses, contentId]),
@@ -103,15 +111,15 @@ export const addEditableCourse = server$(async function (
 });
 
 export const getChapters = server$(async function (courseId: string) {
-  return await drizzleClient(this.env).select().from(content).where(eq(content.index_id, courseId));
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content).where(eq(content.index_id, courseId));
 });
 
 export const deleteCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content_index)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content_index.id, courseId));
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content.index_id, courseId));
@@ -119,7 +127,7 @@ export const deleteCourse = server$(async function (courseId: string) {
 });
 
 export const deleteChapter = server$(async function (chapterId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content.id, chapterId));
@@ -130,7 +138,7 @@ export const createChapter = server$(async function (
   newChapter: NewContent,
   chapter_order: string[]
 ) {
-  return await drizzleClient(this.env).transaction(async (tx) => {
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async (tx) => {
     await tx
       .update(content_index)
       .set({ chapter_order, updated_at: getSQLTimeStamp() })
@@ -140,7 +148,7 @@ export const createChapter = server$(async function (
 });
 
 export const saveChapter = server$(async function (newChapter: Content) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content)
     .set(newChapter)
     .where(eq(content.id, newChapter.id))
@@ -148,7 +156,7 @@ export const saveChapter = server$(async function (newChapter: Content) {
 });
 
 export const checkExistingChapter = server$(async function (slug: string, courseId: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({ id: content.id })
     .from(content)
     .where(
@@ -157,7 +165,7 @@ export const checkExistingChapter = server$(async function (slug: string, course
 });
 
 export const checkExistingChapterLink = server$(async function (link: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({ id: content.id })
     .from(content)
     .where(and(eq(content.link, link), eq(content.is_deleted, false)));
@@ -181,49 +189,49 @@ export const addCategorySchema = z.object({
 });
 
 export const publishCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(course_approval)
     .set({ ready_for_approval: true, updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
 export const amendCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(course_approval)
     .set({ status: "pending", updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
 export const unpublishCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(course_approval)
     .set({ ready_for_approval: false, status: "pending", updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
 export const unlockChapter = server$(async function (chapterId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content)
     .set({ is_locked: false })
     .where(eq(content.id, chapterId));
 });
 
 export const lockChapter = server$(async function (chapterId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content)
     .set({ is_locked: true })
     .where(eq(content.id, chapterId));
 });
 
 export const unlockCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content_index)
     .set({ is_locked: false })
     .where(eq(content_index.id, courseId));
 });
 
 export const lockCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env)
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .update(content_index)
     .set({ is_locked: true })
     .where(eq(content_index.id, courseId));

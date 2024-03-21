@@ -29,7 +29,7 @@ import drizzleClient from "~/utils/drizzleClient";
 export { getChapters };
 
 const getChapterSingle = server$(async function (chapterId: string) {
-  return await drizzleClient(this.env).select().from(content).where(eq(content.id, chapterId));
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content).where(eq(content.id, chapterId));
 });
 
 export default component$(

@@ -5,7 +5,7 @@ import drizzleClient from "~/utils/drizzleClient";
 import { content_share_token } from "../../drizzle_turso/schema/content_share_token";
 
 export default async (env: RequestEventBase["env"], token: string) => {
-  const drizzle = drizzleClient(env);
+  const drizzle = drizzleClient(env, import.meta.env.VITE_USE_PROD_DB === "1");
   const storedToken = await drizzle.transaction(async (trx) => {
     const storedToken = await trx
       .select()

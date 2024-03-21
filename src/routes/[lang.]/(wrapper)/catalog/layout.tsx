@@ -15,7 +15,7 @@ export const onRequest: RequestHandler = ({ env, cacheControl }) => {
 };
 
 export const useCourseLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env)
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select()
     .from(content_index)
     .innerJoin(course_approval, eq(course_approval.course_id, content_index.id))
@@ -29,14 +29,14 @@ export const useCourseLoader = routeLoader$(async (event) => {
 });
 
 export const useCategories = routeLoader$(async (event) => {
-  return await drizzleClient(event.env)
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select()
     .from(content_category)
     .where(eq(content_category.approved, true));
 });
 
 export const useTags = routeLoader$(async (event) => {
-  return await drizzleClient(event.env).select().from(tag).where(eq(tag.approved, true));
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag).where(eq(tag.approved, true));
 });
 
 export default component$(() => <Slot />);

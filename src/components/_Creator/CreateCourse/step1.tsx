@@ -9,7 +9,7 @@ import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_i
 import { content_index } from "../../../../drizzle_turso/schema/content_index";
 
 const checkExistingCourse = server$(async function (slug: string) {
-  return await drizzleClient(this.env)
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({ id: content_index.id })
     .from(content_index)
     .where(and(eq(content_index.slug, slug), eq(content_index.is_deleted, false)));

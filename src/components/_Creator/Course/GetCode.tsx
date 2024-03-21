@@ -7,7 +7,7 @@ import { generateToken } from "~/components/_Creator/Course";
 
 // const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 // export const generateToken = server$(async function (contentId: string) {
-//   const storedUserTokens = await drizzleClient(this.env)
+//   const storedUserTokens = await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
 //     .select()
 //     .from(content_share_token)
 //     .where(eq(content_share_token.index_id, contentId));
@@ -21,7 +21,7 @@ import { generateToken } from "~/components/_Creator/Course";
 //       storedUserTokens
 //         .filter((token) => token.id !== reusableStoredToken?.id || "")
 //         .map(async (token) => {
-//           await drizzleClient(this.env)
+//           await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
 //             .delete(content_share_token)
 //             .where(eq(content_share_token.id, token.id));
 //         })
@@ -29,7 +29,7 @@ import { generateToken } from "~/components/_Creator/Course";
 //     if (reusableStoredToken) return reusableStoredToken.id;
 //   }
 //   const token = generateRandomString(6).toUpperCase();
-//   await drizzleClient(this.env)
+//   await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
 //     .insert(content_share_token)
 //     .values({
 //       id: token,

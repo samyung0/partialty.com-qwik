@@ -45,11 +45,11 @@ export const useUserLoaderNullable = routeLoader$(async (event) => {
 });
 
 export const useTagLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env).select().from(tag);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag);
 });
 
 export const useCategoryLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env).select().from(content_category);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content_category);
 });
 
 export const useCourseLoader = routeLoader$(async (event) => {
@@ -57,7 +57,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
 
   const courseSlug = event.params.courseSlug;
   const course = (
-    await drizzleClient(event.env)
+    await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select()
       .from(content_index)
       .where(and(eq(content_index.slug, courseSlug), eq(content_index.is_deleted, false)))
@@ -74,7 +74,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, "/notfound/");
-  const chapters = await drizzleClient(event.env)
+  const chapters = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select({
       id: content.id,
       name: content.name,

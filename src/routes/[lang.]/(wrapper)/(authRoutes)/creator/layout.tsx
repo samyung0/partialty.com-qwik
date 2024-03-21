@@ -6,11 +6,11 @@ import { content_category } from "../../../../../../drizzle_turso/schema/content
 import { tag } from "../../../../../../drizzle_turso/schema/tag";
 
 export const useTags = routeLoader$(async (event) => {
-  return await drizzleClient(event.env).select().from(tag);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(tag);
 });
 
 export const useCategories = routeLoader$(async (event) => {
-  return await drizzleClient(event.env).select().from(content_category);
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(content_category);
 });
 
 export default component$(() => {

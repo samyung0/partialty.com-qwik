@@ -34,7 +34,7 @@ export const useSetBio = globalAction$(async function (data, event) {
       return event.fail(500, { message: "Unable to upload avatar! Please try again later" });
     }
   }
-  const drizzle = drizzleClient(event.env);
+  const drizzle = drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
   try {
     await drizzle
       .update(profiles)

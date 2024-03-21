@@ -66,7 +66,7 @@ export const useCurrentChapter = routeLoader$(async (event) => {
     ret.subscriptionNeeded = true;
   else {
     const chapter = (
-      await drizzleClient(event.env)
+      await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
         .select()
         .from(content)
         .where(eq(content.id, currentChapterFiltered.id))
@@ -89,7 +89,7 @@ export const useDBLoader = routeLoader$(async (event) => {
   let newUserProgress: ContentUserProgress | null = course.content_user_progress;
   if (!course.content_user_progress)
     newUserProgress = (
-      await drizzleClient(event.env)
+      await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
         .insert(content_user_progress)
         .values({
           id: v4(),

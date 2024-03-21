@@ -50,14 +50,14 @@ export const useAccessibleCourseWriteResolved = routeLoader$(async (event) => {
     course_approval: CourseApproval;
   }[] = [];
   if (accessibleCourseWrite.length === 1 && accessibleCourseWrite[0] === "*") {
-    courses = await drizzleClient(event.env)
+    courses = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select()
       .from(content_index)
       .where(not(eq(content_index.is_deleted, true)))
       .innerJoin(profiles, eq(profiles.id, content_index.author))
       .innerJoin(course_approval, eq(course_approval.course_id, content_index.id));
   } else
-    courses = await drizzleClient(event.env)
+    courses = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select()
       .from(content_index)
       .where(

@@ -7,7 +7,7 @@ import { profiles } from "../../../drizzle_turso/schema/profiles";
 export default server$(async function (userId: string) {
   if (this.cookie.get("github_access_token")) return this.cookie.get("github_access_token")!.value;
   const installationId = (
-    await drizzleClient(this.env)
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select({ github_installation_id: profiles.github_installation_id })
       .from(profiles)
       .where(eq(profiles.id, userId))

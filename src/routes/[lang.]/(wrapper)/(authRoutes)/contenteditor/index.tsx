@@ -38,7 +38,7 @@ export const fetchAudioServer = server$(async function (id: string) {
     .then((res) => res.json())
     .catch((e) => console.error(e))) as any;
   const filename = (
-    await drizzleClient(this.env)
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select({ filename: mux_assets.name })
       .from(mux_assets)
       .where(eq(mux_assets.id, id))
@@ -66,11 +66,11 @@ const saveContentServer = server$(async function (
     };
     contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
     contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
-    await drizzleClient(this.env)
+    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .update(content_index)
       .set({ updated_at: getSQLTimeStamp() })
       .where(eq(content_index.id, courseId));
-    return await drizzleClient(this.env)
+    return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .update(content)
       .set(contentVal)
       .where(eq(content.id, chapterId))
@@ -106,8 +106,8 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
     .catch((e) => console.error(e));
   const userMuxAssets =
     user.role === "admin"
-      ? await drizzleClient(requestEvent.env).select().from(mux_assets)
-      : await drizzleClient(requestEvent.env)
+      ? await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1").select().from(mux_assets)
+      : await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1")
           .select()
           .from(mux_assets)
           .where(eq(mux_assets.user_id, user.userId));

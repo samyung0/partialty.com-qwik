@@ -19,12 +19,12 @@ export const useLoader = routeLoader$(async (event) => {
   if (!accessible_courses.includes(id) && user.role !== "admin")
     throw event.redirect(302, "/unauth/");
   try {
-    const course = await drizzleClient(event.env)
+    const course = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select()
       .from(content_index)
       .where(eq(content_index.id, id));
     if (!course[0]) throw event.redirect(302, "/notfound/");
-    const approval = await drizzleClient(event.env)
+    const approval = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
       .select()
       .from(course_approval)
       .where(eq(course_approval.course_id, course[0].id));

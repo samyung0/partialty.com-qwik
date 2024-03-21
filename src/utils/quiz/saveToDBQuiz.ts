@@ -7,7 +7,7 @@ import { content_user_quiz } from "../../../drizzle_turso/schema/content_user_qu
 export default $(
   async (isCorrect: boolean, userId: string, course_id: string, chapter_id: string) => {
     const server = server$(async function (isCorrect: boolean) {
-      await drizzleClient(this.env).transaction(async (tx) => {
+      await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async (tx) => {
         const recordExists = await tx
           .select()
           .from(content_user_quiz)

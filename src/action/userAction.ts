@@ -15,7 +15,7 @@ export const useUpdateProfile = globalAction$(async (data, requestEvent) => {
   try {
     const newAvatarUrl = await cloudinaryUpload(secure_url, requestEvent);
 
-    const drizzle = drizzleClient(requestEvent.env);
+    const drizzle = drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1");
     await drizzle
       .update(profiles)
       .set({ nickname: nickname, avatar_url: newAvatarUrl.secure_url })
