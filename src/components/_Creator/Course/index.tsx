@@ -26,6 +26,7 @@ import {
 import { and, eq } from "drizzle-orm";
 
 import { isServer } from "@builder.io/qwik/build";
+import { generateRandomString } from "lucia/utils";
 import verifyContentShareToken from "~/auth/verifyContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
 import AddChapter from "~/components/_Creator/Course/AddChapter";
@@ -38,13 +39,12 @@ import type { Content, NewContent } from "../../../../drizzle_turso/schema/conte
 import { content } from "../../../../drizzle_turso/schema/content";
 import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
 import { content_index, type ContentIndex } from "../../../../drizzle_turso/schema/content_index";
+import { content_share_token } from "../../../../drizzle_turso/schema/content_share_token";
 import type { CourseApproval } from "../../../../drizzle_turso/schema/course_approval";
 import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
 import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profiles";
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
-import { content_share_token } from "../../../../drizzle_turso/schema/content_share_token";
-import { generateRandomString, isWithinExpiration } from "lucia/utils";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateContentShareToken = server$(async function (contentId: string) {
@@ -70,13 +70,13 @@ export const generateContentShareToken = server$(async function (contentId: stri
   //   if (reusableStoredToken) return reusableStoredToken.id;
   // }
   const token = generateRandomString(6).toUpperCase();
-  await drizzleClient(this.env)
-    .insert(content_share_token)
-    .values({
+  await drizzleClient(this.env).transaction(async (tx) => {
+    await tx.insert(content_share_token).values({
       id: token,
       expires: BigInt(new Date().getTime() + EXPIRES_IN),
       index_id: contentId,
     });
+  });
 
   return token;
 });
