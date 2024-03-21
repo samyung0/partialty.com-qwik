@@ -1,10 +1,8 @@
 import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
-import { IoCaretDown } from "@qwikest/icons/ionicons";
 import { LuHome } from "@qwikest/icons/lucide";
 import LoadingSVG from "~/components/LoadingSVG";
-import NavCourses from "~/components/NavCourses";
 import getUser from "~/components/_Index/Nav/getUser";
 
 export { getUser };
@@ -36,20 +34,22 @@ export default component$(() => {
             </span>
           </Link>
         </li>
-        <li class="relative px-6 py-2 [&:hover>div]:flex [&:hover_span:last-child]:rotate-180">
+        <li class="py- relative px-6">
           <div class={"flex gap-2"}>
-            <span>Courses</span>
-            <span
+            <Link prefetch href={"/catalog/"}>
+              Courses
+            </Link>
+            {/* <span
               class={
                 "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform"
               }
             >
               <IoCaretDown />
-            </span>
+            </span> */}
           </div>
-          <div class="absolute left-[50%] top-[100%] z-[100] hidden w-[600px] -translate-x-[50%] pt-3">
+          {/* <div class="absolute left-[50%] top-[100%] z-[100] hidden w-[600px] -translate-x-[50%] pt-3">
             {NavCourses}
-          </div>
+          </div> */}
         </li>
         <li class="px-2 py-2">
           <Link prefetch href={"/"}>
