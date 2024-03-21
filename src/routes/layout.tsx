@@ -1,4 +1,4 @@
-import { Slot, component$, useContextProvider, useStore } from "@builder.io/qwik";
+import { Slot, component$, useContextProvider, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
 
@@ -7,13 +7,22 @@ import { themeContext } from "~/context/themeContext";
 
 export const useTheme = routeLoader$((event) => {
   const userTheme = event.cookie.get("theme")?.value as (typeof theme)[number] | undefined;
-  return userTheme ?? "light";
+  return userTheme ?? "default";
 });
 
 export default component$(() => {
   const theme = useTheme().value;
   const themeStore = useStore({ value: theme });
   useContextProvider(themeContext, themeStore);
+
+  useVisibleTask$(() => {
+    if (
+      window.matchMedia("(prefers-color-scheme: dark)").matches &&
+      themeStore.value === "default"
+    ) {
+      themeStore.value = "dark";
+    }
+  });
 
   return (
     <>
