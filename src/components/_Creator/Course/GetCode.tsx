@@ -21,6 +21,15 @@ export const generateContentShareToken = server$(async function (contentId: stri
       // and reuse the token if true
       return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
     });
+    await Promise.allSettled(
+      storedUserTokens
+        .filter((token) => token.id !== reusableStoredToken?.id || "")
+        .map(async (token) => {
+          await drizzleClient(this.env)
+            .delete(content_share_token)
+            .where(eq(content_share_token.id, token.id));
+        })
+    );
     if (reusableStoredToken) return reusableStoredToken.id;
   }
   const token = generateRandomString(6).toUpperCase();
