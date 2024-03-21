@@ -1352,15 +1352,6 @@ export default component$(
                                     </>
                                   )}
                                 <div class="flex w-full flex-col items-start justify-start gap-3 lg:flex-row lg:items-center">
-                                  <button
-                                    onClick$={() => {
-                                      handleDeleteContentIndex(currentCourse.id);
-                                    }}
-                                    class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
-                                  >
-                                    Delete Course
-                                  </button>
-
                                   {user.userId === courses[currentCourse.id].profile.id && (
                                     <button
                                       onClick$={() => {
@@ -1372,6 +1363,15 @@ export default component$(
                                       Get Shareable Code
                                     </button>
                                   )}
+                                  <button
+                                    onClick$={() => {
+                                      handleDeleteContentIndex(currentCourse.id);
+                                    }}
+                                    class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"
+                                  >
+                                    Delete Course
+                                  </button>
+
                                 </div>
                               </div>
                             )

@@ -5,41 +5,6 @@ import { LuX } from "@qwikest/icons/lucide";
 import LoadingSVG from "~/components/LoadingSVG";
 import { generateToken } from "~/components/_Creator/Course";
 
-// const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
-// export const generateToken = server$(async function (contentId: string) {
-//   const storedUserTokens = await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
-//     .select()
-//     .from(content_share_token)
-//     .where(eq(content_share_token.index_id, contentId));
-//   if (storedUserTokens.length > 0) {
-//     const reusableStoredToken = storedUserTokens.find((token) => {
-//       // check if expiration is within 15 minutes
-//       // and reuse the token if true
-//       return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
-//     });
-//     await Promise.allSettled(
-//       storedUserTokens
-//         .filter((token) => token.id !== reusableStoredToken?.id || "")
-//         .map(async (token) => {
-//           await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
-//             .delete(content_share_token)
-//             .where(eq(content_share_token.id, token.id));
-//         })
-//     );
-//     if (reusableStoredToken) return reusableStoredToken.id;
-//   }
-//   const token = generateRandomString(6).toUpperCase();
-//   await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
-//     .insert(content_share_token)
-//     .values({
-//       id: token,
-//       expires: BigInt(new Date().getTime() + EXPIRES_IN),
-//       index_id: contentId,
-//     });
-
-//   return token;
-// });
-
 export default component$(
   ({ showGetCode, contentId }: { showGetCode: Signal<boolean>; contentId: string }) => {
     const isGeneratingCode = useSignal(false);
@@ -78,11 +43,14 @@ export default component$(
             {generatedCode.value && (
               <p class="font-mosk text-xl font-bold tracking-widest">{generatedCode.value}</p>
             )}
+            {generatedCode.value && (
+              <p class="text-base">The code is valid for 30 minutes.</p>
+            )}
           </div>
           <p class="max-w-[280px] pt-4 text-center text-sm md:max-w-[400px] md:pt-6 md:text-base">
             Anyone with this code can view and edit your courses. If you don't want other people to
             edit the course, <span class="border-b-4 border-tomato dark:border-pink">lock</span> the
-            course before sharing the code. <br />
+            course before sharing the code. <br /><br />
             You CANNOT revoke the access later.
           </p>
         </div>
