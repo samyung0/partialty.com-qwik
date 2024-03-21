@@ -1,48 +1,44 @@
 import type { Signal } from "@builder.io/qwik";
 import { component$, useSignal } from "@builder.io/qwik";
-import { server$ } from "@builder.io/qwik-city";
 import { LuX } from "@qwikest/icons/lucide";
-import { eq } from "drizzle-orm";
-import { generateRandomString, isWithinExpiration } from "lucia/utils";
 // import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
-import drizzleClient from "~/utils/drizzleClient";
-import { content_share_token } from "../../../../drizzle_turso/schema/content_share_token";
+import { generateContentShareToken } from "~/components/_Creator/Course";
 
-const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
-export const generateContentShareToken = server$(async function (contentId: string) {
-  const storedUserTokens = await drizzleClient(this.env)
-    .select()
-    .from(content_share_token)
-    .where(eq(content_share_token.index_id, contentId));
-  if (storedUserTokens.length > 0) {
-    const reusableStoredToken = storedUserTokens.find((token) => {
-      // check if expiration is within 15 minutes
-      // and reuse the token if true
-      return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
-    });
-    await Promise.allSettled(
-      storedUserTokens
-        .filter((token) => token.id !== reusableStoredToken?.id || "")
-        .map(async (token) => {
-          await drizzleClient(this.env)
-            .delete(content_share_token)
-            .where(eq(content_share_token.id, token.id));
-        })
-    );
-    if (reusableStoredToken) return reusableStoredToken.id;
-  }
-  const token = generateRandomString(6).toUpperCase();
-  await drizzleClient(this.env)
-    .insert(content_share_token)
-    .values({
-      id: token,
-      expires: BigInt(new Date().getTime() + EXPIRES_IN),
-      index_id: contentId,
-    });
+// const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
+// export const generateContentShareToken = server$(async function (contentId: string) {
+//   const storedUserTokens = await drizzleClient(this.env)
+//     .select()
+//     .from(content_share_token)
+//     .where(eq(content_share_token.index_id, contentId));
+//   if (storedUserTokens.length > 0) {
+//     const reusableStoredToken = storedUserTokens.find((token) => {
+//       // check if expiration is within 15 minutes
+//       // and reuse the token if true
+//       return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+//     });
+//     await Promise.allSettled(
+//       storedUserTokens
+//         .filter((token) => token.id !== reusableStoredToken?.id || "")
+//         .map(async (token) => {
+//           await drizzleClient(this.env)
+//             .delete(content_share_token)
+//             .where(eq(content_share_token.id, token.id));
+//         })
+//     );
+//     if (reusableStoredToken) return reusableStoredToken.id;
+//   }
+//   const token = generateRandomString(6).toUpperCase();
+//   await drizzleClient(this.env)
+//     .insert(content_share_token)
+//     .values({
+//       id: token,
+//       expires: BigInt(new Date().getTime() + EXPIRES_IN),
+//       index_id: contentId,
+//     });
 
-  return token;
-});
+//   return token;
+// });
 
 export default component$(
   ({ showGetCode, contentId }: { showGetCode: Signal<boolean>; contentId: string }) => {
