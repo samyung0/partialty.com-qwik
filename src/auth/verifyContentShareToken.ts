@@ -13,9 +13,9 @@ export default async (env: RequestEventBase["env"], token: string) => {
       .where(eq(content_share_token.id, token))
       .limit(1);
     if (storedToken.length === 0) throw new Error("Invalid token");
-    await trx
-      .delete(content_share_token)
-      .where(eq(content_share_token.index_id, storedToken[0].index_id));
+    // await trx
+    //   .delete(content_share_token)
+    //   .where(eq(content_share_token.index_id, storedToken[0].index_id));
     return storedToken[0];
   });
   const tokenExpires = Number(storedToken.expires);
