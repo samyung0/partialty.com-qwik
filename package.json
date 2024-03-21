@@ -88,7 +88,6 @@
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0",
     "monaco-editor": "^0.43.0",
-    "netlify-cli": "^15.0.0",
     "pre-commit": "^1.2.2",
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "^3.2.3",
