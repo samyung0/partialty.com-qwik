@@ -75,7 +75,7 @@ export const generateContentShareToken = server$(async function (contentId: stri
       id: token,
       expires: BigInt(new Date().getTime() + EXPIRES_IN),
       index_id: contentId,
-    });
+    }).returning();
   });
 
   return token;
