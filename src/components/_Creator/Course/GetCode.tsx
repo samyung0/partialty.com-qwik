@@ -15,16 +15,15 @@ export const generateContentShareToken = server$(async function (contentId: stri
     .select()
     .from(content_share_token)
     .where(eq(content_share_token.index_id, contentId));
-  return "777777"
-  // if (storedUserTokens.length > 0) {
-  //   const reusableStoredToken = storedUserTokens.find((token) => {
-  //     // check if expiration is within 15 minutes
-  //     // and reuse the token if true
-  //     return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
-  //   });
-  //   if (reusableStoredToken) return reusableStoredToken.id;
-  // }
-  // const token = generateRandomString(7);
+  if (storedUserTokens.length > 0) {
+    const reusableStoredToken = storedUserTokens.find((token) => {
+      // check if expiration is within 15 minutes
+      // and reuse the token if true
+      return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+    });
+    if (reusableStoredToken) return reusableStoredToken.id;
+  }
+  const token = generateRandomString(7);
 
   // await drizzleClient(this.env)
   //   .insert(content_share_token)
@@ -34,7 +33,7 @@ export const generateContentShareToken = server$(async function (contentId: stri
   //     index_id: contentId,
   //   });
 
-  // return token;
+  return token;
 });
 
 export default component$(
