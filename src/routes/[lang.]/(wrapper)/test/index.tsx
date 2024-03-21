@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import { RequestHandler, server$ } from "@builder.io/qwik-city";
 import { generateRandomString } from "lucia/utils";
 import drizzleClient, { initDrizzleIfNeeded } from "~/utils/drizzleClient";
-import { initTursoIfNeeded } from "~/utils/tursoClient";
+import tursoClient, { initTursoIfNeeded } from "~/utils/tursoClient";
 import { content_share_token } from "../../../../../drizzle_turso/schema/content_share_token";
 
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
@@ -34,16 +34,21 @@ export const generateToken = server$(async function (contentId: string) {
   //   if (reusableStoredToken) return reusableStoredToken.id;
   // }
   const token = generateRandomString(6).toUpperCase();
-  await drizzleClient(this.env).transaction(async (tx) => {
-    await tx
-      .insert(content_share_token)
-      .values({
-        id: token,
-        expires: BigInt(new Date().getTime() + EXPIRES_IN),
-        index_id: contentId,
-      })
-      .returning();
+  const client = tursoClient(this.env);
+  await client.execute({
+    sql: "INSERT INTO content_share_token (id, index_id, expires) VALUES (?, ?, ?)",
+    args: [token, contentId, BigInt(new Date().getTime() + EXPIRES_IN)],
   });
+  // await drizzleClient(this.env).transaction(async (tx) => {
+  //   await tx
+  //     .insert(content_share_token)
+  //     .values({
+  //       id: token,
+  //       expires: BigInt(new Date().getTime() + EXPIRES_IN),
+  //       index_id: contentId,
+  //     })
+  //     .returning();
+  // });
 
   return token;
 });
