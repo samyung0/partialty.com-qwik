@@ -48,27 +48,27 @@ import { generateRandomString, isWithinExpiration } from "lucia/utils";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateContentShareToken = server$(async function (contentId: string) {
-  const storedUserTokens = await drizzleClient(this.env)
-    .select()
-    .from(content_share_token)
-    .where(eq(content_share_token.index_id, contentId));
-  if (storedUserTokens.length > 0) {
-    const reusableStoredToken = storedUserTokens.find((token) => {
-      // check if expiration is within 15 minutes
-      // and reuse the token if true
-      return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
-    });
-    await Promise.allSettled(
-      storedUserTokens
-        .filter((token) => token.id !== reusableStoredToken?.id || "")
-        .map(async (token) => {
-          await drizzleClient(this.env)
-            .delete(content_share_token)
-            .where(eq(content_share_token.id, token.id));
-        })
-    );
-    if (reusableStoredToken) return reusableStoredToken.id;
-  }
+  // const storedUserTokens = await drizzleClient(this.env)
+  //   .select()
+  //   .from(content_share_token)
+  //   .where(eq(content_share_token.index_id, contentId));
+  // if (storedUserTokens.length > 0) {
+  //   const reusableStoredToken = storedUserTokens.find((token) => {
+  //     // check if expiration is within 15 minutes
+  //     // and reuse the token if true
+  //     return isWithinExpiration(Number(token.expires) - EXPIRES_IN / 2);
+  //   });
+  //   await Promise.allSettled(
+  //     storedUserTokens
+  //       .filter((token) => token.id !== reusableStoredToken?.id || "")
+  //       .map(async (token) => {
+  //         await drizzleClient(this.env)
+  //           .delete(content_share_token)
+  //           .where(eq(content_share_token.id, token.id));
+  //       })
+  //   );
+  //   if (reusableStoredToken) return reusableStoredToken.id;
+  // }
   const token = generateRandomString(6).toUpperCase();
   await drizzleClient(this.env)
     .insert(content_share_token)
