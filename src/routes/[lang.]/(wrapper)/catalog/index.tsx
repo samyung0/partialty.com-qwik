@@ -72,8 +72,6 @@ export default component$(() => {
     sort: loc.url.searchParams.get("sort") || "difficulty-increasing",
   }));
 
-  console.log(urlStateManager.value.sort);
-
   const coursesDisplay = useComputed$(() =>
     urlStateManager.value.type === "project" || urlStateManager.value.type === "guide"
       ? []
