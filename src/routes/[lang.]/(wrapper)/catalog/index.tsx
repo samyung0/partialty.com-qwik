@@ -9,10 +9,12 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { LuGem, LuRocket, LuTags } from "@qwikest/icons/lucide";
 import Footer from "~/components/Footer";
-import LoadingSVG from "~/components/LoadingSVG";
 import Nav from "~/components/Nav";
 import { useCategories, useCourseLoader, useTags } from "~/routes/[lang.]/(wrapper)/catalog/layout";
+import Masonry from "~/routes/[lang.]/(wrapper)/catalog/masonry";
 import { cn } from "~/utils/cn";
+
+// const Masonry = _Masonry as any;
 
 // import Macy from "macy"
 
@@ -22,39 +24,39 @@ export default component$(() => {
   const tagOpened = useSignal(true);
   const categoryOpened = useSignal(true);
 
-  const container = useSignal<HTMLElement>();
-  const macy = useSignal<any>();
-  const scriptLoaded = useSignal(false);
+  // const container = useSignal<HTMLElement>();
+  // const macy = useSignal<any>();
+  // const scriptLoaded = useSignal(false);
 
   const nav = useNavigate();
   const loc = useLocation();
 
-  useVisibleTask$(() => {
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js";
-    script.async = true;
-    document.head.appendChild(script);
-    script.onload = () => {
-      scriptLoaded.value = true;
-    };
-  });
+  // useVisibleTask$(() => {
+  //   const script = document.createElement("script");
+  //   script.src = "https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js";
+  //   script.async = true;
+  //   document.head.appendChild(script);
+  //   script.onload = () => {
+  //     scriptLoaded.value = true;
+  //   };
+  // });
 
-  useVisibleTask$(({ track }) => {
-    track(container);
-    track(scriptLoaded);
-    if (!container.value || !scriptLoaded.value) return;
-    macy.value = noSerialize(
-      new (window as any).Masonry(container.value, {
-        // container: container.value,
-        // columns: 3,
-        itemSelector: ".item",
-        columnWidth: ".item",
-        percentPosition: true,
-        gutter: 12,
-        stagger: 30,
-      })
-    );
-  });
+  // useVisibleTask$(({ track }) => {
+  //   track(container);
+  //   track(scriptLoaded);
+  //   if (!container.value || !scriptLoaded.value) return;
+  //   macy.value = noSerialize(
+  //     new (window as any).Masonry(container.value, {
+  //       // container: container.value,
+  //       // columns: 3,
+  //       itemSelector: ".item",
+  //       columnWidth: ".item",
+  //       percentPosition: true,
+  //       gutter: 12,
+  //       stagger: 30,
+  //     })
+  //   );
+  // });
 
   const courses = useCourseLoader().value;
   const tags = useTags().value;
@@ -863,76 +865,64 @@ export default component$(() => {
                         </div>
                       </div>
                     </div>
-                    <section
-                      ref={container}
-                      class="h-full w-full py-4 [&_.item]:[margin-bottom:12px]"
-                    >
-                      {scriptLoaded.value && (
-                        <>
-                          {sortedDisplay.value.map((course) => {
-                            return (
-                              <Link
-                                href={course.link || undefined}
-                                key={course.id}
-                                class="item flex w-[100%] cursor-pointer flex-col gap-3 rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 shadow-md hover:shadow-lg dark:border-disabled-dark dark:bg-highlight-dark md:w-[calc(50%-12px)] lg:w-[calc(33%-8px)]"
-                              >
-                                <h3 class="font-mosk text-base font-bold tracking-wide md:text-lg">
-                                  {course.name}
-                                </h3>
-                                <p class="whitespace-pre-line text-sm">
-                                  {course.short_description}
+                    <section class="py-4">
+                      <Masonry client:only>
+                        {sortedDisplay.value.map((course) => {
+                          return (
+                            <Link
+                              href={course.link || undefined}
+                              key={course.id}
+                              class="item flex cursor-pointer flex-col gap-3 rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 shadow-md hover:shadow-lg dark:border-disabled-dark dark:bg-highlight-dark"
+                            >
+                              <h3 class="font-mosk text-base font-bold tracking-wide md:text-lg">
+                                {course.name}
+                              </h3>
+                              <p class="whitespace-pre-line text-sm">{course.short_description}</p>
+                              <div class="flex items-center gap-2">
+                                <span class="-mt-[6px] block text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                                  <LuRocket />
+                                </span>
+                                <p
+                                  class={cn(
+                                    "self-start border-b-2 pb-1",
+                                    course.difficulty === "easy" && "border-sea",
+                                    course.difficulty === "intermediate" && "border-yellow",
+                                    course.difficulty === "advanced" && "border-pink"
+                                  )}
+                                >
+                                  {course.difficulty}
                                 </p>
-                                <div class="flex items-center gap-2">
-                                  <span class="-mt-[6px] block text-[15px] text-primary-dark-gray dark:text-background-light-gray">
-                                    <LuRocket />
+                              </div>
+                              {course.tags && (
+                                <div class="flex items-start gap-2">
+                                  <span class=" block text-[15px] text-primary-dark-gray dark:text-background-light-gray">
+                                    <LuTags />
                                   </span>
-                                  <p
-                                    class={cn(
-                                      "self-start border-b-2 pb-1",
-                                      course.difficulty === "easy" && "border-sea",
-                                      course.difficulty === "intermediate" && "border-yellow",
-                                      course.difficulty === "advanced" && "border-pink"
-                                    )}
-                                  >
-                                    {course.difficulty}
+                                  <p class="flex gap-2 whitespace-pre-wrap break-all">
+                                    {course.tags
+                                      .map((tagId) => tags.find((tag) => tag.id === tagId))
+                                      .filter((x) => x)
+                                      .map((tag) => tag!.name)
+                                      .join(", ")}
                                   </p>
                                 </div>
-                                {course.tags && (
-                                  <div class="flex items-start gap-2">
-                                    <span class=" block text-[15px] text-primary-dark-gray dark:text-background-light-gray">
-                                      <LuTags />
+                              )}
+                              {course.is_premium && (
+                                <div class="flex items-start gap-2">
+                                  <p class="flex items-center gap-2">
+                                    <span class="text-[15px] text-tomato dark:text-pink">
+                                      <LuGem />
                                     </span>
-                                    <p class="flex gap-2 whitespace-pre-wrap break-all">
-                                      {course.tags
-                                        .map((tagId) => tags.find((tag) => tag.id === tagId))
-                                        .filter((x) => x)
-                                        .map((tag) => tag!.name)
-                                        .join(", ")}
-                                    </p>
-                                  </div>
-                                )}
-                                {course.is_premium && (
-                                  <div class="flex items-start gap-2">
-                                    <p class="flex items-center gap-2">
-                                      <span class="text-[15px] text-tomato dark:text-pink">
-                                        <LuGem />
-                                      </span>
-                                      <span class="text-tomato dark:text-pink">
-                                        Subscription Required
-                                      </span>
-                                    </p>
-                                  </div>
-                                )}
-                              </Link>
-                            );
-                          })}
-                        </>
-                      )}
-                      {!scriptLoaded.value && (
-                        <div class="flex h-full items-center justify-center">
-                          <LoadingSVG />
-                        </div>
-                      )}
+                                    <span class="text-tomato dark:text-pink">
+                                      Subscription Required
+                                    </span>
+                                  </p>
+                                </div>
+                              )}
+                            </Link>
+                          );
+                        })}
+                      </Masonry>
                     </section>
                   </div>
                 </div>
