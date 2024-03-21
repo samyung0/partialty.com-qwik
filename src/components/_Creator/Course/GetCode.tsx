@@ -3,10 +3,10 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { LuX } from "@qwikest/icons/lucide";
 // import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
-import { generateContentShareToken } from "~/components/_Creator/Course";
+import { generateToken } from "~/components/_Creator/Course";
 
 // const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
-// export const generateContentShareToken = server$(async function (contentId: string) {
+// export const generateToken = server$(async function (contentId: string) {
 //   const storedUserTokens = await drizzleClient(this.env)
 //     .select()
 //     .from(content_share_token)
@@ -62,7 +62,7 @@ export default component$(
                 if (isGeneratingCode.value) return;
                 isGeneratingCode.value = true;
                 try {
-                  const code = await generateContentShareToken(contentId);
+                  const code = await generateToken(contentId);
                   generatedCode.value = code;
                 } catch (e) {
                   console.error(e);

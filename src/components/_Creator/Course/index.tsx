@@ -47,7 +47,7 @@ import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
-export const generateContentShareToken = server$(async function (contentId: string) {
+export const generateToken = server$(async function (contentId: string) {
   // const storedUserTokens = await drizzleClient(this.env)
   //   .select()
   //   .from(content_share_token)
