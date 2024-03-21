@@ -33,7 +33,9 @@ export const generateContentShareToken = server$(async function (contentId: stri
     if (reusableStoredToken) return reusableStoredToken.id;
   }
   const token = generateRandomString(6).toUpperCase();
-
+  throw new Error(
+    BigInt(new Date().getTime() + EXPIRES_IN).toString() + " " + contentId + " " + token
+  );
   // await drizzleClient(this.env)
   //   .insert(content_share_token)
   //   .values({
