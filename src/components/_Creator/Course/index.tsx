@@ -44,55 +44,56 @@ import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profil
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
 
-export const addEditableCourse = server$(
-  async (
-    code: string,
-    accessible_courses: string[],
-    accessible_courses_read: string[],
-    userId: string
-  ) => {
-    try {
-      const contentId = await verifyContentShareToken(code);
-      await drizzleClient()
-        .update(profiles)
-        .set({
-          accessible_courses: JSON.stringify([...accessible_courses, contentId]),
-          accessible_courses_read: JSON.stringify([...accessible_courses_read, contentId]),
-        })
-        .where(eq(profiles.id, userId));
-      return { success: true, userId };
-    } catch (e) {
-      return { success: false, error: e };
-    }
+export const addEditableCourse = server$(async function (
+  code: string,
+  accessible_courses: string[],
+  accessible_courses_read: string[],
+  userId: string
+) {
+  try {
+    const contentId = await verifyContentShareToken(this.env, code);
+    await drizzleClient(this.env)
+      .update(profiles)
+      .set({
+        accessible_courses: JSON.stringify([...accessible_courses, contentId]),
+        accessible_courses_read: JSON.stringify([...accessible_courses_read, contentId]),
+      })
+      .where(eq(profiles.id, userId));
+    return { success: true, userId };
+  } catch (e) {
+    return { success: false, error: e };
   }
-);
-
-export const getChapters = server$(async (courseId: string) => {
-  return await drizzleClient().select().from(content).where(eq(content.index_id, courseId));
 });
 
-export const deleteCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const getChapters = server$(async function (courseId: string) {
+  return await drizzleClient(this.env).select().from(content).where(eq(content.index_id, courseId));
+});
+
+export const deleteCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(content_index)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content_index.id, courseId));
-  await drizzleClient()
+  await drizzleClient(this.env)
     .update(content)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content.index_id, courseId));
   // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
 });
 
-export const deleteChapter = server$(async (chapterId: string) => {
-  await drizzleClient()
+export const deleteChapter = server$(async function (chapterId: string) {
+  await drizzleClient(this.env)
     .update(content)
     .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
     .where(eq(content.id, chapterId));
   // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
 });
 
-export const createChapter = server$(async (newChapter: NewContent, chapter_order: string[]) => {
-  return await drizzleClient().transaction(async (tx) => {
+export const createChapter = server$(async function (
+  newChapter: NewContent,
+  chapter_order: string[]
+) {
+  return await drizzleClient(this.env).transaction(async (tx) => {
     await tx
       .update(content_index)
       .set({ chapter_order, updated_at: getSQLTimeStamp() })
@@ -101,16 +102,16 @@ export const createChapter = server$(async (newChapter: NewContent, chapter_orde
   });
 });
 
-export const saveChapter = server$(async (newChapter: Content) => {
-  return await drizzleClient()
+export const saveChapter = server$(async function (newChapter: Content) {
+  return await drizzleClient(this.env)
     .update(content)
     .set(newChapter)
     .where(eq(content.id, newChapter.id))
     .returning();
 });
 
-export const checkExistingChapter = server$(async (slug: string, courseId: string) => {
-  return await drizzleClient()
+export const checkExistingChapter = server$(async function (slug: string, courseId: string) {
+  return await drizzleClient(this.env)
     .select({ id: content.id })
     .from(content)
     .where(
@@ -118,8 +119,8 @@ export const checkExistingChapter = server$(async (slug: string, courseId: strin
     );
 });
 
-export const checkExistingChapterLink = server$(async (link: string) => {
-  return await drizzleClient()
+export const checkExistingChapterLink = server$(async function (link: string) {
+  return await drizzleClient(this.env)
     .select({ id: content.id })
     .from(content)
     .where(and(eq(content.link, link), eq(content.is_deleted, false)));
@@ -142,44 +143,50 @@ export const addCategorySchema = z.object({
     .regex(/^\/[a-za-z0-9]+[-/a-za-z0-9]*$/, "No special characters except -/ are allowed"),
 });
 
-export const publishCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const publishCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(course_approval)
     .set({ ready_for_approval: true, updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
-export const amendCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const amendCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(course_approval)
     .set({ status: "pending", updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
-export const unpublishCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const unpublishCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(course_approval)
     .set({ ready_for_approval: false, status: "pending", updated_at: getSQLTimeStamp() })
     .where(eq(course_approval.course_id, courseId));
 });
 
-export const unlockChapter = server$(async (chapterId: string) => {
-  await drizzleClient().update(content).set({ is_locked: false }).where(eq(content.id, chapterId));
+export const unlockChapter = server$(async function (chapterId: string) {
+  await drizzleClient(this.env)
+    .update(content)
+    .set({ is_locked: false })
+    .where(eq(content.id, chapterId));
 });
 
-export const lockChapter = server$(async (chapterId: string) => {
-  await drizzleClient().update(content).set({ is_locked: true }).where(eq(content.id, chapterId));
+export const lockChapter = server$(async function (chapterId: string) {
+  await drizzleClient(this.env)
+    .update(content)
+    .set({ is_locked: true })
+    .where(eq(content.id, chapterId));
 });
 
-export const unlockCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const unlockCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(content_index)
     .set({ is_locked: false })
     .where(eq(content_index.id, courseId));
 });
 
-export const lockCourse = server$(async (courseId: string) => {
-  await drizzleClient()
+export const lockCourse = server$(async function (courseId: string) {
+  await drizzleClient(this.env)
     .update(content_index)
     .set({ is_locked: true })
     .where(eq(content_index.id, courseId));

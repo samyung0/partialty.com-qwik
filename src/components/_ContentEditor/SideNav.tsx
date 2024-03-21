@@ -28,9 +28,9 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 export { getChapters };
 
-const getChapterSingle = server$(async (chapterId: string) =>
-  drizzleClient().select().from(content).where(eq(content.id, chapterId))
-);
+const getChapterSingle = server$(async function (chapterId: string) {
+  return await drizzleClient(this.env).select().from(content).where(eq(content.id, chapterId));
+});
 
 export default component$(
   ({

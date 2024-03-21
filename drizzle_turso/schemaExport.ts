@@ -25,5 +25,5 @@ export default {
   content_category,
   course_approval,
   content_user_progress,
-  content_share_token
+  content_share_token,
 };

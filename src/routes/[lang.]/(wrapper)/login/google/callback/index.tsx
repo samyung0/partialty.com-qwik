@@ -21,8 +21,10 @@ export const onGet: RequestHandler = async (request) => {
   }
 
   try {
-    const { getExistingUser, googleUser, createUser, createKey } =
-      await googleAuth().validateCallback(code);
+    const { getExistingUser, googleUser, createUser, createKey } = await googleAuth(
+      request.env,
+      import.meta.env.VITE_USE_PROD_DB === "1"
+    ).validateCallback(code);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();
@@ -36,7 +38,7 @@ export const onGet: RequestHandler = async (request) => {
       };
 
       if (googleUser.email && googleUser.email_verified) {
-        const drizzle = drizzleClient();
+        const drizzle = drizzleClient(request.env);
         const existingDatabaseUserWithEmail = await drizzle
           .select()
           .from(profiles)
@@ -66,7 +68,7 @@ export const onGet: RequestHandler = async (request) => {
       }
     };
 
-    const Auth = auth();
+    const Auth = auth(request.env, import.meta.env.VITE_USE_PROD_DB === "1");
 
     const user = await getUser();
     const session = await Auth.createSession({

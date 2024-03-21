@@ -16,12 +16,14 @@ export const onRequest: RequestHandler = ({ env, cacheControl }) => {
     noCache: true,
   });
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
   initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
 };
 
 export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = auth().handleRequest(event);
+  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
+    event
+  );
 
   const time1 = performance.now();
   let session: LuciaSession | null = null;

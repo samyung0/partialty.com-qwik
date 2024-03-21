@@ -2,7 +2,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 import { githubAuth } from "~/auth/lucia";
 
 export const onGet: RequestHandler = async (request) => {
-  const GithubAuth = githubAuth();
+  const GithubAuth = githubAuth(request.env, import.meta.env.VITE_USE_PROD_DB === "1");
   const [_, state] = await GithubAuth.getAuthorizationUrl();
   request.cookie.set("github_app_state", state, {
     httpOnly: true,

@@ -11,8 +11,8 @@ export const useLoader = routeLoader$(async (request) => {
   const token = request.params.token;
 
   try {
-    const userId = await verifyEmailTokens(token);
-    const drizzle = drizzleClient();
+    const userId = await verifyEmailTokens(request.env, token);
+    const drizzle = drizzleClient(request.env);
     await drizzle.update(profiles).set({ email_verified: true }).where(eq(profiles.id, userId));
     return { verified: true, userId };
   } catch (e) {

@@ -1,10 +1,11 @@
+import type { RequestEventBase } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
 import { isWithinExpiration } from "lucia/utils";
 import drizzleClient from "~/utils/drizzleClient";
 import { email_verification_token } from "../../drizzle_turso/schema/email_verification_token";
 
-export default async (token: string) => {
-  const drizzle = drizzleClient();
+export default async (env: RequestEventBase["env"], token: string) => {
+  const drizzle = drizzleClient(env);
   const storedToken = await drizzle.transaction(async (trx) => {
     const storedToken = await trx
       .select()

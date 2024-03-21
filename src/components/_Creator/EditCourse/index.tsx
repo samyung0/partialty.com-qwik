@@ -120,89 +120,87 @@ const removeCategoryContentIndex = server$(
   }
 );
 
-const handleCourseUpdate = server$(
-  async (
-    courseApproval: NewCourseApproval,
-    prevCourseApproval: NewCourseApproval,
-    course: ContentIndex,
-    prevCourse: ContentIndex,
-    category: ContentCategory | undefined,
-    tags: Tag[],
-    prevCategory: ContentCategory | undefined,
-    prevTags: Tag[]
-  ) => {
-    return await drizzleClient().transaction(async (tx) => {
-      if (category && course.category !== category.id) courseApproval.added_categories = null;
-      if (course.tags && courseApproval.added_tags) {
-        for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
-          if (!course.tags!.includes(courseApproval.added_tags![i]))
-            courseApproval.added_tags!.splice(i, 1);
-        }
+const handleCourseUpdate = server$(async function (
+  courseApproval: NewCourseApproval,
+  prevCourseApproval: NewCourseApproval,
+  course: ContentIndex,
+  prevCourse: ContentIndex,
+  category: ContentCategory | undefined,
+  tags: Tag[],
+  prevCategory: ContentCategory | undefined,
+  prevTags: Tag[]
+) {
+  return await drizzleClient(this.env).transaction(async (tx) => {
+    if (category && course.category !== category.id) courseApproval.added_categories = null;
+    if (course.tags && courseApproval.added_tags) {
+      for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
+        if (!course.tags!.includes(courseApproval.added_tags![i]))
+          courseApproval.added_tags!.splice(i, 1);
       }
-      await updateCourseApproval(tx, { ...courseApproval, updated_at: getSQLTimeStamp() });
-      if (prevCategory && prevCourseApproval.added_categories !== courseApproval.added_categories) {
-        await deleteCategory(tx, prevCategory);
-      }
+    }
+    await updateCourseApproval(tx, { ...courseApproval, updated_at: getSQLTimeStamp() });
+    if (prevCategory && prevCourseApproval.added_categories !== courseApproval.added_categories) {
+      await deleteCategory(tx, prevCategory);
+    }
+    if (
+      prevCourse.category &&
+      prevCourse.category !== prevCourseApproval.added_categories &&
+      prevCourse.category !== course.category
+    ) {
+      await removeCategoryContentIndex(tx, course.id, prevCourse.category);
+    }
+    if (
+      category &&
+      courseApproval.added_categories &&
+      course.category === category.id &&
+      prevCourseApproval.added_categories !== courseApproval.added_categories
+    ) {
+      await tx.insert(content_category).values(category);
+    }
+    if (
+      course.category &&
+      courseApproval.added_categories !== course.category &&
+      prevCourse.category !== course.category
+    ) {
+      await addCategoryContentIndex(tx, course.id, course.category);
+    }
+    for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
       if (
-        prevCourse.category &&
-        prevCourse.category !== prevCourseApproval.added_categories &&
-        prevCourse.category !== course.category
+        !course.tags!.includes(prevCourseApproval.added_tags![i]) &&
+        prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])
       ) {
-        await removeCategoryContentIndex(tx, course.id, prevCourse.category);
+        await deleteTag(tx, prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])!);
       }
+    }
+    for (let i = 0; i < courseApproval.added_tags!.length; i++) {
       if (
-        category &&
-        courseApproval.added_categories &&
-        course.category === category.id &&
-        prevCourseApproval.added_categories !== courseApproval.added_categories
+        !prevCourseApproval.added_tags!.includes(courseApproval.added_tags![i]) &&
+        tags.find((t) => t.id === courseApproval.added_tags![i])
       ) {
-        await tx.insert(content_category).values(category);
+        await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
       }
+    }
+    for (let i = 0; i < prevCourse.tags!.length; i++) {
       if (
-        course.category &&
-        courseApproval.added_categories !== course.category &&
-        prevCourse.category !== course.category
+        !course.tags!.includes(prevCourse.tags![i]) &&
+        !prevTags.find((t) => t.id === prevCourse.tags![i]) &&
+        !prevCourseApproval.added_tags!.find((t) => t === prevCourse.tags![i])
       ) {
-        await addCategoryContentIndex(tx, course.id, course.category);
+        await removeTagContentIndex(tx, course.id, prevCourse.tags![i]);
       }
-      for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
-        if (
-          !course.tags!.includes(prevCourseApproval.added_tags![i]) &&
-          prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])
-        ) {
-          await deleteTag(tx, prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])!);
-        }
+    }
+    for (let i = 0; i < course.tags!.length; i++) {
+      if (
+        !prevCourse.tags!.includes(course.tags![i]) &&
+        !tags.find((t) => t.id === course.tags![i]) &&
+        !courseApproval.added_tags!.find((t) => t === course.tags![i])
+      ) {
+        await addTagContentIndex(tx, course.id, course.tags![i]);
       }
-      for (let i = 0; i < courseApproval.added_tags!.length; i++) {
-        if (
-          !prevCourseApproval.added_tags!.includes(courseApproval.added_tags![i]) &&
-          tags.find((t) => t.id === courseApproval.added_tags![i])
-        ) {
-          await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
-        }
-      }
-      for (let i = 0; i < prevCourse.tags!.length; i++) {
-        if (
-          !course.tags!.includes(prevCourse.tags![i]) &&
-          !prevTags.find((t) => t.id === prevCourse.tags![i]) &&
-          !prevCourseApproval.added_tags!.find((t) => t === prevCourse.tags![i])
-        ) {
-          await removeTagContentIndex(tx, course.id, prevCourse.tags![i]);
-        }
-      }
-      for (let i = 0; i < course.tags!.length; i++) {
-        if (
-          !prevCourse.tags!.includes(course.tags![i]) &&
-          !tags.find((t) => t.id === course.tags![i]) &&
-          !courseApproval.added_tags!.find((t) => t === course.tags![i])
-        ) {
-          await addTagContentIndex(tx, course.id, course.tags![i]);
-        }
-      }
-      return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
-    });
-  }
-);
+    }
+    return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
+  });
+});
 
 export default component$(() => {
   const user = useUserLoader().value;

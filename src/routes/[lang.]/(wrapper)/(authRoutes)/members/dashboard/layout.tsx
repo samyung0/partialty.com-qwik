@@ -9,18 +9,18 @@ import { content_index } from "../../../../../../../drizzle_turso/schema/content
 import { content_user_progress } from "../../../../../../../drizzle_turso/schema/content_user_progress";
 import { tag } from "../../../../../../../drizzle_turso/schema/tag";
 
-export const useTagLoader = routeLoader$(async () => {
-  return await drizzleClient().select().from(tag);
+export const useTagLoader = routeLoader$(async (event) => {
+  return await drizzleClient(event.env).select().from(tag);
 });
 
-export const useCategoryLoader = routeLoader$(async () => {
-  return await drizzleClient().select().from(content_category);
+export const useCategoryLoader = routeLoader$(async (event) => {
+  return await drizzleClient(event.env).select().from(content_category);
 });
 
 export const useDBLoader = routeLoader$(async (event) => {
   const user = await event.resolveValue(useUserLoader);
 
-  const data = await drizzleClient()
+  const data = await drizzleClient(event.env)
     .select()
     .from(content_user_progress)
     .where(eq(content_user_progress.user_id, user.userId))
@@ -29,7 +29,7 @@ export const useDBLoader = routeLoader$(async (event) => {
       and(eq(content_index.id, content_user_progress.index_id), eq(content_index.is_deleted, false))
     );
 
-  const chapters = await drizzleClient()
+  const chapters = await drizzleClient(event.env)
     .select({ id: content.id, slug: content.slug, name: content.name, link: content.link })
     .from(content)
     .where(

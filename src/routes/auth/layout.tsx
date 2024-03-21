@@ -12,6 +12,6 @@ export const onRequest: RequestHandler = ({ env, url, cacheControl }) => {
   });
 
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
   initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
 };

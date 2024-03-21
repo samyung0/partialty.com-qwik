@@ -24,7 +24,7 @@ export const initTursoIfNeeded = (env: RequestEventBase["env"], prodInDev: boole
   }
 };
 
-export default () => {
-  if (!client) throw new Error("Turso client not initialized");
-  return client;
+export default (env: RequestEventBase["env"], prodInDev: boolean = false) => {
+  if (!client) initTursoIfNeeded(env, prodInDev);
+  return client!;
 };

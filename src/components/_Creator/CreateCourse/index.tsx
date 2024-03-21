@@ -102,84 +102,82 @@ const setCourseServer = server$(
   }
 );
 
-const insertCourseHandler = server$(
-  async (
-    courseData: NewContentIndex,
-    chapter: NewContent,
-    courseApproval: NewCourseApproval,
-    _accessible_courses: string | null,
-    _accessible_courses_read: string | null,
-    userId: string,
-    category: ContentCategory | undefined,
-    _tag: Tag[]
-  ) => {
-    return await drizzleClient().transaction(async (tx) => {
-      await insertCourse(tx, courseData);
-      if (category && courseData.category !== category.id) courseApproval.added_categories = null;
-      if (courseData.tags && courseApproval.added_tags) {
-        for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
-          if (!courseData.tags!.includes(courseApproval.added_tags![i]))
-            courseApproval.added_tags!.splice(i, 1);
-        }
+const insertCourseHandler = server$(async function (
+  courseData: NewContentIndex,
+  chapter: NewContent,
+  courseApproval: NewCourseApproval,
+  _accessible_courses: string | null,
+  _accessible_courses_read: string | null,
+  userId: string,
+  category: ContentCategory | undefined,
+  _tag: Tag[]
+) {
+  return await drizzleClient(this.env).transaction(async (tx) => {
+    await insertCourse(tx, courseData);
+    if (category && courseData.category !== category.id) courseApproval.added_categories = null;
+    if (courseData.tags && courseApproval.added_tags) {
+      for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
+        if (!courseData.tags!.includes(courseApproval.added_tags![i]))
+          courseApproval.added_tags!.splice(i, 1);
       }
-      await insertCourseApproval(tx, courseApproval); // insert after course due to fk constraint
-      if (courseData.is_single_page) await insertChapter(tx, chapter); // insert after course due to fk constraint
+    }
+    await insertCourseApproval(tx, courseApproval); // insert after course due to fk constraint
+    if (courseData.is_single_page) await insertChapter(tx, chapter); // insert after course due to fk constraint
 
-      if (category && category.id === courseData.category) {
-        category.content_index_id.push(courseData.id);
-        await insertContentCategory(tx, category);
-      }
-      if (courseData.category && courseData.category !== courseApproval.added_categories) {
-        await addCategoryContentIndex(tx, courseData.id, courseData.category);
-      }
-      if (_tag.length > 0)
-        await Promise.all(
-          _tag.map(async (tag) => {
-            if (!courseData.tags?.includes(tag.id)) return;
-            tag.content_index_id.push(courseData.id);
-            return await insertTag(tx, tag);
-          })
-        );
-      if (courseData.tags)
-        await Promise.all(
-          courseData.tags.map(async (tag) => {
-            if (!courseApproval.added_tags!.includes(tag)) return;
-            return await addTagContentIndex(tx, courseData.id, tag);
-          })
-        );
-
-      let accessible_courses: string[];
-      try {
-        accessible_courses = JSON.parse(_accessible_courses || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses = [];
-      }
-      accessible_courses.push(courseData.id);
-      let accessible_courses_read: string[];
-      try {
-        accessible_courses_read = JSON.parse(_accessible_courses_read || "[]");
-      } catch (e) {
-        console.error(e);
-        accessible_courses_read = [];
-      }
-      accessible_courses_read.push(courseData.id);
-      await setCourseServer(
-        tx,
-        JSON.stringify(accessible_courses),
-        JSON.stringify(accessible_courses_read),
-        userId
+    if (category && category.id === courseData.category) {
+      category.content_index_id.push(courseData.id);
+      await insertContentCategory(tx, category);
+    }
+    if (courseData.category && courseData.category !== courseApproval.added_categories) {
+      await addCategoryContentIndex(tx, courseData.id, courseData.category);
+    }
+    if (_tag.length > 0)
+      await Promise.all(
+        _tag.map(async (tag) => {
+          if (!courseData.tags?.includes(tag.id)) return;
+          tag.content_index_id.push(courseData.id);
+          return await insertTag(tx, tag);
+        })
+      );
+    if (courseData.tags)
+      await Promise.all(
+        courseData.tags.map(async (tag) => {
+          if (!courseApproval.added_tags!.includes(tag)) return;
+          return await addTagContentIndex(tx, courseData.id, tag);
+        })
       );
 
-      await tx.insert(content_user_progress).values({
-        id: uuidv4(),
-        user_id: userId,
-        index_id: courseData.id,
-        progress: [],
-      });
+    let accessible_courses: string[];
+    try {
+      accessible_courses = JSON.parse(_accessible_courses || "[]");
+    } catch (e) {
+      console.error(e);
+      accessible_courses = [];
+    }
+    accessible_courses.push(courseData.id);
+    let accessible_courses_read: string[];
+    try {
+      accessible_courses_read = JSON.parse(_accessible_courses_read || "[]");
+    } catch (e) {
+      console.error(e);
+      accessible_courses_read = [];
+    }
+    accessible_courses_read.push(courseData.id);
+    await setCourseServer(
+      tx,
+      JSON.stringify(accessible_courses),
+      JSON.stringify(accessible_courses_read),
+      userId
+    );
+
+    await tx.insert(content_user_progress).values({
+      id: uuidv4(),
+      user_id: userId,
+      index_id: courseData.id,
+      progress: [],
     });
-  }
-);
+  });
+});
 
 export default component$(() => {
   const user = useUserLoader().value;

@@ -12,11 +12,14 @@ import { user_key } from "../../../../../../../drizzle_turso/schema/user_key";
 
 export const useCanResetPasswordLoader = routeLoader$<[boolean, string]>(async (requestEvent) => {
   const user = await requestEvent.resolveValue(useUserLoader);
-  const keys = await auth().getAllUserKeys(user.userId);
+  const keys = await auth(
+    requestEvent.env,
+    import.meta.env.VITE_USE_PROD_DB === "1"
+  ).getAllUserKeys(user.userId);
   const emailKey = keys.filter((key) => key.providerId === "email");
   const hash =
     (
-      await drizzleClient()
+      await drizzleClient(requestEvent.env)
         .select({ hashed_password: user_key.hashed_password })
         .from(user_key)
         .where(eq(user_key.user_id, user.userId))

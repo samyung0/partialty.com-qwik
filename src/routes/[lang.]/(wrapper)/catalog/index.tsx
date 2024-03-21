@@ -5,7 +5,8 @@ import {
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
-import { DocumentHead, Link, useLocation, useNavigate } from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
+import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import { LuGem, LuRocket, LuTags } from "@qwikest/icons/lucide";
 import Footer from "~/components/Footer";
 import LoadingSVG from "~/components/LoadingSVG";

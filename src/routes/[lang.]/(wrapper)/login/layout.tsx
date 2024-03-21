@@ -7,7 +7,9 @@ import { initTursoIfNeeded } from "~/utils/tursoClient";
 
 // redirect to dashboard if user is logged in
 export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = auth().handleRequest(event);
+  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
+    event
+  );
 
   let session: Session | null = null;
   try {
@@ -30,6 +32,6 @@ export const useUserLoader = routeLoader$(async (event) => {
 
 export const onRequest: RequestHandler = ({ env }) => {
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
   initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
 };

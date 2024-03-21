@@ -21,8 +21,10 @@ export const onGet: RequestHandler = async (request) => {
   }
 
   try {
-    const { getExistingUser, githubUser, createUser, githubTokens, createKey } =
-      await githubAuth().validateCallback(code);
+    const { getExistingUser, githubUser, createUser, githubTokens, createKey } = await githubAuth(
+      request.env,
+      import.meta.env.VITE_USE_PROD_DB === "1"
+    ).validateCallback(code);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();
@@ -45,7 +47,7 @@ export const onGet: RequestHandler = async (request) => {
             email.primary
         )[0];
         if (primaryEmail && primaryEmail.verified) {
-          const drizzle = drizzleClient();
+          const drizzle = drizzleClient(request.env);
           const existingDatabaseUserWithEmail = await drizzle
             .select()
             .from(profiles)
@@ -81,7 +83,7 @@ export const onGet: RequestHandler = async (request) => {
       }
     };
 
-    const Auth = auth();
+    const Auth = auth(request.env, import.meta.env.VITE_USE_PROD_DB === "1");
 
     const user = await getUser();
     const session = await Auth.createSession({

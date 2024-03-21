@@ -21,7 +21,7 @@ export const onRequest: RequestHandler = ({ env, cacheControl }) => {
     noCache: true,
   });
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(import.meta.env.VITE_USE_PROD_DB === "1");
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
   initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
 };
 
@@ -29,7 +29,9 @@ export const useUserLoaderNullable = routeLoader$(async (event) => {
   const courseSlug = event.params.courseSlug;
   if (!courseSlug) throw event.redirect(302, "/notfound/");
 
-  const authRequest = auth().handleRequest(event);
+  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
+    event
+  );
 
   let session: LuciaSession | null = null;
   try {
@@ -42,12 +44,12 @@ export const useUserLoaderNullable = routeLoader$(async (event) => {
   return session?.user as LuciaSession["user"] | undefined;
 });
 
-export const useTagLoader = routeLoader$(async () => {
-  return await drizzleClient().select().from(tag);
+export const useTagLoader = routeLoader$(async (event) => {
+  return await drizzleClient(event.env).select().from(tag);
 });
 
-export const useCategoryLoader = routeLoader$(async () => {
-  return await drizzleClient().select().from(content_category);
+export const useCategoryLoader = routeLoader$(async (event) => {
+  return await drizzleClient(event.env).select().from(content_category);
 });
 
 export const useCourseLoader = routeLoader$(async (event) => {
@@ -55,7 +57,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
 
   const courseSlug = event.params.courseSlug;
   const course = (
-    await drizzleClient()
+    await drizzleClient(event.env)
       .select()
       .from(content_index)
       .where(and(eq(content_index.slug, courseSlug), eq(content_index.is_deleted, false)))
@@ -72,7 +74,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, "/notfound/");
-  const chapters = await drizzleClient()
+  const chapters = await drizzleClient(event.env)
     .select({
       id: content.id,
       name: content.name,

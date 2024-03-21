@@ -38,7 +38,7 @@ export const fetchAudioServer = server$(async function (id: string) {
     .then((res) => res.json())
     .catch((e) => console.error(e))) as any;
   const filename = (
-    await drizzleClient()
+    await drizzleClient(this.env)
       .select({ filename: mux_assets.name })
       .from(mux_assets)
       .where(eq(mux_assets.id, id))
@@ -50,37 +50,35 @@ export const fetchAudioServer = server$(async function (id: string) {
   };
 });
 
-const saveContentServer = server$(
-  async (
-    chapterId: string,
-    contentEditorValue2: string | null,
-    renderedHTML2: string,
-    audio_track_playback_id: string | undefined,
-    audio_track_asset_id: string | undefined,
-    courseId: string
-  ) => {
-    try {
-      const contentVal: any = {
-        content_slate: contentEditorValue2,
-        renderedHTML: renderedHTML2,
-        updated_at: getSQLTimeStamp(),
-      };
-      contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
-      contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
-      await drizzleClient()
-        .update(content_index)
-        .set({ updated_at: getSQLTimeStamp() })
-        .where(eq(content_index.id, courseId));
-      return await drizzleClient()
-        .update(content)
-        .set(contentVal)
-        .where(eq(content.id, chapterId))
-        .returning();
-    } catch (e) {
-      return [false, e];
-    }
+const saveContentServer = server$(async function (
+  chapterId: string,
+  contentEditorValue2: string | null,
+  renderedHTML2: string,
+  audio_track_playback_id: string | undefined,
+  audio_track_asset_id: string | undefined,
+  courseId: string
+) {
+  try {
+    const contentVal: any = {
+      content_slate: contentEditorValue2,
+      renderedHTML: renderedHTML2,
+      updated_at: getSQLTimeStamp(),
+    };
+    contentVal["audio_track_playback_id"] = audio_track_playback_id || null;
+    contentVal["audio_track_asset_id"] = audio_track_asset_id || null;
+    await drizzleClient(this.env)
+      .update(content_index)
+      .set({ updated_at: getSQLTimeStamp() })
+      .where(eq(content_index.id, courseId));
+    return await drizzleClient(this.env)
+      .update(content)
+      .set(contentVal)
+      .where(eq(content.id, chapterId))
+      .returning();
+  } catch (e) {
+    return [false, e];
   }
-);
+});
 
 export const useUserAssets = routeLoader$(async (requestEvent) => {
   const ret: {
@@ -108,8 +106,11 @@ export const useUserAssets = routeLoader$(async (requestEvent) => {
     .catch((e) => console.error(e));
   const userMuxAssets =
     user.role === "admin"
-      ? await drizzleClient().select().from(mux_assets)
-      : await drizzleClient().select().from(mux_assets).where(eq(mux_assets.user_id, user.userId));
+      ? await drizzleClient(requestEvent.env).select().from(mux_assets)
+      : await drizzleClient(requestEvent.env)
+          .select()
+          .from(mux_assets)
+          .where(eq(mux_assets.user_id, user.userId));
   const _muxAudios = await Promise.allSettled(
     userMuxAssets.map(
       (asset) =>

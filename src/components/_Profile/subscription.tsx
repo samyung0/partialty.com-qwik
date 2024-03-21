@@ -8,8 +8,8 @@ import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../drizzle_turso/schema/profiles";
 
-const getCustomerId = server$((userId: string) => {
-  return drizzleClient()
+const getCustomerId = server$(async function (userId: string) {
+  return await drizzleClient(this.env)
     .select({
       customerId: profiles.stripe_id,
     })

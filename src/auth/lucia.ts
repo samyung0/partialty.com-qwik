@@ -1,4 +1,4 @@
-import type { RequestEvent } from "@builder.io/qwik-city";
+import type { RequestEvent, RequestEventBase } from "@builder.io/qwik-city";
 import { libsql } from "@lucia-auth/adapter-sqlite";
 import { github, google } from "@lucia-auth/oauth/providers";
 import { lucia } from "lucia";
@@ -34,7 +34,7 @@ const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"])
         : "http://localhost:5173/login/github/callback/",
   });
 
-const _lucia = (prodInDev: boolean = false) =>
+const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
   lucia({
     env: import.meta.env.MODE === "production" ? "PROD" : "DEV",
     passwordHash: {
@@ -57,7 +57,7 @@ const _lucia = (prodInDev: boolean = false) =>
       },
     },
     middleware: qwik(),
-    adapter: libsql(tursoClient(), {
+    adapter: libsql(tursoClient(env, prodInDev), {
       user: "profiles",
       key: "user_key",
       session: "user_session",
@@ -92,24 +92,24 @@ const _lucia = (prodInDev: boolean = false) =>
 
 export const initLuciaIfNeeded = (env: RequestEvent["env"], prodInDev: boolean = false) => {
   if (!_auth) {
-    _auth = _lucia(prodInDev);
+    _auth = _lucia(env, prodInDev);
   }
   if (!_github) _github = _githubAuth(_auth, env);
   if (!_google) _google = _googleAuth(_auth, env);
 };
 
-export const auth = () => {
-  if (!_auth) throw new Error("Lucia auth not initialized");
+export const auth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+  if (!_auth) _auth = _lucia(env, prodInDev);
   return _auth;
 };
 
-export const githubAuth = () => {
-  if (!_github) throw new Error("Github auth not initialized");
+export const githubAuth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+  if (!_github) _github = _githubAuth(auth(env, prodInDev), env);
   return _github;
 };
 
-export const googleAuth = () => {
-  if (!_google) throw new Error("Github auth not initialized");
+export const googleAuth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+  if (!_google) _google = _googleAuth(auth(env, prodInDev), env);
   return _google;
 };
 

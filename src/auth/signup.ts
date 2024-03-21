@@ -34,14 +34,14 @@ export const useSetBio = globalAction$(async function (data, event) {
       return event.fail(500, { message: "Unable to upload avatar! Please try again later" });
     }
   }
-  const drizzle = drizzleClient();
+  const drizzle = drizzleClient(event.env);
   try {
     await drizzle
       .update(profiles)
       .set({ avatar_url: secure_url, nickname: data.nickname })
       .where(eq(profiles.id, data.userId));
 
-    const Auth = auth();
+    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
     const session = await Auth.createSession({
       userId: data.userId,
       attributes: {},
@@ -63,7 +63,7 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     //   throw Error("Avatar not found!");
     // });
 
-    const Auth = auth();
+    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
     const user = await Auth.createUser({
       key: {
         providerId: "email",
@@ -84,7 +84,7 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
       console.error("Unable to send verification email!");
     }
 
-    const emailToken = await generateEmailTokens(user.userId);
+    const emailToken = await generateEmailTokens(event.env, user.userId);
     const res = await fetch(
       event.env.get("QSTASH_URL")! + "https://api.partialty.com/mail/sendMail/verifyMail",
       {

@@ -17,10 +17,10 @@ import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../drizzle_turso/schema/profiles";
 import { listSupportedLang } from "../../../lang";
 
-const getFavourite = server$(async (id: string) => {
+const getFavourite = server$(async function (id: string) {
   return (
     (
-      await drizzleClient()
+      await drizzleClient(this.env)
         .select({ favourite_courses: profiles.favourite_courses })
         .from(profiles)
         .where(eq(profiles.id, id))
@@ -31,7 +31,7 @@ const getFavourite = server$(async (id: string) => {
 const setFavouriteDB = server$(async function (userId: string, courseId: string) {
   const favourite_courses = await getFavourite(userId);
   favourite_courses.push(courseId);
-  return await drizzleClient()
+  return await drizzleClient(this.env)
     .update(profiles)
     .set({ favourite_courses })
     .where(eq(profiles.id, userId))
@@ -42,7 +42,7 @@ const removeFavouriteDB = server$(async function (userId: string, courseId: stri
   const favourite_courses = await getFavourite(userId);
   const index = favourite_courses.indexOf(courseId);
   if (index >= 0) favourite_courses.splice(index, 1);
-  return await drizzleClient()
+  return await drizzleClient(this.env)
     .update(profiles)
     .set({ favourite_courses })
     .where(eq(profiles.id, userId))

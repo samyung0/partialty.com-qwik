@@ -15,7 +15,7 @@ export const useUpdateProfile = globalAction$(async (data, requestEvent) => {
   try {
     const newAvatarUrl = await cloudinaryUpload(secure_url, requestEvent);
 
-    const drizzle = drizzleClient();
+    const drizzle = drizzleClient(requestEvent.env);
     await drizzle
       .update(profiles)
       .set({ nickname: nickname, avatar_url: newAvatarUrl.secure_url })
@@ -37,7 +37,7 @@ export const useResetPassword = globalAction$(async (data, requestEvent) => {
     if (!hashVerification.data.isVerified)
       return requestEvent.fail(500, { message: "Wrong old password!" });
 
-    const Auth = auth();
+    const Auth = auth(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1");
     const user = await Auth.getUser(data.userId);
     await Auth.invalidateAllUserSessions(user.userId);
     await Auth.updateKeyPassword("email", user.email, data.newPassword);

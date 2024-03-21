@@ -354,7 +354,7 @@ export default component$(
                     <IoCaretDown />
                   </span>
                 </div>
-                <div class="absolute 2xl:left-[50%] left-[30%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2">
+                <div class="absolute left-[30%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2 2xl:left-[50%]">
                   <div
                     class={
                       "flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray " +

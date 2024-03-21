@@ -1,4 +1,5 @@
-import { component$, Signal, useSignal } from "@builder.io/qwik";
+import type { Signal } from "@builder.io/qwik";
+import { component$, useSignal } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 import { LuX } from "@qwikest/icons/lucide";
 import { eq } from "drizzle-orm";
@@ -9,9 +10,8 @@ import drizzleClient from "~/utils/drizzleClient";
 import { content_share_token } from "../../../../drizzle_turso/schema/content_share_token";
 
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
-export const generateContentShareToken = server$(async (contentId: string) => {
-  if(!drizzleClient()) throw new Error("wtf");
-  const storedUserTokens = await drizzleClient()
+export const generateContentShareToken = server$(async function (contentId: string) {
+  const storedUserTokens = await drizzleClient(this.env)
     .select()
     .from(content_share_token)
     .where(eq(content_share_token.index_id, contentId));
@@ -25,7 +25,7 @@ export const generateContentShareToken = server$(async (contentId: string) => {
   }
   const token = generateRandomString(7);
 
-  await drizzleClient()
+  await drizzleClient(this.env)
     .insert(content_share_token)
     .values({
       id: token,

@@ -13,32 +13,32 @@ import { content_category } from "../../../../drizzle_turso/schema/content_categ
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import type { NewTag } from "../../../../drizzle_turso/schema/tag";
 
-const checkExistingCourseFromCategory = server$(async (id: string) => {
+const checkExistingCourseFromCategory = server$(async function (id: string) {
   return (
-    await drizzleClient().select().from(content_category).where(eq(content_category.id, id))
+    await drizzleClient(this.env).select().from(content_category).where(eq(content_category.id, id))
   )[0].content_index_id;
 });
 
-const deleteCategoryAction = server$(async (id: string) => {
-  return await drizzleClient()
+const deleteCategoryAction = server$(async function (id: string) {
+  return await drizzleClient(this.env)
     .delete(content_category)
     .where(eq(content_category.id, id))
     .returning();
 });
 
-const addCategoryAction = server$(async (formData: NewTag) => {
-  return await drizzleClient().insert(content_category).values(formData).returning();
+const addCategoryAction = server$(async function (formData: NewTag) {
+  return await drizzleClient(this.env).insert(content_category).values(formData).returning();
 });
 
-const checkExistingCategory = server$(async (slug: string) => {
-  return await drizzleClient()
+const checkExistingCategory = server$(async function (slug: string) {
+  return await drizzleClient(this.env)
     .select({ id: content_category.id })
     .from(content_category)
     .where(and(eq(content_category.slug, slug), eq(content_category.approved, true)));
 });
 
-const checkExistingCategoryLink = server$(async (link: string) => {
-  return await drizzleClient()
+const checkExistingCategoryLink = server$(async function (link: string) {
+  return await drizzleClient(this.env)
     .select({ id: content_category.id })
     .from(content_category)
     .where(and(eq(content_category.link, link), eq(content_category.approved, true)));

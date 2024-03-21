@@ -1,3 +1,4 @@
+import type { RequestEventBase } from "@builder.io/qwik-city";
 import { type Client } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 import tursoClient from "~/utils/tursoClient";
@@ -7,13 +8,13 @@ let client: ReturnType<typeof init> | null = null;
 
 const init = (client: Client) => drizzle(client, { schema: schemaExport });
 
-export const initDrizzleIfNeeded = (prodInDev: boolean = false) => {
+export const initDrizzleIfNeeded = (env: RequestEventBase["env"], prodInDev: boolean = false) => {
   if (!client) {
-    client = init(tursoClient());
+    client = init(tursoClient(env, prodInDev));
   }
 };
 
-export default () => {
-  if (!client) throw new Error("Drizzle client not initialized");
+export default (env: RequestEventBase["env"], prodInDev: boolean = false) => {
+  if (!client) client = init(tursoClient(env, prodInDev));
   return client;
 };

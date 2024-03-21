@@ -23,7 +23,7 @@ export const useVerifyChapter = routeLoader$(async (event) => {
     accessible_courses = [];
   }
   const isLocked = (
-    await drizzleClient()
+    await drizzleClient(event.env)
       .select({
         is_locked: content.is_locked,
         author: content_index.author,

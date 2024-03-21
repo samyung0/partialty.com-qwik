@@ -21,17 +21,20 @@ import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";
 import { content_user_progress } from "../../../../drizzle_turso/schema/content_user_progress";
 export { fetchAudioServer };
 
-const saveProgressServer = server$(
-  async (progress: string[], courseId: string, userId: string, notFinished: boolean) => {
-    return await drizzleClient()
-      .update(content_user_progress)
-      .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
-      .where(
-        and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId))
-      )
-      .returning();
-  }
-);
+const saveProgressServer = server$(async function (
+  progress: string[],
+  courseId: string,
+  userId: string,
+  notFinished: boolean
+) {
+  return await drizzleClient(this.env)
+    .update(content_user_progress)
+    .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
+    .where(
+      and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId))
+    )
+    .returning();
+});
 
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;

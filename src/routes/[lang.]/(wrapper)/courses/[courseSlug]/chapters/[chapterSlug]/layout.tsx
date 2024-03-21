@@ -66,7 +66,10 @@ export const useCurrentChapter = routeLoader$(async (event) => {
     ret.subscriptionNeeded = true;
   else {
     const chapter = (
-      await drizzleClient().select().from(content).where(eq(content.id, currentChapterFiltered.id))
+      await drizzleClient(event.env)
+        .select()
+        .from(content)
+        .where(eq(content.id, currentChapterFiltered.id))
     )[0];
     if (!chapter) throw event.redirect(302, "/notfound/");
     ret.currentChapter = chapter;
@@ -86,7 +89,7 @@ export const useDBLoader = routeLoader$(async (event) => {
   let newUserProgress: ContentUserProgress | null = course.content_user_progress;
   if (!course.content_user_progress)
     newUserProgress = (
-      await drizzleClient()
+      await drizzleClient(event.env)
         .insert(content_user_progress)
         .values({
           id: v4(),

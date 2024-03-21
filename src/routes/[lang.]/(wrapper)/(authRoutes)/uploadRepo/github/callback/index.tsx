@@ -16,7 +16,9 @@ export const onGet: RequestHandler = async (request) => {
     throw request.redirect(302, "/uploadRepo/?errMessage=App installation failed!");
   }
 
-  const authRequest = auth().handleRequest(request);
+  const authRequest = auth(request.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
+    request
+  );
 
   let session: LuciaSession | null = null;
   try {
@@ -28,7 +30,7 @@ export const onGet: RequestHandler = async (request) => {
   if (!session) throw request.redirect(302, "/uploadRepo/?errMessage=Unauthorized!");
   const userId = session.user.userId;
 
-  await drizzleClient()
+  await drizzleClient(request.env)
     .update(profiles)
     .set({ github_installation_id: installationId })
     .where(eq(profiles.id, userId));
