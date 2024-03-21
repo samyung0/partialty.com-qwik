@@ -60,81 +60,83 @@ export default component$(() => {
       <div class=" z-[100] block w-full 2xl:hidden">
         <Nav disableTheme />
       </div>
-      <div class="relative z-10 flex flex-col items-center justify-center pb-12 md:pt-0 2xl:flex-row">
-        <div class=" flex items-center justify-center overflow-auto [order:1] xl:w-[50%] 2xl:justify-end 2xl:pr-[6vw] 2xl:[order:0]">
-          <div class="relative flex h-[300px] w-[500px] max-w-[95vw] items-start justify-stretch overflow-auto bg-code-editor-one-dark-pro p-4 shadow-2xl lg:h-[400px] lg:w-[600px] lg:p-8">
-            <div dangerouslySetInnerHTML={codeDisplay.value}></div>
-            <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-4 lg:p-8">
-              <pre class="text-base font-bold leading-6 lg:text-lg lg:leading-8">
-                {typeWriter.blankCharArr.map((blankCount, index) => {
-                  currentCharWithoutNewLine--;
-                  return [
-                    <span
-                      key={`typeWriterBlankLine${
-                        displayCodeOrder[typeWriter.displayIndex]
-                      }${index}`}
-                    >
-                      {Array.from(Array(blankCount)).map((_, index2) => {
-                        blankCharSum++;
-                        return (
-                          <span
-                            key={`typeWriterBlankChar${
-                              displayCodeOrder[typeWriter.displayIndex]
-                            }${index}-${index2}`}
-                            class={
-                              (typeWriter.revealedCharArr[index] > index2
-                                ? "bg-transparent "
-                                : "bg-code-editor-one-dark-pro ") +
-                              (currentCharWithoutNewLine === blankCharSum
-                                ? typeWriter.appearStart === 0
-                                  ? styles.blinkingCursorDisappearing
-                                  : styles.blinkingCursorAppearing
-                                : currentCharWithoutNewLine === -1 && blankCharSum === 1
-                                ? styles.blinkingCursorEmptyCode
-                                : "")
-                            }
-                          >
-                            &nbsp;
-                          </span>
-                        );
-                      })}
-                    </span>,
-                    "\n",
-                  ];
-                })}
-              </pre>
+      <div class="flex flex-auto justify-stretch items-center">
+        <div class="relative z-10 flex h-full w-full flex-col items-center justify-center pb-12 md:pt-0 2xl:flex-row">
+          <div class=" flex items-center justify-center overflow-auto [order:1] xl:w-[50%] 2xl:justify-end 2xl:pr-[6vw] 2xl:[order:0]">
+            <div class="relative flex h-[300px] w-[500px] max-w-[95vw] items-start justify-stretch overflow-auto bg-code-editor-one-dark-pro p-4 shadow-2xl lg:h-[400px] lg:w-[600px] lg:p-8">
+              <div dangerouslySetInnerHTML={codeDisplay.value}></div>
+              <div class="absolute left-0 top-0 flex items-start justify-stretch overflow-hidden p-4 lg:p-8">
+                <pre class="text-base font-bold leading-6 lg:text-lg lg:leading-8">
+                  {typeWriter.blankCharArr.map((blankCount, index) => {
+                    currentCharWithoutNewLine--;
+                    return [
+                      <span
+                        key={`typeWriterBlankLine${
+                          displayCodeOrder[typeWriter.displayIndex]
+                        }${index}`}
+                      >
+                        {Array.from(Array(blankCount)).map((_, index2) => {
+                          blankCharSum++;
+                          return (
+                            <span
+                              key={`typeWriterBlankChar${
+                                displayCodeOrder[typeWriter.displayIndex]
+                              }${index}-${index2}`}
+                              class={
+                                (typeWriter.revealedCharArr[index] > index2
+                                  ? "bg-transparent "
+                                  : "bg-code-editor-one-dark-pro ") +
+                                (currentCharWithoutNewLine === blankCharSum
+                                  ? typeWriter.appearStart === 0
+                                    ? styles.blinkingCursorDisappearing
+                                    : styles.blinkingCursorAppearing
+                                  : currentCharWithoutNewLine === -1 && blankCharSum === 1
+                                  ? styles.blinkingCursorEmptyCode
+                                  : "")
+                              }
+                            >
+                              &nbsp;
+                            </span>
+                          );
+                        })}
+                      </span>,
+                      "\n",
+                    ];
+                  })}
+                </pre>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex flex-col items-center justify-center px-2 pt-0 [order:0] xl:w-[50%]  xl:pt-0 2xl:items-start 2xl:[order:1]">
-          <h1>
+          <div class="flex flex-col items-center justify-center px-2 pt-0 [order:0] xl:w-[50%]  xl:pt-0 2xl:items-start 2xl:[order:1]">
+            <h1>
+              <Link
+                href="/"
+                class="font-mosk text-[1.5rem] font-[900] leading-[3rem] xl:text-[2rem] xl:leading-[3.5rem]"
+              >
+                Partialty.com
+              </Link>
+            </h1>
+            <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] xl:pb-8 xl:text-[2.5rem] xl:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
+              Learn{" "}
+              <span class="relative inline-block p-1">
+                <span
+                  class={
+                    "-z-1 test absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-bright-yellow " +
+                    styles.animateInitialText
+                  }
+                ></span>
+                <span class="relative z-10">Web Development</span>
+              </span>{" "}
+              like you have <i>never</i> before.
+            </h2>
             <Link
-              href="/"
-              class="font-mosk text-[1.5rem] font-[900] leading-[3rem] xl:text-[2rem] xl:leading-[3.5rem]"
+              href="/signup/"
+              prefetch
+              class="mb-6 rounded-lg bg-primary-dark-gray px-6 py-3 text-[0.875rem] text-background-light-gray shadow-2xl lg:mb-8 lg:px-8 lg:py-4 lg:text-[1rem] 2xl:mb-0"
             >
-              Partialty.com
+              Get Started
             </Link>
-          </h1>
-          <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] xl:pb-8 xl:text-[2.5rem] xl:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
-            Learn{" "}
-            <span class="relative inline-block p-1">
-              <span
-                class={
-                  "-z-1 test absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-bright-yellow " +
-                  styles.animateInitialText
-                }
-              ></span>
-              <span class="relative z-10">Web Development</span>
-            </span>{" "}
-            like you have <i>never</i> before.
-          </h2>
-          <Link
-            href="/signup/"
-            prefetch
-            class="mb-6 rounded-lg bg-primary-dark-gray px-6 py-3 text-[0.875rem] text-background-light-gray shadow-2xl lg:mb-8 lg:px-8 lg:py-4 lg:text-[1rem] 2xl:mb-0"
-          >
-            Get Started
-          </Link>
+          </div>
         </div>
       </div>
     </section>

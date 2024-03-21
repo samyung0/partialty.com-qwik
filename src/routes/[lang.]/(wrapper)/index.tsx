@@ -1,5 +1,5 @@
 import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
 import { useLocation } from "@builder.io/qwik-city";
 
 import UnderConstruction from "~/assets/img/under_construction.png";
@@ -9,6 +9,17 @@ import ContentInteractive from "~/components/_Index/ContentInteractive";
 import ContentVarieties from "~/components/_Index/ContentVarieties";
 import Hero from "~/components/_Index/Hero";
 import IndexNav from "~/components/_Index/Nav";
+
+
+// REMOVE
+export const onRequest: RequestHandler = ({ env, cacheControl }) => {
+  cacheControl({
+    maxAge: 0,
+    sMaxAge: 0,
+    noStore: true,
+    noCache: true,
+  });
+};
 
 export default component$(() => {
   const params = useLocation().url.searchParams;
