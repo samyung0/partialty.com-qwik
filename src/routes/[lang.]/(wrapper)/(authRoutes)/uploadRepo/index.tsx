@@ -32,7 +32,7 @@ export default component$(() => {
     // });
   });
 
-  const submitHandler = $((_: any, currentTarget: HTMLFormElement): any => {
+  const submitHandler = $(async (_: any, currentTarget: HTMLFormElement) => {
     const schema = z.object({
       owner: z.string().max(255).min(1),
       repo: z.string().max(255).min(1),
@@ -46,8 +46,11 @@ export default component$(() => {
       message.value = parse.error.issues[0].message;
       return;
     }
+    const token = await getToken(user.userId)
 
-    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch).then((res) => {
+    if(!token) return message.value = "Error!";
+
+    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch,token).then((res) => {
       if (res[0]) message.value = res[1];
       else message.value = "Error! " + res[1];
     });
@@ -55,6 +58,7 @@ export default component$(() => {
 
   useVisibleTask$(async () => {
     const token = await getToken(user.userId);
+    console.log(token)
     if (!token) return;
     test(token);
   });

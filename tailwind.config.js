@@ -7,7 +7,7 @@ export default {
   darkMode: "class",
   plugins: [
     tailwindPlugins(),
-    require("daisyui"),
+    // require("daisyui"),
     require("@tailwindcss/typography"),
     // Method 1: directly use the variant inline: theme-test:bg-red
     // however it does not work well with prettier plugin rn
@@ -19,8 +19,8 @@ export default {
 
     // check components/site/navigation for exmaples
   ],
-  daisyui: {
-    themes: ["light"],
-    prefix: "daisyui-",
-  },
+  // daisyui: {
+  //   themes: ["light"],
+  //   prefix: "daisyui-",
+  // },
 };

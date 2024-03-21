@@ -9,11 +9,12 @@ import { uploadGithubFetchCloudflare } from "~/utils/uploadGithubFetchCloudflare
 export const uploadRepoToCloudflare = async (
   owner: string,
   repo: string,
-  branch: string = "main"
+  branch: string = "main",
+  token: string,
 ): Promise<[boolean, string]> => {
-  const GITHUB_PUBLIC_TOKEN = import.meta.env.VITE_GITHUB_PUBLIC_TOKEN;
+  // const GITHUB_PUBLIC_TOKEN = import.meta.env.VITE_GITHUB_PUBLIC_TOKEN;
 
-  const data = await directFetchGithub(owner, repo, branch, GITHUB_PUBLIC_TOKEN!);
+  const data = await directFetchGithub(owner, repo, branch, token);
   if (!data[0]) return data;
 
   const size = (data[1] as FetchedFile[]).reduce((prev, curr) => prev + curr.size, 0);
@@ -30,7 +31,13 @@ export const test = $(async function (token: string) {
       authorization: `Bearer ${token}`,
     },
   });
+  const res2 = await request("GET /repos/samyung0/qwik-project/branches", {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  })
   console.log("RES", res.data);
+  console.log(res2.data);
 });
 
 const directFetchGithub = async (

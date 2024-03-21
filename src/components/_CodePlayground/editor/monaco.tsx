@@ -111,9 +111,9 @@ export const openFile = async (
   nonBinaryData: string
 ) => {
   const monaco = await getMonaco();
-
   const uri = getUri(monaco, path);
-  // modelToRender = monaco.editor.getModel(uri);
+
+  // check if the model is already present
   if (!monaco.editor.getModel(uri)) {
     monaco.editor.createModel(nonBinaryData, undefined, uri);
   }
@@ -131,8 +131,10 @@ export const openFile = async (
   // }
 
   if (editorStore.editor) {
-    const selectedFsPath = getUri(monaco, path).fsPath;
+    // get the current model
     const previousSelectedModel = editorStore.editor.getModel();
+    const selectedFsPath = getUri(monaco, path).fsPath;
+
     if (previousSelectedModel) {
       const viewState = editorStore.editor.saveViewState();
       if (viewState) {
@@ -141,7 +143,9 @@ export const openFile = async (
     }
 
     // if (!previousSelectedModel || previousSelectedModel.uri.fsPath !== selectedFsPath) {
-    const selectedModel = monaco.editor.getModels().find((m) => m.uri.fsPath === selectedFsPath);
+    const selectedModel = monaco.editor
+      .getModels()
+      .find((model) => model.uri.fsPath === selectedFsPath);
     if (selectedModel) {
       editorStore.editor.setModel(selectedModel);
 

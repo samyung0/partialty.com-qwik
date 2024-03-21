@@ -15,14 +15,16 @@ export default component$(() => {
   const themeStore = useStore({ value: theme });
   useContextProvider(themeContext, themeStore);
 
-  useVisibleTask$(() => {
-    if (
-      window.matchMedia("(prefers-color-scheme: dark)").matches &&
-      themeStore.value === "default"
-    ) {
-      themeStore.value = "dark";
-    }
-  });
+  // there will be a flicker which is not good, instead we push user to set the theme value in cookie which has no flickers
+  
+  // useVisibleTask$(() => {
+  //   if (
+  //     window.matchMedia("(prefers-color-scheme: dark)").matches &&
+  //     themeStore.value === "default"
+  //   ) {
+  //     themeStore.value = "dark";
+  //   }
+  // });
 
   return (
     <>

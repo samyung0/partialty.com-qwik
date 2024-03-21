@@ -1,36 +1,45 @@
 import type { NoSerialize } from "@builder.io/qwik";
-import { component$, noSerialize, useSignal, useStyles$, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  noSerialize,
+  useContext,
+  useSignal,
+  useStyles$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
-import xtermStyles from "xterm/css/xterm.css?inline";
 
-interface Props {
-  style?: Record<string, string>;
-  class?: string;
-  terminalStore: TerminalStore;
-}
+import xtermStyles from "xterm/css/xterm.css?inline";
+import { TerminalContext } from "~/routes/[lang.]/(wrapper)/codeplayground";
 
 export interface TerminalStore {
   fitAddon: NoSerialize<FitAddon> | null;
   terminal: NoSerialize<Terminal> | null;
 }
 
-export default component$((props: Props) => {
+export default component$(() => {
   useStyles$(xtermStyles);
-  const refTerminal = useSignal<HTMLElement>();
+
+  const terminalStore = useContext(TerminalContext);
+
+  const terminalOutputRef = useSignal<HTMLElement>();
 
   useVisibleTask$(async ({ cleanup }) => {
     let resizeListener: any = null;
 
-    const fitAddon = new FitAddon();
     const terminal = new Terminal({
+      rows: 12,
       convertEol: true,
     });
 
-    if (refTerminal.value) {
+    const fitAddon = new FitAddon();
+
+    if (terminalOutputRef.value) {
+      terminal.open(terminalOutputRef.value);
+
       terminal.loadAddon(fitAddon);
-      terminal.open(refTerminal.value);
       fitAddon.fit();
 
       resizeListener = window.addEventListener("resize", () => {
@@ -40,13 +49,13 @@ export default component$((props: Props) => {
       console.error("Unable to initialize terminal!!");
     }
 
-    props.terminalStore.fitAddon = noSerialize(fitAddon);
-    props.terminalStore.terminal = noSerialize(terminal);
+    // terminalStore.fitAddon = noSerialize(fitAddon);
+    terminalStore.terminal = noSerialize(terminal);
 
     cleanup(() => {
       if (resizeListener) window.removeEventListener("resize", resizeListener);
     });
   });
 
-  return <div style={props.style} class={"terminal " + props.class} ref={refTerminal}></div>;
+  return <div ref={terminalOutputRef}></div>;
 });

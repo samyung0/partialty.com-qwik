@@ -48,6 +48,48 @@ export class WebContainerInterface {
     }
   }
 
+  async relocateTerminal(terminal: Terminal) {
+    this.#shellProcess?.kill();
+    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
+    if (!this.#webcontainerInstance) return;
+
+    // install necessary dependency
+    await this.#webcontainerInstance.spawn("npm", ["install"]);
+
+    const shellProcess = await this.#webcontainerInstance.spawn("jsh");
+    shellProcess.output.pipeTo(
+      new WritableStream({
+        write: (data) => {
+          terminal.write(data);
+        },
+      })
+    );
+
+    // allow input on the terminal
+    const input = shellProcess.input.getWriter();
+    terminal.onData((data) => {
+      input.write(data);
+    });
+
+    // const installDependencies = await this.#webcontainerInstance.spawn("npm", ["install"]);
+    // installDependencies.output.pipeTo(
+    //   new WritableStream({
+    //     write: (data) => {
+    //       terminal.write(data);
+    //     },
+    //   })
+    // );
+    this.#shellProcess = shellProcess;
+    this.#terminal = terminal;
+
+    this.#terminalResize = window.addEventListener("resize", () => {
+      shellProcess.resize({
+        cols: terminal.cols,
+        rows: terminal.rows,
+      });
+    });
+  }
+
   /**
    * I guess node -e blablabla does not work well
    * So instead we create a single file containing all the chokidar codes (compiled by @vercel/ncc)
@@ -60,6 +102,8 @@ export class WebContainerInterface {
     this.#isWatchFilesActive = true;
     const filename = "chokidar" + Date.now().toString();
     await this.#webcontainerInstance.fs.writeFile(filename, chokidarStandalone);
+
+    // create a process for watching the file changes
     this.#watchFilesProcess = await this.#webcontainerInstance.spawn("node", [filename]);
     await new Promise<void>((res) =>
       this.#watchFilesProcess!.output.pipeTo(
@@ -70,14 +114,15 @@ export class WebContainerInterface {
               this.#watchFilesChokidarHasRemoved = true;
               res();
             }
+            console.log("Process wateched");
 
             // file events
             if (!this.#isWatchFilesActive) return;
             // omit chokidar file events RISKY AGAIN
             if (data.includes(filename)) return;
 
-            console.log(data);
             this.#fileEventsQueue.push(data);
+
             if (this.#debounceFileEvents) clearTimeout(this.#debounceFileEvents);
             this.#debounceFileEvents = setTimeout(() => {
               console.log("process");
@@ -103,47 +148,13 @@ export class WebContainerInterface {
     // )
   }
 
-  async relocateTerminal(terminal: Terminal) {
-    this.#shellProcess?.kill();
-    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
-    if (!this.#webcontainerInstance) return;
-
-    const shellProcess = await this.#webcontainerInstance.spawn("jsh", {
-      terminal: {
-        // give a bit of spaces
-        cols: terminal.cols - 1,
-        rows: terminal.rows,
-      },
-    });
-    shellProcess.output.pipeTo(
-      new WritableStream({
-        write: (data) => {
-          terminal.write(data);
-        },
-      })
-    );
-    const input = shellProcess.input.getWriter();
-    terminal.onData((data) => {
-      input.write(data);
-    });
-
-    this.#shellProcess = shellProcess;
-    this.#terminal = terminal;
-
-    this.#terminalResize = window.addEventListener("resize", () => {
-      shellProcess.resize({
-        cols: terminal.cols,
-        rows: terminal.rows,
-      });
-    });
-  }
-
   #processFileEventsChokidar(events: string[]) {
     // doesnt really debounce good enough since it is modifying proxy value directly
     // and the update timing is left for qwik to handle
     for (let i = 0; i < events.length; i++) {
       const command = events[i].slice(0, events[i].indexOf(" "));
       const path = events[i].slice(events[i].indexOf(" ") + 1).trim();
+
       if (path === "") continue;
       if (command === "add") addFileTree(this.fileStore.entries, this.fileStore.path + path);
       else if (command === "addDir" && path[0] !== ".")

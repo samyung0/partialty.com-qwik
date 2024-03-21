@@ -1,23 +1,52 @@
-import type { NoSerialize, PropFunction, Signal } from "@builder.io/qwik";
+import type { NoSerialize, PropFunction } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { getMonaco, getUri, openFile } from "~/components/editor/monaco";
-import FolderStructure from "~/components/folderStructure/folderStructure";
-import type { WebContainerInterface } from "~/components/serverInterface/serverInterface";
+import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
+import FileStructureLargeScreen from "../fileStructure/fileStructureLargeScreen";
+import FileTab from "./fileTab";
 import type { IStandaloneCodeEditor } from "./monaco";
-import { initMonacoEditor, type ICodeEditorViewState } from "./monaco";
+import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
 
-export default component$((props: Props) => {
+interface EditorInterface {
+  fileStore: FileStore;
+  saveServerFile: PropFunction<(path: string, nonBinaryData: string) => any>;
+  editorClass?: string;
+  editorStyle?: Record<string, string>;
+  structureClass?: string;
+  structureStyle?: Record<string, string>;
+  stagedClass?: string;
+  stagedStyle?: Record<string, string>;
+  serverInterface: {
+    server: NoSerialize<WebContainerInterface>;
+    booted: boolean;
+    ready: boolean;
+  };
+}
+
+export interface EditorStore {
+  editor: NoSerialize<IStandaloneCodeEditor>;
+  ready: boolean;
+  // onChangeDebounce: NoSerialize<any>;
+  onChangeSubscription: NoSerialize<any>;
+  viewStates: Record<string, NoSerialize<ICodeEditorViewState>>;
+  openedFiles: Entry[];
+}
+
+export default component$((props: EditorInterface) => {
   const hostRef = useSignal<Element>();
+
   const editorStore = useStore<EditorStore>({
     editor: undefined,
+    ready: false,
     onChangeSubscription: undefined,
     viewStates: {}, // uses fsPath
     openedFiles: [], // !!! will store a file snapshot
     // openedEntriesModels: Entry
   });
+  const saveTimerRunning = useSignal(false);
 
   const __getEntryFromPath$ = {} as any;
+
   __getEntryFromPath$._getEntryFromPath$ = $(
     async (pathSegment: string[], currentEntry: Entry | FileStore): Promise<Entry | null> => {
       for (let i = 0; i < currentEntry.entries.length; i++) {
@@ -37,6 +66,7 @@ export default component$((props: Props) => {
       return null;
     }
   );
+
   __getEntryFromPath$.getEntryFromPath$ = $(
     (path: string, currentEntry: Entry | FileStore): Promise<Entry | null> =>
       __getEntryFromPath$._getEntryFromPath$(path.split("/").slice(1), currentEntry)
@@ -49,16 +79,18 @@ export default component$((props: Props) => {
     // file should be in fileStore
     // Entry should be in opened files
     // file should be in system
+    console.log(await getEntryFromPath$(path, props.fileStore));
+
     return (
       (await getEntryFromPath$(path, props.fileStore)) !== null &&
       editorStore.openedFiles.filter((entry: Entry) => entry.path === path).length === 1 &&
-      (await props.interfaceStore.value?.readFile(path)) !== undefined
+      (await props.serverInterface.server?.readFile(path)) !== undefined
     );
   });
 
   const verifyFileUnchanged = $(async (path: string) => {
     // non binary data file only
-    const data = await props.interfaceStore.value?.readSimpleFile(path);
+    const data = await props.serverInterface.server?.readSimpleFile(path);
     if (data === undefined) return false;
     // entry.discrepancy already checks
     // we just do a double check by retrieving the file from fs
@@ -101,20 +133,7 @@ export default component$((props: Props) => {
     }
   });
 
-  const openStagedFile = $((entry: Entry, nonBindaryData: string) => {
-    /** If the file data in file system is different than the openedFiles one
-     * then a file change has occured and we handle it accordingly
-     */
-
-    // Do not display binary files such as images/videos
-    if (!entry.isBinary && !entry.isFolder) {
-      openFile(editorStore, entry.path, nonBindaryData);
-    }
-
-    /** When closing file, warn user about any unsaved changes and discard model */
-  });
-
-  const saveOpenedFile = $(async () => {
+  const saveOpenedFiles = $(async () => {
     const currentModel = editorStore.editor?.getModel();
     if (currentModel) {
       const path = currentModel.uri.path;
@@ -142,7 +161,7 @@ export default component$((props: Props) => {
         return;
       }
 
-      props.onFileSave(path, nonBinaryData);
+      props.saveServerFile(path, nonBinaryData);
       updateNonBinaryData$(path, nonBinaryData);
       console.log("updated", editorStore.openedFiles);
       // viewState data (if any) is now identical to fileStore and fileSnapshot
@@ -150,17 +169,36 @@ export default component$((props: Props) => {
   });
 
   const addToStage = $(async (entry: Entry) => {
-    // for now, only file with non binary data can be open
     try {
-      const data = await props.interfaceStore.value?.readSimpleFile(entry.path);
-      if (data === undefined) return null;
-      if (editorStore.openedFiles.filter((e) => e.path === entry.path).length === 0)
-        editorStore.openedFiles.push({ ...entry, data });
-      return data;
+      const targetEntry = editorStore.openedFiles.find((e) => e.path === entry.path);
+
+      // if not in display list
+      if (!targetEntry) {
+        const data = await props.serverInterface.server?.readSimpleFile(entry.path);
+
+        if (data) {
+          editorStore.openedFiles.push({ ...entry, data });
+          return data;
+        }
+      }
     } catch (e) {
       console.error(e);
+
       return null;
     }
+  });
+
+  const openStagedFile = $((entry: Entry, nonBindaryData: string) => {
+    /** If the file data in file system is different than the openedFiles one
+     * then a file change has occured and we handle it accordingly
+     */
+
+    // Do not display binary files such as images/videos
+    if (!entry.isBinary && !entry.isFolder) {
+      openFile(editorStore, entry.path, nonBindaryData);
+    }
+
+    /** When closing file, warn user about any unsaved changes and discard model */
   });
 
   /**
@@ -170,8 +208,23 @@ export default component$((props: Props) => {
   // fileStore.entries.forEach((entry) => addToStage(entry));
   // });
 
-  useVisibleTask$(async () => {
-    if (!editorStore.editor) {
+  // useVisibleTask$(async ({ track }) => {
+  //   track(() => editorStore.editor?.getModel()?.getValue());
+  //   // let editorInput = false;
+  //   const save = () => {
+  //     setTimeout();
+  //   };
+  //   if (!saveTimerRunning.value) {
+  //     setTimeout(save, 3000);
+  //   }
+  // });
+
+  useVisibleTask$(async ({ track }) => {
+    track(() => props.serverInterface.ready);
+    track(() => props.fileStore.entries.length);
+
+    if (props.serverInterface.ready && props.fileStore.entries.length > 0) {
+      // initiate monaco editor
       await initMonacoEditor(
         hostRef.value,
         editorStore,
@@ -180,7 +233,13 @@ export default component$((props: Props) => {
           // console.log(path, code);
         })
       );
+
+      const openedEntry = props.fileStore.entries[0];
+
+      const nonBinaryData = await addToStage(openedEntry);
+      openStagedFile(openedEntry, nonBinaryData as string);
     }
+
     return () => {
       if (editorStore.editor) {
         editorStore.editor.dispose();
@@ -220,71 +279,26 @@ export default component$((props: Props) => {
   //   }
   // });
   return (
-    <>
-      <div>
-        <Helper openedFiles={editorStore.openedFiles} openStagedFile={openStagedFile} />
-        <button class="daisyui-btn" onClick$={saveOpenedFile}>
-          Save
-        </button>
+    <div class="flex h-[50%]">
+      {/* file structure on the right side in larger screen*/}
+      <FileStructureLargeScreen
+        entries={props.fileStore.entries}
+        addToStage={addToStage}
+        openStagedFile={openStagedFile}
+      />
+
+      <div class="flex h-full w-full flex-1 flex-col">
+        {/* editor and display */}
+
+        <FileTab
+          entries={props.fileStore.entries}
+          openedFiles={editorStore.openedFiles}
+          addToStage={addToStage}
+          openStagedFile={openStagedFile}
+          saveOpenedFiles={saveOpenedFiles}
+        />
+        <div class="z-10 flex-1" style={props.editorStyle} ref={hostRef} />
       </div>
-      <div class="flex">
-        <div class="p-4">
-          <ul>
-            <FolderStructure
-              addToStage={addToStage}
-              openStagedFile={openStagedFile}
-              entries={props.fileStore.entries}
-            />
-          </ul>
-        </div>
-        <div class={"flex-1 " + props.editorClass} style={props.editorStyle} ref={hostRef} />
-      </div>
-    </>
+    </div>
   );
 });
-
-export const Helper = component$(
-  ({
-    openedFiles,
-    openStagedFile,
-  }: {
-    openedFiles: Entry[];
-    openStagedFile: PropFunction<(entry: Entry, nonBinaryData: string) => any>;
-  }) => {
-    return (
-      <>
-        {openedFiles.map((entry) => (
-          <button
-            class="daisyui-btn"
-            key={entry.path}
-            onClick$={() => {
-              if (!entry.isBinary) openStagedFile(entry, entry.data as string);
-            }}
-          >
-            {entry.name}
-          </button>
-        ))}
-      </>
-    );
-  }
-);
-
-interface Props {
-  fileStore: FileStore;
-  onFileSave: PropFunction<(path: string, nonBinaryData: string) => any>;
-  editorClass?: string;
-  editorStyle?: Record<string, string>;
-  structureClass?: string;
-  structureStyle?: Record<string, string>;
-  stagedClass?: string;
-  stagedStyle?: Record<string, string>;
-  interfaceStore: Signal<NoSerialize<WebContainerInterface> | null>;
-}
-
-export interface EditorStore {
-  editor: NoSerialize<IStandaloneCodeEditor>;
-  // onChangeDebounce: NoSerialize<any>;
-  onChangeSubscription: NoSerialize<any>;
-  viewStates: Record<string, NoSerialize<ICodeEditorViewState>>;
-  openedFiles: Entry[];
-}

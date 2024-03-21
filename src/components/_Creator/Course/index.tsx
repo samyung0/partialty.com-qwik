@@ -880,37 +880,60 @@ export default component$(
                               </button>
                             </div>
                           </div>
-                          <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
-                            {!courses[currentCourse.id].courseApproval.ready_for_approval &&
-                              courses[currentCourse.id].courseApproval.status === "pending" && (
-                                <span class="inline-flex items-center gap-2">
-                                  <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
-                                    <LuInfo />
-                                  </span>
-                                  Not Published
-                                  {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-3 lg:ml-6">
-                                      <LoadingSVG />
+                          <div class="flex flex-col gap-2">
+                            <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
+                              {!courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                courses[currentCourse.id].courseApproval.status === "pending" && (
+                                  <span class="inline-flex items-center gap-2">
+                                    <span class="mt-[-2px] inline-block text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
+                                      <LuInfo />
                                     </span>
-                                  )}
-                                  {!courses[currentCourse.id].isPublishing && (
-                                    <button
-                                      onClick$={() => handlePublish(currentCourse.id)}
-                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                    >
-                                      <span>Publish</span>
-                                    </button>
-                                  )}
-                                </span>
-                              )}
-
-                            {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                              courses[currentCourse.id].courseApproval.status === "pending" && (
-                                <span class="inline-flex items-center gap-2">
-                                  <span class=" text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
-                                    <LuHourglass />
+                                    Not Published
+                                    {courses[currentCourse.id].isPublishing && (
+                                      <span class="ml-3 lg:ml-6">
+                                        <LoadingSVG />
+                                      </span>
+                                    )}
+                                    {!courses[currentCourse.id].isPublishing && (
+                                      <button
+                                        onClick$={() => handlePublish(currentCourse.id)}
+                                        class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                      >
+                                        <span>Publish</span>
+                                      </button>
+                                    )}
                                   </span>
-                                  Pending for Approval
+                                )}
+
+                              {courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                courses[currentCourse.id].courseApproval.status === "pending" && (
+                                  <span class="inline-flex items-center gap-2">
+                                    <span class=" text-[16px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
+                                      <LuHourglass />
+                                    </span>
+                                    Pending for Approval
+                                    {courses[currentCourse.id].isPublishing && (
+                                      <span class="ml-3 lg:ml-6">
+                                        <LoadingSVG />
+                                      </span>
+                                    )}
+                                    {!courses[currentCourse.id].isPublishing && (
+                                      <button
+                                        onClick$={() => handleUnpublish(currentCourse.id)}
+                                        class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                      >
+                                        <span>Cancel Publish</span>
+                                      </button>
+                                    )}
+                                  </span>
+                                )}
+
+                              {courses[currentCourse.id].courseApproval.status === "approved" && (
+                                <span class="inline-flex items-center gap-2">
+                                  <span class=" text-[16px] text-mint-down lg:text-[20px]">
+                                    <LuCheck />
+                                  </span>
+                                  Published
                                   {courses[currentCourse.id].isPublishing && (
                                     <span class="ml-3 lg:ml-6">
                                       <LoadingSVG />
@@ -919,68 +942,65 @@ export default component$(
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
                                       onClick$={() => handleUnpublish(currentCourse.id)}
-                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                      class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
                                     >
-                                      <span>Cancel Publish</span>
+                                      <span>Unpublish</span>
                                     </button>
                                   )}
                                 </span>
                               )}
 
-                            {courses[currentCourse.id].courseApproval.status === "approved" && (
-                              <span class="inline-flex items-center gap-2">
-                                <span class=" text-[16px] text-mint-down lg:text-[20px]">
-                                  <LuCheck />
-                                </span>
-                                Published
-                                {courses[currentCourse.id].isPublishing && (
-                                  <span class="ml-3 lg:ml-6">
-                                    <LoadingSVG />
+                              {courses[currentCourse.id].courseApproval.status === "rejected" && (
+                                <span class="inline-flex items-center gap-2 text-tomato">
+                                  <span class=" text-[16px] lg:text-[20px]">
+                                    <LuBan />
                                   </span>
-                                )}
-                                {!courses[currentCourse.id].isPublishing && (
-                                  <button
-                                    onClick$={() => handleUnpublish(currentCourse.id)}
-                                    class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
-                                  >
-                                    <span>Unpublish</span>
-                                  </button>
-                                )}
-                              </span>
-                            )}
-
-                            {courses[currentCourse.id].courseApproval.status === "rejected" && (
-                              <span class="inline-flex items-center gap-2 text-tomato">
-                                <span class=" text-[16px] lg:text-[20px]">
-                                  <LuBan />
+                                  Unable to Publish
                                 </span>
-                                Unable to Publish
-                              </span>
-                            )}
+                              )}
 
+                              {courses[currentCourse.id].courseApproval.status ===
+                                "need_amendment" && (
+                                <span class="inline-flex items-center gap-2 text-tomato">
+                                  <span class=" text-[16px] lg:text-[20px]">
+                                    <LuAlertTriangle />
+                                  </span>
+                                  Amendment Needed
+                                  {courses[currentCourse.id].isPublishing && (
+                                    <span class="ml-3 lg:ml-6">
+                                      <LoadingSVG />
+                                    </span>
+                                  )}
+                                  {!courses[currentCourse.id].isPublishing && (
+                                    <button
+                                      onClick$={() => handleAmendment(currentCourse.id)}
+                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                    >
+                                      <span>Re-Publish</span>
+                                    </button>
+                                  )}
+                                </span>
+                              )}
+                            </p>
                             {courses[currentCourse.id].courseApproval.status ===
                               "need_amendment" && (
-                              <span class="inline-flex items-center gap-2 text-tomato">
-                                <span class=" text-[16px] lg:text-[20px]">
-                                  <LuAlertTriangle />
+                              <p class="flex flex-col items-start text-sm  md:flex-row md:gap-2 md:text-base">
+                                <span>Details:</span>
+                                <span class="inline-block  md:max-w-[350px] ">
+                                  {courses[currentCourse.id].courseApproval.need_amendment_reason}
                                 </span>
-                                Amendment Needed
-                                {courses[currentCourse.id].isPublishing && (
-                                  <span class="ml-3 lg:ml-6">
-                                    <LoadingSVG />
-                                  </span>
-                                )}
-                                {!courses[currentCourse.id].isPublishing && (
-                                  <button
-                                    onClick$={() => handleAmendment(currentCourse.id)}
-                                    class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                  >
-                                    <span>Re-Publish</span>
-                                  </button>
-                                )}
-                              </span>
+                              </p>
                             )}
-                          </p>
+                            {courses[currentCourse.id].courseApproval.status ===
+                              "rejected" && (
+                              <p class="flex flex-col items-start text-sm  md:flex-row md:gap-2 md:text-base">
+                                <span>Details:</span>
+                                <span class="inline-block  md:max-w-[350px] ">
+                                  {courses[currentCourse.id].courseApproval.rejected_reason}
+                                </span>
+                              </p>
+                            )}
+                          </div>
                           <div class="mt-3 flex items-center gap-3 text-[0.875rem] md:mt-4 lg:text-[1rem]">
                             <a
                               target="_blank"
