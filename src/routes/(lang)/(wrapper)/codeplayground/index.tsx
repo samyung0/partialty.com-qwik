@@ -17,6 +17,7 @@ import Editor from "~/components/_CodePlayground/editor/editor";
 import SampleCourse from "~/components/_CodePlayground/sampleCourse/sampleCourse";
 import { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import Terminal, { type TerminalStore } from "~/components/_CodePlayground/terminal/terminal";
+import { cn } from "~/utils/cn";
 import type { FileStore } from "~/utils/fileUtil";
 
 export const TerminalContext = createContextId<TerminalStore>("docs.terminal-context");
@@ -53,6 +54,7 @@ export default component$(() => {
   useContextProvider(TerminalContext, terminalStore);
 
   const editorSide = useSignal(true); // true: Editor false: Tutorial
+  const terminalOpen = useSignal(false);
 
   const onPortOpen = $((port: number, type: "open" | "close", url: string) => {
     console.log(port, type, url);
@@ -98,17 +100,17 @@ export default component$(() => {
 
   return (
     <section class="flex h-screen flex-col">
-      <div class="flex h-full">
+      <div class="flex h-full max-w-[100vw] flex-nowrap overflow-hidden">
         <div
-          class={`fixed left-0 top-0 h-full w-full transition-transform  duration-500  lg:static  lg:w-[40%] lg:transform-none  ${
+          class={` left-0 top-0 h-full min-w-[100vw] transition-transform duration-500  xl:w-[40%]   xl:min-w-[unset] xl:transform-none ${
             editorSide.value && "-translate-x-full "
           }`}
         >
           <SampleCourse />
         </div>
         <div
-          class={`fixed left-0 top-0 flex h-full    w-full max-w-7xl flex-col transition-transform  duration-500 lg:static  lg:w-[60%] lg:transition-none ${
-            !editorSide.value && "translate-x-full "
+          class={`relative left-0 top-0 flex h-full max-h-[100vh] min-w-[100vw]  max-w-7xl   flex-col overflow-hidden transition-transform  duration-500 xl:w-[60%]  xl:min-w-[unset] xl:transform-none ${
+            editorSide.value && "-translate-x-full "
           }`}
         >
           <Editor
@@ -117,9 +119,9 @@ export default component$(() => {
             fileStore={fileStore}
             editorStyle={{ height: "200px" }}
           />
-          <div class="flex w-full flex-col">
+          <div class="flex w-full flex-auto flex-col">
             {/* control set */}
-            <div class="flex w-full items-center border-b border-black">
+            <div class="flex w-full items-center shadow shadow-slate-200/80 ring-1 ring-slate-900/5">
               {/* refresh button */}
               <div class="m-2 rounded-lg hover:bg-dark/10">
                 <RefreshIcon width={25} height={25} />
@@ -137,24 +139,30 @@ export default component$(() => {
                 }}
               />
               {/* toggle button for the terminal */}
-              <input id="terminal-toggle" type="checkbox" class="peer sr-only relative" />
-              <label
-                for="terminal-toggle"
+              {/* <input id="terminal-toggle" type="checkbox" class="peer sr-only relative" /> */}
+              <button
+                // for="terminal-toggle"
+                onClick$={() => (terminalOpen.value = !terminalOpen.value)}
                 class="m-2 inline-block rounded-lg transition-transform duration-500 hover:bg-dark/10 peer-checked:left-64 peer-checked:bg-yellow"
               >
                 <TerminalIcon width={25} height={25} />
-              </label>
-              <div class="fixed bottom-10 z-20 w-full translate-y-full transform bg-white shadow-lg transition-all duration-500 peer-checked:translate-y-0 lg:bottom-0">
-                <Terminal />
-              </div>
+              </button>
             </div>
             {/* display window */}
             <iframe class="flex-1" ref={displayRef}></iframe>
           </div>
+          <div
+            class={cn(
+              "absolute bottom-0 z-20 w-full translate-y-full bg-white shadow-lg transition-all duration-500",
+              terminalOpen.value && "translate-y-0"
+            )}
+          >
+            <Terminal />
+          </div>
         </div>
       </div>
       {/* toggle button for switching between the course content and the editor */}
-      <div class="z-50 flex  justify-center border border-t-dark/10 bg-background-light-gray py-2 lg:hidden">
+      <div class="z-50 flex  justify-center border border-t-dark/10 bg-background-light-gray py-2 xl:hidden">
         <label class=" inline-flex cursor-pointer items-center">
           <span class="me-3 text-sm font-medium text-gray-900 dark:text-gray-300">Tutorial</span>
           <input
@@ -165,7 +173,7 @@ export default component$(() => {
               editorSide.value = !editorSide.value;
             }}
           />
-          <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+          <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full"></div>
           <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Editor</span>
         </label>
       </div>

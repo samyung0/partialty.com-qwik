@@ -859,9 +859,10 @@ export default component$(() => {
                         </div>
                       </div>
                     </div>
+                    
                     <section class="py-4">
-                      <Masonry client:only>
-                        {sortedDisplay.value.map((course) => {
+                      <Masonry client:only course={sortedDisplay.value} tags={tags}>
+                        {/* {sortedDisplay.value.map((course) => {
                           return (
                             <Link
                               href={course.link || undefined}
@@ -915,7 +916,7 @@ export default component$(() => {
                               )}
                             </Link>
                           );
-                        })}
+                        })} */}
                       </Masonry>
                     </section>
                   </div>
