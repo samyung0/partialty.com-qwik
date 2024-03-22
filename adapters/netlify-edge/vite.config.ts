@@ -15,6 +15,19 @@ export default extendConfig(baseConfig, () => {
       netlifyEdgeAdapter({
         ssg: {
           include: ["/*"],
+          exclude: [
+            "/contenteditor",
+            "/creator",
+            "/members",
+            "/profile",
+            "/uploadRepo",
+            "/",
+            "/signup",
+            "/login",
+            "/courses",
+            "/catalog",
+            "/unauth"
+          ],
           origin: "https://www.partialty.com",
           sitemapOutFile: "sitemap.xml",
         },

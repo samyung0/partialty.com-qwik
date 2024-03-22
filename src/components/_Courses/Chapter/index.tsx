@@ -3,18 +3,18 @@ import QwikContent from "~/components/Prose/QwikContent";
 import {
   useCurrentChapter,
   useDBLoader,
-} from "~/routes/[lang.]/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout";
+} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout";
 
 import {
   useCategoryLoader,
   useCourseLoader,
   useTagLoader,
   useUserLoaderNullable,
-} from "~/routes/[lang.]/(wrapper)/courses/[courseSlug]/layout";
+} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout";
 
 import { server$ } from "@builder.io/qwik-city";
 import { and, eq } from "drizzle-orm";
-import { fetchAudioServer } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
+import { fetchAudioServer } from "~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor";
 import drizzleClient from "~/utils/drizzleClient";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
 import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";

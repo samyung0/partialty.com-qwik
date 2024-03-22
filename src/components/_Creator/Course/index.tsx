@@ -32,7 +32,7 @@ import LoadingSVG from "~/components/LoadingSVG";
 import AddChapter from "~/components/_Creator/Course/AddChapter";
 import EditChapter from "~/components/_Creator/Course/EditChapter";
 import GetCode from "~/components/_Creator/Course/GetCode";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
 import tursoClient from "~/utils/tursoClient";

@@ -21,7 +21,7 @@ import Step4 from "~/components/_Creator/CreateCourse/step4";
 import Step5 from "~/components/_Creator/CreateCourse/step5";
 import Step6 from "~/components/_Creator/CreateCourse/step6";
 import Step7 from "~/components/_Creator/CreateCourse/step7";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import useWS from "~/utils/useWS";
 import type { NewContent } from "../../../../drizzle_turso/schema/content";

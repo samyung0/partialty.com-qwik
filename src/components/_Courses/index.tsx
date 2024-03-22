@@ -12,7 +12,7 @@ import {
   useCourseLoader,
   useTagLoader,
   useUserLoaderNullable,
-} from "~/routes/[lang.]/(wrapper)/courses/[courseSlug]/layout";
+} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../drizzle_turso/schema/profiles";
 import { listSupportedLang } from "../../../lang";

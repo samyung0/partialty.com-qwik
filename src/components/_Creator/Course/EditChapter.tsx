@@ -8,7 +8,7 @@ import {
   checkExistingChapterLink,
   saveChapter,
 } from "~/components/_Creator/Course";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import type { Content } from "../../../../drizzle_turso/schema/content";
 export { addCategorySchema, checkExistingChapter, checkExistingChapterLink, saveChapter };
 

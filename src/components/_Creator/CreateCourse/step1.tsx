@@ -3,7 +3,7 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { server$, z } from "@builder.io/qwik-city";
 import { and, eq } from "drizzle-orm";
 import LoadingSVG from "~/components/LoadingSVG";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 import { content_index } from "../../../../drizzle_turso/schema/content_index";

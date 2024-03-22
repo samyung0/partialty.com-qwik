@@ -3,7 +3,7 @@ import { component$, useSignal } from "@builder.io/qwik";
 
 import { LuExternalLink } from "@qwikest/icons/lucide";
 import Nav from "~/components/Nav";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import type { ContentCategory } from "../../../drizzle_turso/schema/content_category";
 import type { ContentIndex } from "../../../drizzle_turso/schema/content_index";
 import type { CourseApproval } from "../../../drizzle_turso/schema/course_approval";

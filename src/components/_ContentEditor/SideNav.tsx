@@ -16,15 +16,15 @@ import LoadingSVG from "~/components/LoadingSVG";
 import {
   useAccessibleCourseWrite,
   useAccessibleCourseWriteResolved,
-} from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor";
+} from "~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor";
 import { content, type Content } from "../../../drizzle_turso/schema/content";
 
 import { LuX } from "@qwikest/icons/lucide";
 import { eq } from "drizzle-orm";
 import SmallNav from "~/components/SmallNav";
 import { getChapters } from "~/components/_Creator/Course";
-import { useVerifyChapter } from "~/routes/[lang.]/(wrapper)/(authRoutes)/contenteditor/layout";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useVerifyChapter } from "~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 export { getChapters };
 

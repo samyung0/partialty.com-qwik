@@ -1,7 +1,7 @@
 import { component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
-import { useDBLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/members/dashboard/layout";
+import { useDBLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/members/dashboard/layout";
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";

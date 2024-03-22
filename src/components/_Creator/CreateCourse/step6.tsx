@@ -3,7 +3,7 @@ import { component$ } from "@builder.io/qwik";
 import { LuArrowLeft, LuEyeOff, LuFiles, LuGem, LuScrollText } from "@qwikest/icons/lucide";
 import type difficulty from "~/const/difficulty";
 import { difficultyLabels } from "~/const/difficulty";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
 
 export default component$(

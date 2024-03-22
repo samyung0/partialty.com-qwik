@@ -1,7 +1,7 @@
 import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 
 import { useUpdateProfile } from "~/action/userAction";
 import Dragndrop from "~/components/_Signup/dragndrop";

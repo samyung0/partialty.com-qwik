@@ -4,7 +4,7 @@ import { server$ } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
 import bunApp from "~/_api/bun/util/edenTreaty";
 import CheckIcon from "~/assets/svg/fitbit-check-small.svg";
-import { useUserLoader } from "~/routes/[lang.]/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 import drizzleClient from "~/utils/drizzleClient";
 import { profiles } from "../../../drizzle_turso/schema/profiles";
 

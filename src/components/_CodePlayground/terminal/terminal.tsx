@@ -12,7 +12,7 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 
 import xtermStyles from "xterm/css/xterm.css?inline";
-import { TerminalContext } from "~/routes/[lang.]/(wrapper)/codeplayground";
+import { TerminalContext } from "~/routes/(lang)/(wrapper)/codeplayground";
 
 export interface TerminalStore {
   fitAddon: NoSerialize<FitAddon> | null;
