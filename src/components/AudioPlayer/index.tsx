@@ -105,7 +105,7 @@ export default component$(
       for (let i = 0; i < dataSync.value.length; i++) {
         const timeStampToActivate =
           Number(dataSync.value[i].getAttribute("data-synctimestamp")) || 0;
-        if (player.currentTime >= timeStampToActivate) {
+        if (player.displayCurrentTime >= timeStampToActivate) {
           if (dataSync.value[i].getAttribute("data-syncactivated") === "1") continue;
           let enter: any = {};
           try {
@@ -140,7 +140,7 @@ export default component$(
     );
 
     return (
-      <div class="flex h-[10dvh] h-[10vh] min-h-[90px] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
+      <div class="flex h-[10dvh] min-h-[90px] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
         {audioTrack && (
           <>
             <div class="hidden md:block">

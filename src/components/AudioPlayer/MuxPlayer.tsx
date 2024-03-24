@@ -32,6 +32,7 @@ export const MuxAudio = ({
       onTimeUpdate={(e) => {
         if (!e.target) return;
         setTimeStamp((e.target as HTMLVideoElement).currentTime);
+        console.log("hello");
         sync();
       }}
     />
