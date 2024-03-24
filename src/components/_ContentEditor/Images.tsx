@@ -158,16 +158,50 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   const editor = useSlateStatic();
   const [value, setValue] = useState(element.caption || "");
   const ref = useRef<HTMLTextAreaElement>(null);
+
+  const parentRef = useRef<any>();
+  const imageRef = useRef<HTMLDivElement>(null);
+  const height = (element as ImageElement).imageHeight;
   useEffect(() => {
     if (ref.current) {
       ref.current.style.height = "auto";
       ref.current.style.height = `${ref.current.scrollHeight}px`;
     }
   }, []);
+  useEffect(() => {
+    parentRef.current = document.getElementById("ParentRefContainer");
+  }, []);
+  useEffect(() => {
+    if (imageRef.current)
+      new ResizeObserver((e) => {
+        if (parentRef.current && parentRef.current.className.includes("hidden")) return;
+        if (imageRef.current)
+          editor.setNodes(
+            {
+              imageHeight: imageRef.current.offsetHeight,
+            },
+            {
+              match: (n) => SlateElement.isElement(n) && n.type === "image",
+              mode: "highest",
+            }
+          );
+      }).observe(imageRef.current);
+  }, [imageRef.current]);
   return (
     <div {...attributes}>
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
-        <img width={400} height={400} src={element.url} className="w-[80%] object-contain" />
+        <div
+          style={{ height: `${height}px` }}
+          className="overflow-hidden [resize:vertical] flex justify-center items-center"
+          ref={imageRef}
+        >
+          <img
+            width={400}
+            height={400}
+            src={element.url}
+            className="max-h-full w-[80%] flex-auto object-contain"
+          />
+        </div>
         <textarea
           ref={ref}
           rows={1}
@@ -189,7 +223,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
             }
           }}
           value={value}
-          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
+          className="min-h-[1.25rem] w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
           placeholder={"Enter some captions..."}
         />
         {children}

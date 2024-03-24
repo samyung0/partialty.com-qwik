@@ -33,6 +33,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
         }
       });
     }, 100);
+    return () => clearInterval(interval.current);
   }, []);
   return innerHTML ? (
     // for preview

@@ -232,6 +232,7 @@ export type ImageElement = {
   filename?: string;
   language?: string;
   children: (CustomText | CustomElement)[];
+  imageHeight?: number;
 };
 
 export type QuizBlockElement = {

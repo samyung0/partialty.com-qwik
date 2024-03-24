@@ -372,7 +372,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "infoBlock":
       return `<style>.dark .infoBlock {
         border-color: rgb(96 165 250) !important;
-        background-color: rgb(96 165 250 / 0.1) !important;
+        background-color: rgb(37 54 75) !important;
       }.dark .infoBlockSVG {
         stroke: rgb(96 165 250) !important;
       }</style><blockquote
@@ -396,7 +396,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "cautionBlock":
       return `<style>.dark .cautionBlock {
         border-color: rgb(234 179 8) !important;
-        background-color: rgb(250 204 21 / 0.1) !important;
+        background-color: rgb(54 58 55) !important;
       }.dark .cautionBlockSVG {
         stroke: rgb(234 179 8) !important;
       }</style><blockquote
@@ -420,7 +420,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case "warningBlock":
       return `<style>.dark .warningBlock {
         border-color: rgb(244 114 182) !important;
-        background: rgb(244 114 182 / 0.1) !important
+        background: rgb(54 49 67) !important
       }.dark .warningBlockSVG {
         stroke: rgb(244 114 182) !important;
       }</style><blockquote
@@ -573,6 +573,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       ">${children}</a>`;
     }
     case "image": {
+      const height = node.imageHeight;
       const caption = node.caption || "";
       return `<div style="${style}">
       <figure style="
@@ -582,8 +583,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         justify-content: center;
         gap: 0.5rem
       ">
-        <img width={400} height={400} src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
-        max-height: 400px;
+        <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
+        height: ${height ? height : 400}px;
         object-fit: contain;
         "/>
         <p

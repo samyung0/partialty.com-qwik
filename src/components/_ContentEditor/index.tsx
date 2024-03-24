@@ -471,6 +471,22 @@ const ContentEditorReact = ({
               editor={editor}
               initialValue={[{ type: "paragraph", children: [{ text: "" }] }]}
             >
+              <SmallCircleNav
+                toggleSmallCircleNav={toggleSmallCircleNav}
+                openSmallCircleNav={openSmallCircleNav}
+                toggleSideNav={toggleSideNav}
+                setIsPreviewing={setIsPreviewing}
+                hasAudioTrack={audioTrack === undefined}
+                isPreviewing={isPreviewing}
+                setSaveBeforePreview={setSaveBeforePreview}
+                saveBeforePreview={saveBeforePreview}
+                changingValue={changingValue}
+                audioTrack={audioTrack}
+                hasChanged={hasChanged}
+                saveChanges={saveChanges}
+                chapterName={chapterName}
+                isEditing={isEditing}
+              />
               <SaveContent
                 setSaveBeforePreview={setSaveBeforePreview}
                 saveBeforePreview={saveBeforePreview}
@@ -687,11 +703,6 @@ const ContentEditorReact = ({
           </div>
         </div>
       )}
-      <SmallCircleNav
-        toggleSmallCircleNav={toggleSmallCircleNav}
-        openSmallCircleNav={openSmallCircleNav}
-        toggleSideNav={toggleSideNav}
-      />
     </>
   );
 };
