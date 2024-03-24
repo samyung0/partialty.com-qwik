@@ -83,29 +83,31 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     if (!event.env.get("QSTASH_URL") || !event.env.get("QSTASH_TOKEN")) {
       console.error("Unable to send verification email!");
     }
-
-    const emailToken = await generateEmailTokens(event.env, user.userId);
-    const res = await fetch(
-      event.env.get("QSTASH_URL")! + "https://api.partialty.com/mail/sendMail/verifyMail",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${event.env.get("QSTASH_TOKEN")!}`,
-        },
-        body: JSON.stringify({
-          verifyLink:
-            import.meta.env.MODE === "production"
-              ? `https://www.partialty.com/auth/email/verifyToken/${emailToken}`
-              : `http://localhost:5173/auth/email/verifyToken/${emailToken}`,
-          receiverEmail: data.email,
-        }),
-      }
-    )
-      .then((x) => x.json())
-      .catch((e) => {
-        console.error("Unable to send verification email! ", e);
-      });
-
+    try {
+      const emailToken = await generateEmailTokens(event.env, user.userId);
+      const res = await fetch(
+        event.env.get("QSTASH_URL")! + "https://api.partialty.com/mail/sendMail/verifyMail",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${event.env.get("QSTASH_TOKEN")!}`,
+          },
+          body: JSON.stringify({
+            verifyLink:
+              import.meta.env.MODE === "production"
+                ? `https://www.partialty.com/auth/email/verifyToken/${emailToken}`
+                : `http://localhost:5173/auth/email/verifyToken/${emailToken}`,
+            receiverEmail: data.email,
+          }),
+        }
+      )
+        .then((x) => x.json())
+        .catch((e) => {
+          console.error("Unable to send verification email! ", e);
+        });
+    } catch (e) {
+      //
+    }
     // console.log("Email Send:", res);
     // const verifyLink = import.meta.env.MODE === "production" ? `https://`
 
