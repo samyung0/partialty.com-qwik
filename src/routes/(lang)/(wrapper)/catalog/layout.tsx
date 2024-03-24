@@ -23,7 +23,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
       and(
         eq(content_index.is_deleted, false),
         eq(content_index.is_private, false),
-        // eq(course_approval.status, "approved")
+        eq(course_approval.status, "approved")
       )
     );
 });
@@ -32,14 +32,14 @@ export const useCategories = routeLoader$(async (event) => {
   return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select()
     .from(content_category)
-    // .where(eq(content_category.approved, true));
+    .where(eq(content_category.approved, true));
 });
 
 export const useTags = routeLoader$(async (event) => {
   return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
     .select()
     .from(tag)
-    // .where(eq(tag.approved, true));
+    .where(eq(tag.approved, true));
 });
 
 export default component$(() => <Slot />);

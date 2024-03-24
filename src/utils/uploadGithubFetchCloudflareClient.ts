@@ -10,7 +10,7 @@ export const uploadRepoToCloudflare = async (
   owner: string,
   repo: string,
   branch: string = "main",
-  token: string,
+  token: string
 ): Promise<[boolean, string]> => {
   // const GITHUB_PUBLIC_TOKEN = import.meta.env.VITE_GITHUB_PUBLIC_TOKEN;
 
@@ -35,7 +35,7 @@ export const test = $(async function (token: string) {
     headers: {
       authorization: `Bearer ${token}`,
     },
-  })
+  });
   console.log("RES", res.data);
   console.log(res2.data);
 });

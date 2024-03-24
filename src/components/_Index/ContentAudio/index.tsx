@@ -22,7 +22,7 @@ export default component$(() => {
   });
 
   return (
-    <section class="min-h-[100vh] bg-pink py-8">
+    <section class="min-h-[100vh] bg-custom-pink py-8">
       <div class="flex min-h-[100vh]  flex-col items-center justify-center gap-12">
         <div class="flex  items-center justify-center">
           <h1 class="p-2 text-center font-mosk text-2xl font-[900] md:text-3xl lg:text-[2rem] lg:leading-[3rem] xl:text-[2.5rem] xl:leading-[3.5rem]">

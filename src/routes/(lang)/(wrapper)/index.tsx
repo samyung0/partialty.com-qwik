@@ -10,7 +10,6 @@ import ContentVarieties from "~/components/_Index/ContentVarieties";
 import Hero from "~/components/_Index/Hero";
 import IndexNav from "~/components/_Index/Nav";
 
-
 // REMOVE
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   cacheControl({

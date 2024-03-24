@@ -110,8 +110,10 @@ const insertCourseHandler = server$(async function (
   _accessible_courses_read: string | null,
   userId: string,
   category: ContentCategory | undefined,
-  _tag: Tag[]
+  _tag: Tag[],
+  userRole: string
 ) {
+  if (userRole === "free") throw new Error("Unexpected submit of course!");
   return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(
     async (tx) => {
       await insertCourse(tx, courseData);
@@ -251,6 +253,7 @@ export default component$(() => {
   });
 
   const handleSubmit = $(async () => {
+    if (user.role === "free") throw new Error("Unexpected submit of course!");
     const newContent = {
       id: uuidv4(),
       name: courseData.name,
@@ -276,7 +279,8 @@ export default component$(() => {
       user.accessible_courses_read,
       user.userId,
       createdCategory.value,
-      createdTags
+      createdTags,
+      user.role
     );
     ws.value?.send(
       JSON.stringify({

@@ -525,8 +525,8 @@ export default component$(() => {
                             coursesInfo[currentProject.slug].difficulty === "beginner"
                               ? "border-sea"
                               : coursesInfo[currentProject.slug].difficulty === "intermediate"
-                              ? "border-yellow"
-                              : "border-pink"
+                              ? "border-custom-yellow"
+                              : "border-custom-pink"
                           }`}
                         >
                           {difficulty[coursesInfo[currentProject.slug].difficulty].name}
@@ -549,7 +549,7 @@ export default component$(() => {
                               Completed
                             </p>
                           ) : (
-                            <p class="border-b-2 border-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
+                            <p class="border-b-2 border-custom-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
                               Not Completed
                             </p>
                           )}

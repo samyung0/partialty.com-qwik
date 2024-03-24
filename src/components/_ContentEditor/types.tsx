@@ -329,6 +329,9 @@ export type CustomText = {
   subscript?: true;
   background?: string;
   color?: string;
+  colorDarkMode?: string;
+  backgroundDarkMode?: string;
+  underlineDarkMode?: string;
   timeStamp?: number;
   sync?: true;
   animate?: true;

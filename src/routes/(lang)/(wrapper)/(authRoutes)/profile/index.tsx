@@ -3,14 +3,13 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 
 import Nav from "~/components/Nav";
 import Profile from "~/components/_Profile/profile";
-import Statistics from "~/components/_Profile/statistics";
 import Subscription from "~/components/_Profile/subscription";
 import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
 
 const tabs = [
   { name: "Profile", component: <Profile /> },
   { name: "Subscription", component: <Subscription /> },
-  { name: "Statistics", component: <Statistics /> },
+  // { name: "Statistics", component: <Statistics /> },
 ];
 
 export default component$(() => {
@@ -39,7 +38,7 @@ export default component$(() => {
                   class={
                     "hidden h-full w-[5px] rounded-lg lg:block " +
                     (idx === displayIdx.value
-                      ? "bg-yellow"
+                      ? "bg-custom-yellow"
                       : "bg-light-yellow dark:bg-primary-dark-gray")
                   }
                 ></div>

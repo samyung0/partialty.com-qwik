@@ -60,7 +60,7 @@ export default component$(
                     class={
                       "hidden h-full w-[5px] rounded-lg lg:block " +
                       (idx === tabIndex.value
-                        ? "bg-yellow"
+                        ? "bg-custom-yellow"
                         : "bg-light-yellow dark:bg-primary-dark-gray")
                     }
                   ></div>

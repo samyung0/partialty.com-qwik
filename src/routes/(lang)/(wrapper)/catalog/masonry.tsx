@@ -4,7 +4,7 @@ import { qwikify$ } from "@builder.io/qwik-react";
 import { Gem, Rocket, Tags } from "lucide-react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { cn } from "~/utils/cn";
-import { Tag } from "../../../../../drizzle_turso/schema/tag";
+import type { Tag } from "../../../../../drizzle_turso/schema/tag";
 
 const component = ({
   course,
@@ -42,8 +42,8 @@ const component = ({
               className={cn(
                 "self-start border-b-2 pb-1",
                 course.difficulty === "easy" && "border-sea",
-                course.difficulty === "intermediate" && "border-yellow",
-                course.difficulty === "advanced" && "border-pink"
+                course.difficulty === "intermediate" && "border-custom-yellow",
+                course.difficulty === "advanced" && "border-custom-pink"
               )}
             >
               {course.difficulty}
@@ -66,10 +66,10 @@ const component = ({
           {course.is_premium && (
             <div className="flex items-start gap-2">
               <p className="flex items-center gap-2">
-                <span className=" text-tomato dark:text-pink">
+                <span className=" text-tomato dark:text-custom-pink">
                   <Gem size={15} />
                 </span>
-                <span className="text-tomato dark:text-pink">Subscription Required</span>
+                <span className="text-tomato dark:text-custom-pink">Subscription Required</span>
               </p>
             </div>
           )}

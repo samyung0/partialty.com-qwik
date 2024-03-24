@@ -41,7 +41,7 @@ export default component$(() => {
     isBinary: false,
     isFolder: true,
     entries: [],
-    discrepancy: false,
+    hasChanged: false,
   });
 
   const displayBaseUrl = useSignal("");
@@ -102,14 +102,14 @@ export default component$(() => {
     <section class="flex h-screen flex-col">
       <div class="flex h-full max-w-[100vw] flex-nowrap overflow-hidden">
         <div
-          class={` left-0 top-0 h-full min-w-[100vw] transition-transform duration-500  xl:w-[40%]   xl:min-w-[unset] xl:transform-none ${
+          class={` left-0 top-0 h-full min-w-[100vw] transition-transform duration-500  xl:w-[30%]   xl:min-w-[unset] xl:transform-none ${
             editorSide.value && "-translate-x-full "
           }`}
         >
           <SampleCourse />
         </div>
         <div
-          class={`relative left-0 top-0 flex h-full max-h-[100vh] min-w-[100vw]  max-w-7xl   flex-col overflow-hidden transition-transform  duration-500 xl:w-[60%]  xl:min-w-[unset] xl:transform-none ${
+          class={`relative left-0 top-0 flex h-full max-h-[100vh] min-w-[100vw]  max-w-7xl   flex-col overflow-hidden transition-transform  duration-500 xl:w-[70%]  xl:min-w-[unset] xl:transform-none ${
             editorSide.value && "-translate-x-full "
           }`}
         >
@@ -117,7 +117,7 @@ export default component$(() => {
             serverInterface={serverInterface}
             saveServerFile={saveServerFile}
             fileStore={fileStore}
-            editorStyle={{ height: "200px" }}
+            // editorStyle={{ height: "200px" }}
           />
           <div class="flex w-full flex-auto flex-col">
             {/* control set */}
@@ -143,7 +143,7 @@ export default component$(() => {
               <button
                 // for="terminal-toggle"
                 onClick$={() => (terminalOpen.value = !terminalOpen.value)}
-                class="m-2 inline-block rounded-lg transition-transform duration-500 hover:bg-dark/10 peer-checked:left-64 peer-checked:bg-yellow"
+                class="m-2 inline-block rounded-lg transition-transform duration-500 hover:bg-dark/10 peer-checked:left-64 peer-checked:bg-custom-yellow"
               >
                 <TerminalIcon width={25} height={25} />
               </button>
@@ -182,11 +182,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "Code Playground",
   meta: [
     {
       name: "description",
-      content: "Qwik site description",
+      content: "Try out your app or project here!",
     },
   ],
 };

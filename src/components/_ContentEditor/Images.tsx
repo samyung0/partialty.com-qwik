@@ -123,21 +123,21 @@ export const HoveringImage = ({
                 setShowImageChooser(true);
               }}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-s-lg border border-custom-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Edit Image
             </button>
             <button
               onClick={() => window.open(initialUrl.current)}
               type="button"
-              className="border-b border-t border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="border-b border-t border-custom-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <ExternalLink strokeWidth={1.5} size={20} />
             </button>
             <button
               onClick={() => toggleImageAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-e-lg border border-custom-yellow bg-light-yellow px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>
@@ -256,7 +256,7 @@ export const CenterImageChooser = ({
             {resolvedUserImages.map(([blobUrl, imgData]) => (
               <button
                 key={`resolvedUserImages${blobUrl}`}
-                className="flex h-[220px] w-[220px] flex-col items-stretch justify-stretch rounded-lg border-2 border-light-mint p-2 hover:border-pink hover:bg-light-pink dark:border-highlight-dark dark:hover:border-disabled-dark dark:hover:bg-highlight-dark"
+                className="flex h-[220px] w-[220px] flex-col items-stretch justify-stretch rounded-lg border-2 border-light-mint p-2 hover:border-custom-pink hover:bg-light-pink dark:border-highlight-dark dark:hover:border-disabled-dark dark:hover:bg-highlight-dark"
                 onClick={() => {
                   ReactEditor.focus(editor);
                   if (!editor.selection) return;

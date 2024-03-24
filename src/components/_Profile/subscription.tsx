@@ -53,7 +53,7 @@ export default component$(() => {
       <div class="mt-6 flex flex-col items-center lg:mt-12">
         <div class="flex flex-col items-center gap-1 lg:gap-3">
           <p class=" font-mosk text-2xl font-bold lg:text-4xl">
-            Want to <span class="highlight-mint-down">learn more</span>?
+            Want to <span class="highlight-mint dark:highlight-mint-down">learn more</span>?
           </p>
           <p class="text-base lg:text-lg">Upgrade to fully utilize the platform</p>
         </div>

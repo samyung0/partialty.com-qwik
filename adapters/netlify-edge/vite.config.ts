@@ -27,7 +27,7 @@ export default extendConfig(baseConfig, () => {
             "/courses",
             "/catalog",
             "/unauth",
-            "/purchase"
+            "/purchase",
           ],
           origin: "https://www.partialty.com",
           sitemapOutFile: "sitemap.xml",

@@ -5,7 +5,7 @@ import { FolderIcon } from "~/assets/icon/folderIcon";
 import { FolderOpenIcon } from "~/assets/icon/folderOpenIcon";
 import { RightArrow } from "~/assets/icon/rightArrow";
 
-import type { Entry } from "~/utils/fileUtil";
+import { Entry } from "~/utils/fileUtil";
 
 interface EntryInterface {
   entry: Entry;

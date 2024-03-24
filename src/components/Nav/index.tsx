@@ -369,7 +369,7 @@ export default component$(
                           <span class="text-[25px]">
                             <LuHome />
                           </span>
-                          <span class="whitespace-nowrap">Home</span>
+                          <span class="whitespace-nowrap  ">Home</span>
                         </Link>
                       </li>
                       <li>

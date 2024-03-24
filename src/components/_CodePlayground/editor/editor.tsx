@@ -1,5 +1,6 @@
 import type { NoSerialize, PropFunction } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import LoadingSVG from "~/components/LoadingSVG";
 import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
 import { type Entry, type FileStore } from "~/utils/fileUtil";
 import FileStructureLargeScreen from "../fileStructure/fileStructureLargeScreen";
@@ -92,11 +93,11 @@ export default component$((props: EditorInterface) => {
     // non binary data file only
     const data = await props.serverInterface.server?.readSimpleFile(path);
     if (data === undefined) return false;
-    // entry.discrepancy already checks
+    // entry.hasChanged already checks
     // we just do a double check by retrieving the file from fs
     return (
       editorStore.openedFiles.filter(
-        (entry: Entry) => entry.path === path && entry.data === data && !entry.discrepancy
+        (entry: Entry) => entry.path === path && entry.data === data && !entry.hasChanged
       ).length === 1
     );
   });
@@ -123,6 +124,13 @@ export default component$((props: EditorInterface) => {
      */
     const monaco = await getMonaco();
     const fsPath = getUri(monaco, path).fsPath;
+
+    if (
+      !(await verifyFileUnchanged(path)) &&
+      !window.confirm("There are unsaved changes! Are you sure you want to close the file?")
+    )
+      return;
+
     const viewState = editorStore.viewStates[fsPath];
     if (viewState) delete editorStore.viewStates[fsPath];
     for (let i = 0; i < editorStore.openedFiles.length; i++) {
@@ -280,25 +288,35 @@ export default component$((props: EditorInterface) => {
   // });
   return (
     <div class="flex h-[50%]">
+      {props.serverInterface.ready && (
+        <>
+          <FileStructureLargeScreen
+            entries={props.fileStore.entries}
+            addToStage={addToStage}
+            openStagedFile={openStagedFile}
+          />
+
+          <div class="flex h-full w-full flex-1 flex-col">
+            {/* editor and display */}
+
+            <FileTab
+              entries={props.fileStore.entries}
+              openedFiles={editorStore.openedFiles}
+              addToStage={addToStage}
+              openStagedFile={openStagedFile}
+              saveOpenedFiles={saveOpenedFiles}
+              closeFile={closeFile$}
+            />
+            <div class="z-10 flex-1" style={props.editorStyle} ref={hostRef} />
+          </div>
+        </>
+      )}
+      {!props.serverInterface.ready && (
+        <div class="flex h-full w-full items-center justify-center bg-background-light-gray dark:bg-primary-dark-gray">
+          <LoadingSVG />
+        </div>
+      )}
       {/* file structure on the right side in larger screen*/}
-      <FileStructureLargeScreen
-        entries={props.fileStore.entries}
-        addToStage={addToStage}
-        openStagedFile={openStagedFile}
-      />
-
-      <div class="flex h-full w-full flex-1 flex-col">
-        {/* editor and display */}
-
-        <FileTab
-          entries={props.fileStore.entries}
-          openedFiles={editorStore.openedFiles}
-          addToStage={addToStage}
-          openStagedFile={openStagedFile}
-          saveOpenedFiles={saveOpenedFiles}
-        />
-        <div class="z-10 flex-1" style={props.editorStyle} ref={hostRef} />
-      </div>
     </div>
   );
 });

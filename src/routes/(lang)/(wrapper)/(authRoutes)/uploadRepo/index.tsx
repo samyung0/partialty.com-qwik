@@ -46,19 +46,21 @@ export default component$(() => {
       message.value = parse.error.issues[0].message;
       return;
     }
-    const token = await getToken(user.userId)
+    const token = await getToken(user.userId);
 
-    if(!token) return message.value = "Error!";
+    if (!token) return (message.value = "Error!");
 
-    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch,token).then((res) => {
-      if (res[0]) message.value = res[1];
-      else message.value = "Error! " + res[1];
-    });
+    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch, token).then(
+      (res) => {
+        if (res[0]) message.value = res[1];
+        else message.value = "Error! " + res[1];
+      }
+    );
   });
 
   useVisibleTask$(async () => {
     const token = await getToken(user.userId);
-    console.log(token)
+    console.log(token);
     if (!token) return;
     test(token);
   });

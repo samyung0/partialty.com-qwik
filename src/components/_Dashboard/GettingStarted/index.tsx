@@ -61,7 +61,7 @@ export default component$(() => {
                     Completed
                   </p>
                 ) : (
-                  <p class="whitespace-nowrap border-b-2 border-pink text-[0.875rem] md:border-b-4 md:text-[1rem]">
+                  <p class="whitespace-nowrap border-b-2 border-custom-pink text-[0.875rem] md:border-b-4 md:text-[1rem]">
                     Not Completed
                   </p>
                 )}

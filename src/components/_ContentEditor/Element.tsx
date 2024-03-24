@@ -52,17 +52,16 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
           <blockquote
             style={{
               ...style,
-              borderColor: "#72cada",
-              backgroundColor: "#e3f4f8",
-              fontStyle: "normal",
+              // borderColor: "#72cada",
+              // backgroundColor: "#e3f4f8",
               paddingTop: "1em",
               paddingBottom: "1em",
               borderRadius: "6px",
             }}
-            className="infoBlock"
+            className="infoBlock !border-blue-700 !bg-blue-50 dark:!border-blue-400 dark:!bg-blue-400/10"
             {...attributes}
           >
-            <div style={{ paddingBottom: "1em", color: "#72cada" }}>
+            <div style={{ paddingBottom: "1em" }} className="!text-blue-700 dark:!text-blue-400">
               <Lightbulb size={24} />
             </div>
             {children}
@@ -74,17 +73,17 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
         <blockquote
           style={{
             ...style,
-            borderColor: "#fcd34d",
-            backgroundColor: "#fef6db",
-            fontStyle: "normal",
+            // borderColor: "#fcd34d",
+            // backgroundColor: "#fef6db",
             paddingTop: "1em",
             paddingBottom: "1em",
             borderRadius: "6px",
           }}
           {...attributes}
+          className="!border-yellow-800 !bg-yellow-50 dark:!border-yellow-500 dark:!bg-yellow-400/10"
         >
-          <div style={{ paddingBottom: "1em" }}>
-            <Info color={"#fcd34d"} size={24} />
+          <div style={{ paddingBottom: "1em" }} className="!text-yellow-800 dark:!text-yellow-500">
+            <Info size={24} />
           </div>
           {children}
         </blockquote>
@@ -94,17 +93,17 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
         <blockquote
           style={{
             ...style,
-            borderColor: "#ff6347",
-            backgroundColor: "#ffe0da",
-            fontStyle: "normal",
+            // borderColor: "#ff6347",
+            // backgroundColor: "#ffe0da",
             paddingTop: "1em",
             paddingBottom: "1em",
             borderRadius: "6px",
           }}
           {...attributes}
+          className="!border-pink-700 !bg-pink-50 dark:!border-pink-400 dark:!bg-pink-400/10"
         >
-          <div style={{ paddingBottom: "1em" }}>
-            <XCircle color={"#ff6347"} size={24} />
+          <div style={{ paddingBottom: "1em" }} className="!text-pink-700 dark:!text-pink-400">
+            <XCircle size={24} />
           </div>
           {children}
         </blockquote>

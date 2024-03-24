@@ -113,7 +113,7 @@ export const HoveringEmbed = ({
         <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
-              <div className="flex gap-4 border-l border-r border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark ">
+              <div className="flex gap-4 border-l border-r border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark ">
                 <Link2
                   className="invert-[0.8] dark:text-background-light-gray dark:invert-0"
                   strokeWidth={1.5}
@@ -144,21 +144,21 @@ export const HoveringEmbed = ({
                     ReactEditor.deselect(editor);
                   }}
                   type="button"
-                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+                  className="flex flex-1 justify-center border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <Check strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setUrl(initialUrl.current)}
                   type="button"
-                  className="flex flex-1 justify-center border-b border-t border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+                  className="flex flex-1 justify-center border-b border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <RotateCcw strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setLinkOpen(false)}
                   type="button"
-                  className="flex flex-1 justify-center border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+                  className="flex flex-1 justify-center border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
                 >
                   <ArrowLeft strokeWidth={2} size={15} />
                 </button>
@@ -169,14 +169,14 @@ export const HoveringEmbed = ({
               <button
                 onClick={() => setLinkOpen(true)}
                 type="button"
-                className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+                className="rounded-s-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
               >
                 Edit Link
               </button>
               <button
                 onClick={() => removeEmbed(editor)}
                 type="button"
-                className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+                className="rounded-e-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow focus:z-10 dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
               >
                 <Trash strokeWidth={1.5} size={20} />
               </button>
@@ -291,7 +291,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
               <iframe
                 allowTransparency
                 allowFullScreen
-                className="size-full"
+                className="iframeEmbed size-full"
                 src={`${
                   parsedUrl && parsedUrl.startsWith(EMBED_URL) && isDark
                     ? `${parsedUrl}?dark=1`
@@ -324,7 +324,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
             }
           }}
           value={value}
-          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50"
+          className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
           placeholder={"Enter some captions..."}
         />
       </div>

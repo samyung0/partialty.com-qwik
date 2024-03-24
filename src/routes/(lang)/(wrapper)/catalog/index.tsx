@@ -1,7 +1,6 @@
 import { component$, useComputed$, useSignal } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
-import { LuGem, LuRocket, LuTags } from "@qwikest/icons/lucide";
+import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import Footer from "~/components/Footer";
 import Nav from "~/components/Nav";
 import { useCategories, useCourseLoader, useTags } from "~/routes/(lang)/(wrapper)/catalog/layout";
@@ -859,7 +858,7 @@ export default component$(() => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <section class="py-4">
                       <Masonry client:only course={sortedDisplay.value} tags={tags}>
                         {/* {sortedDisplay.value.map((course) => {
@@ -881,8 +880,8 @@ export default component$(() => {
                                   class={cn(
                                     "self-start border-b-2 pb-1",
                                     course.difficulty === "easy" && "border-sea",
-                                    course.difficulty === "intermediate" && "border-yellow",
-                                    course.difficulty === "advanced" && "border-pink"
+                                    course.difficulty === "intermediate" && "border-custom-yellow",
+                                    course.difficulty === "advanced" && "border-custom-pink"
                                   )}
                                 >
                                   {course.difficulty}
@@ -905,10 +904,10 @@ export default component$(() => {
                               {course.is_premium && (
                                 <div class="flex items-start gap-2">
                                   <p class="flex items-center gap-2">
-                                    <span class="text-[15px] text-tomato dark:text-pink">
+                                    <span class="text-[15px] text-tomato dark:text-custom-pink">
                                       <LuGem />
                                     </span>
-                                    <span class="text-tomato dark:text-pink">
+                                    <span class="text-tomato dark:text-custom-pink">
                                       Subscription Required
                                     </span>
                                   </p>

@@ -3,10 +3,18 @@ import { component$, useSignal } from "@builder.io/qwik";
 import { LuX } from "@qwikest/icons/lucide";
 // import generateContentShareToken from "~/auth/generateContentShareToken";
 import LoadingSVG from "~/components/LoadingSVG";
+import type { IsLockedValidation } from "~/components/_Creator/Course";
 import { generateToken } from "~/components/_Creator/Course";
 
 export default component$(
-  ({ showGetCode, contentId }: { showGetCode: Signal<boolean>; contentId: string }) => {
+  ({
+    showGetCode,
+    contentId,
+    userRole,
+    userId,
+    author,
+    isLocked,
+  }: { showGetCode: Signal<boolean>; contentId: string } & IsLockedValidation) => {
     const isGeneratingCode = useSignal(false);
     const generatedCode = useSignal("");
     return (
@@ -24,6 +32,8 @@ export default component$(
           <div class="flex flex-col items-center justify-center gap-3">
             <button
               onClick$={async () => {
+                if (isLocked && userId !== author && userRole !== "admin")
+                  return alert("Unexpected!");
                 if (isGeneratingCode.value) return;
                 isGeneratingCode.value = true;
                 try {
@@ -47,8 +57,9 @@ export default component$(
           </div>
           <p class="max-w-[280px] pt-4 text-center text-sm md:max-w-[400px] md:pt-6 md:text-base">
             Anyone with this code can view and edit your courses. If you don't want other people to
-            edit the course, <span class="border-b-4 border-tomato dark:border-pink">lock</span> the
-            course before sharing the code. <br />
+            edit the course,{" "}
+            <span class="border-b-4 border-tomato dark:border-custom-pink">lock</span> the course
+            before sharing the code. <br />
             <br />
             You CANNOT revoke the access later.
           </p>

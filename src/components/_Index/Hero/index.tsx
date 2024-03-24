@@ -60,7 +60,7 @@ export default component$(() => {
       <div class=" z-[100] block w-full 2xl:hidden">
         <Nav disableTheme />
       </div>
-      <div class="flex flex-auto justify-stretch items-center">
+      <div class="flex flex-auto items-center justify-stretch">
         <div class="relative z-10 flex h-full w-full flex-col items-center justify-center pb-12 md:pt-0 2xl:flex-row">
           <div class=" flex items-center justify-center overflow-auto [order:1] xl:w-[50%] 2xl:justify-end 2xl:pr-[6vw] 2xl:[order:0]">
             <div class="relative flex h-[300px] w-[500px] max-w-[95vw] items-start justify-stretch overflow-auto bg-code-editor-one-dark-pro p-4 shadow-2xl lg:h-[400px] lg:w-[600px] lg:p-8">

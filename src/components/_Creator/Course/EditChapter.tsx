@@ -2,6 +2,7 @@ import type { QRL, Signal } from "@builder.io/qwik";
 import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 import { LuGem, LuX } from "@qwikest/icons/lucide";
 import LoadingSVG from "~/components/LoadingSVG";
+import type { IsLockedValidation } from "~/components/_Creator/Course";
 import {
   addCategorySchema,
   checkExistingChapter,
@@ -19,13 +20,17 @@ export default component$(
     callBackOnSave,
     courseData,
     courseSlug,
+    userRole,
+    userId,
+    author,
+    isLocked,
   }: {
     showEditChapter: Signal<boolean>;
     courseId: Signal<string>;
     callBackOnSave: QRL<(course: Content) => any>;
     courseData: Content;
     courseSlug: Signal<string>;
-  }) => {
+  } & IsLockedValidation) => {
     const user = useUserLoader().value;
     const formData = useStore(() => Object.assign({}, courseData));
     const formError = useStore({
@@ -38,6 +43,7 @@ export default component$(
     const loading = useSignal(false);
 
     const handleSubmit = $(async () => {
+      if (isLocked && userId !== author && userRole !== "admin") return alert("Unexpected!");
       if (loading.value) return;
       loading.value = true;
       formError.name = "";

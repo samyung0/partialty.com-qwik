@@ -54,7 +54,7 @@ const audioTrack = ({
   }, []);
   return (
     audioTrack && (
-      <div className="mt-auto grid h-[10vh] w-full grid-cols-1 bg-background-light-gray px-8 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm">
+      <div className="mt-auto grid h-[10vh] w-full grid-cols-1 bg-background-light-gray px-8 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray">
         <MuxPlayer
           ref={muxRef}
           className="hidden"
@@ -70,13 +70,13 @@ const audioTrack = ({
         <div className="mx-auto flex w-[80%] items-center">
           <div className="w-full">
             <div className="mx-auto mb-1 flex items-center justify-between">
-              <p className="block w-[300px] overflow-auto truncate text-base tracking-wide ">
+              <p className="block w-[300px] overflow-auto truncate text-base tracking-wide text-primary-dark-gray dark:text-background-light-gray">
                 {audioTrack.filename}
               </p>
               <button
                 data-tooltip-target="tooltip-pause"
                 type="button"
-                className="group mx-2 inline-flex items-center justify-center rounded-full bg-primary-dark-gray p-2.5 font-medium focus:outline-none"
+                className="group mx-2 inline-flex items-center justify-center rounded-full bg-primary-dark-gray p-2.5 font-medium focus:outline-none dark:bg-highlight-dark"
                 onClick={() => setPaused(!paused)}
               >
                 {paused ? (
@@ -115,7 +115,7 @@ const audioTrack = ({
                     }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`,
                   }}
                   className={`m-0 h-1.5 w-full cursor-pointer appearance-none rounded-full
-           bg-background-light-gray p-0 accent-primary-dark-gray`}
+           bg-background-light-gray p-0 accent-primary-dark-gray dark:accent-highlight-dark`}
                 />
               </label>
               <span className="text-sm font-medium text-primary-dark-gray dark:text-gray-400">

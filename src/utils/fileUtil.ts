@@ -22,7 +22,7 @@ export interface Entry {
   isBinary: boolean;
   isFolder: boolean;
   entries: Entry[];
-  discrepancy: boolean;
+  hasChanged: boolean;
 }
 
 export const arrayBufferToBlob = (arrayBuffer: ArrayBuffer) => {
@@ -99,7 +99,7 @@ export const addFolderTree = (entries: Entry[], path: string, prevPath: string =
     isBinary: false,
     isFolder: true,
     name: name,
-    discrepancy: false,
+    hasChanged: false,
     path: prevPath + "/" + name,
   };
   entries.push(entry);
@@ -120,7 +120,7 @@ export const addFileTree = (entries: Entry[], path: string): Entry[] => {
     entries: [],
     isBinary: isBinary(name),
     isFolder: false,
-    discrepancy: false,
+    hasChanged: false,
     name: name,
     path: path,
   };

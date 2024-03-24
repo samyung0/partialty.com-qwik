@@ -156,8 +156,8 @@ export default component$(() => {
                 course.content_index.difficulty === "easy"
                   ? "border-sea"
                   : course.content_index.difficulty === "intermediate"
-                  ? "border-yellow"
-                  : "border-pink"
+                  ? "border-custom-yellow"
+                  : "border-custom-pink"
               }`}
             >
               {difficultyLabels[course.content_index.difficulty]}
@@ -168,7 +168,7 @@ export default component$(() => {
           <div class="order-2 flex flex-1 flex-col gap-3 pb-12 md:order-1 md:gap-4">
             {course.content_index.is_premium && (
               <div class="flex flex-col gap-1 md:gap-2">
-                <p class="flex items-center gap-2 text-sm text-tomato dark:text-pink md:gap-3 md:text-base">
+                <p class="flex items-center gap-2 text-sm text-tomato dark:text-custom-pink md:gap-3 md:text-base">
                   <span class="text-[15px] md:text-[20px]">
                     <LuGem />
                   </span>
@@ -200,7 +200,7 @@ export default component$(() => {
                     <li key={chapter.id} class="flex items-center gap-2">
                       <span>{chapter.name}</span>
                       {chapter.is_premium && (
-                        <span class="text-[14px] text-tomato dark:text-pink md:text-[16px] lg:text-[18px]">
+                        <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
                           <LuGem />
                         </span>
                       )}
@@ -307,7 +307,7 @@ export default component$(() => {
                   {/* <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                     <LuHeart />
                   </span> */}
-                  <span class="h-[20px] w-[20px] fill-tomato stroke-tomato dark:fill-pink dark:stroke-pink">
+                  <span class="h-[20px] w-[20px] fill-tomato stroke-tomato dark:fill-custom-pink dark:stroke-custom-pink">
                     <HeartSVG checked={isFavourite} />
                   </span>
                 </span>

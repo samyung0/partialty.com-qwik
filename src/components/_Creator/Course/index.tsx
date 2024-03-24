@@ -47,6 +47,13 @@ import { profiles, type Profiles } from "../../../../drizzle_turso/schema/profil
 import type { Tag } from "../../../../drizzle_turso/schema/tag";
 import { displayNamesLang, listSupportedLang } from "../../../../lang";
 
+export type IsLockedValidation = {
+  userRole: string;
+  userId: string;
+  author: string;
+  isLocked: boolean;
+};
+
 const EXPIRES_IN = 1000 * 60 * 30; // 30 minutes
 export const generateToken = server$(async function (contentId: string) {
   const storedUserTokens = await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
@@ -531,7 +538,13 @@ export default component$(
       );
     });
 
-    const handlePublish = $(async (courseId: string) => {
+    const handlePublish = $(async (courseId: string, userId: string) => {
+      if (
+        courses[courseId].is_locked &&
+        courses[courseId].author !== userId &&
+        user.role !== "admin"
+      )
+        return alert("Course is locked. You cannot publish the course!");
       if (!window.confirm("Are you sure you want to publish this course?")) return;
 
       if (courses[courseId].isPublishing) return;
@@ -546,7 +559,13 @@ export default component$(
       courses[courseId].isPublishing = false;
     });
 
-    const handleAmendment = $(async (courseId: string) => {
+    const handleAmendment = $(async (courseId: string, userId: string) => {
+      if (
+        courses[courseId].is_locked &&
+        courses[courseId].author !== userId &&
+        user.role !== "admin"
+      )
+        return alert("Course is locked. You cannot re-publish the course!");
       if (!window.confirm("Are you sure you want to re-publish this course?")) return;
 
       if (courses[courseId].isPublishing) return;
@@ -561,7 +580,13 @@ export default component$(
       courses[courseId].isPublishing = false;
     });
 
-    const handleUnpublish = $(async (courseId: string) => {
+    const handleUnpublish = $(async (courseId: string, userId: string) => {
+      if (
+        courses[courseId].is_locked &&
+        courses[courseId].author !== userId &&
+        user.role !== "admin"
+      )
+        return alert("Course is locked. You cannot unpublish the course!");
       if (!window.confirm("Are you sure you want to unpublish this course?")) return;
 
       if (courses[courseId].isPublishing) return;
@@ -682,10 +707,21 @@ export default component$(
     return (
       <>
         {showGetCodeCourseId.value && showGetCode.value && (
-          <GetCode showGetCode={showGetCode} contentId={showGetCodeCourseId.value} />
+          <GetCode
+            userRole={user.role}
+            userId={user.userId}
+            author={courses[showGetCodeCourseId.value].author}
+            isLocked={courses[showGetCodeCourseId.value].is_locked}
+            showGetCode={showGetCode}
+            contentId={showGetCodeCourseId.value}
+          />
         )}
         {showAddChapter.value && showAddCourseId.value && (
           <AddChapter
+            userRole={user.role}
+            userId={user.userId}
+            author={courses[showAddCourseId.value].author}
+            isLocked={courses[showAddCourseId.value].is_locked}
             showAddChapter={showAddChapter}
             courseId={showAddCourseId}
             courseChapters={showAddCourseChapters}
@@ -709,6 +745,10 @@ export default component$(
           showEditCourseId.value &&
           showEditCourseData.value && (
             <EditChapter
+              userRole={user.role}
+              userId={user.userId}
+              author={courses[showEditChapterId.value].author}
+              isLocked={courses[showEditCourseId.value].is_locked}
               showEditChapter={showEditChapter}
               courseId={showEditCourseId}
               callBackOnSave={$((chapter) => {
@@ -896,7 +936,9 @@ export default component$(
                                     )}
                                     {!courses[currentCourse.id].isPublishing && (
                                       <button
-                                        onClick$={() => handlePublish(currentCourse.id)}
+                                        onClick$={() =>
+                                          handlePublish(currentCourse.id, user.userId)
+                                        }
                                         class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                       >
                                         <span>Publish</span>
@@ -919,7 +961,9 @@ export default component$(
                                     )}
                                     {!courses[currentCourse.id].isPublishing && (
                                       <button
-                                        onClick$={() => handleUnpublish(currentCourse.id)}
+                                        onClick$={() =>
+                                          handleUnpublish(currentCourse.id, user.userId)
+                                        }
                                         class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                       >
                                         <span>Cancel Publish</span>
@@ -941,7 +985,9 @@ export default component$(
                                   )}
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
-                                      onClick$={() => handleUnpublish(currentCourse.id)}
+                                      onClick$={() =>
+                                        handleUnpublish(currentCourse.id, user.userId)
+                                      }
                                       class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
                                     >
                                       <span>Unpublish</span>
@@ -973,7 +1019,9 @@ export default component$(
                                   )}
                                   {!courses[currentCourse.id].isPublishing && (
                                     <button
-                                      onClick$={() => handleAmendment(currentCourse.id)}
+                                      onClick$={() =>
+                                        handleAmendment(currentCourse.id, user.userId)
+                                      }
                                       class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
                                     >
                                       <span>Re-Publish</span>
@@ -991,8 +1039,7 @@ export default component$(
                                 </span>
                               </p>
                             )}
-                            {courses[currentCourse.id].courseApproval.status ===
-                              "rejected" && (
+                            {courses[currentCourse.id].courseApproval.status === "rejected" && (
                               <p class="flex flex-col items-start text-sm  md:flex-row md:gap-2 md:text-base">
                                 <span>Details:</span>
                                 <span class="inline-block  md:max-w-[350px] ">
@@ -1247,6 +1294,15 @@ export default component$(
                                         <button
                                           onClick$={(e) => {
                                             e.stopPropagation();
+                                            if (
+                                              courses[currentCourse.id].is_locked &&
+                                              user.userId !== courses[currentCourse.id].author &&
+                                              user.role !== "admin"
+                                            )
+                                              return alert(
+                                                "The Course is locked! You cannot add a chapter!."
+                                              );
+
                                             showAddChapter.value = true;
                                             showAddCourseId.value = currentCourse.id;
                                           }}
@@ -1321,6 +1377,15 @@ export default component$(
                                                   </button>
                                                   <button
                                                     onClick$={() => {
+                                                      if (
+                                                        courses[currentCourse.id].is_locked &&
+                                                        user.userId !==
+                                                          courses[currentCourse.id].author &&
+                                                        user.role !== "admin"
+                                                      )
+                                                        return alert(
+                                                          "Course is locked! You cannot edit a chapter."
+                                                        );
                                                       showEditChapter.value = true;
                                                       showEditChapterId.value = chapter.id;
                                                       showEditCourseId.value = currentCourse.id;
@@ -1353,6 +1418,15 @@ export default component$(
                                                   )}
                                                   <button
                                                     onClick$={() => {
+                                                      if (
+                                                        courses[currentCourse.id].is_locked &&
+                                                        user.userId !==
+                                                          courses[currentCourse.id].author &&
+                                                        user.role !== "admin"
+                                                      )
+                                                        return alert(
+                                                          "The Course is locked! You cannot delete a chapter."
+                                                        );
                                                       handleDeleteContent(
                                                         chapter.id,
                                                         currentCourse.id
@@ -1380,6 +1454,15 @@ export default component$(
                                   {user.userId === courses[currentCourse.id].profile.id && (
                                     <button
                                       onClick$={() => {
+                                        if (
+                                          courses[currentCourse.id].is_locked &&
+                                          user.userId !== courses[currentCourse.id].author &&
+                                          user.role !== "admin"
+                                        )
+                                          return alert(
+                                            "The Course is locked! You cannot share the course."
+                                          );
+
                                         showGetCode.value = true;
                                         showGetCodeCourseId.value = currentCourse.id;
                                       }}
@@ -1390,6 +1473,15 @@ export default component$(
                                   )}
                                   <button
                                     onClick$={() => {
+                                      if (
+                                        courses[currentCourse.id].is_locked &&
+                                        user.userId !== courses[currentCourse.id].author &&
+                                        user.role !== "admin"
+                                      )
+                                        return alert(
+                                          "The course is locked! You cannot delete a course."
+                                        );
+
                                       handleDeleteContentIndex(currentCourse.id);
                                     }}
                                     class="rounded-lg bg-tomato px-4 py-2 text-[0.875rem] text-background-light-gray shadow-lg lg:px-6  lg:py-3 lg:text-[1rem]"

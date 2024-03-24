@@ -86,9 +86,21 @@ export const BackgroundMarkButton = ({
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
           }}
+          setColorDarkMode={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            const currentMark = Editor.marks(editor);
+            if (
+              currentMark &&
+              currentMark["backgroundDarkMode"] &&
+              currentMark["backgroundDarkMode"] === color
+            )
+              return Editor.removeMark(editor, "backgroundDarkMode");
+            Editor.addMark(editor, "backgroundDarkMode", color);
+          }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "backgroundDarkMode");
             Editor.removeMark(editor, "timeStamp");
             Editor.removeMark(editor, "sync");
             Editor.removeMark(editor, "animate");
@@ -149,9 +161,21 @@ export const UnderlineMarkButton = ({
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
           }}
+          setColorDarkMode={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            const currentMark = Editor.marks(editor);
+            if (
+              currentMark &&
+              currentMark["underlineDarkMode"] &&
+              currentMark["underlineDarkMode"] === color
+            )
+              return Editor.removeMark(editor, "underlineDarkMode");
+            Editor.addMark(editor, "underlineDarkMode", color);
+          }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "underlineDarkMode");
             Editor.removeMark(editor, "timeStamp");
             Editor.removeMark(editor, "sync");
             Editor.removeMark(editor, "animate");
@@ -214,9 +238,21 @@ export const ColorMarkButton = ({
               return Editor.removeMark(editor, format);
             Editor.addMark(editor, format, color);
           }}
+          setColorDarkMode={(color: string) => {
+            if (editor.selection && Range.isCollapsed(editor.selection)) return;
+            const currentMark = Editor.marks(editor);
+            if (
+              currentMark &&
+              currentMark["colorDarkMode"] &&
+              currentMark["colorDarkMode"] === color
+            )
+              return Editor.removeMark(editor, "colorDarkMode");
+            Editor.addMark(editor, "colorDarkMode", color);
+          }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
+            Editor.removeMark(editor, "colorDarkMode");
             Editor.removeMark(editor, "timeStamp");
             Editor.removeMark(editor, "sync");
             Editor.removeMark(editor, "animate");
@@ -274,7 +310,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 id="ColorChooserTimeStamp"
                 value={fontSize}
                 onChange={(e) => {
-                  if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                  if (!editor.selection) return;
                   Editor.addMark(editor, "fontSize", Number(e.target.value));
                   setFontSize(Number(e.target.value));
                 }}
@@ -284,7 +320,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref.current) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSize", Number(ref.current.value) + 1);
                     setFontSize(Number(ref.current.value) + 1);
                   }
@@ -296,7 +332,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref.current && Number(ref.current.value) > 0) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSize", Number(ref.current.value) - 1);
                     setFontSize(Number(ref.current.value) - 1);
                   }
@@ -308,7 +344,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref.current) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSize", defaultSize.current);
                     setFontSize(defaultSize.current);
                   }
@@ -338,7 +374,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                     <li className="border-l-2 border-r-2 border-t-2 border-primary-dark-gray p-1">
                       <button
                         onClick={() => {
-                          if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                          if (!editor.selection) return;
                           Editor.addMark(editor, "fontFamily", "Varela_Round");
                           setFontFamily("Varela_Round");
                           setShowSelection(false);
@@ -352,7 +388,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                     <li className="border-l-2 border-r-2 border-t-2 border-primary-dark-gray p-1">
                       <button
                         onClick={() => {
-                          if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                          if (!editor.selection) return;
                           Editor.addMark(editor, "fontFamily", "mosk");
                           setFontFamily("mosk");
                           setShowSelection(false);
@@ -366,7 +402,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                     <li className="border-l-2 border-r-2 border-t-2 border-primary-dark-gray p-1">
                       <button
                         onClick={() => {
-                          if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                          if (!editor.selection) return;
                           Editor.addMark(editor, "fontFamily", "Consolas");
                           setFontFamily("Consolas");
                           setShowSelection(false);
@@ -380,7 +416,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                     <li className="border-2 border-primary-dark-gray p-1">
                       <button
                         onClick={() => {
-                          if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                          if (!editor.selection) return;
                           Editor.addMark(editor, "fontFamily", "Cascadia Code");
                           setFontFamily("Cascadia Code");
                           setShowSelection(false);
@@ -398,7 +434,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
             <div className="ml-auto flex gap-1">
               <button
                 onClick={() => {
-                  if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                  if (!editor.selection) return;
                   Editor.addMark(editor, "fontFamily", defaultFamily.current);
                   setFontFamily(defaultFamily.current);
                 }}
@@ -422,7 +458,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 id="ColorChooserTimeStamp2"
                 value={fontSpacing}
                 onChange={(e) => {
-                  if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                  if (!editor.selection) return;
                   Editor.addMark(editor, "fontSpacing", Number(e.target.value));
                   setFontSpacing(Number(e.target.value));
                 }}
@@ -432,7 +468,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref2.current) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSpacing", Number(ref2.current.value) + 1);
                     setFontSpacing(Number(ref2.current.value) + 1);
                   }
@@ -444,7 +480,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref2.current && Number(ref2.current.value) > 0) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSpacing", Number(ref2.current.value) - 1);
                     setFontSpacing(Number(ref2.current.value) - 1);
                   }
@@ -456,7 +492,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (ref2.current) {
-                    if (editor.selection && Range.isCollapsed(editor.selection)) return;
+                    if (!editor.selection) return;
                     Editor.addMark(editor, "fontSpacing", defaultSpacing.current);
                     setFontSpacing(defaultSpacing.current);
                   }

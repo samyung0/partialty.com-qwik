@@ -68,22 +68,34 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         position: absolute;
           top:100%;
           left:0;
-          height:6px;
+          height:4px;
           width:100%;
           display:block;
           background:${node.underline};
           z-index: 0;
+      }
+      ${
+        node.underlineDarkMode
+          ? `.dark #${uuid}lower {
+        background: ${node.underlineDarkMode}
+      }`
+          : ""
       }
     #${uuid}upper {
         position: absolute;
           display: block;
           top:100%;
           right:0;
-          height: 6px;
+          height: 4px;
           width: 100%;
           background: inherit;
           z-index: 1;
           ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
+      }
+      @media (min-width: 1024px) {
+        #${uuid}upper, #${uuid}lower {
+          height: 6px;
+        }
       }
        </style>
        `;
@@ -102,21 +114,33 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         position: absolute;
           top:100%;
           left:0;
-          height:6px;
+          height:4px;
           width:100%;
           display:block;
           background:${node.underline};
           z-index: 0;
+      }
+      ${
+        node.underlineDarkMode
+          ? `.dark #${uuid}lower {
+        background: ${node.underlineDarkMode}
+      }`
+          : ""
       }
     #${uuid}upper {
         position: absolute;
           display: block;
           top:100%;
           right:0;
-          height: 6px;
+          height:4px;
           width: 100%;
           background: inherit;
           z-index: 1;
+      }
+      @media (min-width: 1024px) {
+        #${uuid}upper, #${uuid}lower {
+          height: 6px;
+        }
       }
        </style>
        `;
@@ -137,6 +161,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           display:block;
           background:${node.underline};
           z-index: 0;
+      }
+      ${
+        node.underlineDarkMode
+          ? `.dark #${uuid}lower {
+        background: ${node.underlineDarkMode}
+      }`
+          : ""
       }
        </style>
        `;
@@ -192,6 +223,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         z-index: 0;
         fill:${node.background};
       }
+      ${
+        node.backgroundDarkMode
+          ? `.dark #${uuid}lower {
+        fill: ${node.backgroundDarkMode}
+      }`
+          : ""
+      }
       #${uuid}upper {
       position: absolute;
       display: block;
@@ -227,6 +265,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         z-index: 0;
         fill:${node.background};
       }
+      ${
+        node.backgroundDarkMode
+          ? `.dark #${uuid}lower {
+        fill: ${node.backgroundDarkMode}
+      }`
+          : ""
+      }
       #${uuid}upper {
       position: absolute;
       display: block;
@@ -261,6 +306,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
          z-index: 0;
          fill:${node.background};
        }
+       ${
+         node.backgroundDarkMode
+           ? `.dark #${uuid}lower {
+        fill: ${node.backgroundDarkMode}
+      }`
+           : ""
+       }
         </style>
         `;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
@@ -273,7 +325,16 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.color) {
-      string = `<span style="background:inherit;color: ${node.color};">${string}</span>`;
+      const uuid = "a" + uuidv4();
+      string = `<style>${
+        node.colorDarkMode
+          ? `.dark #${uuid}lower {
+        color: ${node.colorDarkMode}
+      }`
+          : ""
+      }</style><span id="${uuid}" style="background:inherit;color: ${
+        node.color
+      };">${string}</span>`;
     }
 
     if (node.fontSize) {
@@ -309,53 +370,73 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ${children}
         </blockquote>`;
     case "infoBlock":
-      return `<blockquote
+      return `<style>.dark .infoBlock {
+        border-color: rgb(96 165 250) !important;
+        background-color: rgb(96 165 250 / 0.1) !important;
+      }.dark .infoBlockSVG {
+        stroke: rgb(96 165 250) !important;
+      }</style><blockquote
           style="
-
-            border-color: #72cada;
-            background-color: #e3f4f8;
+            ${style}
+            border-color: rgb(29 78 216);
+            background-color: rgb(239 246 255);
             font-style: normal;
             padding-top: 1em;
             padding-bottom: 1em;
             border-radius: 6px;
           "
+          class="infoBlock"
         >
           <div style="padding-bottom: 1em;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#72cada" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+          <svg class="infoBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(29 78 216)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
           </div>
           ${children}
         </blockquote>`;
 
     case "cautionBlock":
-      return `<blockquote
+      return `<style>.dark .cautionBlock {
+        border-color: rgb(234 179 8) !important;
+        background-color: rgb(250 204 21 / 0.1) !important;
+      }.dark .cautionBlockSVG {
+        stroke: rgb(234 179 8) !important;
+      }</style><blockquote
               style="
-                border-color: #fcd34d;
-                background-color: #fef6db;
+              ${style}
+                border-color: rgb(133 77 14);
+                background-color: rgb(254 252 232);
                 font-style: normal;
                 padding-top: 1em;
                 padding-bottom: 1em;
                 border-radius: 6px;
               "
+              class="cautionBlock"
             >
               <div style="padding-bottom: 1em;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+              <svg class="cautionBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(133 77 14)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
               </div>
               ${children}
             </blockquote>`;
 
     case "warningBlock":
-      return `<blockquote
+      return `<style>.dark .warningBlock {
+        border-color: rgb(244 114 182) !important;
+        background: rgb(244 114 182 / 0.1) !important
+      }.dark .warningBlockSVG {
+        stroke: rgb(244 114 182) !important;
+      }</style><blockquote
                   style="
-                    border-color: #ff6347;
-                    background-color: #ffe0da;
+                  ${style}
+                    border-color: rgb(190 24 93);
+                    background-color: rgb(253 242 248);
                     font-style: normal;
                     padding-top: 1em;
                     padding-bottom: 1em;
                     border-radius: 6px;
                   "
+                  class="warningBlock"
                 >
                   <div style="padding-bottom: 1em;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff6347" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                  <svg class="warningBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(190 24 93)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                   </div>
                   ${children}
                 </blockquote>`;

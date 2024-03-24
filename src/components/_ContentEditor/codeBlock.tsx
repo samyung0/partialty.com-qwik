@@ -245,14 +245,14 @@ export const HoveringCodeBlock = ({
             <button
               onClick={() => setShowCodeBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-s-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Settings
             </button>
             <button
               onClick={() => toggleCodeBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-e-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>
@@ -270,13 +270,13 @@ export function toggleCodeBlockAtSelection(editor: Editor) {
 }
 
 export const CodeLine = ({ attributes, children, element }: RenderElementProps) => {
-  return <div className="leading-7">{children}</div>;
+  return <div>{children}</div>;
 };
 
 export const CodeBlock = ({ attributes, children, element }: RenderElementProps) => {
   const filename = element.filename;
   return (
-    <div className={"prismOneDark"}>
+    <div>
       <pre {...attributes} spellCheck={false}>
         {filename && (
           <div contentEditable={false}>

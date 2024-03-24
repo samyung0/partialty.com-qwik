@@ -1,7 +1,7 @@
 import type { PropFunction } from "@builder.io/qwik";
 import { component$, useVisibleTask$ } from "@builder.io/qwik";
+import { LuFile } from "@qwikest/icons/lucide";
 import { CrossIcon } from "~/assets/icon/crossIcon";
-import { FileIcon } from "~/assets/icon/fileIcon";
 import { MenuIcon } from "~/assets/icon/menuIcon";
 import { SaveIcon } from "~/assets/icon/saveIcon";
 import type { Entry } from "~/utils/fileUtil";
@@ -13,10 +13,11 @@ interface FileTab {
   addToStage: PropFunction<(entry: Entry) => any>;
   openStagedFile: PropFunction<(entry: Entry, nonBinaryData: string) => any>;
   saveOpenedFiles: PropFunction<() => any>;
+  closeFile: PropFunction<(path: string) => any>;
 }
 
 export default component$<FileTab>(
-  ({ entries, openedFiles, addToStage, openStagedFile, saveOpenedFiles }) => {
+  ({ entries, openedFiles, addToStage, openStagedFile, saveOpenedFiles, closeFile }) => {
     useVisibleTask$(() => {
       // toggle button for the file structure
       const toggleButton = document.getElementById("file-structure-toggle");
@@ -38,11 +39,11 @@ export default component$<FileTab>(
     });
 
     return (
-      <div class="z-20">
-        <div class="relative -z-10 flex h-[35px] items-center justify-between border-y border-r border-dark bg-black  text-xs text-background-light-gray">
+      <div class="z-20 border-l border-dark">
+        <div class="relative -z-10 flex h-[35px] items-center justify-between bg-primary-dark-gray  text-xs text-background-light-gray">
           <div class=" flex h-full items-center overflow-auto">
             {/* toggle file structure in smaller screen */}
-            <div class=" block h-full border-r border-dark   p-1 md:hidden">
+            <div class=" block h-full   p-1 md:hidden">
               <div
                 id="file-structure-toggle"
                 class="inline-block rounded-lg transition-transform duration-500 "
@@ -53,7 +54,7 @@ export default component$<FileTab>(
             {/* files which is opened */}
             <div class="  flex h-full overflow-x-auto">
               {openedFiles.map((file, idx) => (
-                <div
+                <button
                   class={`group flex items-center gap-1 border-r border-dark py-1 pl-2 pr-1 ${
                     openedFiles.length - 1 === idx && "border-r"
                   }`}
@@ -63,17 +64,21 @@ export default component$<FileTab>(
                   }}
                 >
                   <div>
-                    <FileIcon />
+                    <LuFile />
                   </div>
                   <span class="whitespace-nowrap">{file.name}</span>
                   {/* user can remove the opened files */}
-                  <div
+                  <button
                     class=" rounded-sm  opacity-0 hover:bg-highlight-dark group-hover:opacity-100"
-                    onClick$={() => {}}
+                    onClick$={(e) => {
+                      e.stopPropagation();
+
+                      closeFile(file.path);
+                    }}
                   >
                     <CrossIcon />
-                  </div>
-                </div>
+                  </button>
+                </button>
               ))}
             </div>
           </div>

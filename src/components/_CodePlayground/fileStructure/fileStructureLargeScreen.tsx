@@ -1,11 +1,9 @@
 import type { PropFunction } from "@builder.io/qwik";
 import { component$, useSignal, useStore } from "@builder.io/qwik";
-import { FileIcon } from "~/assets/icon/fileIcon";
-import { FolderIcon } from "~/assets/icon/folderIcon";
-import { FolderOpenIcon } from "~/assets/icon/folderOpenIcon";
+import { LuFile, LuFolderClosed, LuFolderOpen } from "@qwikest/icons/lucide";
 import { RightArrow } from "~/assets/icon/rightArrow";
 
-import type { Entry } from "~/utils/fileUtil";
+import { Entry } from "~/utils/fileUtil";
 
 interface EntryInterface {
   entry: Entry;
@@ -35,7 +33,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
               )}
             </div>
             <div style={{ paddingLeft: indent }}>
-              {isExpanded.value ? <FolderOpenIcon /> : <FolderIcon />}
+              {isExpanded.value ? <LuFolderOpen /> : <LuFolderClosed />}
             </div>
             <span class="">{entry.name}</span>
           </div>
@@ -64,7 +62,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
             openStagedFile(entry, nonBinaryData);
           }}
         >
-          <FileIcon />
+          <LuFile />
           <span>{entry.name}</span>
         </div>
       )}
@@ -84,7 +82,7 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
   const selectedEntry = useStore({ level: -1, entryIndex: -1 });
 
   return (
-    <div class="hidden h-full min-w-[200px] border border-dark bg-black pt-1   text-xs text-background-light-gray md:block">
+    <div class="hidden h-full min-w-[200px]  flex-col bg-primary-dark-gray   pt-1 text-xs text-background-light-gray md:flex">
       <div
         class={`relative flex cursor-pointer items-center gap-1 py-1   hover:bg-dark-down`}
         onClick$={() => (projectExpanded.value = !projectExpanded.value)}
@@ -98,7 +96,7 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
         </div>
         <span class="font-bold">{projectName}</span>
       </div>
-      <div class={`${!projectExpanded.value && "hidden"}`}>
+      <div class={`${!projectExpanded.value && "hidden"} overflow-auto`}>
         {entries.map((entry, idx) => (
           <Entry
             key={`entry-${idx}`}

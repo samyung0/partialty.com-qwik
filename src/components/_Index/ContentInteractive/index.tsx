@@ -11,7 +11,7 @@ import styles from "./index.module.css";
 const codeSnippets = [
   <div key="snippet-1" class="flex h-[100%] w-full">
     <div class="w-[30%] bg-white" />
-    <div class="flex w-[70%] items-center bg-yellow">
+    <div class="flex w-[70%] items-center bg-custom-yellow">
       <p class="m-8 text-[1.5em]">Let's learn web development</p>
     </div>
   </div>,
@@ -36,10 +36,10 @@ const codeSnippets = [
 ];
 
 const replaceStringArr = [
-  { from: "bg-yellow-400", to: "bg-red-400", row: 4, pos: 56 },
+  { from: "bg-custom-yellow-400", to: "bg-red-400", row: 4, pos: 56 },
   { from: "text-[1.5em]", to: "text-[2.5em]", row: 5, pos: 33 },
   { from: "text-[2.5em]", to: "text-[1.5em]", row: 5, pos: 33 },
-  { from: "bg-red-400", to: "bg-yellow-400", row: 4, pos: 53 },
+  { from: "bg-red-400", to: "bg-custom-yellow-400", row: 4, pos: 53 },
 ];
 
 export default component$(() => {
@@ -138,7 +138,7 @@ export default component$(() => {
           <div class=" flex max-h-[40vh] w-[500px] max-w-[95vw] overflow-auto rounded-xl bg-code-editor-one-dark-pro lg:h-[500px] lg:max-h-[100vh] lg:w-[650px] lg:max-w-[50vw] xl:h-[500px]">
             <div class=" flex flex-col gap-2 bg-primary-dark-gray px-2 pt-2">
               <div class="h-[15px] w-[15px] rounded-full bg-red-500"></div>
-              <div class="h-[15px] w-[15px] rounded-full bg-yellow"></div>
+              <div class="h-[15px] w-[15px] rounded-full bg-custom-yellow"></div>
               <div class="h-[15px] w-[15px] rounded-full bg-green-600"></div>
             </div>
             <div class="flex flex-col">

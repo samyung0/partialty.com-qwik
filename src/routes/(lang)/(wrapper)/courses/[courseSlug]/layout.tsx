@@ -59,6 +59,18 @@ export const useCategoryLoader = routeLoader$(async (event) => {
 export const useCourseLoader = routeLoader$(async (event) => {
   const _user = await event.resolveValue(useUserLoaderNullable);
 
+  let accessible_courses_read: string[] = [];
+  let accessible_courses: string[] = [];
+  if (_user) {
+    try {
+      accessible_courses = JSON.parse(_user.accessible_courses || "[]");
+      accessible_courses_read = JSON.parse(_user.accessible_courses_read || "[]");
+    } catch (e) {
+      console.error(e);
+      throw event.redirect(302, "/notfound/");
+    }
+  }
+
   const courseSlug = event.params.courseSlug;
   const course = (
     await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
@@ -92,7 +104,11 @@ export const useCourseLoader = routeLoader$(async (event) => {
 
   if (
     course.course_approval.status !== "approved" &&
-    (!_user || (_user.userId !== course.content_index.author && _user.role !== "admin"))
+    (!_user ||
+      (_user.userId !== course.content_index.author &&
+        _user.role !== "admin" &&
+        !accessible_courses.includes(course.content_index.id) &&
+        !accessible_courses_read.includes(course.content_index.id)))
   )
     throw event.redirect(302, "/notfound/");
 

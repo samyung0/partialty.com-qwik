@@ -35,6 +35,7 @@ export const PredefinedColorList = {
 
 const ColorChooser = ({
   setColor,
+  setColorDarkMode,
   getTime,
   setSync,
   setTimeStamp,
@@ -46,6 +47,7 @@ const ColorChooser = ({
 }: {
   mark: any;
   setColor: (color: string) => any;
+  setColorDarkMode: (color: string) => any;
   getTime: () => number;
   setSync: () => void;
   setTimeStamp: (timeStamp: number) => void;
@@ -66,7 +68,8 @@ const ColorChooser = ({
     setAnimateState(!!mark.animate);
   }, [JSON.stringify(mark)]);
   return (
-    <div className="flex cursor-context-menu flex-col rounded-md border-2 border-primary-dark-gray bg-white dark:border-disabled-dark dark:bg-primary-dark-gray">
+    <div className="flex max-h-[500px] cursor-context-menu flex-col overflow-auto rounded-md border-2 border-primary-dark-gray bg-white dark:border-disabled-dark dark:bg-primary-dark-gray">
+      <p className="pl-6 pt-6 text-sm">Light Mode (must choose)</p>
       <ul className="grid grid-cols-6 gap-3 p-6">
         {Object.entries(PredefinedColorList).map((color) => (
           <li
@@ -75,6 +78,20 @@ const ColorChooser = ({
             style={{ background: color[1] }}
           >
             <button onClick={() => setColor(color[1])} className="h-full w-full">
+              {" "}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p className="pl-6 text-sm">Dark Mode</p>
+      <ul className="grid grid-cols-6 gap-3 p-6">
+        {Object.entries(PredefinedColorList).map((color) => (
+          <li
+            key={`ColorChooser${color[1]}`}
+            className="h-[30px] w-[30px] rounded-xl dark:border-2 dark:border-highlight-dark"
+            style={{ background: color[1] }}
+          >
+            <button onClick={() => setColorDarkMode(color[1])} className="h-full w-full">
               {" "}
             </button>
           </li>

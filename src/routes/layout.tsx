@@ -1,4 +1,4 @@
-import { Slot, component$, useContextProvider, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { Slot, component$, useContextProvider, useStore } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
 
@@ -16,7 +16,7 @@ export default component$(() => {
   useContextProvider(themeContext, themeStore);
 
   // there will be a flicker which is not good, instead we push user to set the theme value in cookie which has no flickers
-  
+
   // useVisibleTask$(() => {
   //   if (
   //     window.matchMedia("(prefers-color-scheme: dark)").matches &&
