@@ -15,6 +15,6 @@ export const initDrizzleIfNeeded = (env: RequestEventBase["env"], prodInDev: boo
 };
 
 export default (env: RequestEventBase["env"], prodInDev: boolean = false) => {
-  if (!client) throw new Error("YO WTF")
+  if (!client) client = init(tursoClient(env, prodInDev));
   return client;
 };
