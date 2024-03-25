@@ -125,14 +125,16 @@ export const getChapters = server$(async function (courseId: string) {
 });
 
 export const deleteCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
-    .update(content_index)
-    .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
-    .where(eq(content_index.id, courseId));
-  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
-    .update(content)
-    .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
-    .where(eq(content.index_id, courseId));
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async tx => {
+    await tx
+      .update(content_index)
+      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+      .where(eq(content_index.id, courseId));
+    await tx
+      .update(content)
+      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+      .where(eq(content.index_id, courseId));
+  })
   // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
 });
 
@@ -1267,7 +1269,7 @@ export default component$(
                                       onClick$={() =>
                                         handleLockUnlockCourse(currentCourse.id, user.userId)
                                       }
-                                      class="ml-3 inline-block underline decoration-wavy underline-offset-[6px] lg:ml-6"
+                                      class="ml-3 inline-block underline decoration-wavy underline-offset-4 lg:ml-6 lg:underline-offset-[6px]"
                                     >
                                       {courses[currentCourse.id].is_locked ? "unlock" : "lock"}
                                     </button>
@@ -1306,7 +1308,7 @@ export default component$(
                                             showAddChapter.value = true;
                                             showAddCourseId.value = currentCourse.id;
                                           }}
-                                          class="pl-3 text-[0.75rem] text-primary-dark-gray underline decoration-wavy underline-offset-[6px] dark:text-background-light-gray lg:pl-6 lg:text-[15px]"
+                                          class="pl-3 text-[0.75rem] text-primary-dark-gray underline decoration-wavy underline-offset-4 dark:text-background-light-gray lg:pl-6 lg:text-[15px] lg:underline-offset-[6px]"
                                         >
                                           add chapter
                                         </button>

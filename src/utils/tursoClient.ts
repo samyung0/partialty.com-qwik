@@ -25,6 +25,6 @@ export const initTursoIfNeeded = (env: RequestEventBase["env"], prodInDev: boole
 };
 
 export default (env: RequestEventBase["env"], prodInDev: boolean = false) => {
-  if (!client) initTursoIfNeeded(env, prodInDev);
+  if (!client) throw new Error("YO WTF")
   return client!;
 };

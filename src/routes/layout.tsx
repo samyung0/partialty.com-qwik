@@ -1,4 +1,4 @@
-import { Slot, component$, useContextProvider, useStore } from "@builder.io/qwik";
+import { Slot, component$, useContextProvider, useStore, useOnDocument, $ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
 
@@ -16,15 +16,16 @@ export default component$(() => {
   useContextProvider(themeContext, themeStore);
 
   // there will be a flicker which is not good, instead we push user to set the theme value in cookie which has no flickers
+  // edit: there is no more flicker with qinit listener 
 
-  // useVisibleTask$(() => {
-  //   if (
-  //     window.matchMedia("(prefers-color-scheme: dark)").matches &&
-  //     themeStore.value === "default"
-  //   ) {
-  //     themeStore.value = "dark";
-  //   }
-  // });
+  useOnDocument("qinit", $(() => {
+    if (
+      window.matchMedia("(prefers-color-scheme: dark)").matches &&
+      themeStore.value === "default"
+    ) {
+      themeStore.value = "dark";
+    }
+  }));
 
   return (
     <>
