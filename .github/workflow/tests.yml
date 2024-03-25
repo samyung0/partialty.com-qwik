@@ -1,4 +1,9 @@
 name: test-workflow
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
 jobs:
   my-job:
     name: test
