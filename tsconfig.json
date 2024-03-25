@@ -16,12 +16,12 @@
     "isolatedModules": true,
     "outDir": "tmp",
     "noEmit": true,
-    "types": ["node", "vite/client", "vite-plugin-compile-time/client"],
+    "types": ["node", "vite/client", "vite-plugin-compile-time/client", "vitest/globals"],
     // "baseUrl": ".",
     "paths": {
       // "*": ["./node_modules/*", "./bun/node_modules/*"],
       "~/*": ["./src/*"]
-    }
+    },
   },
   "files": ["./.eslintrc.cjs"],
   "include": [
@@ -32,6 +32,10 @@
     "postcss.config.js",
     "drizzle_turso",
     "emails",
-    "tailwind"
+    "tailwind",
+    "vitest",
+    "vitest.config.integration.ts",
+    "tests",
+    "setup"
   ]
 }

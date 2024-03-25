@@ -1,5 +1,11 @@
 import { protectedRoutes } from "~/utils/protectedRoutes";
 
+const removeTrailing = (path: string) => {
+  if(path === "/") return path;
+  if(path.endsWith("/")) return path.slice(0, path.length - 1);
+  return path;
+}
+
 export const checkProtectedPath = (
   path: string | undefined,
   role: any
@@ -12,8 +18,7 @@ export const checkProtectedPath = (
   if (!path) return [true, redirectTo, searchParams];
 
   for (const i of protectedRoutes) {
-    const re = new RegExp(i.path);
-    if (i.exact ? i.path === path : re.test(path)) {
+    if (i.exact ? removeTrailing(i.path) === removeTrailing(path) : removeTrailing(path).startsWith(removeTrailing(i.path))) {
       searchParams.append("redirectedFrom", path || "/");
       redirectTo = i.redirectTo;
       if (i.authRolesPermitted.length > 0) shouldRedirect = !i.authRolesPermitted.includes(role);
