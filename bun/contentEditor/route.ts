@@ -52,6 +52,12 @@ const getContentIndexLocked = (id: string) =>
     args: [id],
   });
 
+const getContentLocked = (id: string) =>
+  turso.execute({
+    sql: "SELECT author, is_locked FROM content WHERE id = ? LIMIT 1",
+    args: [id],
+  });
+
 const app = new Elysia()
   .group("/mux", (app) => {
     return app.post(
@@ -262,6 +268,26 @@ const app = new Elysia()
           if (
             (isLocked.author as string) !== userId &&
             !!isLocked.is_locked &&
+            user.role !== "admin"
+          ) {
+            return ws.send(
+              JSON.stringify({
+                type: "openContentError",
+                message: "Content is locked!",
+              })
+            );
+          }
+          const isLockedChapter = (await getContentLocked(courseId)).rows[0];
+          if (!isLockedChapter)
+            return ws.send(
+              JSON.stringify({
+                type: "openContentError",
+                message: "Badly formatted request",
+              })
+            );
+          if (
+            (isLocked.author as string) !== userId &&
+            !!isLockedChapter.is_locked &&
             user.role !== "admin"
           ) {
             return ws.send(
