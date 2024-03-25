@@ -31,7 +31,10 @@ export default component$(({ innerHTML }: { innerHTML: string }) => {
         }
       });
     }, 100);
-    return () => clearInterval(interval.value);
+    return () => {
+      clearInterval(interval.value);
+      isDark.value = false;
+    }
   });
   return (
     <>
