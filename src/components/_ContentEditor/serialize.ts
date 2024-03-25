@@ -77,7 +77,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       ${
         node.underlineDarkMode
           ? `.dark #${uuid}lower {
-        background: ${node.underlineDarkMode}
+        background: ${node.underlineDarkMode} !important;
       }`
           : ""
       }
@@ -226,7 +226,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       ${
         node.backgroundDarkMode
           ? `.dark #${uuid}lower {
-        fill: ${node.backgroundDarkMode}
+        fill: ${node.backgroundDarkMode} !important;
       }`
           : ""
       }
@@ -328,8 +328,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       const uuid = "a" + uuidv4();
       string = `<style>${
         node.colorDarkMode
-          ? `.dark #${uuid}lower {
-        color: ${node.colorDarkMode}
+          ? `.dark #${uuid} {
+        color: ${node.colorDarkMode} !important;
       }`
           : ""
       }</style><span id="${uuid}" style="background:inherit;color: ${

@@ -458,7 +458,7 @@ export default component$(
                         !courses[currentCourse.id].is_single_page &&
                         courses[currentCourse.id].hasLoadedChapter &&
                         displayChapters.length > 0 && (
-                          <ul class="relative mt-2 flex flex-col gap-4 py-1 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray md:py-2">
+                          <ul class="relative mt-2 flex flex-col gap-3 py-2 pl-4 after:absolute after:left-0 after:top-0 after:h-full after:w-[2px] after:bg-primary-dark-gray dark:after:bg-background-light-gray md:py-3">
                             {displayChapters.map((_chapterId, chapterIndex) => {
                               const chapter = courses[currentCourse.id].chapters.find(
                                 (c) => c.id === _chapterId

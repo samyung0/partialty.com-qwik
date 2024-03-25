@@ -163,120 +163,111 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue ?? [
-    {
-      type: "quizCodeBlock",
-      ans: {
-        type: "ast",
-        matchInput: { blablabla: "=" },
-        ast: "{}",
-        displayAst: "{}",
-      },
-      codeInput: "",
-      isCode: true,
-      astLang: "js",
-      formName: "test2",
-      quizTitle: "Question 2",
-      removeTrailingSpaces: true,
-      inputWidth: 400,
-      inputCount: 1,
-      children: [
-        {
-          type: "quizCodeParagraph",
-          children: [
-            { text: "let x " },
-            {
-              type: "quizCodeInput",
-              inputWidth: 200,
-              formName: "test2",
-              children: [{ text: "" }],
-              inputNumber: 0,
-              inputId: "blablabla",
-            },
-            { text: " 10;" },
-          ],
-        },
-      ],
-    },
-    {
-      type: "quizBlock",
-      ans: "2",
-      formName: "test",
-      quizTitle: "Question 1",
-      children: [
-        {
-          type: "quizOption",
-          formName: "test",
-          optionValue: "1",
-          children: [{ text: "answer A" }],
-        },
-        {
-          type: "quizOption",
-          formName: "test",
-          optionValue: "2",
-          children: [{ text: "answer B" }],
-        },
-        {
-          type: "quizOption",
-          formName: "test",
-          optionValue: "3",
-          children: [{ text: "answer C" }],
-        },
-      ],
-    },
-    {
-      type: "paragraph",
-      children: [
-        {
-          text: "",
-        },
-        {
-          type: "link",
-          url: "https://google.com",
-          children: [{ text: "this is a link" }],
-        },
-        { text: "" },
-      ],
-    },
-    {
-      type: "paragraph",
-      children: [
-        { text: "This is editable " },
-        { text: "rich", bold: true },
-        { text: " text, " },
-        { text: "much", italic: true },
-        { text: " better than a " },
-        { text: "<textarea>", code: true },
-        { text: "!" },
-      ],
-    },
-    {
-      type: "paragraph",
-      children: [
-        {
-          text: "Since it's rich text, you can do things like turn a selection of text ",
-        },
-        { text: "bold", bold: true },
-        {
-          text: ", or add a semantically rendered block quote in the middle of the page, like this:",
-        },
-      ],
-    },
-    {
-      type: "paragraph",
-      align: "center",
-      children: [{ text: "Try it out for yourself!" }],
-    },
-    {
-      type: "paragraph",
-      children: [
-        {
-          text: "",
-        },
-      ],
-    },
-  ];
+  const normalizedInitialValue = initialValue 
   // ?? [
+  //   {
+  //     type: "quizCodeBlock",
+  //     ans: {
+  //       type: "ast",
+  //       matchInput: { blablabla: "=" },
+  //       ast: "{}",
+  //       displayAst: "{}",
+  //     },
+  //     codeInput: "",
+  //     isCode: true,
+  //     astLang: "js",
+  //     formName: "test2",
+  //     quizTitle: "Question 2",
+  //     removeTrailingSpaces: true,
+  //     inputWidth: 400,
+  //     inputCount: 1,
+  //     children: [
+  //       {
+  //         type: "quizCodeParagraph",
+  //         children: [
+  //           { text: "let x " },
+  //           {
+  //             type: "quizCodeInput",
+  //             inputWidth: 200,
+  //             formName: "test2",
+  //             children: [{ text: "" }],
+  //             inputNumber: 0,
+  //             inputId: "blablabla",
+  //           },
+  //           { text: " 10;" },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     type: "quizBlock",
+  //     ans: "2",
+  //     formName: "test",
+  //     quizTitle: "Question 1",
+  //     children: [
+  //       {
+  //         type: "quizOption",
+  //         formName: "test",
+  //         optionValue: "1",
+  //         children: [{ text: "answer A" }],
+  //       },
+  //       {
+  //         type: "quizOption",
+  //         formName: "test",
+  //         optionValue: "2",
+  //         children: [{ text: "answer B" }],
+  //       },
+  //       {
+  //         type: "quizOption",
+  //         formName: "test",
+  //         optionValue: "3",
+  //         children: [{ text: "answer C" }],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     type: "paragraph",
+  //     children: [
+  //       {
+  //         text: "",
+  //       },
+  //       {
+  //         type: "link",
+  //         url: "https://google.com",
+  //         children: [{ text: "this is a link" }],
+  //       },
+  //       { text: "" },
+  //     ],
+  //   },
+  //   {
+  //     type: "paragraph",
+  //     children: [
+  //       { text: "This is editable " },
+  //       { text: "rich", bold: true },
+  //       { text: " text, " },
+  //       { text: "much", italic: true },
+  //       { text: " better than a " },
+  //       { text: "<textarea>", code: true },
+  //       { text: "!" },
+  //     ],
+  //   },
+  //   {
+  //     type: "paragraph",
+  //     children: [
+  //       {
+  //         text: "Since it's rich text, you can do things like turn a selection of text ",
+  //       },
+  //       { text: "bold", bold: true },
+  //       {
+  //         text: ", or add a semantically rendered block quote in the middle of the page, like this:",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     type: "paragraph",
+  //     align: "center",
+  //     children: [{ text: "Try it out for yourself!" }],
+  //   },
   //   {
   //     type: "paragraph",
   //     children: [
@@ -286,6 +277,16 @@ const ContentEditorReact = ({
   //     ],
   //   },
   // ];
+  ?? [
+    {
+      type: "paragraph",
+      children: [
+        {
+          text: "",
+        },
+      ],
+    },
+  ];
 
   // Create a Slate editor object that won't change across renders.
   const [editor] = useState(() =>
