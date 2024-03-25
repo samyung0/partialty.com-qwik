@@ -17,7 +17,7 @@ export const withLink = (editor: Editor) => {
 
   editor.insertText = (text) => {
     if (text.endsWith(" ") && editor.selection && Range.isCollapsed(editor.selection)) {
-      if (isBlockActive(editor, "link", "type")) {
+      if (isBlockActive(editor, "link", "type") || isBlockActive(editor, "codeBlock", "type")) {
         insertText(text);
         return;
       }
@@ -187,7 +187,7 @@ export const withLink = (editor: Editor) => {
   editor.insertData = (data) => {
     const text = data.getData("text/plain");
 
-    if (text && isUrl(text)) {
+    if (text && isUrl(text) && !isBlockActive(editor, "codeBlock", "type")) {
       wrapLink(editor, text);
       Transforms.move(editor, {
         distance: 1,

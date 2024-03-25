@@ -125,16 +125,18 @@ export const getChapters = server$(async function (courseId: string) {
 });
 
 export const deleteCourse = server$(async function (courseId: string) {
-  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(async tx => {
-    await tx
-      .update(content_index)
-      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
-      .where(eq(content_index.id, courseId));
-    await tx
-      .update(content)
-      .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
-      .where(eq(content.index_id, courseId));
-  })
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(
+    async (tx) => {
+      await tx
+        .update(content_index)
+        .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+        .where(eq(content_index.id, courseId));
+      await tx
+        .update(content)
+        .set({ is_deleted: true, updated_at: getSQLTimeStamp() })
+        .where(eq(content.index_id, courseId));
+    }
+  );
   // DO NOT DELETE the course, it will fail due to foreign key constraints, instead set the delete flag
 });
 
