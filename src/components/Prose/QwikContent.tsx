@@ -45,7 +45,7 @@ export default component$(
           <ProgressTracker saveProress={saveProress} />
         </div>
         <div class="flex flex-col gap-3">
-          <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
+          <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
             {!!prevChapter && (
               <Link href={prevChapter} class="mr-auto text-sm underline md:text-base">
                 Previous Chapter
@@ -65,9 +65,11 @@ export default component$(
         </div>
       </div>
       {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
-      <div class="mt-auto">
-        <AudioPlayer audioTrack={audioTrack} />
-      </div>
+      {audioTrack && (
+        <div class="mt-auto">
+          <AudioPlayer audioTrack={audioTrack} />
+        </div>
+      )}
     </div>
   )
 );
