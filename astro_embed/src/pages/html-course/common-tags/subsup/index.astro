@@ -1,0 +1,13 @@
+---
+const dark = Astro.url.searchParams.get("dark");
+---
+
+<html class={dark ? "dark" : ""}>
+  <body class={"bg-transparent dark:text-background-light-gray text-primary-dark-gray"}>
+    log<sub>2</sub>2(e<sup>x</sup>)=10
+  </body>
+</html>
+
+<style>
+  @tailwind utilities;
+</style>

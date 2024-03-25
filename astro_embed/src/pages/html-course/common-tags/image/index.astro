@@ -1,0 +1,13 @@
+---
+const dark = Astro.url.searchParams.get("dark");
+---
+
+<html class={dark ? "dark" : ""}>
+  <body class={"bg-transparent dark:text-background-light-gray text-primary-dark-gray"}>
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWJldWdrMnJyYjdvZDNrNno5ZDdsemRhemViaXlvZmtvYWJ0emJ0NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5kq0GCjHA8Rwc/giphy.gif" height="400" width="1000" />
+  </body>
+</html>
+
+<style>
+  @tailwind utilities;
+</style>
