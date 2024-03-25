@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths"
+import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsConfigPaths()],
@@ -9,6 +9,6 @@ export default defineConfig({
     environment: "happy-dom",
     include: ["./vitest/**/*.test.{js,ts,jsx,tsx}"],
     exclude: ["./vitest/integration/*.test.{js,jsx,ts,tsx}"],
-    reporters: process.env.GITHUB_ACTIONS ? ['verbose', "github-actions"] : ["verbose"]
+    reporters: process.env.GITHUB_ACTIONS ? ["verbose", "github-actions"] : ["verbose"],
   },
-})
+});

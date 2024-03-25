@@ -163,8 +163,7 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue 
-  // ?? [
+  const normalizedInitialValue = initialValue ?? // ?? [
   //   {
   //     type: "quizCodeBlock",
   //     ans: {
@@ -277,7 +276,7 @@ const ContentEditorReact = ({
   //     ],
   //   },
   // ];
-  ?? [
+  [
     {
       type: "paragraph",
       children: [

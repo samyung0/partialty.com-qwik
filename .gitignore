@@ -53,3 +53,5 @@ package-lock.json
 
 # Netlify
 .netlify
+
+.zed

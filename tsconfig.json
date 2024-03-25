@@ -21,7 +21,7 @@
     "paths": {
       // "*": ["./node_modules/*", "./bun/node_modules/*"],
       "~/*": ["./src/*"]
-    },
+    }
   },
   "files": ["./.eslintrc.cjs"],
   "include": [

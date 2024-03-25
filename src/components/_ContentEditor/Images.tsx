@@ -192,7 +192,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
         <div
           style={{ height: `${height}px` }}
-          className="overflow-hidden [resize:vertical] flex justify-center items-center"
+          className="flex items-center justify-center overflow-hidden [resize:vertical]"
           ref={imageRef}
         >
           <img

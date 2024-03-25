@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import tsConfigPaths from "vite-tsconfig-paths"
+import tsConfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsConfigPaths()],
@@ -7,11 +7,11 @@ export default defineConfig({
     globals: true,
     poolOptions: {
       threads: {
-        singleThread: true
-      }
+        singleThread: true,
+      },
     },
     include: ["./vitest/integration/*.test.{js,ts,jsx,tsx}"],
     setupFiles: ["./setup/setup.unit.integration.ts"],
-    reporters: process.env.GITHUB_ACTIONS ? ['verbose', "github-actions"] : ["verbose"]
+    reporters: process.env.GITHUB_ACTIONS ? ["verbose", "github-actions"] : ["verbose"],
   },
-})
+});
