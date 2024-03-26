@@ -1,0 +1,16 @@
+---
+const dark = Astro.url.searchParams.get("dark");
+---
+
+<html class={dark ? "dark" : ""}>
+  <body class={"bg-transparent dark:text-background-light-gray text-primary-dark-gray"}>
+    <form action="">
+      Checkbox
+      <input type="checkbox" checked /> <!-- this is same as checked={true} -->
+    </form>  
+  </body>
+</html>
+
+<style>
+  @tailwind utilities;
+</style>
