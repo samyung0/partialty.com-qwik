@@ -698,7 +698,7 @@ export default component$(
           <EditChapter
             userRole={user.role}
             userId={user.userId}
-            author={courses[showEditChapterId.value].author}
+            author={courses[showEditCourseId.value].author}
             isLocked={courses[showEditCourseId.value].is_locked}
             showEditChapter={showEditChapter}
             courseId={showEditCourseId}
