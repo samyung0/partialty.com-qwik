@@ -14,7 +14,7 @@ interface EntryInterface {
   openStagedFile: PropFunction<(entry: Entry, nonBinaryData: string) => any>;
 }
 
-const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, level }) => {
+const EntryComponent = component$<EntryInterface>(({ entry, addToStage, openStagedFile, level }) => {
   const isExpanded = useSignal(true);
   const indent = 4 + 12 * (level + 1);
 
@@ -40,7 +40,7 @@ const Entry = component$<EntryInterface>(({ entry, addToStage, openStagedFile, l
           {/* there are one or more file in a folder */}
           <div class={`${!isExpanded.value && 'hidden'}`}>
             {entry.entries.map((entry, idx) => (
-              <Entry
+              <EntryComponent
                 key={`entry-${idx}`}
                 entry={entry}
                 level={level + 1}
@@ -94,7 +94,7 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
       </div>
       <div class={`${!projectExpanded.value && 'hidden'}`}>
         {entries.map((entry, idx) => (
-          <Entry key={`entry-${idx}`} entry={entry} level={1} addToStage={addToStage} openStagedFile={openStagedFile} />
+          <EntryComponent key={`entry-${idx}`} entry={entry} level={1} addToStage={addToStage} openStagedFile={openStagedFile} />
         ))}
       </div>
     </div>
