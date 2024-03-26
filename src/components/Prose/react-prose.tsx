@@ -47,7 +47,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
     prose-a:underline-offset-4 prose-blockquote:pr-[1em]
     prose-strong:tracking-wider
     prose-code:text-[unset]
-    prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-xs prose-pre:font-bold prose-pre:leading-5
+    prose-pre:bg-code-editor-one-dark-pro prose-pre:text-xs prose-pre:font-bold prose-pre:leading-5
     prose-img:m-0
     dark:bg-primary-dark-gray
     dark:text-background-light-gray md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-sm lg:prose-pre:leading-6
@@ -62,7 +62,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
   prose-a:underline-offset-4 prose-blockquote:pr-[1em]
   prose-strong:tracking-wider
   prose-code:text-[unset]
-  prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-xs prose-pre:font-bold prose-pre:leading-5
+  prose-pre:bg-code-editor-one-dark-pro prose-pre:text-xs prose-pre:font-bold prose-pre:leading-5
   prose-img:m-0
   dark:bg-primary-dark-gray
   dark:text-background-light-gray md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-sm lg:prose-pre:leading-6
