@@ -1,22 +1,22 @@
-import type { Signal } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
-import { server$, z } from "@builder.io/qwik-city";
-import { and, eq } from "drizzle-orm";
-import LoadingSVG from "~/components/LoadingSVG";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import drizzleClient from "~/utils/drizzleClient";
-import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
-import { content_index } from "../../../../drizzle_turso/schema/content_index";
+import type { Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
+import { server$, z } from '@builder.io/qwik-city';
+import { and, eq } from 'drizzle-orm';
+import LoadingSVG from '~/components/LoadingSVG';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import drizzleClient from '~/utils/drizzleClient';
+import type { NewContentIndex } from '../../../../drizzle_turso/schema/content_index';
+import { content_index } from '../../../../drizzle_turso/schema/content_index';
 
 const checkExistingCourse = server$(async function (slug: string) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .select({ id: content_index.id })
     .from(content_index)
     .where(and(eq(content_index.slug, slug), eq(content_index.is_deleted, false)));
 });
 
 const schema = z.object({
-  name: z.string().trim().min(2, "A name is required").max(70, "Name is too long (max. 70 chars)"),
+  name: z.string().trim().min(2, 'A name is required').max(70, 'Name is too long (max. 70 chars)'),
 });
 
 export default component$(
@@ -61,21 +61,17 @@ export default component$(
                     value={courseData.name}
                     onInput$={(_, el) => {
                       courseData.name = el.value;
-                      courseData.slug = el.value.toLowerCase().replace(/ /g, "-");
+                      courseData.slug = el.value.toLowerCase().replace(/ /g, '-');
                       if (ref.value) ref.value.scrollLeft += 99999;
                     }}
                     required
                     class={
-                      "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-black/20 md:w-[300px] " +
-                      (courseDataError.name
-                        ? "border-tomato dark:border-tomato"
-                        : "border-black/10")
+                      'w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-black/20 md:w-[300px] ' +
+                      (courseDataError.name ? 'border-tomato dark:border-tomato' : 'border-black/10')
                     }
                   />
                 </div>
-                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">
-                  {courseDataError.name}
-                </p>
+                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">{courseDataError.name}</p>
               </div>
               <div>
                 <label for="slug" class="cursor-pointer text-base md:text-lg">
@@ -92,7 +88,7 @@ export default component$(
                     value={courseData.slug}
                     required
                     class={
-                      "w-[250px] rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray  dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] "
+                      'w-[250px] rounded-md border-2 px-3 py-2 disabled:bg-gray-300 dark:border-background-light-gray  dark:bg-highlight-dark dark:text-background-light-gray  dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] '
                     }
                   />
                 </div>
@@ -100,7 +96,7 @@ export default component$(
               <br />
               <button
                 onClick$={async () => {
-                  courseDataError.name = "";
+                  courseDataError.name = '';
                   loading.value = true;
                   const result = schema.safeParse(courseData);
                   if (!result.success) {
@@ -109,11 +105,8 @@ export default component$(
                     return;
                   }
                   const existingCourse = await checkExistingCourse(courseData.slug);
-                  if (
-                    existingCourse.length > 0 &&
-                    (isEditing ? existingCourse[0].id !== courseData.id : true)
-                  ) {
-                    courseDataError.name = "A course with this name already exists";
+                  if (existingCourse.length > 0 && (isEditing ? existingCourse[0].id !== courseData.id : true)) {
+                    courseDataError.name = 'A course with this name already exists';
                     loading.value = false;
                     return;
                   }

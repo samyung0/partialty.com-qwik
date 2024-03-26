@@ -1,22 +1,18 @@
 /** @jsxImportSource react */
-import { Trash, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { BaseRange } from "slate";
-import { Editor, Range, Element as SlateElement, Transforms } from "slate";
-import type { RenderElementProps } from "slate-react";
-import { ReactEditor, useFocused, useSlate } from "slate-react";
-import { isBlockActive } from "~/components/_ContentEditor/blockFn";
-import type { QuizBlockElement, QuizOptionElement } from "~/components/_ContentEditor/types";
+import { Trash, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { BaseRange } from 'slate';
+import { Editor, Range, Element as SlateElement, Transforms } from 'slate';
+import type { RenderElementProps } from 'slate-react';
+import { ReactEditor, useFocused, useSlate } from 'slate-react';
+import { isBlockActive } from '~/components/_ContentEditor/blockFn';
+import type { QuizBlockElement, QuizOptionElement } from '~/components/_ContentEditor/types';
 
 export const QuizOption = ({ attributes, children, element }: RenderElementProps) => {
   const optionValue = (element as QuizOptionElement).optionValue;
   const name = (element as QuizOptionElement).formName;
   return (
-    <div
-      {...attributes}
-      data-formname={name}
-      className="flex items-center gap-4 bg-inherit text-inherit"
-    >
+    <div {...attributes} data-formname={name} className="flex items-center gap-4 bg-inherit text-inherit">
       <input hidden className="hidden" type="radio" name={name} value={optionValue} />
       <div
         contentEditable={false}
@@ -31,10 +27,7 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
 
 export const QuizBlock = ({ attributes, children, element }: RenderElementProps) => {
   return (
-    <div
-      {...attributes}
-      className="mb-[1.25rem] mt-[1.25rem] bg-inherit tracking-wide text-inherit"
-    >
+    <div {...attributes} className="mb-[1.25rem] mt-[1.25rem] bg-inherit tracking-wide text-inherit">
       <h3 className="mb-3 mt-0 bg-inherit text-inherit" contentEditable={false}>
         {(element as QuizBlockElement).quizTitle}
       </h3>
@@ -60,9 +53,7 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
           Correct
         </div>
         <div contentEditable={false} className="formWrong hidden">
-          <div className="inline-block rounded-lg bg-tomato px-6 py-2 text-light-tomato shadow-lg">
-            Wrong
-          </div>
+          <div className="inline-block rounded-lg bg-tomato px-6 py-2 text-light-tomato shadow-lg">Wrong</div>
           <p className="m-0 pt-1 text-sm text-tomato">sads aDA SD asd asd sa</p>
         </div>
       </form>
@@ -73,17 +64,17 @@ export const QuizBlock = ({ attributes, children, element }: RenderElementProps)
 export const withQuiz = (editor: Editor) => {
   const { insertBreak } = editor;
   editor.insertBreak = (...args) => {
-    if (isBlockActive(editor, "quizBlock", "type")) {
+    if (isBlockActive(editor, 'quizBlock', 'type')) {
       const parent = editor.above({
-        match: (n) => SlateElement.isElement(n) && n.type === "quizBlock",
+        match: (n) => SlateElement.isElement(n) && n.type === 'quizBlock',
       });
       if (!parent) return insertBreak(...args);
       const noOfChildren = parent[0].children.length;
       editor.insertNode({
-        type: "quizOption",
+        type: 'quizOption',
         formName: (parent[0] as QuizBlockElement).formName,
         optionValue: (noOfChildren + 1).toString(),
-        children: [{ text: "" }],
+        children: [{ text: '' }],
       });
       return;
     }
@@ -100,21 +91,18 @@ export const CenterQuizBlockSettings = ({
   setShowQuizBlockSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const matching = editor.above({
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "quizBlock",
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'quizBlock',
   });
   if (!matching) return null;
   const quizBlock = matching[0] as QuizBlockElement;
-  const [quizTitle, setQuizTitle] = useState(quizBlock.quizTitle || "");
-  const [quizAns, setQuizAns] = useState(quizBlock.ans || "");
+  const [quizTitle, setQuizTitle] = useState(quizBlock.quizTitle || '');
+  const [quizAns, setQuizAns] = useState(quizBlock.ans || '');
   const noOfOptions = quizBlock.children.length;
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
         <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Quiz</h2>
-        <button
-          onClick={() => setShowQuizBlockSettings(false)}
-          className="absolute right-8 top-8 p-2"
-        >
+        <button onClick={() => setShowQuizBlockSettings(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
         </button>
         <div>
@@ -129,7 +117,7 @@ export const CenterQuizBlockSettings = ({
               name="QuizTitle"
               type="text"
               className={
-                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+                'block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark'
               }
             />
           </div>
@@ -145,7 +133,7 @@ export const CenterQuizBlockSettings = ({
               onChange={(e) => setQuizAns(e.target.value)}
               id="QuizAnswer"
               className={
-                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+                'block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark'
               }
             >
               {Array.from(Array(noOfOptions)).map((_, index) => (
@@ -161,8 +149,7 @@ export const CenterQuizBlockSettings = ({
             editor.setNodes(
               { quizTitle, ans: quizAns },
               {
-                match: (n) =>
-                  SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === "quizBlock",
+                match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === 'quizBlock',
               }
             );
             setShowQuizBlockSettings(false);
@@ -198,26 +185,21 @@ export const HoveringQuizBlock = ({
     const { selection } = editor;
 
     if (!el || !selection) {
-      if (el && !selection) el.style.display = "none";
+      if (el && !selection) el.style.display = 'none';
       return;
     }
 
     prevSelection.current = selection;
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "quizBlock",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'quizBlock',
     });
     if (!node) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
     const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
 
-    const {
-      x: nodeX,
-      height: nodeHeight,
-      y: _nodeY,
-      width: nodeWidth,
-    } = linkDOMNode.getBoundingClientRect();
+    const { x: nodeX, height: nodeHeight, y: _nodeY, width: nodeWidth } = linkDOMNode.getBoundingClientRect();
 
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
@@ -230,27 +212,20 @@ export const HoveringQuizBlock = ({
         (prevSelection.current === undefined || prevSelection.current === null)) ||
       !Range.isCollapsed(selection)
     ) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
 
-    el.style.display = "flex";
-    el.style.top = `${Math.min(
-      nodeY + nodeHeight + offsetY,
-      window.innerHeight * 0.9 - el.offsetHeight
-    )}px`;
+    el.style.display = 'flex';
+    el.style.top = `${Math.min(nodeY + nodeHeight + offsetY, window.innerHeight * 0.9 - el.offsetHeight)}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
-    el.style.transform = "translateX(-50%)";
+    el.style.transform = 'translateX(-50%)';
   });
 
   return (
     <>
-      {isBlockActive(editor, "quizBlock", "type") && (
-        <div
-          ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start shadow-xl"
-          role="group"
-        >
+      {isBlockActive(editor, 'quizBlock', 'type') && (
+        <div ref={ref} className="absolute z-[60] flex flex-col items-center justify-start shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => setShowQuizBlockSettings(true)}
@@ -275,6 +250,6 @@ export const HoveringQuizBlock = ({
 
 export function toggleQuizBlockAtSelection(editor: Editor) {
   Transforms.removeNodes(editor, {
-    match: (n) => SlateElement.isElement(n) && n.type === "quizBlock",
+    match: (n) => SlateElement.isElement(n) && n.type === 'quizBlock',
   });
 }

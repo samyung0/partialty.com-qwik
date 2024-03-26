@@ -1,12 +1,12 @@
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 
-import displayCodeOrderInteractive from "../codeAnimation/displayCodeOrderInteractive";
-import blankChar from "../codeBlock/blankChar";
-import rendered from "../codeBlock/rendered";
+import displayCodeOrderInteractive from '../codeAnimation/displayCodeOrderInteractive';
+import blankChar from '../codeBlock/blankChar';
+import rendered from '../codeBlock/rendered';
 
-import TypeScriptIcon from "~/assets/svg/typescript.svg";
+import TypeScriptIcon from '~/assets/svg/typescript.svg';
 
-import styles from "./index.module.css";
+import styles from './index.module.css';
 
 const codeSnippets = [
   <div key="snippet-1" class="flex h-[100%] w-full">
@@ -36,10 +36,10 @@ const codeSnippets = [
 ];
 
 const replaceStringArr = [
-  { from: "bg-custom-yellow-400", to: "bg-red-400", row: 4, pos: 56 },
-  { from: "text-[1.5em]", to: "text-[2.5em]", row: 5, pos: 33 },
-  { from: "text-[2.5em]", to: "text-[1.5em]", row: 5, pos: 33 },
-  { from: "bg-red-400", to: "bg-custom-yellow-400", row: 4, pos: 53 },
+  { from: 'bg-custom-yellow-400', to: 'bg-red-400', row: 4, pos: 56 },
+  { from: 'text-[1.5em]', to: 'text-[2.5em]', row: 5, pos: 33 },
+  { from: 'text-[2.5em]', to: 'text-[1.5em]', row: 5, pos: 33 },
+  { from: 'bg-red-400', to: 'bg-custom-yellow-400', row: 4, pos: 53 },
 ];
 
 export default component$(() => {
@@ -47,7 +47,7 @@ export default component$(() => {
   const replaceStringIdx = useSignal(0);
   const codeOutputIdx = useSignal(0);
 
-  const blankCharArr = useSignal(blankChar["reactCode2BlankChar"]);
+  const blankCharArr = useSignal(blankChar['reactCode2BlankChar']);
   const cursorRow = useSignal(replaceStringArr[0].row);
   const cursorPos = useSignal(replaceStringArr[0].pos);
 
@@ -156,16 +156,14 @@ export default component$(() => {
                           <span
                             key={`blankline-${row}-char-${charIdx}`}
                             class={
-                              row === cursorRow.value &&
-                              charIdx === cursorPos.value &&
-                              styles.blinkingCursorEmptyCode
+                              row === cursorRow.value && charIdx === cursorPos.value && styles.blinkingCursorEmptyCode
                             }
                           >
                             &nbsp;
                           </span>
                         ))}
                       </span>,
-                      "\n",
+                      '\n',
                     ])}
                   </pre>
                 </div>

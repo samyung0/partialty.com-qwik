@@ -15,7 +15,7 @@ import MySvelteButton from './MySvelteButton.svelte';
 // export const astroCodeRendered = renderIndexCodeBlock({ code });
 const _astroCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
-  if (char === "\n") _astroCodeBlankChar.push(0);
+  if (char === '\n') _astroCodeBlankChar.push(0);
   else _astroCodeBlankChar[_astroCodeBlankChar.length - 1]++;
 });
 export const astroCodeBlankChar = _astroCodeBlankChar;

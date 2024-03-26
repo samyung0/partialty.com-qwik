@@ -1,10 +1,10 @@
-import { Elysia, t } from "elysia";
+import { Elysia, t } from 'elysia';
 
 // import SibApiV3Sdk from "@getbrevo/brevo";
-import { Receiver } from "@upstash/qstash";
-import { Eta } from "eta";
-import path from "node:path";
-import { Resend } from "resend";
+import { Receiver } from '@upstash/qstash';
+import { Eta } from 'eta';
+import path from 'node:path';
+import { Resend } from 'resend';
 
 if (
   !Bun.env.RESEND_API_KEY ||
@@ -12,50 +12,50 @@ if (
   !Bun.env.QSTASH_CURRENT_SIGNING_KEY ||
   !Bun.env.QSTASH_NEXT_SIGNING_KEY
 )
-  throw new Error("Server env var Error!");
+  throw new Error('Server env var Error!');
 // let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // let apiKey = (apiInstance as any).authentications["apiKey"];
 // apiKey.apiKey = Bun.env.BREVO_API_KEY;
-const eta = new Eta({ views: path.resolve(import.meta.dir, "./templates") });
+const eta = new Eta({ views: path.resolve(import.meta.dir, './templates') });
 
-const senderMail = "automatic@partialty.com";
-const senderName = "Partialty";
+const senderMail = 'automatic@partialty.com';
+const senderName = 'Partialty';
 
-const app = new Elysia().group("/mail", (app) => {
+const app = new Elysia().group('/mail', (app) => {
   return app.post(
-    "/sendMail/verifyMail",
+    '/sendMail/verifyMail',
     async ({ body, headers }) => {
-      if (!headers["upstash-signature"]) return;
+      if (!headers['upstash-signature']) return;
 
       const r = new Receiver({
         currentSigningKey: Bun.env.QSTASH_CURRENT_SIGNING_KEY!,
         nextSigningKey: Bun.env.QSTASH_NEXT_SIGNING_KEY!,
       });
       const content = JSON.parse(body as any);
-      if (!content.verifyLink || !content.receiverEmail) throw new Error("server Error");
+      if (!content.verifyLink || !content.receiverEmail) throw new Error('server Error');
 
       const isValid = await r
         .verify({
-          signature: headers["upstash-signature"],
+          signature: headers['upstash-signature'],
           body: body as string,
           clockTolerance: 1,
         })
         .catch((e) => {
           console.log(e);
-          throw new Error("Server Error!");
+          throw new Error('Server Error!');
         });
 
-      if (!isValid) throw new Error("Server Error!");
+      if (!isValid) throw new Error('Server Error!');
 
-      const res = eta.render("verifyEmail.eta", {
+      const res = eta.render('verifyEmail.eta', {
         verifyLink: content.verifyLink,
       });
       const resend = new Resend(Bun.env.RESEND_API_KEY!);
 
       const emailRes = await resend.emails.send({
-        from: "Partialty <automatic@partialty.com>",
+        from: 'Partialty <automatic@partialty.com>',
         to: content.receiverEmail,
-        subject: "Verify Your Partialty Account",
+        subject: 'Verify Your Partialty Account',
         html: res,
       });
 
@@ -79,7 +79,7 @@ const app = new Elysia().group("/mail", (app) => {
 
       return {
         statusCode: 200,
-        body: "OK",
+        body: 'OK',
       };
     },
     {

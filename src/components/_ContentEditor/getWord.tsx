@@ -1,5 +1,5 @@
-import type { Point } from "slate";
-import { Editor, Range } from "slate";
+import type { Point } from 'slate';
+import { Editor, Range } from 'slate';
 
 export function getWord(
   editor: Editor,
@@ -7,10 +7,10 @@ export function getWord(
   options: {
     terminator?: string[];
     include?: boolean;
-    directions?: "both" | "left" | "right";
+    directions?: 'both' | 'left' | 'right';
   } = {}
 ): Range | undefined {
-  const { terminator = [" "], include = false, directions = "both" } = options;
+  const { terminator = [' '], include = false, directions = 'both' } = options;
 
   const { selection } = editor;
   if (!selection) return;
@@ -20,22 +20,19 @@ export function getWord(
 
   let point: Point = start;
 
-  function move(direction: "right" | "left"): boolean {
+  function move(direction: 'right' | 'left'): boolean {
     const next =
-      direction === "right"
+      direction === 'right'
         ? Editor.after(editor, point, {
-            unit: "character",
+            unit: 'character',
           })
-        : Editor.before(editor, point, { unit: "character" });
+        : Editor.before(editor, point, { unit: 'character' });
 
     const wordNext =
       next &&
-      Editor.string(
-        editor,
-        direction === "right" ? { anchor: point, focus: next } : { anchor: next, focus: point }
-      );
+      Editor.string(editor, direction === 'right' ? { anchor: point, focus: next } : { anchor: next, focus: point });
 
-    const last = wordNext && wordNext[direction === "right" ? 0 : wordNext.length - 1];
+    const last = wordNext && wordNext[direction === 'right' ? 0 : wordNext.length - 1];
     if (next && last && !terminator.includes(last)) {
       point = next;
 
@@ -53,23 +50,23 @@ export function getWord(
   // Move point and update start & end ranges
 
   // Move forwards
-  if (directions !== "left") {
+  if (directions !== 'left') {
     point = end;
-    while (move("right"));
+    while (move('right'));
     end = point;
   }
 
   // Move backwards
-  if (directions !== "right") {
+  if (directions !== 'right') {
     point = start;
-    while (move("left"));
+    while (move('left'));
     start = point;
   }
 
   if (include) {
     return {
-      anchor: Editor.before(editor, start, { unit: "offset" }) ?? start,
-      focus: Editor.after(editor, end, { unit: "offset" }) ?? end,
+      anchor: Editor.before(editor, start, { unit: 'offset' }) ?? start,
+      focus: Editor.after(editor, end, { unit: 'offset' }) ?? end,
     };
   }
 

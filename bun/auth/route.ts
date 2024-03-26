@@ -1,12 +1,12 @@
-import { Elysia, t } from "elysia";
-import generateJWTForGithub from "./generateJWTForGithub";
-import passwordToHash from "./passwordToHash";
-import verifyHash from "./verifyHash";
+import { Elysia, t } from 'elysia';
+import generateJWTForGithub from './generateJWTForGithub';
+import passwordToHash from './passwordToHash';
+import verifyHash from './verifyHash';
 
-const app = new Elysia().group("/auth", (app) => {
+const app = new Elysia().group('/auth', (app) => {
   return app
     .post(
-      "/githubApp/generateJWT",
+      '/githubApp/generateJWT',
       async ({ body }) => {
         const jwt = await generateJWTForGithub(body.id);
         // const res: any = await fetch(
@@ -34,11 +34,11 @@ const app = new Elysia().group("/auth", (app) => {
       }
     )
     .post(
-      "/signup/passwordToHash",
+      '/signup/passwordToHash',
       async ({ body, set }) => {
         if (Date.now() - body.time > 3 * 60 * 1000) {
           set.status = 400;
-          return { error: true, message: "Bad Request" };
+          return { error: true, message: 'Bad Request' };
         }
         try {
           const hash = await passwordToHash(body.password);
@@ -55,17 +55,17 @@ const app = new Elysia().group("/auth", (app) => {
       }
     )
     .post(
-      "/login/hashToPassword",
+      '/login/hashToPassword',
       async ({ body, set }) => {
         if (Date.now() - body.time > 3 * 60 * 1000) {
           set.status = 400;
-          return { error: true, message: "Bad Request" };
+          return { error: true, message: 'Bad Request' };
         }
         try {
           if (await verifyHash(body.password, body.hash)) {
             return { error: false, isVerified: true };
           } else {
-            return { error: false, isVerified: false, message: "Incorrect Password!" };
+            return { error: false, isVerified: false, message: 'Incorrect Password!' };
           }
         } catch (e) {
           return { error: true, isVerified: false, message: (e as any).toString() };

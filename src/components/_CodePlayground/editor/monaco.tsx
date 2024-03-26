@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-import type { PropFunction } from "@builder.io/qwik";
-import { noSerialize } from "@builder.io/qwik";
-import type MonacoTypes from "monaco-editor"; // save-dev only
-import type { EditorStore } from "./editor";
+import type { PropFunction } from '@builder.io/qwik';
+import { noSerialize } from '@builder.io/qwik';
+import type MonacoTypes from 'monaco-editor'; // save-dev only
+import type { EditorStore } from './editor';
 
 export const initMonacoEditor = async (
   containerElm: any,
@@ -43,12 +43,12 @@ export const initMonacoEditor = async (
     esModuleInterop: true,
     isolatedModules: true,
     jsx: ts.JsxEmit.ReactJSX,
-    jsxImportSource: "@builder.io/qwik",
+    jsxImportSource: '@builder.io/qwik',
     moduleResolution: ts.ModuleResolutionKind.NodeJs,
     noEmit: true,
     skipLibCheck: true,
     target: ts.ScriptTarget.Latest,
-    typeRoots: ["node_modules/@types"],
+    typeRoots: ['node_modules/@types'],
   });
 
   ts.javascriptDefaults.setDiagnosticsOptions({
@@ -79,12 +79,12 @@ export const initMonacoEditor = async (
     wordBasedSuggestionsOnlySameLanguage: true,
     maxTokenizationLineLength: 1000,
     ariaLabel: ariaLabel,
-    lineNumbers: "on",
+    lineNumbers: 'on',
     model: null,
     theme: getEditorTheme(true),
-    wordWrap: "wordWrapColumn",
+    wordWrap: 'wordWrapColumn',
     wordWrapColumn: 80,
-    wrappingIndent: "indent",
+    wrappingIndent: 'indent',
   });
 
   ts.typescriptDefaults.setEagerModelSync(true);
@@ -143,9 +143,7 @@ export const openFile = async (
     }
 
     // if (!previousSelectedModel || previousSelectedModel.uri.fsPath !== selectedFsPath) {
-    const selectedModel = monaco.editor
-      .getModels()
-      .find((model) => model.uri.fsPath === selectedFsPath);
+    const selectedModel = monaco.editor.getModels().find((model) => model.uri.fsPath === selectedFsPath);
     if (selectedModel) {
       editorStore.editor.setModel(selectedModel);
 
@@ -164,7 +162,7 @@ export const openFile = async (
 };
 
 export const getEditorTheme = (isDark: boolean) => {
-  return isDark ? "vs-dark" : "vs";
+  return isDark ? 'vs-dark' : 'vs';
 };
 
 // const checkDiagnostics = async (
@@ -317,13 +315,13 @@ export const getMonaco = async (): Promise<Monaco> => {
   if (!monacoCtx.loader) {
     // lazy-load the monaco AMD script ol' school
     monacoCtx.loader = new Promise<Monaco>((resolve, reject) => {
-      const script = document.createElement("script");
-      script.addEventListener("error", reject);
-      script.addEventListener("load", () => {
+      const script = document.createElement('script');
+      script.addEventListener('error', reject);
+      script.addEventListener('load', () => {
         require.config({ paths: { vs: MONACO_VS_URL } });
 
         // https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/editor/editor.main.js
-        require(["vs/editor/editor.main"], () => {
+        require(['vs/editor/editor.main'], () => {
           resolve((globalThis as any).monaco);
 
           /**
@@ -359,8 +357,8 @@ const getCdnUrl = (pkgName: string, pkgVersion: string, pkgPath: string) => {
   return `https://cdn.jsdelivr.net/npm/${pkgName}@${pkgVersion}${pkgPath}`;
 };
 
-const MONACO_VERSION = "0.43.0";
-const MONACO_VS_URL = getCdnUrl("monaco-editor", MONACO_VERSION, "/min/vs");
+const MONACO_VERSION = '0.43.0';
+const MONACO_VS_URL = getCdnUrl('monaco-editor', MONACO_VERSION, '/min/vs');
 const MONACO_LOADER_URL = `${MONACO_VS_URL}/loader.js`;
 
 const CLIENT_LIB = `
@@ -374,8 +372,7 @@ declare module '*.css?inline' {
 export type Monaco = typeof MonacoTypes;
 export type IStandaloneCodeEditor = MonacoTypes.editor.IStandaloneCodeEditor;
 export type ICodeEditorViewState = MonacoTypes.editor.ICodeEditorViewState;
-export type IStandaloneEditorConstructionOptions =
-  MonacoTypes.editor.IStandaloneEditorConstructionOptions;
+export type IStandaloneEditorConstructionOptions = MonacoTypes.editor.IStandaloneEditorConstructionOptions;
 export type IModelContentChangedEvent = MonacoTypes.editor.IModelContentChangedEvent;
 export type TypeScriptWorker = MonacoTypes.languages.typescript.TypeScriptWorker;
 export type TypeScriptDiagnostic = MonacoTypes.languages.typescript.Diagnostic;

@@ -9,16 +9,16 @@ import {
   _jsxBranch,
   _jsxQ,
   useServerData,
-} from "@builder.io/qwik";
+} from '@builder.io/qwik';
 
-import { ContentInternalContext } from "./contexts";
-import shim from "./spa-shim";
+import { ContentInternalContext } from './contexts';
+import shim from './spa-shim';
 
 /** @public */
-export const RouterOutlet = component$(({ layout = "default" }: { layout?: string }) => {
-  const forbiddenValues = ["head", "headings", "onStaticGenerate"];
+export const RouterOutlet = component$(({ layout = 'default' }: { layout?: string }) => {
+  const forbiddenValues = ['head', 'headings', 'onStaticGenerate'];
   if (layout in forbiddenValues) {
-    console.warn("head, headings and onStaticGenerate are not valid layout names !!!");
+    console.warn('head, headings and onStaticGenerate are not valid layout names !!!');
   }
 
   // TODO Option to remove this shim, especially for MFEs.
@@ -26,7 +26,7 @@ export const RouterOutlet = component$(({ layout = "default" }: { layout?: strin
 
   _jsxBranch();
 
-  const nonce = useServerData<string | undefined>("nonce");
+  const nonce = useServerData<string | undefined>('nonce');
   const { value } = useContext(ContentInternalContext);
   if (value && value.length > 0) {
     const contentsLen = value.length;

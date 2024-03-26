@@ -1,24 +1,24 @@
-import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import QwikContent from "~/components/Prose/QwikContent";
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import QwikContent from '~/components/Prose/QwikContent';
 import {
   useCurrentChapter,
   useDBLoader,
-} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout";
+} from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
 import {
   useCategoryLoader,
   useCourseLoader,
   useTagLoader,
   useUserLoaderNullable,
-} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout";
+} from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 
-import { server$ } from "@builder.io/qwik-city";
-import { and, eq } from "drizzle-orm";
-import { fetchAudioServer } from "~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor";
-import drizzleClient from "~/utils/drizzleClient";
-import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
-import saveToDBQuiz from "~/utils/quiz/saveToDBQuiz";
-import { content_user_progress } from "../../../../drizzle_turso/schema/content_user_progress";
+import { server$ } from '@builder.io/qwik-city';
+import { and, eq } from 'drizzle-orm';
+import { fetchAudioServer } from '~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor';
+import drizzleClient from '~/utils/drizzleClient';
+import getSQLTimeStamp from '~/utils/getSQLTimeStamp';
+import saveToDBQuiz from '~/utils/quiz/saveToDBQuiz';
+import { content_user_progress } from '../../../../drizzle_turso/schema/content_user_progress';
 export { fetchAudioServer };
 
 const saveProgressServer = server$(async function (
@@ -27,12 +27,10 @@ const saveProgressServer = server$(async function (
   userId: string,
   notFinished: boolean
 ) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .update(content_user_progress)
     .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
-    .where(
-      and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId))
-    )
+    .where(and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId)))
     .returning();
 });
 
@@ -65,25 +63,17 @@ export default component$(() => {
   });
   const saveProress = $(async () => {
     if (!userProgress || !userNullable || !currentChapter) return;
-    console.log("saving Progress");
+    console.log('saving Progress');
     const newProgress = userProgress.progress;
     if (!userProgress.progress.includes(currentChapter.id)) newProgress.push(currentChapter.id);
-    const notFinished =
-      course.content_index.chapter_order.filter((id) => !newProgress.includes(id)).length > 0;
-    await saveProgressServer(
-      [...newProgress],
-      course.content_index.id,
-      userNullable.userId,
-      notFinished
-    );
+    const notFinished = course.content_index.chapter_order.filter((id) => !newProgress.includes(id)).length > 0;
+    await saveProgressServer([...newProgress], course.content_index.id, userNullable.userId, notFinished);
   });
   const a =
     chapters.find(
       (chapter) =>
         chapter.id ===
-        course.content_index.chapter_order[
-          course.content_index.chapter_order.indexOf(currentChapter!.id) - 1
-        ]
+        course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter!.id) - 1]
     )?.link || undefined;
   return currentChapter ? (
     <QwikContent
@@ -97,18 +87,14 @@ export default component$(() => {
         chapters.find(
           (chapter) =>
             chapter.id ===
-            course.content_index.chapter_order[
-              course.content_index.chapter_order.indexOf(currentChapter.id) - 1
-            ]
+            course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter.id) - 1]
         )?.link || undefined
       }
       nextChapter={
         chapters.find(
           (chapter) =>
             chapter.id ===
-            course.content_index.chapter_order[
-              course.content_index.chapter_order.indexOf(currentChapter.id) + 1
-            ]
+            course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter.id) + 1]
         )?.link || undefined
       }
     />

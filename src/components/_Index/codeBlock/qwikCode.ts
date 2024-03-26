@@ -10,7 +10,7 @@ export default component$(() => {
 // export const qwikCodeRendered = renderIndexCodeBlock({ code });
 const _qwikCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
-  if (char === "\n") _qwikCodeBlankChar.push(0);
+  if (char === '\n') _qwikCodeBlankChar.push(0);
   else _qwikCodeBlankChar[_qwikCodeBlankChar.length - 1]++;
 });
 export const qwikCodeBlankChar = _qwikCodeBlankChar;

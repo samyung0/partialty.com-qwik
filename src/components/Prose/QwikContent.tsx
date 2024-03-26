@@ -1,12 +1,12 @@
-import type { QRL } from "@builder.io/qwik";
-import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import AudioPlayer from "~/components/AudioPlayer";
-import ProgressTracker from "~/components/Prose/ProgressTracker";
-import { QwikQuizCodeHydrate } from "~/components/Prose/QuizCodeHydrate";
-import { QwikQuizHydrate } from "~/components/Prose/QuizHydrate";
-import QwikProse from "~/components/Prose/qwik-prose";
-import { cn } from "~/utils/cn";
+import type { QRL } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
+import AudioPlayer from '~/components/AudioPlayer';
+import ProgressTracker from '~/components/Prose/ProgressTracker';
+import { QwikQuizCodeHydrate } from '~/components/Prose/QuizCodeHydrate';
+import { QwikQuizHydrate } from '~/components/Prose/QuizHydrate';
+import QwikProse from '~/components/Prose/qwik-prose';
+import { cn } from '~/utils/cn';
 
 export default component$(
   ({
@@ -39,8 +39,8 @@ export default component$(
       <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
       <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
       {/* <QwikEmbedHydrate /> */}
-      <div class={cn("max-h-full flex-auto overflow-auto")}>
-        <QwikProse innerHTML={innerHTML || ""} />
+      <div class={cn('max-h-full flex-auto overflow-auto')}>
+        <QwikProse innerHTML={innerHTML || ''} />
         <div class="">
           <ProgressTracker saveProress={saveProress} />
         </div>

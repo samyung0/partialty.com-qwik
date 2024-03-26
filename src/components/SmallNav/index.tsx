@@ -1,31 +1,31 @@
-import { $, component$, useContext } from "@builder.io/qwik";
-import { Link, removeClientDataCache, server$, useNavigate } from "@builder.io/qwik-city";
+import { $, component$, useContext } from '@builder.io/qwik';
+import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
 
-import type { LuciaSession } from "~/types/LuciaSession";
+import type { LuciaSession } from '~/types/LuciaSession';
 
-import { IoCaretDown } from "@qwikest/icons/ionicons";
-import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuSun, LuUser2 } from "@qwikest/icons/lucide";
-import CrownPNG from "~/assets/img/crown.png";
-import { logout } from "~/auth/logout";
-import { themeContext } from "~/context/themeContext";
+import { IoCaretDown } from '@qwikest/icons/ionicons';
+import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuSun, LuUser2 } from '@qwikest/icons/lucide';
+import CrownPNG from '~/assets/img/crown.png';
+import { logout } from '~/auth/logout';
+import { themeContext } from '~/context/themeContext';
 
-const setThemeCookie = server$(function (theme: "light" | "dark") {
-  this.cookie.set("theme", theme, {
-    path: "/",
-    maxAge: [7, "days"],
+const setThemeCookie = server$(function (theme: 'light' | 'dark') {
+  this.cookie.set('theme', theme, {
+    path: '/',
+    maxAge: [7, 'days'],
     httpOnly: false,
-    sameSite: "lax",
+    sameSite: 'lax',
     secure: true,
   });
 });
 
-export default component$(({ user }: { user?: LuciaSession["user"] | undefined }) => {
+export default component$(({ user }: { user?: LuciaSession['user'] | undefined }) => {
   const nav = useNavigate();
   const theme = useContext(themeContext);
   const handleLogout = $(async () => {
     await logout();
     removeClientDataCache();
-    nav("/");
+    nav('/');
   });
   return (
     <nav class="dark:text-background-light-gray">
@@ -36,13 +36,13 @@ export default component$(({ user }: { user?: LuciaSession["user"] | undefined }
             <input
               onChange$={(e, cTarget) => {
                 if (cTarget.checked) {
-                  theme.value = "dark";
+                  theme.value = 'dark';
                 } else {
-                  theme.value = "light";
+                  theme.value = 'light';
                 }
                 setThemeCookie(theme.value);
               }}
-              checked={theme.value === "dark"}
+              checked={theme.value === 'dark'}
               type="checkbox"
               class="peer sr-only"
             ></input>
@@ -52,7 +52,7 @@ export default component$(({ user }: { user?: LuciaSession["user"] | undefined }
         </li>
         {user && (
           <li class="relative flex gap-3 py-2 pl-6 [&:hover>div>span:last-child]:rotate-180 [&:hover>div]:flex">
-            <div class={"flex gap-2"}>
+            <div class={'flex gap-2'}>
               <span class="relative">
                 <img
                   src={user.avatar_url}
@@ -62,19 +62,13 @@ export default component$(({ user }: { user?: LuciaSession["user"] | undefined }
                   class="rounded-full object-contain"
                   referrerPolicy="no-referrer"
                 />
-                {user.role !== "free" && (
-                  <img
-                    src={CrownPNG}
-                    width={16}
-                    height={16}
-                    alt="Crown"
-                    class="absolute right-[-14px] top-[-14px]"
-                  />
+                {user.role !== 'free' && (
+                  <img src={CrownPNG} width={16} height={16} alt="Crown" class="absolute right-[-14px] top-[-14px]" />
                 )}
               </span>
               <span
                 class={
-                  "inline-flex items-center text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray"
+                  'inline-flex items-center text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray'
                 }
               >
                 <IoCaretDown />

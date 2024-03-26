@@ -1,8 +1,8 @@
-import type { Signal } from "@builder.io/qwik";
-import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
-import animateHide from "~/components/_Index/codeAnimation/animateHide";
-import { appearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
-import type codeBlock from "~/components/_Index/codeBlock";
+import type { Signal } from '@builder.io/qwik';
+import type { TypeWriter } from '~/components/_Index/codeAnimation/TypeWriter';
+import animateHide from '~/components/_Index/codeAnimation/animateHide';
+import { appearEasingFunction } from '~/components/_Index/codeAnimation/easingFunctions';
+import type codeBlock from '~/components/_Index/codeBlock';
 
 const animateShow = (
   typeWriter: TypeWriter,
@@ -19,8 +19,7 @@ const animateShow = (
     typeWriter.currentChar >= typeWriter.totalChar &&
     typeWriter.timeAfterAnimationFinished >= typeWriter.disappearDelay
   ) {
-    typeWriter.codeOutputIndex =
-      (typeWriter.codeOutputIndex % typeWriter.displayCodeOrder.length) + 1;
+    typeWriter.codeOutputIndex = (typeWriter.codeOutputIndex % typeWriter.displayCodeOrder.length) + 1;
 
     typeWriter.currentChar = typeWriter.totalChar - 1;
     typeWriter.appearStart = 0;
@@ -42,7 +41,7 @@ const animateShow = (
         typeWriter.largestIntervalBetweenCharAppear * (1 - ratio) +
         typeWriter.smallestIntervalBetweenCharAppear * ratio;
       if (typeWriter.timeAfterLastChar > interval) {
-        if (typeWriter.displayCode[typeWriter.currentChar] === "\n") typeWriter.currentRow++;
+        if (typeWriter.displayCode[typeWriter.currentChar] === '\n') typeWriter.currentRow++;
         else typeWriter.revealedCharArr[typeWriter.currentRow]++;
         typeWriter.currentChar++;
         typeWriter.timeAfterLastChar -= interval;

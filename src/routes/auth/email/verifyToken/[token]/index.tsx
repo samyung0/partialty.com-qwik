@@ -1,11 +1,11 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link, routeLoader$ } from "@builder.io/qwik-city";
+import { component$ } from '@builder.io/qwik';
+import type { DocumentHead } from '@builder.io/qwik-city';
+import { Link, routeLoader$ } from '@builder.io/qwik-city';
 
-import { eq } from "drizzle-orm";
-import verifyEmailTokens from "~/auth/verifyEmailTokens";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
+import { eq } from 'drizzle-orm';
+import verifyEmailTokens from '~/auth/verifyEmailTokens';
+import drizzleClient from '~/utils/drizzleClient';
+import { profiles } from '../../../../../../drizzle_turso/schema/profiles';
 
 export const useLoader = routeLoader$(async (request) => {
   const token = request.params.token;
@@ -26,10 +26,10 @@ export default component$(() => {
   return (
     <section
       class={
-        "flex h-[100vh] flex-col items-center justify-center " +
+        'flex h-[100vh] flex-col items-center justify-center ' +
         (verifyInfo.value.verified
-          ? "bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray"
-          : "bg-light-tomato")
+          ? 'bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray'
+          : 'bg-light-tomato')
       }
     >
       {verifyInfo.value.verified ? (
@@ -47,8 +47,8 @@ export default component$(() => {
         <>
           <h1 class="font-mosk text-[3em] font-bold tracking-wide">Ooops</h1>
           <p class="pt-4 text-lg tracking-wide">
-            It looks like the verification link is invalid or something went wrong in the server.
-            Please try to send another verification email!
+            It looks like the verification link is invalid or something went wrong in the server. Please try to send
+            another verification email!
           </p>
         </>
       )}
@@ -57,11 +57,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Email Verification",
+  title: 'Email Verification',
   meta: [
     {
-      name: "description",
-      content: "Email verification page.",
+      name: 'description',
+      content: 'Email verification page.',
     },
   ],
 };

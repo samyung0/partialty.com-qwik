@@ -1,50 +1,47 @@
 /** @jsxImportSource react */
 
-import { qwikify$ } from "@builder.io/qwik-react";
-import MuxPlayer from "@mux/mux-player-react";
-import { Pause, Play } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { qwikify$ } from '@builder.io/qwik-react';
+import MuxPlayer from '@mux/mux-player-react';
+import { Pause, Play } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 const audioTrack = ({
   audioTrack,
 }: {
-  audioTrack:
-    | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
-    | undefined;
+  audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
 }) => {
   const dataSync = useRef<NodeListOf<Element> | undefined>();
   const [timeStamp, setTimeStamp] = useState(0);
   const [paused, setPaused] = useState(true);
   const muxRef = useRef<any>();
   const sync = () => {
-    console.log("syncing");
+    console.log('syncing');
     if (!dataSync.current) return;
     for (let i = 0; i < dataSync.current.length; i++) {
-      const timeStampToActivate =
-        Number(dataSync.current[i].getAttribute("data-synctimestamp")) || 0;
+      const timeStampToActivate = Number(dataSync.current[i].getAttribute('data-synctimestamp')) || 0;
       if (timeStamp >= timeStampToActivate) {
-        if (dataSync.current[i].getAttribute("data-syncactivated") === "1") continue;
+        if (dataSync.current[i].getAttribute('data-syncactivated') === '1') continue;
         let enter: any = {};
         try {
-          enter = JSON.parse(dataSync.current[i].getAttribute("data-syncenter") || "{}");
+          enter = JSON.parse(dataSync.current[i].getAttribute('data-syncenter') || '{}');
         } catch (_) {
           /* empty */
         }
         for (const j in enter) (dataSync.current[i] as HTMLElement).style[j as any] = enter[j];
-        dataSync.current[i].setAttribute("data-syncactivated", "1");
+        dataSync.current[i].setAttribute('data-syncactivated', '1');
       } else {
-        if (dataSync.current[i].getAttribute("data-syncactivated") !== "1") continue;
+        if (dataSync.current[i].getAttribute('data-syncactivated') !== '1') continue;
         let enter: any = {};
         let leave: any = {};
         try {
-          enter = JSON.parse(dataSync.current[i].getAttribute("data-syncenter") || "{}");
-          leave = JSON.parse(dataSync.current[i].getAttribute("data-syncleave") || "{}");
+          enter = JSON.parse(dataSync.current[i].getAttribute('data-syncenter') || '{}');
+          leave = JSON.parse(dataSync.current[i].getAttribute('data-syncleave') || '{}');
         } catch (_) {
           /* empty */
         }
         for (const j in enter) delete (dataSync.current[i] as HTMLElement).style[j as any];
         for (const j in leave) (dataSync.current![i] as HTMLElement).style[j as any] = leave[j];
-        dataSync.current[i].setAttribute("data-syncactivated", "0");
+        dataSync.current[i].setAttribute('data-syncactivated', '0');
       }
     }
   };
@@ -92,12 +89,9 @@ const audioTrack = ({
                 {Math.floor(timeStamp / 60)}:
                 {Math.floor(timeStamp % 60)
                   .toString()
-                  .padStart(2, "0")}
+                  .padStart(2, '0')}
               </span>
-              <label
-                htmlFor="audioRange"
-                className="relative flex w-full items-center justify-center"
-              >
+              <label htmlFor="audioRange" className="relative flex w-full items-center justify-center">
                 <input
                   id="audioRange"
                   type="range"
@@ -122,7 +116,7 @@ const audioTrack = ({
                 {Math.floor(audioTrack.duration / 60)}:
                 {Math.floor(audioTrack.duration % 60)
                   .toString()
-                  .padStart(2, "0")}
+                  .padStart(2, '0')}
               </span>
             </div>
           </div>
@@ -133,4 +127,4 @@ const audioTrack = ({
 };
 
 export default audioTrack;
-export const QwikAudioTrack = qwikify$(audioTrack, { eagerness: "load" });
+export const QwikAudioTrack = qwikify$(audioTrack, { eagerness: 'load' });

@@ -1,11 +1,11 @@
-import { type PropFunction } from "@builder.io/qwik";
-import type { BufferEncoding, WebContainerProcess } from "@webcontainer/api";
-import { WebContainer } from "@webcontainer/api";
-import { type Terminal } from "xterm";
-import type { FileStore, Tree } from "~/utils/fileUtil";
-import { addFileTree, addFolderTree, removeFileTree, removeFolderTree } from "~/utils/fileUtil";
+import { type PropFunction } from '@builder.io/qwik';
+import type { BufferEncoding, WebContainerProcess } from '@webcontainer/api';
+import { WebContainer } from '@webcontainer/api';
+import { type Terminal } from 'xterm';
+import type { FileStore, Tree } from '~/utils/fileUtil';
+import { addFileTree, addFolderTree, removeFileTree, removeFolderTree } from '~/utils/fileUtil';
 
-import chokidarStandalone from "~/assets/chokidar/index.txt?raw";
+import chokidarStandalone from '~/assets/chokidar/index.txt?raw';
 export class WebContainerInterface {
   #webcontainerInstance: WebContainer | null;
   #terminal: Terminal | null;
@@ -50,13 +50,13 @@ export class WebContainerInterface {
 
   async relocateTerminal(terminal: Terminal) {
     this.#shellProcess?.kill();
-    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
+    if (this.#terminalResize) window.removeEventListener('resize', this.#terminalResize);
     if (!this.#webcontainerInstance) return;
 
     // install necessary dependency
-    await this.#webcontainerInstance.spawn("npm", ["install"]);
+    await this.#webcontainerInstance.spawn('npm', ['install']);
 
-    const shellProcess = await this.#webcontainerInstance.spawn("jsh");
+    const shellProcess = await this.#webcontainerInstance.spawn('jsh');
     shellProcess.output.pipeTo(
       new WritableStream({
         write: (data) => {
@@ -82,7 +82,7 @@ export class WebContainerInterface {
     this.#shellProcess = shellProcess;
     this.#terminal = terminal;
 
-    this.#terminalResize = window.addEventListener("resize", () => {
+    this.#terminalResize = window.addEventListener('resize', () => {
       shellProcess.resize({
         cols: terminal.cols,
         rows: terminal.rows,
@@ -97,14 +97,14 @@ export class WebContainerInterface {
    * VERY RISKY INDEED
    */
   async watchFiles() {
-    if (!this.#webcontainerInstance) throw new Error("WebContainer is not initialized!");
+    if (!this.#webcontainerInstance) throw new Error('WebContainer is not initialized!');
 
     this.#isWatchFilesActive = true;
-    const filename = "chokidar" + Date.now().toString();
+    const filename = 'chokidar' + Date.now().toString();
     await this.#webcontainerInstance.fs.writeFile(filename, chokidarStandalone);
 
     // create a process for watching the file changes
-    this.#watchFilesProcess = await this.#webcontainerInstance.spawn("node", [filename]);
+    this.#watchFilesProcess = await this.#webcontainerInstance.spawn('node', [filename]);
     await new Promise<void>((res) =>
       this.#watchFilesProcess!.output.pipeTo(
         new WritableStream({
@@ -114,7 +114,7 @@ export class WebContainerInterface {
               this.#watchFilesChokidarHasRemoved = true;
               res();
             }
-            console.log("Process wateched");
+            console.log('Process wateched');
 
             // file events
             if (!this.#isWatchFilesActive) return;
@@ -125,7 +125,7 @@ export class WebContainerInterface {
 
             if (this.#debounceFileEvents) clearTimeout(this.#debounceFileEvents);
             this.#debounceFileEvents = setTimeout(() => {
-              console.log("process");
+              console.log('process');
               this.#processFileEventsChokidar([...this.#fileEventsQueue]);
               this.#fileEventsQueue = [];
             }, 300);
@@ -135,7 +135,7 @@ export class WebContainerInterface {
     );
   }
 
-  async loadGithub(owner: string, repo: string, branch: string = "main") {
+  async loadGithub(owner: string, repo: string, branch: string = 'main') {
     // if (!this.#webcontainerInstance) throw new Error("WebContainer is not initialized!");
     // const url = `https://api.github.com/repos/${owner}/${repo}/zipball/${branch}`;
     // const t = await this.#webcontainerInstance.spawn("node", ["-e", githubFetchStandalone.replace("$$$GITHUB_URL$$$", url)]);
@@ -152,17 +152,15 @@ export class WebContainerInterface {
     // doesnt really debounce good enough since it is modifying proxy value directly
     // and the update timing is left for qwik to handle
     for (let i = 0; i < events.length; i++) {
-      const command = events[i].slice(0, events[i].indexOf(" "));
-      const path = events[i].slice(events[i].indexOf(" ") + 1).trim();
+      const command = events[i].slice(0, events[i].indexOf(' '));
+      const path = events[i].slice(events[i].indexOf(' ') + 1).trim();
 
-      if (path === "") continue;
-      if (command === "add") addFileTree(this.fileStore.entries, this.fileStore.path + path);
-      else if (command === "addDir" && path[0] !== ".")
+      if (path === '') continue;
+      if (command === 'add') addFileTree(this.fileStore.entries, this.fileStore.path + path);
+      else if (command === 'addDir' && path[0] !== '.')
         addFolderTree(this.fileStore.entries, this.fileStore.path + path);
-      else if (command === "unlinkDir")
-        removeFolderTree(this.fileStore.entries, this.fileStore.path + path);
-      else if (command === "unlink")
-        removeFileTree(this.fileStore.entries, this.fileStore.path + path);
+      else if (command === 'unlinkDir') removeFolderTree(this.fileStore.entries, this.fileStore.path + path);
+      else if (command === 'unlink') removeFileTree(this.fileStore.entries, this.fileStore.path + path);
     }
   }
 
@@ -177,7 +175,7 @@ export class WebContainerInterface {
   }
 
   async readSimpleFile(path: string) {
-    return await this.#webcontainerInstance!.fs.readFile(path, "utf-8");
+    return await this.#webcontainerInstance!.fs.readFile(path, 'utf-8');
   }
 
   async readdir(path: string, withFileTypes: boolean = true, encoding?: BufferEncoding) {
@@ -227,16 +225,16 @@ export class WebContainerInterface {
     return await process.exit;
   }
 
-  onPort(func: PropFunction<(port: number, type: "close" | "open", url: string) => any>) {
-    return this.#webcontainerInstance!.on("port", func);
+  onPort(func: PropFunction<(port: number, type: 'close' | 'open', url: string) => any>) {
+    return this.#webcontainerInstance!.on('port', func);
   }
 
   onServerReady(func: PropFunction<(port: number, url: string) => any>) {
-    return this.#webcontainerInstance!.on("server-ready", func);
+    return this.#webcontainerInstance!.on('server-ready', func);
   }
 
   onError(func: PropFunction<(error: { message: string }) => any>) {
-    return this.#webcontainerInstance!.on("error", (error: { message: string }) => {
+    return this.#webcontainerInstance!.on('error', (error: { message: string }) => {
       this.isErrored = true;
       func(error);
     });
@@ -256,7 +254,7 @@ export class WebContainerInterface {
     this.#isWatchFilesActive = false;
     this.#shellProcess?.kill();
     this.#watchFilesProcess?.kill();
-    if (this.#terminalResize) window.removeEventListener("resize", this.#terminalResize);
+    if (this.#terminalResize) window.removeEventListener('resize', this.#terminalResize);
     this.#webcontainerInstance?.teardown();
     // (globalThis as any).webContainerClosed = true;
     // (globalThis as any).webcontainerInstance = null;

@@ -1,14 +1,14 @@
-import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { Link, z } from "@builder.io/qwik-city";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import getToken from "~/utils/github/getToken";
-import { test, uploadRepoToCloudflare } from "~/utils/uploadGithubFetchCloudflareClient";
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { Link, z } from '@builder.io/qwik-city';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import getToken from '~/utils/github/getToken';
+import { test, uploadRepoToCloudflare } from '~/utils/uploadGithubFetchCloudflareClient';
 
 export { getToken };
 
 export default component$(() => {
   const user = useUserLoader().value;
-  const message = useSignal("");
+  const message = useSignal('');
   const imgRef = useSignal<any>();
 
   useVisibleTask$(() => {
@@ -48,14 +48,12 @@ export default component$(() => {
     }
     const token = await getToken(user.userId);
 
-    if (!token) return (message.value = "Error!");
+    if (!token) return (message.value = 'Error!');
 
-    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch, token).then(
-      (res) => {
-        if (res[0]) message.value = res[1];
-        else message.value = "Error! " + res[1];
-      }
-    );
+    uploadRepoToCloudflare(parse.data.owner, parse.data.repo, parse.data.branch, token).then((res) => {
+      if (res[0]) message.value = res[1];
+      else message.value = 'Error! ' + res[1];
+    });
   });
 
   useVisibleTask$(async () => {
@@ -67,20 +65,11 @@ export default component$(() => {
 
   return (
     <div ref={imgRef}>
-      <Link href={"/uploadRepo/github/"}>Click</Link>
-      <form
-        class="flex flex-col items-start gap-4 p-10"
-        preventdefault:submit
-        onSubmit$={submitHandler}
-      >
+      <Link href={'/uploadRepo/github/'}>Click</Link>
+      <form class="flex flex-col items-start gap-4 p-10" preventdefault:submit onSubmit$={submitHandler}>
         <label>
           <span>Owner: </span>
-          <input
-            class="border-b-2 border-gray-500 outline-none"
-            name="owner"
-            type="text"
-            placeholder="Enter owner"
-          />
+          <input class="border-b-2 border-gray-500 outline-none" name="owner" type="text" placeholder="Enter owner" />
         </label>
         <label>
           <span>Repo name: </span>
@@ -101,10 +90,7 @@ export default component$(() => {
             placeholder="Enter branch"
           />
         </label>
-        <button
-          class="cursor-pointer rounded-sm border-2 border-black px-4 py-2 capitalize"
-          type="submit"
-        >
+        <button class="cursor-pointer rounded-sm border-2 border-black px-4 py-2 capitalize" type="submit">
           Upload Repo
         </button>
       </form>

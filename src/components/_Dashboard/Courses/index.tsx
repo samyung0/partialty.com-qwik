@@ -1,7 +1,7 @@
-import { component$, useComputed$, useSignal, useStore } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
-import { useDBLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/members/dashboard/layout";
+import { component$, useComputed$, useSignal, useStore } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
+import { IoCaretDown, IoReaderOutline } from '@qwikest/icons/ionicons';
+import { useDBLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/members/dashboard/layout';
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";
@@ -23,9 +23,7 @@ export default component$(() => {
         new Date(a.content_user_progress.started_date).getTime()
     )
   );
-  const displayCourses = useComputed$(() =>
-    showAll.value ? sortedCourses.value : sortedCourses.value.slice(0, 3)
-  );
+  const displayCourses = useComputed$(() => (showAll.value ? sortedCourses.value : sortedCourses.value.slice(0, 3)));
 
   // useVisibleTask$(() => {
   //   fuseCourse.value = noSerialize(
@@ -78,7 +76,7 @@ export default component$(() => {
             return (
               <li
                 class={
-                  "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3"
+                  'flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3'
                 }
                 key={`currentCourses${currentCourse.slug}`}
               >
@@ -94,9 +92,7 @@ export default component$(() => {
                       <div
                         class={`h-1.5 rounded-full bg-lilac`}
                         style={{
-                          width: `${Math.round(
-                            (completedChapters.length / currentChapters.length) * 100
-                          )}%`,
+                          width: `${Math.round((completedChapters.length / currentChapters.length) * 100)}%`,
                         }}
                       ></div>
                     </div>
@@ -106,7 +102,7 @@ export default component$(() => {
                       </span>
                       <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
                         {completedChapters.length} / {currentChapters.length} chapter
-                        {currentChapters.length > 1 ? "s" : ""} completed
+                        {currentChapters.length > 1 ? 's' : ''} completed
                       </span>
                     </p>
                   </div>
@@ -115,20 +111,16 @@ export default component$(() => {
                       <div
                         class={`h-1.5 rounded-full bg-lilac`}
                         style={{
-                          width: `${Math.round(
-                            (completedChapters.length / chapters.length) * 100
-                          )}%`,
+                          width: `${Math.round((completedChapters.length / chapters.length) * 100)}%`,
                         }}
                       ></div>
                     </div>
                     <button class="p-2">
                       <span
                         style={{
-                          transform: courseObj[currentCourse.id].opened ? "rotateZ(180deg)" : "",
+                          transform: courseObj[currentCourse.id].opened ? 'rotateZ(180deg)' : '',
                         }}
-                        class={
-                          "inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray"
-                        }
+                        class={'inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray'}
                       >
                         <IoCaretDown />
                       </span>
@@ -146,9 +138,7 @@ export default component$(() => {
                           <Link href={chapter.link || undefined}>{chapter.name}</Link>
                         </h2>
                         {completedChapters.indexOf(chapter.id) !== -1 ? (
-                          <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">
-                            Completed
-                          </p>
+                          <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">Completed</p>
                         ) : (
                           <p class="border-b-2 border-custom-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
                             Not Completed

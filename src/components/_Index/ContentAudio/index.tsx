@@ -1,6 +1,6 @@
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 
-import { AudioPlayer } from "~/components/_Index/audioPlayer/audioPlayer";
+import { AudioPlayer } from '~/components/_Index/audioPlayer/audioPlayer';
 
 export default component$(() => {
   const playButtonClicked = useSignal(false);
@@ -15,9 +15,7 @@ export default component$(() => {
     track(() => elapsedTime.value);
 
     instantTime.value = instantTime.value.map((instant) =>
-      elapsedTime.value >= instant.from
-        ? { ...instant, highlight: true }
-        : { ...instant, highlight: false }
+      elapsedTime.value >= instant.from ? { ...instant, highlight: true } : { ...instant, highlight: false }
     );
   });
 
@@ -45,11 +43,11 @@ export default component$(() => {
                 <div class="w-full">
                   <div
                     class={
-                      "text-sm leading-[1.5rem] md:text-lg lg:text-xl lg:leading-[2.5rem] lg:first-letter:tracking-wide"
+                      'text-sm leading-[1.5rem] md:text-lg lg:text-xl lg:leading-[2.5rem] lg:first-letter:tracking-wide'
                     }
                   >
                     <span key="row-1">
-                      <strong>React</strong> is a JavaScript framework that helps build{" "}
+                      <strong>React</strong> is a JavaScript framework that helps build{' '}
                       <span
                         // data-text="interactive and"
                         // class={`${instantTime.value[0].highlight && styles.highlight_word}`}
@@ -57,7 +55,7 @@ export default component$(() => {
                       >
                         <span
                           class={`${
-                            instantTime.value[0].highlight && "highlight-underline"
+                            instantTime.value[0].highlight && 'highlight-underline'
                           } absolute z-10 w-full whitespace-nowrap border-b-4 border-background-light-gray bg-background-light-gray`}
                         >
                           interactive and
@@ -66,12 +64,12 @@ export default component$(() => {
                           interactive and
                         </span>
                       </span>
-                    </span>{" "}
+                    </span>{' '}
                     <span key="row-2">
                       <span class="relative whitespace-nowrap">
                         <span
                           class={`${
-                            instantTime.value[1].highlight && "highlight-underline"
+                            instantTime.value[1].highlight && 'highlight-underline'
                           } absolute z-10 w-full whitespace-nowrap border-b-4 border-background-light-gray bg-background-light-gray`}
                         >
                           reusable user interfaces.&lrm;
@@ -79,22 +77,20 @@ export default component$(() => {
                         <span class="relative  whitespace-nowrap border-b-4 border-mint lg:border-b-8">
                           reusable user interfaces.
                         </span>
-                      </span>{" "}
+                      </span>{' '}
                       It simplifies UI development by breaking it
-                    </span>{" "}
+                    </span>{' '}
                     <span key="row-3">
-                      down into smaller components that{" "}
+                      down into smaller components that{' '}
                       <span class="relative whitespace-nowrap">
                         <span
                           class={`${
-                            instantTime.value[2].highlight && "highlight-underline"
+                            instantTime.value[2].highlight && 'highlight-underline'
                           } absolute z-10 w-full whitespace-nowrap  bg-background-light-gray`}
                         >
                           update efficiently.&lrm;
                         </span>
-                        <span class="highlight-pink-audio relative whitespace-nowrap ">
-                          update efficiently.
-                        </span>
+                        <span class="highlight-pink-audio relative whitespace-nowrap ">update efficiently.</span>
                       </span>
                     </span>
                   </div>

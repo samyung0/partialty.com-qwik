@@ -1,15 +1,13 @@
-import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import type { Session } from "lucia";
-import { auth, initLuciaIfNeeded } from "~/auth/lucia";
-import { initDrizzleIfNeeded } from "~/utils/drizzleClient";
-import { checkProtectedPath } from "~/utils/redirect";
-import { initTursoIfNeeded } from "~/utils/tursoClient";
+import { routeLoader$, type RequestHandler } from '@builder.io/qwik-city';
+import type { Session } from 'lucia';
+import { auth, initLuciaIfNeeded } from '~/auth/lucia';
+import { initDrizzleIfNeeded } from '~/utils/drizzleClient';
+import { checkProtectedPath } from '~/utils/redirect';
+import { initTursoIfNeeded } from '~/utils/tursoClient';
 
 // redirect to dashboard if user is logged in
 export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
-    event
-  );
+  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === '1').handleRequest(event);
 
   let session: Session | null = null;
   try {
@@ -18,10 +16,7 @@ export const useUserLoader = routeLoader$(async (event) => {
     /* empty */
   }
 
-  const [shouldRedirect, redirectTo] = checkProtectedPath(
-    event.url.pathname,
-    session ? session.user.role : ""
-  );
+  const [shouldRedirect, redirectTo] = checkProtectedPath(event.url.pathname, session ? session.user.role : '');
 
   if (shouldRedirect) {
     throw event.redirect(302, redirectTo);
@@ -31,7 +26,7 @@ export const useUserLoader = routeLoader$(async (event) => {
 });
 
 export const onRequest: RequestHandler = ({ env }) => {
-  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
+  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
+  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
 };

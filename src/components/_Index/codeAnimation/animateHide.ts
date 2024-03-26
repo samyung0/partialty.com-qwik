@@ -1,9 +1,9 @@
-import type { Signal } from "@builder.io/qwik";
-import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
-import animateShow from "~/components/_Index/codeAnimation/animateShow";
-import { disappearEasingFunction } from "~/components/_Index/codeAnimation/easingFunctions";
-import switchCodeDisplayed from "~/components/_Index/codeAnimation/switchCodeDisplayed";
-import type codeBlock from "~/components/_Index/codeBlock";
+import type { Signal } from '@builder.io/qwik';
+import type { TypeWriter } from '~/components/_Index/codeAnimation/TypeWriter';
+import animateShow from '~/components/_Index/codeAnimation/animateShow';
+import { disappearEasingFunction } from '~/components/_Index/codeAnimation/easingFunctions';
+import switchCodeDisplayed from '~/components/_Index/codeAnimation/switchCodeDisplayed';
+import type codeBlock from '~/components/_Index/codeBlock';
 
 const animateHide = async (
   typeWriter: TypeWriter,
@@ -42,7 +42,7 @@ const animateHide = async (
         typeWriter.largestIntervalBetweenCharDisappear * (1 - ratio) +
         typeWriter.smallestIntervalBetweenCharDisappear * ratio;
       if (typeWriter.timeAfterLastChar > interval) {
-        if (typeWriter.displayCode[typeWriter.currentChar] === "\n") typeWriter.currentRow--;
+        if (typeWriter.displayCode[typeWriter.currentChar] === '\n') typeWriter.currentRow--;
         else typeWriter.revealedCharArr[typeWriter.currentRow]--;
         typeWriter.currentChar--;
         typeWriter.timeAfterLastChar -= interval;

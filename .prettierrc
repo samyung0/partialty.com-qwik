@@ -1,7 +1,15 @@
 {
   "trailingComma": "es5",
   "tabWidth": 2,
-  "printWidth": 100,
   "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
-  "tailwindConfig": "./tailwind.config.js"
+  "tailwindConfig": "./tailwind.config.js",
+  "printWidth": 120,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "jsxSingleQuote": false,
+  "bracketSameLine": false,
+  "endOfLine": "lf"
 }

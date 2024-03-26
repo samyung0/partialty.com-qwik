@@ -1,28 +1,28 @@
-import { globalAction$, zod$ } from "@builder.io/qwik-city";
-import { LibsqlError } from "@libsql/client";
-import { auth } from "~/auth/lucia";
-import { emailSignupSchema, setBioSchema } from "~/types/Signup";
+import { globalAction$, zod$ } from '@builder.io/qwik-city';
+import { LibsqlError } from '@libsql/client';
+import { auth } from '~/auth/lucia';
+import { emailSignupSchema, setBioSchema } from '~/types/Signup';
 
-import { eq } from "drizzle-orm";
-import generateEmailTokens from "~/auth/generateEmailTokens";
-import { CLOUDINARY_NAME } from "~/const/cloudinary";
-import cloudinary from "~/utils/cloudinary";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../drizzle_turso/schema/profiles";
+import { eq } from 'drizzle-orm';
+import generateEmailTokens from '~/auth/generateEmailTokens';
+import { CLOUDINARY_NAME } from '~/const/cloudinary';
+import cloudinary from '~/utils/cloudinary';
+import drizzleClient from '~/utils/drizzleClient';
+import { profiles } from '../../drizzle_turso/schema/profiles';
 
 export const useSetBio = globalAction$(async function (data, event) {
   let secure_url: string = data.avatar.secure_url;
   if (data.customAvatar) {
     try {
-      if (!event.env.get("CLOUDINARY_PRESET_PROFILEPIC")) {
-        return event.fail(500, { message: "Server Error! Please try again later." });
+      if (!event.env.get('CLOUDINARY_PRESET_PROFILEPIC')) {
+        return event.fail(500, { message: 'Server Error! Please try again later.' });
       }
       const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
       const fd = new FormData();
-      fd.append("upload_preset", event.env.get("CLOUDINARY_PRESET_PROFILEPIC")!);
-      fd.append("file", data.avatar.secure_url);
+      fd.append('upload_preset', event.env.get('CLOUDINARY_PRESET_PROFILEPIC')!);
+      fd.append('file', data.avatar.secure_url);
       const res = await fetch(url, {
-        method: "POST",
+        method: 'POST',
         body: fd,
       })
         .then((res) => res.json())
@@ -31,17 +31,17 @@ export const useSetBio = globalAction$(async function (data, event) {
         });
       secure_url = res.secure_url;
     } catch (e) {
-      return event.fail(500, { message: "Unable to upload avatar! Please try again later" });
+      return event.fail(500, { message: 'Unable to upload avatar! Please try again later' });
     }
   }
-  const drizzle = drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
+  const drizzle = drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1');
   try {
     await drizzle
       .update(profiles)
       .set({ avatar_url: secure_url, nickname: data.nickname })
       .where(eq(profiles.id, data.userId));
 
-    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
+    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === '1');
     const session = await Auth.createSession({
       userId: data.userId,
       attributes: {},
@@ -63,10 +63,10 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
     //   throw Error("Avatar not found!");
     // });
 
-    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1");
+    const Auth = auth(event.env, import.meta.env.VITE_USE_PROD_DB === '1');
     const user = await Auth.createUser({
       key: {
-        providerId: "email",
+        providerId: 'email',
         providerUserId: data.email.toLowerCase(),
         password: data.password,
       },
@@ -78,32 +78,29 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
       },
     });
 
-    console.log("Time taken to signup: ", performance.now() - time1);
+    console.log('Time taken to signup: ', performance.now() - time1);
 
-    if (!event.env.get("QSTASH_URL") || !event.env.get("QSTASH_TOKEN")) {
-      console.error("Unable to send verification email!");
+    if (!event.env.get('QSTASH_URL') || !event.env.get('QSTASH_TOKEN')) {
+      console.error('Unable to send verification email!');
     }
     try {
       const emailToken = await generateEmailTokens(event.env, user.userId);
-      const res = await fetch(
-        event.env.get("QSTASH_URL")! + "https://api.partialty.com/mail/sendMail/verifyMail",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${event.env.get("QSTASH_TOKEN")!}`,
-          },
-          body: JSON.stringify({
-            verifyLink:
-              import.meta.env.MODE === "production"
-                ? `https://www.partialty.com/auth/email/verifyToken/${emailToken}`
-                : `http://localhost:5173/auth/email/verifyToken/${emailToken}`,
-            receiverEmail: data.email,
-          }),
-        }
-      )
+      const res = await fetch(event.env.get('QSTASH_URL')! + 'https://api.partialty.com/mail/sendMail/verifyMail', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${event.env.get('QSTASH_TOKEN')!}`,
+        },
+        body: JSON.stringify({
+          verifyLink:
+            import.meta.env.MODE === 'production'
+              ? `https://www.partialty.com/auth/email/verifyToken/${emailToken}`
+              : `http://localhost:5173/auth/email/verifyToken/${emailToken}`,
+          receiverEmail: data.email,
+        }),
+      })
         .then((x) => x.json())
         .catch((e) => {
-          console.error("Unable to send verification email! ", e);
+          console.error('Unable to send verification email! ', e);
         });
     } catch (e) {
       //
@@ -115,8 +112,8 @@ export const useSignupWithPassword = globalAction$(async function (data, event) 
   } catch (e: any) {
     if (e instanceof LibsqlError) {
       if (
-        e.message.includes("UNIQUE constraint failed: user_key.id") ||
-        e.message.includes("UNIQUE constraint failed: profiles.email")
+        e.message.includes('UNIQUE constraint failed: user_key.id') ||
+        e.message.includes('UNIQUE constraint failed: profiles.email')
       )
         return event.fail(500, { message: `Error! User already exists` });
     }

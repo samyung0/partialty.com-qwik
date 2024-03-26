@@ -1,29 +1,29 @@
-import type { RequestHandler } from "@builder.io/qwik-city";
-import { LibsqlError } from "@libsql/client";
-import { OAuthRequestError } from "@lucia-auth/oauth";
-import { and, eq } from "drizzle-orm";
-import { auth, githubAuth } from "~/auth/lucia";
-import type { Lucia } from "~/lucia";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../../../../../../drizzle_turso/schema/profiles";
+import type { RequestHandler } from '@builder.io/qwik-city';
+import { LibsqlError } from '@libsql/client';
+import { OAuthRequestError } from '@lucia-auth/oauth';
+import { and, eq } from 'drizzle-orm';
+import { auth, githubAuth } from '~/auth/lucia';
+import type { Lucia } from '~/lucia';
+import drizzleClient from '~/utils/drizzleClient';
+import { profiles } from '../../../../../../../drizzle_turso/schema/profiles';
 
 export const onGet: RequestHandler = async (request) => {
-  const redirectedFrom = request.cookie.get("redirectedFrom")?.value;
-  request.cookie.delete("redirectedFrom");
+  const redirectedFrom = request.cookie.get('redirectedFrom')?.value;
+  request.cookie.delete('redirectedFrom');
 
-  const storedState = request.cookie.get("github_oauth_state")?.value;
+  const storedState = request.cookie.get('github_oauth_state')?.value;
   const url = new URL(request.url);
-  const state = url.searchParams.get("state");
-  const code = url.searchParams.get("code");
+  const state = url.searchParams.get('state');
+  const code = url.searchParams.get('code');
 
   if (!storedState || !state || storedState !== state || !code) {
-    throw request.redirect(302, "/login/?errMessage=OAuth failed!");
+    throw request.redirect(302, '/login/?errMessage=OAuth failed!');
   }
 
   try {
     const { getExistingUser, githubUser, createUser, githubTokens, createKey } = await githubAuth(
       request.env,
-      import.meta.env.VITE_USE_PROD_DB === "1"
+      import.meta.env.VITE_USE_PROD_DB === '1'
     ).validateCallback(code);
 
     const getUser = async () => {
@@ -36,15 +36,14 @@ export const onGet: RequestHandler = async (request) => {
         email_verified: false,
         github_id: String(githubUser.id),
       };
-      const emails = await fetch("https://api.github.com/user/emails", {
+      const emails = await fetch('https://api.github.com/user/emails', {
         headers: {
           Authorization: `Bearer ${githubTokens.accessToken}`,
         },
       }).then((res) => res.json());
       if (Array.isArray(emails)) {
         const primaryEmail = emails.filter(
-          (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) =>
-            email.primary
+          (email: { email: string; primary: boolean; verified: boolean; visibility: boolean }) => email.primary
         )[0];
         if (primaryEmail && primaryEmail.verified) {
           const drizzle = drizzleClient(request.env);
@@ -72,7 +71,7 @@ export const onGet: RequestHandler = async (request) => {
         } else {
           throw request.redirect(
             302,
-            "/login/?errMessage=Error! Please use a Github account with a verified email address."
+            '/login/?errMessage=Error! Please use a Github account with a verified email address.'
           );
         }
       } else {
@@ -83,7 +82,7 @@ export const onGet: RequestHandler = async (request) => {
       }
     };
 
-    const Auth = auth(request.env, import.meta.env.VITE_USE_PROD_DB === "1");
+    const Auth = auth(request.env, import.meta.env.VITE_USE_PROD_DB === '1');
 
     const user = await getUser();
     const session = await Auth.createSession({
@@ -96,20 +95,20 @@ export const onGet: RequestHandler = async (request) => {
     console.error(e);
     if (e instanceof LibsqlError) {
       if (
-        e.message.includes("UNIQUE constraint failed: user_key.id") ||
-        e.message.includes("UNIQUE constraint failed: profiles.email")
+        e.message.includes('UNIQUE constraint failed: user_key.id') ||
+        e.message.includes('UNIQUE constraint failed: profiles.email')
       ) {
         throw request.redirect(
           302,
-          "/login/?errMessage=Error! User already exists! Try verifying your email first before logging in with other means."
+          '/login/?errMessage=Error! User already exists! Try verifying your email first before logging in with other means.'
         );
       }
     }
     if (e instanceof OAuthRequestError) {
-      throw request.redirect(302, "/login/?errMessage=OAuth failed!");
+      throw request.redirect(302, '/login/?errMessage=OAuth failed!');
     }
-    throw request.redirect(302, "/login/?errMessage=" + e);
+    throw request.redirect(302, '/login/?errMessage=' + e);
   }
   if (redirectedFrom) throw request.redirect(302, redirectedFrom);
-  throw request.redirect(302, "/members/dashboard/");
+  throw request.redirect(302, '/members/dashboard/');
 };

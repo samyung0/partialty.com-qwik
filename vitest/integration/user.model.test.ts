@@ -1,7 +1,7 @@
-import { createUser } from "../models/user.model";
+import { createUser } from '../models/user.model';
 
-describe("testing users", () => {
-  it("should create, read and delete a user", async ({ integration }) => {
+describe('testing users', () => {
+  it('should create, read and delete a user', async ({ integration }) => {
     const [user] = await integration.createNormalUser();
     expect(user).toBeDefined();
 
@@ -12,9 +12,9 @@ describe("testing users", () => {
     const [readUserAfterDelete] = await integration.getUser(user.id);
     expect(readUserAfterDelete).toBeUndefined();
   });
-  it("should throw an error - duplicate email", async ({ integration }) => {
+  it('should throw an error - duplicate email', async ({ integration }) => {
     const [user] = await integration.createNormalUser();
     expect(user).toBeDefined();
-    expect(() => createUser({ ...user, id: user.id + "randomized" })).rejects.toThrow();
+    expect(() => createUser({ ...user, id: user.id + 'randomized' })).rejects.toThrow();
   });
 });

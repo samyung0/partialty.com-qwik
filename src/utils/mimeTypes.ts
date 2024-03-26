@@ -5,15 +5,15 @@
  * MIT Licensed
  */
 
-"use strict";
+'use strict';
 
 /**
  * Module dependencies.
  * @private
  */
 
-import db from "mime-db";
-const extname = (path: string) => path.split(".").pop() ?? "";
+import db from 'mime-db';
+const extname = (path: string) => path.split('.').pop() ?? '';
 
 /**
  * Module variables.
@@ -47,7 +47,7 @@ function charset(type: string) {
 
   // default text/* to utf-8
   if (match && TEXT_TYPE_REGEXP.test(match[1])) {
-    return "UTF-8";
+    return 'UTF-8';
   }
 
   return false;
@@ -61,16 +61,16 @@ function charset(type: string) {
  */
 
 export function contentType(str: string) {
-  let mime = str.indexOf("/") === -1 ? lookup(str) : str;
+  let mime = str.indexOf('/') === -1 ? lookup(str) : str;
 
   if (!mime) {
     return false;
   }
 
   // TODO: use content-type or other module
-  if (mime.indexOf("charset") === -1) {
+  if (mime.indexOf('charset') === -1) {
     const _charset = charset(mime);
-    if (_charset) mime += "; charset=" + _charset.toLowerCase();
+    if (_charset) mime += '; charset=' + _charset.toLowerCase();
   }
 
   return mime;
@@ -106,7 +106,7 @@ function extension(type: string) {
 
 function lookup(path: string) {
   // get the extension ("ext" or ".ext" or full path)
-  const extension = extname("x." + path).toLowerCase();
+  const extension = extname('x.' + path).toLowerCase();
 
   if (!extension) {
     return false;
@@ -122,7 +122,7 @@ function lookup(path: string) {
 
 function populateMaps(extensions: any, types: any) {
   // source preference (least -> most)
-  const preference = ["nginx", "apache", undefined, "iana"];
+  const preference = ['nginx', 'apache', undefined, 'iana'];
 
   Object.keys(db).forEach(function forEachMimeType(type) {
     const mime = db[type];
@@ -144,8 +144,8 @@ function populateMaps(extensions: any, types: any) {
         const to = preference.indexOf(mime.source);
 
         if (
-          types[extension] !== "application/octet-stream" &&
-          (from > to || (from === to && types[extension].substr(0, 12) === "application/"))
+          types[extension] !== 'application/octet-stream' &&
+          (from > to || (from === to && types[extension].substr(0, 12) === 'application/'))
         ) {
           // skip the remapping
           continue;

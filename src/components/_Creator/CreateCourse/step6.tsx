@@ -1,10 +1,10 @@
-import type { Signal } from "@builder.io/qwik";
-import { component$ } from "@builder.io/qwik";
-import { LuArrowLeft, LuEyeOff, LuFiles, LuGem, LuScrollText } from "@qwikest/icons/lucide";
-import type difficulty from "~/const/difficulty";
-import { difficultyLabels } from "~/const/difficulty";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
+import type { Signal } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
+import { LuArrowLeft, LuEyeOff, LuFiles, LuGem, LuScrollText } from '@qwikest/icons/lucide';
+import type difficulty from '~/const/difficulty';
+import { difficultyLabels } from '~/const/difficulty';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import type { NewContentIndex } from '../../../../drizzle_turso/schema/content_index';
 
 export default component$(
   ({
@@ -58,7 +58,7 @@ export default component$(
                   </select>
                 </label>
               </div>
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <div>
                   <label
                     title="Shows up in the guides section"
@@ -76,9 +76,7 @@ export default component$(
                       type="checkbox"
                       class="h-4 w-4"
                       checked={courseData.is_guide}
-                      onChange$={(e, currentTarget) =>
-                        (courseData.is_guide = currentTarget.checked)
-                      }
+                      onChange$={(e, currentTarget) => (courseData.is_guide = currentTarget.checked)}
                     />
                   </label>
                 </div>
@@ -100,9 +98,7 @@ export default component$(
                     type="checkbox"
                     class="h-4 w-4"
                     checked={courseData.is_private}
-                    onChange$={(e, currentTarget) =>
-                      (courseData.is_private = currentTarget.checked)
-                    }
+                    onChange$={(e, currentTarget) => (courseData.is_private = currentTarget.checked)}
                   />
                 </label>
               </div>
@@ -131,7 +127,7 @@ export default component$(
                   />
                 </label>
               </div>
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <div>
                   <label
                     title="The course is only accessible to subscribed users if checked."
@@ -149,9 +145,7 @@ export default component$(
                       type="checkbox"
                       class="h-4 w-4"
                       checked={courseData.is_premium}
-                      onChange$={(e, currentTarget) =>
-                        (courseData.is_premium = currentTarget.checked)
-                      }
+                      onChange$={(e, currentTarget) => (courseData.is_premium = currentTarget.checked)}
                     />
                   </label>
                 </div>
@@ -160,8 +154,8 @@ export default component$(
                 Setting the course private will disable all the category and tags for the course!
               </p>
               <p class="max-w-[250px] text-sm md:max-w-[400px]  md:text-base">
-                Once you have submitted a non-private course, you need to mark it as ready for
-                review and a few days are required before the course is approved and published.
+                Once you have submitted a non-private course, you need to mark it as ready for review and a few days are
+                required before the course is approved and published.
               </p>
               <br />
               <button

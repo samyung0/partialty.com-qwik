@@ -1,17 +1,17 @@
-import type { NoSerialize, Signal } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
+import type { NoSerialize, Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
 
-import { LuExternalLink } from "@qwikest/icons/lucide";
-import Nav from "~/components/Nav";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import type { ContentCategory } from "../../../drizzle_turso/schema/content_category";
-import type { ContentIndex } from "../../../drizzle_turso/schema/content_index";
-import type { CourseApproval } from "../../../drizzle_turso/schema/course_approval";
-import type { Profiles } from "../../../drizzle_turso/schema/profiles";
-import type { Tag } from "../../../drizzle_turso/schema/tag";
-import Course from "./Course";
+import { LuExternalLink } from '@qwikest/icons/lucide';
+import Nav from '~/components/Nav';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import type { ContentCategory } from '../../../drizzle_turso/schema/content_category';
+import type { ContentIndex } from '../../../drizzle_turso/schema/content_index';
+import type { CourseApproval } from '../../../drizzle_turso/schema/course_approval';
+import type { Profiles } from '../../../drizzle_turso/schema/profiles';
+import type { Tag } from '../../../drizzle_turso/schema/tag';
+import Course from './Course';
 
-const tabs = [{ name: "Course" }, { name: "Project" }];
+const tabs = [{ name: 'Course' }, { name: 'Project' }];
 
 export default component$(
   ({
@@ -58,16 +58,14 @@ export default component$(
                 <div class="relative flex h-full gap-1" key={`tab-${idx}`}>
                   <div
                     class={
-                      "hidden h-full w-[5px] rounded-lg lg:block " +
-                      (idx === tabIndex.value
-                        ? "bg-custom-yellow"
-                        : "bg-light-yellow dark:bg-primary-dark-gray")
+                      'hidden h-full w-[5px] rounded-lg lg:block ' +
+                      (idx === tabIndex.value ? 'bg-custom-yellow' : 'bg-light-yellow dark:bg-primary-dark-gray')
                     }
                   ></div>
 
                   <button
                     class={`w-full rounded-md bg-light-yellow p-2 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150 ${
-                      idx === tabIndex.value && "brightness-90 dark:brightness-150"
+                      idx === tabIndex.value && 'brightness-90 dark:brightness-150'
                     }`}
                     onClick$={() => {
                       tabIndex.value = idx;
@@ -78,7 +76,7 @@ export default component$(
                 </div>
               ))}
               <div class="relative flex h-full gap-1">
-                <div class={"h-full w-[5px] rounded-lg"}></div>
+                <div class={'h-full w-[5px] rounded-lg'}></div>
                 <a
                   class={`flex w-full items-center gap-2 rounded-md bg-light-yellow p-2 text-left hover:brightness-90 dark:bg-primary-dark-gray dark:hover:brightness-150`}
                   href="/contenteditor/"

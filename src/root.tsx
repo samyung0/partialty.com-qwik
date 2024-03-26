@@ -1,15 +1,15 @@
-import { component$, useContextProvider, useStore } from "@builder.io/qwik";
-import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
-import { useQwikSpeak } from "qwik-speak";
-import { config as _config } from "~/speak-config";
-import { translationFn } from "~/speak-function";
-import { RouterHead } from "./components/router-head/router-head";
+import { component$, useContextProvider, useStore } from '@builder.io/qwik';
+import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
+import { useQwikSpeak } from 'qwik-speak';
+import { config as _config } from '~/speak-config';
+import { translationFn } from '~/speak-function';
+import { RouterHead } from './components/router-head/router-head';
 
-import { layoutContext } from "~/context/layoutContext";
-import "../tailwind/css/global.css";
+import { layoutContext } from '~/context/layoutContext';
+import '../tailwind/css/global.css';
 
 export default component$(() => {
-  const layoutStore = useStore({ value: "default" });
+  const layoutStore = useStore({ value: 'default' });
   useContextProvider(layoutContext, layoutStore);
 
   useQwikSpeak({ config: _config, translationFn });

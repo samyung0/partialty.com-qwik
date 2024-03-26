@@ -1,11 +1,11 @@
-export const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
-export const LIST_TYPES = ["numbered-list", "bulleted-list"];
+export const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
+export const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
-export type Align = "left" | "center" | "right" | "justify";
-export type List = "numbered-list" | "bulleted-list";
+export type Align = 'left' | 'center' | 'right' | 'justify';
+export type List = 'numbered-list' | 'bulleted-list';
 
 export type ParagraphElement = {
-  type: "paragraph";
+  type: 'paragraph';
   align?: Align;
   url?: string;
   caption?: string;
@@ -17,7 +17,7 @@ export type ParagraphElement = {
 };
 
 export type LineBreakElement = {
-  type: "line-break";
+  type: 'line-break';
   align?: Align;
   url?: string;
   caption?: string;
@@ -29,7 +29,7 @@ export type LineBreakElement = {
 };
 
 export type CodeElement = {
-  type: "code";
+  type: 'code';
   align?: Align;
   url?: string;
   caption?: string;
@@ -41,7 +41,7 @@ export type CodeElement = {
 };
 
 export type CodeBlockElement = {
-  type: "codeBlock";
+  type: 'codeBlock';
   align?: Align;
   url?: string;
   caption?: string;
@@ -53,7 +53,7 @@ export type CodeBlockElement = {
 };
 
 export type CodeLineElement = {
-  type: "codeLine";
+  type: 'codeLine';
   align?: Align;
   url?: string;
   caption?: string;
@@ -65,7 +65,7 @@ export type CodeLineElement = {
 };
 
 export type BlockQuote = {
-  type: "block-quote";
+  type: 'block-quote';
   align?: Align;
   url?: string;
   caption?: string;
@@ -76,7 +76,7 @@ export type BlockQuote = {
   children: (CustomText | CustomElement)[];
 };
 export type InfoBlock = {
-  type: "infoBlock";
+  type: 'infoBlock';
   align?: Align;
   url?: string;
   caption?: string;
@@ -87,7 +87,7 @@ export type InfoBlock = {
   children: (CustomText | CustomElement)[];
 };
 export type CautionBlock = {
-  type: "cautionBlock";
+  type: 'cautionBlock';
   align?: Align;
   url?: string;
   caption?: string;
@@ -98,7 +98,7 @@ export type CautionBlock = {
   children: (CustomText | CustomElement)[];
 };
 export type WarningBlock = {
-  type: "warningBlock";
+  type: 'warningBlock';
   align?: Align;
   url?: string;
   caption?: string;
@@ -109,7 +109,7 @@ export type WarningBlock = {
   children: (CustomText | CustomElement)[];
 };
 export type HeadingOne = {
-  type: "heading-one";
+  type: 'heading-one';
   align?: Align;
   url?: string;
   caption?: string;
@@ -120,7 +120,7 @@ export type HeadingOne = {
   children: (CustomText | CustomElement)[];
 };
 export type HeadingTwo = {
-  type: "heading-two";
+  type: 'heading-two';
   align?: Align;
   url?: string;
   caption?: string;
@@ -131,7 +131,7 @@ export type HeadingTwo = {
   children: (CustomText | CustomElement)[];
 };
 export type HeadingThree = {
-  type: "heading-three";
+  type: 'heading-three';
   align?: Align;
   url?: string;
   caption?: string;
@@ -142,7 +142,7 @@ export type HeadingThree = {
   children: (CustomText | CustomElement)[];
 };
 export type HeadingFour = {
-  type: "heading-four";
+  type: 'heading-four';
   align?: Align;
   url?: string;
   caption?: string;
@@ -153,7 +153,7 @@ export type HeadingFour = {
   children: (CustomText | CustomElement)[];
 };
 export type ListItem = {
-  type: "list-item";
+  type: 'list-item';
   align?: Align;
   url?: string;
   caption?: string;
@@ -164,7 +164,7 @@ export type ListItem = {
   children: (CustomText | CustomElement)[];
 };
 export type ListItemText = {
-  type: "list-item-text";
+  type: 'list-item-text';
   align?: Align;
   url?: string;
   caption?: string;
@@ -175,7 +175,7 @@ export type ListItemText = {
   children: (CustomText | CustomElement)[];
 };
 export type NumberedList = {
-  type: "numbered-list";
+  type: 'numbered-list';
   align?: Align;
   url?: string;
   caption?: string;
@@ -186,7 +186,7 @@ export type NumberedList = {
   children: (CustomText | CustomElement)[];
 };
 export type BulletedList = {
-  type: "bulleted-list";
+  type: 'bulleted-list';
   align?: Align;
   url?: string;
   caption?: string;
@@ -198,7 +198,7 @@ export type BulletedList = {
 };
 
 export type VideoEmbed = {
-  type: "embed";
+  type: 'embed';
   align?: Align;
   url?: string;
   caption?: string;
@@ -211,7 +211,7 @@ export type VideoEmbed = {
 };
 
 export type UrlLink = {
-  type: "link";
+  type: 'link';
   align?: Align;
   url?: string;
   caption?: string;
@@ -223,7 +223,7 @@ export type UrlLink = {
 };
 
 export type ImageElement = {
-  type: "image";
+  type: 'image';
   align?: Align;
   url?: string;
   caption?: string;
@@ -236,7 +236,7 @@ export type ImageElement = {
 };
 
 export type QuizBlockElement = {
-  type: "quizBlock";
+  type: 'quizBlock';
   formName?: string;
   quizTitle?: string;
   ans?: string;
@@ -251,7 +251,7 @@ export type QuizBlockElement = {
 };
 
 export type QuizOptionElement = {
-  type: "quizOption";
+  type: 'quizOption';
   formName?: string;
   optionValue?: string;
   align?: Align;
@@ -265,10 +265,10 @@ export type QuizOptionElement = {
 };
 
 export type QuizCodeBlockElement = {
-  type: "quizCodeBlock";
+  type: 'quizCodeBlock';
   quizTitle: string;
   ans: {
-    type: "matchInput" | "ast";
+    type: 'matchInput' | 'ast';
     matchInput: Record<string, string>;
     ast: string;
   };
@@ -292,7 +292,7 @@ export type QuizCodeBlockElement = {
 };
 
 export type QuizCodeInputElement = {
-  type: "quizCodeInput";
+  type: 'quizCodeInput';
   formName: string;
   inputId: string;
   inputWidth: number;
@@ -308,7 +308,7 @@ export type QuizCodeInputElement = {
 };
 
 export type QuizCodePragraphElement = {
-  type: "quizCodeParagraph";
+  type: 'quizCodeParagraph';
   align?: Align;
   url?: string;
   caption?: string;
@@ -368,7 +368,7 @@ export type CustomElement =
   | QuizCodePragraphElement
   | LineBreakElement;
 
-export type BlockFormat = Align | List | CustomElement["type"];
-export type CustomElementType = CustomElement["type"];
+export type BlockFormat = Align | List | CustomElement['type'];
+export type CustomElementType = CustomElement['type'];
 export type MarkFormat = keyof CustomText;
-export type CustomMarkFormat = keyof Omit<CustomText, "text">;
+export type CustomMarkFormat = keyof Omit<CustomText, 'text'>;

@@ -1,35 +1,34 @@
-import escapeHtml from "escape-html";
-import { Node, Text } from "slate";
+import escapeHtml from 'escape-html';
+import { Node, Text } from 'slate';
 
-import urlParser from "js-video-url-parser";
-import { isUrl } from "~/utils/isUrl";
+import urlParser from 'js-video-url-parser';
+import { isUrl } from '~/utils/isUrl';
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
-const YOUTUBE_PREFIX = "https://www.youtube.com/embed/";
-const VIMEO_PREFIX = "https://player.vimeo.com/video/";
-const DAILYMOTION_PREFIX = "https://www.dailymotion.com/embed/video/";
-const YOUKU_PREFIX = "https://player.youku.com/embed/";
-const COUB_PREFIX = "https://coub.com/embed/";
+const YOUTUBE_PREFIX = 'https://www.youtube.com/embed/';
+const VIMEO_PREFIX = 'https://player.vimeo.com/video/';
+const DAILYMOTION_PREFIX = 'https://www.dailymotion.com/embed/video/';
+const YOUKU_PREFIX = 'https://player.youku.com/embed/';
+const COUB_PREFIX = 'https://coub.com/embed/';
 
-import highlightSVGString from "~/components/_ContentEditor/highlightSVGString";
-import { CLOUDINARY_NAME } from "~/const/cloudinary";
-import { highlightShikiji } from "~/utils/shikiji/renderIndexCodeBlock";
+import highlightSVGString from '~/components/_ContentEditor/highlightSVGString';
+import { CLOUDINARY_NAME } from '~/const/cloudinary';
+import { highlightShikiji } from '~/utils/shikiji/renderIndexCodeBlock';
 
 const combinedHighlightSVGString = highlightSVGString;
 
 const plainTextSerialize = (nodes: any) => {
-  return nodes.map((n: any) => Node.string(n)).join("\n");
+  return nodes.map((n: any) => Node.string(n)).join('\n');
 };
 
 const serialize = async (node: any, initial: boolean = false): Promise<string> => {
-  if (!node) return "";
-  if (initial)
-    return `${node ? (await Promise.all(node.map((n: any) => serialize(n)))).join("") : "&nbsp;"}`;
+  if (!node) return '';
+  if (initial) return `${node ? (await Promise.all(node.map((n: any) => serialize(n)))).join('') : '&nbsp;'}`;
 
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
-    const style = "background-color:inherit;color:inherit";
+    const style = 'background-color:inherit;color:inherit';
     if (node.bold) {
       string = `<strong style="${style}">${string}</strong>`;
     }
@@ -43,8 +42,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.underline) {
-      let str = "";
-      const uuid = "a" + uuidv4();
+      let str = '';
+      const uuid = 'a' + uuidv4();
       if (node.animate) {
         str += `
        <style>
@@ -79,7 +78,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ? `.dark #${uuid}lower {
         background: ${node.underlineDarkMode} !important;
       }`
-          : ""
+          : ''
       }
     #${uuid}upper {
         position: absolute;
@@ -125,7 +124,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ? `.dark #${uuid}lower {
         background: ${node.underlineDarkMode}
       }`
-          : ""
+          : ''
       }
     #${uuid}upper {
         position: absolute;
@@ -167,7 +166,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ? `.dark #${uuid}lower {
         background: ${node.underlineDarkMode}
       }`
-          : ""
+          : ''
       }
        </style>
        `;
@@ -192,8 +191,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.background) {
-      let str = "";
-      const uuid = "a" + uuidv4();
+      let str = '';
+      const uuid = 'a' + uuidv4();
       if (node.animate) {
         str += `
        <style>
@@ -228,7 +227,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ? `.dark #${uuid}lower {
         fill: ${node.backgroundDarkMode} !important;
       }`
-          : ""
+          : ''
       }
       #${uuid}upper {
       position: absolute;
@@ -270,7 +269,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ? `.dark #${uuid}lower {
         fill: ${node.backgroundDarkMode}
       }`
-          : ""
+          : ''
       }
       #${uuid}upper {
       position: absolute;
@@ -311,7 +310,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
            ? `.dark #${uuid}lower {
         fill: ${node.backgroundDarkMode}
       }`
-           : ""
+           : ''
        }
         </style>
         `;
@@ -325,16 +324,14 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.color) {
-      const uuid = "a" + uuidv4();
+      const uuid = 'a' + uuidv4();
       string = `<style>${
         node.colorDarkMode
           ? `.dark #${uuid} {
         color: ${node.colorDarkMode} !important;
       }`
-          : ""
-      }</style><span id="${uuid}" style="background:inherit;color: ${
-        node.color
-      };">${string}</span>`;
+          : ''
+      }</style><span id="${uuid}" style="background:inherit;color: ${node.color};">${string}</span>`;
     }
 
     if (node.fontSize) {
@@ -351,25 +348,21 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     return string;
   }
 
-  let children = node.children
-    ? (await Promise.all(node.children.map((n: any) => serialize(n)))).join("")
-    : "";
+  let children = node.children ? (await Promise.all(node.children.map((n: any) => serialize(n)))).join('') : '';
 
-  if (children.trim() === "") children = "&nbsp;";
+  if (children.trim() === '') children = '&nbsp;';
 
-  const style = `text-align: ${
-    node.align || "left"
-  };background-color:inherit;color:inherit;` as const;
+  const style = `text-align: ${node.align || 'left'};background-color:inherit;color:inherit;` as const;
   switch (node.type) {
-    case "paragraph":
+    case 'paragraph':
       return `<p style="${style}">${children}</p>`;
-    case "line-break":
+    case 'line-break':
       return `<hr />`;
-    case "block-quote":
+    case 'block-quote':
       return `<blockquote style="${style}">
           ${children}
         </blockquote>`;
-    case "infoBlock":
+    case 'infoBlock':
       return `<style>.dark .infoBlock {
         border-color: rgb(96 165 250) !important;
         background-color: rgb(37 54 75) !important;
@@ -393,7 +386,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           ${children}
         </blockquote>`;
 
-    case "cautionBlock":
+    case 'cautionBlock':
       return `<style>.dark .cautionBlock {
         border-color: rgb(234 179 8) !important;
         background-color: rgb(54 58 55) !important;
@@ -417,7 +410,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
               ${children}
             </blockquote>`;
 
-    case "warningBlock":
+    case 'warningBlock':
       return `<style>.dark .warningBlock {
         border-color: rgb(244 114 182) !important;
         background: rgb(54 49 67) !important
@@ -441,65 +434,65 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                   ${children}
                 </blockquote>`;
 
-    case "heading-one":
+    case 'heading-one':
       return `<h1 style="${style}">
           ${children}
         </h1>`;
-    case "heading-two":
+    case 'heading-two':
       return `<h2 style="${style}">
           ${children}
         </h2>`;
-    case "heading-three":
+    case 'heading-three':
       return `<h3 style="${style}">
           ${children}
         </h3>`;
-    case "heading-four":
+    case 'heading-four':
       return `<h4 style="${style}">
           ${children}
         </h4>`;
-    case "list-item":
+    case 'list-item':
       return `<li style="${style}">
           ${children}
         </li>`;
-    case "list-item-text":
+    case 'list-item-text':
       return `<span style="${style}">
           ${children}
         </span>`;
-    case "numbered-list":
+    case 'numbered-list':
       return `<ol style="${style} listStylePosition: inside;">
           ${children}
         </ol>`;
-    case "bulleted-list":
+    case 'bulleted-list':
       return `<ul style="${style} listStylePosition: inside;">
           ${children}
         </ul>`;
-    case "embed": {
+    case 'embed': {
       const height = node.embedHeight;
       const { url } = node;
-      const caption = node.caption || "";
-      let embedType = url ? (url.trim() === "" ? "Blank" : "Embed") : "Blank";
-      const parse = urlParser.parse(url || "");
+      const caption = node.caption || '';
+      let embedType = url ? (url.trim() === '' ? 'Blank' : 'Embed') : 'Blank';
+      const parse = urlParser.parse(url || '');
       let parsedUrl = url;
 
       if (parse && parse.provider && parse.id) {
         embedType = parse.provider
-          .split(" ")
+          .split(' ')
           .map((seg) => seg.slice(0, 1).toUpperCase() + seg.slice(1))
-          .join(" ");
+          .join(' ');
         switch (parse.provider) {
-          case "youtube":
+          case 'youtube':
             parsedUrl = YOUTUBE_PREFIX + parse.id;
             break;
-          case "vimeo":
+          case 'vimeo':
             parsedUrl = VIMEO_PREFIX + parse.id;
             break;
-          case "dailymotion":
+          case 'dailymotion':
             parsedUrl = DAILYMOTION_PREFIX + parse.id;
             break;
-          case "youku":
+          case 'youku':
             parsedUrl = YOUKU_PREFIX + parse.id;
             break;
-          case "coub":
+          case 'coub':
             parsedUrl = COUB_PREFIX + parse.id;
             break;
           default:
@@ -527,9 +520,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         object-fit: contain;
         ">
           <div style="
-          ${height ? "" : "aspect-ratio: 16 / 9;"}
+          ${height ? '' : 'aspect-ratio: 16 / 9;'}
           width: 100%;
-          ${height ? `height: ${height}px` : ""}
+          ${height ? `height: ${height}px` : ''}
           ">
             ${
               shouldDisplay
@@ -545,7 +538,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                 frameBorder="0"
               ></iframe>
             `
-                : ""
+                : ''
             }
           </div>
         </div>
@@ -562,19 +555,19 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             white-space: pre-line;
         "
         >${escapeHtml(caption)}</div>`
-            : ""
+            : ''
         }
       </div>
     </div>`;
     }
-    case "link": {
+    case 'link': {
       return `<a target="_blank" href=${node.url} style="
       ${style}
       ">${children}</a>`;
     }
-    case "image": {
+    case 'image': {
       const height = node.imageHeight;
-      const caption = node.caption || "";
+      const caption = node.caption || '';
       return `<div style="${style}">
       <figure style="
         display: flex;
@@ -600,14 +593,14 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       </figure>
     </div>`;
     }
-    case "codeBlock": {
+    case 'codeBlock': {
       const plainText = plainTextSerialize(node.children);
       let highlighted = await highlightShikiji({
         code: plainText,
-        lang: node.language || "plainText",
+        lang: node.language || 'plainText',
       });
       if (node.filename) {
-        const endoftag = highlighted.indexOf(">") + 1;
+        const endoftag = highlighted.indexOf('>') + 1;
         highlighted =
           highlighted.slice(0, endoftag) +
           `<div><p style="margin: 0px;">${escapeHtml(
@@ -619,7 +612,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     ${highlighted}
   </div>`;
     }
-    case "quizBlock": {
+    case 'quizBlock': {
       return `<div style="
       ${style}
       letter-spacing: 0.025em;
@@ -707,7 +700,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       </form>
     </div>`;
     }
-    case "quizOption": {
+    case 'quizOption': {
       const name = node.formName;
       const optionValue = node.optionValue;
       return `<button
@@ -738,7 +731,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       <span class="optionText">${children}</span>
     </button>`;
     }
-    case "quizCodeBlock": {
+    case 'quizCodeBlock': {
       const width = node.inputWidth;
       const formName = node.formName;
       const combinedText = node.combinedText;
@@ -763,7 +756,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         data-formname="${formName}"
         data-combinedtext="${combinedText}"
         data-astlang="${astLang}"
-        data-isCode="${isCode ? "1" : "0"}"
+        data-isCode="${isCode ? '1' : '0'}"
         class="quizCodeBlock"
         style="
         display: flex;
@@ -880,7 +873,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       </form>
     </div>`;
     }
-    case "quizCodeParagraph": {
+    case 'quizCodeParagraph': {
       return `<div style="
       border-color: inherit;
       background-color: inherit;
@@ -888,7 +881,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       margin-bottom:8px;
       ">${children}</div>`;
     }
-    case "quizCodeInput": {
+    case 'quizCodeInput': {
       const width = node.inputWidth;
       const name = node.formName;
       const number = node.inputNumber;

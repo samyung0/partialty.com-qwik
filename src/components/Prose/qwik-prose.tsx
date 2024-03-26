@@ -1,31 +1,31 @@
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { EMBED_URL } from "~/const";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { EMBED_URL } from '~/const';
 
 export default component$(({ innerHTML }: { innerHTML: string }) => {
   const interval = useSignal<any>();
   const isDark = useSignal<boolean>(false);
   useVisibleTask$(({ cleanup }) => {
-    console.log("hydrate embed");
-    const darkThemeDiv = document.getElementById("darkThemeDiv");
+    console.log('hydrate embed');
+    const darkThemeDiv = document.getElementById('darkThemeDiv');
     if (!darkThemeDiv) return;
     clearInterval(interval.value);
     interval.value = setInterval(() => {
       const dark = darkThemeDiv.className;
-      const shouldGoDark = dark === "dark" && !isDark.value;
-      const shouldGoLight = dark !== "dark" && isDark.value;
-      const iframeEmbed = Array.from(document.getElementsByClassName("iframeEmbed"));
+      const shouldGoDark = dark === 'dark' && !isDark.value;
+      const shouldGoLight = dark !== 'dark' && isDark.value;
+      const iframeEmbed = Array.from(document.getElementsByClassName('iframeEmbed'));
       iframeEmbed.forEach((iframe) => {
-        const iframeSrc = iframe.getAttribute("src");
+        const iframeSrc = iframe.getAttribute('src');
         if (iframeSrc && iframeSrc.startsWith(EMBED_URL)) {
           if (shouldGoDark) {
             isDark.value = true;
             const url = new URL(iframeSrc);
-            url.searchParams.set("dark", "1");
+            url.searchParams.set('dark', '1');
             (iframe as HTMLIFrameElement).src = url.toString();
           } else if (shouldGoLight) {
             isDark.value = false;
             const url = new URL(iframeSrc);
-            url.searchParams.delete("dark");
+            url.searchParams.delete('dark');
             (iframe as HTMLIFrameElement).src = url.toString();
           }
         }

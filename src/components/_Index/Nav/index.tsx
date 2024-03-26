@@ -1,9 +1,9 @@
-import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 
-import { LuHome } from "@qwikest/icons/lucide";
-import LoadingSVG from "~/components/LoadingSVG";
-import getUser from "~/components/_Index/Nav/getUser";
+import { LuHome } from '@qwikest/icons/lucide';
+import LoadingSVG from '~/components/LoadingSVG';
+import getUser from '~/components/_Index/Nav/getUser';
 
 export { getUser };
 
@@ -11,7 +11,7 @@ export default component$(() => {
   const login = useStore({
     isLoading: true,
     isLoggedIn: false,
-    avatarUrl: "",
+    avatarUrl: '',
   });
 
   useVisibleTask$(async () => {
@@ -27,7 +27,7 @@ export default component$(() => {
       <div class="w-[50%] pr-[6vw]"></div>
       <ul class="flex w-[50%] items-center gap-6 text-base font-bold tracking-wide">
         <li class="px-2 py-2">
-          <Link prefetch href={"/members/dashboard/"} class="flex gap-2">
+          <Link prefetch href={'/members/dashboard/'} class="flex gap-2">
             Home
             <span class="text-[20px] text-primary-dark-gray">
               <LuHome />
@@ -35,8 +35,8 @@ export default component$(() => {
           </Link>
         </li>
         <li class="py- relative px-6">
-          <div class={"flex gap-2"}>
-            <Link prefetch href={"/catalog/"}>
+          <div class={'flex gap-2'}>
+            <Link prefetch href={'/catalog/'}>
               Courses
             </Link>
             {/* <span
@@ -52,12 +52,12 @@ export default component$(() => {
           </div> */}
         </li>
         <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
+          <Link prefetch href={'/'}>
             Projects
           </Link>
         </li>
         <li class="px-2 py-2">
-          <Link prefetch href={"/"}>
+          <Link prefetch href={'/'}>
             Playground
           </Link>
         </li>
@@ -67,19 +67,13 @@ export default component$(() => {
           </span>
         ) : login.isLoggedIn ? (
           <li>
-            <Link prefetch href={"/members/dashboard/"} aria-label="Go to profile">
-              <img
-                src={login.avatarUrl}
-                alt="Avatar"
-                width={40}
-                height={40}
-                class="rounded-full object-contain"
-              />
+            <Link prefetch href={'/members/dashboard/'} aria-label="Go to profile">
+              <img src={login.avatarUrl} alt="Avatar" width={40} height={40} class="rounded-full object-contain" />
             </Link>
           </li>
         ) : (
           <li class="rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md">
-            <Link prefetch href={"/login"} class="whitespace-nowrap">
+            <Link prefetch href={'/login'} class="whitespace-nowrap">
               Login | Signup
             </Link>
           </li>

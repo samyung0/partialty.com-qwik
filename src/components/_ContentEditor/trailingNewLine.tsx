@@ -1,5 +1,5 @@
 /** @jsxImportSource react */
-import { Editor, Element as SlateElement, Text } from "slate";
+import { Editor, Element as SlateElement, Text } from 'slate';
 export const withTrailingNewLine = (editor: Editor) => {
   const { normalizeNode } = editor;
 
@@ -9,17 +9,17 @@ export const withTrailingNewLine = (editor: Editor) => {
         match: (n) =>
           !Editor.isEditor(n) &&
           SlateElement.isElement(n) &&
-          n.type === "paragraph" &&
+          n.type === 'paragraph' &&
           n.children.length === 1 &&
           Text.isText(n.children[0]) &&
-          n.children[0].text === "",
+          n.children[0].text === '',
         at: Editor.end(editor, []),
-        mode: "highest",
+        mode: 'highest',
       });
       if (!endElement) {
         editor.insertNode(
-          { type: "paragraph", children: [{ text: "" }] },
-          { at: Editor.end(editor, []), mode: "highest" }
+          { type: 'paragraph', children: [{ text: '' }] },
+          { at: Editor.end(editor, []), mode: 'highest' }
         );
       }
     }

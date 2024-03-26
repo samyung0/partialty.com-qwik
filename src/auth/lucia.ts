@@ -1,42 +1,42 @@
-import type { RequestEvent, RequestEventBase } from "@builder.io/qwik-city";
-import { libsql } from "@lucia-auth/adapter-sqlite";
-import { github, google } from "@lucia-auth/oauth/providers";
-import { lucia } from "lucia";
-import { qwik } from "lucia/middleware";
-import tursoClient from "~/utils/tursoClient";
+import type { RequestEvent, RequestEventBase } from '@builder.io/qwik-city';
+import { libsql } from '@lucia-auth/adapter-sqlite';
+import { github, google } from '@lucia-auth/oauth/providers';
+import { lucia } from 'lucia';
+import { qwik } from 'lucia/middleware';
+import tursoClient from '~/utils/tursoClient';
 
-import bunApp from "~/_api/bun/util/edenTreaty";
-import type { Profiles } from "../../drizzle_turso/schema/profiles";
+import bunApp from '~/_api/bun/util/edenTreaty';
+import type { Profiles } from '../../drizzle_turso/schema/profiles';
 
 let _auth: ReturnType<typeof _lucia> | null = null;
 let _github: ReturnType<typeof _githubAuth> | null = null;
 let _google: ReturnType<typeof _googleAuth> | null = null;
 
-const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"]) =>
+const _googleAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent['env']) =>
   google(lucia, {
-    clientId: env.get("GOOGLE_ID")!,
-    clientSecret: env.get("GOOGLE_SECRET")!,
-    scope: ["email"],
+    clientId: env.get('GOOGLE_ID')!,
+    clientSecret: env.get('GOOGLE_SECRET')!,
+    scope: ['email'],
     redirectUri:
-      import.meta.env.MODE === "production"
-        ? "https://www.partialty.com/login/google/callback/"
-        : "http://localhost:5173/login/google/callback/",
+      import.meta.env.MODE === 'production'
+        ? 'https://www.partialty.com/login/google/callback/'
+        : 'http://localhost:5173/login/google/callback/',
   });
 
-const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent["env"]) =>
+const _githubAuth = (lucia: ReturnType<typeof _lucia>, env: RequestEvent['env']) =>
   github(lucia, {
-    clientId: env.get("GITHUB_ID")!,
-    clientSecret: env.get("GITHUB_SECRET")!,
-    scope: ["user"],
+    clientId: env.get('GITHUB_ID')!,
+    clientSecret: env.get('GITHUB_SECRET')!,
+    scope: ['user'],
     redirectUri:
-      import.meta.env.MODE === "production"
-        ? "https://www.partialty.com/login/github/callback/"
-        : "http://localhost:5173/login/github/callback/",
+      import.meta.env.MODE === 'production'
+        ? 'https://www.partialty.com/login/github/callback/'
+        : 'http://localhost:5173/login/github/callback/',
   });
 
-const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
+const _lucia = (env: RequestEventBase['env'], prodInDev: boolean = false) =>
   lucia({
-    env: import.meta.env.MODE === "production" ? "PROD" : "DEV",
+    env: import.meta.env.MODE === 'production' ? 'PROD' : 'DEV',
     passwordHash: {
       generate: async (password) => {
         const res = await bunApp.auth.signup.passwordToHash.post({
@@ -44,7 +44,7 @@ const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
           password,
         });
         if (res.error || res.data.error) throw Error(res.data?.message);
-        return res.data.data ?? "";
+        return res.data.data ?? '';
       },
       validate: async (password, hash) => {
         const res = await bunApp.auth.login.hashToPassword.post({
@@ -58,9 +58,9 @@ const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
     },
     middleware: qwik(),
     adapter: libsql(tursoClient(env, prodInDev), {
-      user: "profiles",
-      key: "user_key",
-      session: "user_session",
+      user: 'profiles',
+      key: 'user_key',
+      session: 'user_session',
     }),
     getUserAttributes: (user) => {
       return {
@@ -77,7 +77,7 @@ const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
         email_verified: !!user.email_verified,
         accessible_courses: user.accessible_courses,
         accessible_courses_read: user.accessible_courses_read,
-      } as Omit<Profiles, "id">;
+      } as Omit<Profiles, 'id'>;
     },
     getSessionAttributes: (session) => {
       return {
@@ -90,7 +90,7 @@ const _lucia = (env: RequestEventBase["env"], prodInDev: boolean = false) =>
     },
   });
 
-export const initLuciaIfNeeded = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+export const initLuciaIfNeeded = (env: RequestEvent['env'], prodInDev: boolean = false) => {
   if (!_auth) {
     _auth = _lucia(env, prodInDev);
   }
@@ -98,17 +98,17 @@ export const initLuciaIfNeeded = (env: RequestEvent["env"], prodInDev: boolean =
   if (!_google) _google = _googleAuth(_auth, env);
 };
 
-export const auth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+export const auth = (env: RequestEvent['env'], prodInDev: boolean = false) => {
   if (!_auth) _auth = _lucia(env, prodInDev);
   return _auth;
 };
 
-export const githubAuth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+export const githubAuth = (env: RequestEvent['env'], prodInDev: boolean = false) => {
   if (!_github) _github = _githubAuth(auth(env, prodInDev), env);
   return _github;
 };
 
-export const googleAuth = (env: RequestEvent["env"], prodInDev: boolean = false) => {
+export const googleAuth = (env: RequestEvent['env'], prodInDev: boolean = false) => {
   if (!_google) _google = _googleAuth(auth(env, prodInDev), env);
   return _google;
 };

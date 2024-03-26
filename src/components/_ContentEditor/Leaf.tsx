@@ -1,11 +1,11 @@
 /* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
-import type { RenderLeafProps } from "slate-react";
-import { v4 } from "uuid";
-import HighlightSVG from "~/components/_ContentEditor/HighlightSVG";
+import type { RenderLeafProps } from 'slate-react';
+import { v4 } from 'uuid';
+import HighlightSVG from '~/components/_ContentEditor/HighlightSVG';
 export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   const { text, ...rest } = leaf;
-  const style = { backgroundColor: "inherit", color: "inherit" };
+  const style = { backgroundColor: 'inherit', color: 'inherit' };
   if (leaf.bold) {
     children = (
       <strong style={style} {...attributes}>
@@ -31,7 +31,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   if (leaf.underline) {
-    const uuid = "a" + v4();
+    const uuid = 'a' + v4();
     children = (
       <span>
         <style
@@ -79,7 +79,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   if (leaf.background) {
-    const uuid = "a" + v4();
+    const uuid = 'a' + v4();
     children = (
       <span>
         <style
@@ -94,7 +94,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
           <span
             id={uuid}
             className={`absolute left-[-4px] top-[-2px] z-0 h-[calc(100%+4px)] w-[calc(100%+8px)]`}
-            style={{ ...style, fill: leaf.background, pointerEvents: "none" }}
+            style={{ ...style, fill: leaf.background, pointerEvents: 'none' }}
             {...attributes}
           >
             <HighlightSVG />
@@ -108,7 +108,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
 
   if (leaf.color) {
-    const uuid = "a" + v4();
+    const uuid = 'a' + v4();
     children = (
       <span>
         <style
@@ -152,9 +152,9 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
 
   return (
     <span
-      className={`${leaf.text === "" ? "pl-[0.1px] pr-[0.1px]" : ""} ${Object.keys(rest)
-        .filter((key) => key !== "underline")
-        .join(" ")}`}
+      className={`${leaf.text === '' ? 'pl-[0.1px] pr-[0.1px]' : ''} ${Object.keys(rest)
+        .filter((key) => key !== 'underline')
+        .join(' ')}`}
       {...attributes}
       style={{ ...style, ...((leaf as any).style || {}) }}
     >

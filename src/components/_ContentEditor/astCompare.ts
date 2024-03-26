@@ -10,7 +10,7 @@ const match = (userAns: any, ans: any) => {
       if (remaining === 0) return false;
       remaining--;
     }
-  } else if (typeof ans === "object") {
+  } else if (typeof ans === 'object') {
     if (Array.isArray(userAns)) return false;
     for (const i in ans) {
       if (!Object.prototype.hasOwnProperty.call(userAns, i)) return false;

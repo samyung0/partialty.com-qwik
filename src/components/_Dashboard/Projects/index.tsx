@@ -1,7 +1,7 @@
-import { component$, useSignal, useStore } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import { IoCaretDown, IoReaderOutline } from "@qwikest/icons/ionicons";
-import { LuArrowRight } from "@qwikest/icons/lucide";
+import { component$, useSignal, useStore } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
+import { IoCaretDown, IoReaderOutline } from '@qwikest/icons/ionicons';
+import { LuArrowRight } from '@qwikest/icons/lucide';
 // import SearchSVG from "~/assets/svg/search-outline.svg";
 
 // import Fuse from "fuse.js";
@@ -12,7 +12,7 @@ type ProjectInfo = {
   steps: Record<string, { name: string; link: string }>;
   link: string;
   topics: string[];
-  difficulty: "beginner" | "intermediate" | "advanced";
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
 };
 
 type CurrentProject = {
@@ -27,16 +27,16 @@ type CurrentProject = {
 
 const difficulty: Record<string, { name: string; link: string }> = {
   beginner: {
-    name: "Beginner",
-    link: "/members/dashboard/",
+    name: 'Beginner',
+    link: '/members/dashboard/',
   },
   intermediate: {
-    name: "Intermediate",
-    link: "/members/dashboard/",
+    name: 'Intermediate',
+    link: '/members/dashboard/',
   },
   advanced: {
-    name: "Advanced",
-    link: "/members/dashboard/",
+    name: 'Advanced',
+    link: '/members/dashboard/',
   },
 };
 
@@ -44,237 +44,237 @@ type Topics = Record<string, { name: string; link: string }>;
 
 const topics: Topics = {
   html: {
-    name: "HTML",
-    link: "/members/dashboard/",
+    name: 'HTML',
+    link: '/members/dashboard/',
   },
   css: {
-    name: "Css",
-    link: "/members/dashboard/",
+    name: 'Css',
+    link: '/members/dashboard/',
   },
   js: {
-    name: "JS",
-    link: "/members/dashboard/",
+    name: 'JS',
+    link: '/members/dashboard/',
   },
   react: {
-    name: "React",
-    link: "/members/dashboard/",
+    name: 'React',
+    link: '/members/dashboard/',
   },
   nextjs: {
-    name: "Next JS",
-    link: "/members/dashboard/",
+    name: 'Next JS',
+    link: '/members/dashboard/',
   },
-  "headless-cms": {
-    name: "Headless CMS",
-    link: "/members/dashboard/",
+  'headless-cms': {
+    name: 'Headless CMS',
+    link: '/members/dashboard/',
   },
   firebase: {
-    name: "Firebase",
-    link: "/members/dashboard/",
+    name: 'Firebase',
+    link: '/members/dashboard/',
   },
   supabase: {
-    name: "Supabase",
-    link: "/members/dashboard/",
+    name: 'Supabase',
+    link: '/members/dashboard/',
   },
   mongodb: {
-    name: "Mongo DB",
-    link: "/members/dashboard/",
+    name: 'Mongo DB',
+    link: '/members/dashboard/',
   },
   docker: {
-    name: "Docker",
-    link: "/members/dashboard/",
+    name: 'Docker',
+    link: '/members/dashboard/',
   },
   astro: {
-    name: "Astro",
-    link: "/members/dashboard/",
+    name: 'Astro',
+    link: '/members/dashboard/',
   },
   webhook: {
-    name: "Webook",
-    link: "/members/dashboard/",
+    name: 'Webook',
+    link: '/members/dashboard/',
   },
   hygraph: {
-    name: "Hygraph",
-    link: "/members/dashboard/",
+    name: 'Hygraph',
+    link: '/members/dashboard/',
   },
   tailwind: {
-    name: "Tailwind",
-    link: "/members/dashboard/",
+    name: 'Tailwind',
+    link: '/members/dashboard/',
   },
 };
 
 const coursesInfo: Record<string, ProjectInfo> = {
-  "simple-landing-page": {
-    name: "Simple Landing page",
-    topics: ["html", "css"],
-    stepsOrder: ["step1", "step2", "step3", "step4", "step5", "step6"],
+  'simple-landing-page': {
+    name: 'Simple Landing page',
+    topics: ['html', 'css'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4', 'step5', 'step6'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step6: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    link: "/members/dashboard/",
-    difficulty: "beginner",
+    link: '/members/dashboard/',
+    difficulty: 'beginner',
   },
-  "simple-carousel-page": {
-    name: "Simple Carousel page",
-    topics: ["html", "css", "js"],
-    stepsOrder: ["step1", "step2", "step3", "step4"],
+  'simple-carousel-page': {
+    name: 'Simple Carousel page',
+    topics: ['html', 'css', 'js'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    difficulty: "beginner",
-    link: "/members/dashboard/",
+    difficulty: 'beginner',
+    link: '/members/dashboard/',
   },
-  "simple-quiz-app": {
-    name: "Simple Quiz App",
-    topics: ["html", "css", "js"],
-    stepsOrder: ["step1", "step2", "step3", "step4", "step5"],
+  'simple-quiz-app': {
+    name: 'Simple Quiz App',
+    topics: ['html', 'css', 'js'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4', 'step5'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    difficulty: "beginner",
-    link: "/members/dashboard/",
+    difficulty: 'beginner',
+    link: '/members/dashboard/',
   },
-  "todo-app-firebase": {
-    name: "Todo App with Firebase",
-    topics: ["html", "css", "js", "firebase"],
-    stepsOrder: ["step1", "step2", "step3", "step4", "step5"],
+  'todo-app-firebase': {
+    name: 'Todo App with Firebase',
+    topics: ['html', 'css', 'js', 'firebase'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4', 'step5'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    difficulty: "beginner",
-    link: "/members/dashboard/",
+    difficulty: 'beginner',
+    link: '/members/dashboard/',
   },
-  "realtime-chat-app-nextjs-supabase": {
-    name: "Realtime Chat App with Next JS, Tailwind and Supabase",
-    topics: ["nextjs", "tailwind", "supabase"],
-    stepsOrder: ["step1", "step2", "step3", "step4", "step5"],
+  'realtime-chat-app-nextjs-supabase': {
+    name: 'Realtime Chat App with Next JS, Tailwind and Supabase',
+    topics: ['nextjs', 'tailwind', 'supabase'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4', 'step5'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    difficulty: "intermediate",
-    link: "/members/dashboard/",
+    difficulty: 'intermediate',
+    link: '/members/dashboard/',
   },
-  "static-blog-page-astro-hygraph": {
-    name: "Static Blog Page with Astro, Tailwind and Hygraph",
-    topics: ["astro", "webhook", "hygraph", "tailwind"],
-    stepsOrder: ["step1", "step2", "step3", "step4", "step5"],
+  'static-blog-page-astro-hygraph': {
+    name: 'Static Blog Page with Astro, Tailwind and Hygraph',
+    topics: ['astro', 'webhook', 'hygraph', 'tailwind'],
+    stepsOrder: ['step1', 'step2', 'step3', 'step4', 'step5'],
     steps: {
       step1: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step2: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step3: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step4: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
       step5: {
-        name: "Lorem Ipsum sthsth",
-        link: "/members/dashboard/",
+        name: 'Lorem Ipsum sthsth',
+        link: '/members/dashboard/',
       },
     },
-    difficulty: "intermediate",
-    link: "/members/dashboard/",
+    difficulty: 'intermediate',
+    link: '/members/dashboard/',
   },
 };
 
@@ -282,7 +282,7 @@ export default component$(() => {
   const currentProjects = useStore(() => {
     const p: CurrentProject[] = [
       {
-        slug: "simple-landing-page",
+        slug: 'simple-landing-page',
         completed: {
           step1: true,
           step2: true,
@@ -291,14 +291,14 @@ export default component$(() => {
           step5: false,
           step6: false,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: false,
         lastAccessed: 1705468275501,
         open: false,
         highlight: {},
       },
       {
-        slug: "simple-carousel-page",
+        slug: 'simple-carousel-page',
         completed: {
           step1: true,
           step2: true,
@@ -306,14 +306,14 @@ export default component$(() => {
           step4: false,
           step5: false,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: false,
         open: false,
         highlight: {},
         lastAccessed: 1705468275500,
       },
       {
-        slug: "simple-quiz-app",
+        slug: 'simple-quiz-app',
         completed: {
           step1: true,
           step2: true,
@@ -321,14 +321,14 @@ export default component$(() => {
           step4: true,
           step5: true,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: true,
         open: false,
         highlight: {},
         lastAccessed: 1705468275503,
       },
       {
-        slug: "todo-app-firebase",
+        slug: 'todo-app-firebase',
         completed: {
           step1: true,
           step2: true,
@@ -336,14 +336,14 @@ export default component$(() => {
           step4: true,
           step5: true,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: true,
         open: false,
         highlight: {},
         lastAccessed: 1705468275501,
       },
       {
-        slug: "realtime-chat-app-nextjs-supabase",
+        slug: 'realtime-chat-app-nextjs-supabase',
         completed: {
           step1: false,
           step2: false,
@@ -351,14 +351,14 @@ export default component$(() => {
           step4: false,
           step5: false,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: false,
         open: false,
         highlight: {},
         lastAccessed: 1705468275505,
       },
       {
-        slug: "static-blog-page-astro-hygraph",
+        slug: 'static-blog-page-astro-hygraph',
         completed: {
           step1: false,
           step2: false,
@@ -366,7 +366,7 @@ export default component$(() => {
           step4: false,
           step5: false,
         },
-        codeSpace: "/members/dashboard/",
+        codeSpace: '/members/dashboard/',
         finished: false,
         open: false,
         highlight: {},
@@ -436,7 +436,7 @@ export default component$(() => {
             return (
               <li
                 class={
-                  "flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray"
+                  'flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-6 py-3 dark:bg-highlight-dark dark:text-background-light-gray'
                 }
                 key={`currentProjects${currentProject.slug}`}
               >
@@ -447,9 +447,7 @@ export default component$(() => {
                   class="flex cursor-pointer items-center justify-between"
                 >
                   <div class="flex flex-col gap-1">
-                    <h2 class="text-base md:text-lg md:tracking-wide">
-                      {coursesInfo[currentProject.slug].name}
-                    </h2>
+                    <h2 class="text-base md:text-lg md:tracking-wide">{coursesInfo[currentProject.slug].name}</h2>
                     <div class="mb-1 block h-1.5 w-[100px] rounded-full bg-light-sea md:hidden">
                       <div
                         class={`h-1.5 rounded-full bg-sea`}
@@ -464,7 +462,7 @@ export default component$(() => {
                       </span>
                       <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
                         {completedChapters.length} / {steps.length} step
-                        {steps.length > 0 ? "s" : ""} completed
+                        {steps.length > 0 ? 's' : ''} completed
                       </span>
                     </p>
                   </div>
@@ -480,10 +478,10 @@ export default component$(() => {
                     <button class="p-2">
                       <span
                         style={{
-                          transform: currentProject.open ? "rotateZ(180deg)" : "",
+                          transform: currentProject.open ? 'rotateZ(180deg)' : '',
                         }}
                         class={
-                          "inline-block text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray"
+                          'inline-block text-[16px] text-primary-dark-gray transition-transform dark:text-background-light-gray'
                         }
                       >
                         <IoCaretDown />
@@ -522,11 +520,11 @@ export default component$(() => {
                         <Link
                           href={difficulty[coursesInfo[currentProject.slug].difficulty].link}
                           class={`border-b-2  text-[0.875rem] md:text-[1rem] ${
-                            coursesInfo[currentProject.slug].difficulty === "beginner"
-                              ? "border-sea"
-                              : coursesInfo[currentProject.slug].difficulty === "intermediate"
-                              ? "border-custom-yellow"
-                              : "border-custom-pink"
+                            coursesInfo[currentProject.slug].difficulty === 'beginner'
+                              ? 'border-sea'
+                              : coursesInfo[currentProject.slug].difficulty === 'intermediate'
+                              ? 'border-custom-yellow'
+                              : 'border-custom-pink'
                           }`}
                         >
                           {difficulty[coursesInfo[currentProject.slug].difficulty].name}

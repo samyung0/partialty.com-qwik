@@ -1,23 +1,23 @@
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { content } from "./content";
-import { content_index } from "./content_index";
-import { profiles } from "./profiles";
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
+import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { content } from './content';
+import { content_index } from './content_index';
+import { profiles } from './profiles';
 
 export const content_user_quiz = sqliteTable(
-  "content_user_quiz",
+  'content_user_quiz',
   {
-    user_id: text("user_id")
+    user_id: text('user_id')
       .notNull()
       .references(() => profiles.id),
-    content_index_id: text("content_index_id")
+    content_index_id: text('content_index_id')
       .notNull()
       .references(() => content_index.id),
-    content_id: text("content_id")
+    content_id: text('content_id')
       .notNull()
       .references(() => content.id),
-    attempts: integer("attempts").notNull().default(0),
-    correct_attempts: integer("correct_attempts").notNull().default(0),
+    attempts: integer('attempts').notNull().default(0),
+    correct_attempts: integer('correct_attempts').notNull().default(0),
   },
   (table) => {
     return {

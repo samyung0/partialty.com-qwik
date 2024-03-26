@@ -1,10 +1,10 @@
-import type { Signal } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
-import { LuX } from "@qwikest/icons/lucide";
+import type { Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
+import { LuX } from '@qwikest/icons/lucide';
 // import generateContentShareToken from "~/auth/generateContentShareToken";
-import LoadingSVG from "~/components/LoadingSVG";
-import type { IsLockedValidation } from "~/components/_Creator/Course";
-import { generateToken } from "~/components/_Creator/Course";
+import LoadingSVG from '~/components/LoadingSVG';
+import type { IsLockedValidation } from '~/components/_Creator/Course';
+import { generateToken } from '~/components/_Creator/Course';
 
 export default component$(
   ({
@@ -16,7 +16,7 @@ export default component$(
     isLocked,
   }: { showGetCode: Signal<boolean>; contentId: string } & IsLockedValidation) => {
     const isGeneratingCode = useSignal(false);
-    const generatedCode = useSignal("");
+    const generatedCode = useSignal('');
     return (
       <div class="fixed left-0 top-0 z-[100] flex h-[100vh] w-full items-center justify-center backdrop-blur-sm">
         <div class="relative flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80vw] lg:w-[50vw] lg:min-w-[400px] lg:max-w-[600px]">
@@ -32,8 +32,7 @@ export default component$(
           <div class="flex flex-col items-center justify-center gap-3">
             <button
               onClick$={async () => {
-                if (isLocked && userId !== author && userRole !== "admin")
-                  return alert("Unexpected!");
+                if (isLocked && userId !== author && userRole !== 'admin') return alert('Unexpected!');
                 if (isGeneratingCode.value) return;
                 isGeneratingCode.value = true;
                 try {
@@ -41,7 +40,7 @@ export default component$(
                   generatedCode.value = code;
                 } catch (e) {
                   console.error(e);
-                  alert("Unable to generate code. Please try again later or contact support.");
+                  alert('Unable to generate code. Please try again later or contact support.');
                 }
                 isGeneratingCode.value = false;
               }}
@@ -50,16 +49,13 @@ export default component$(
               {!isGeneratingCode.value && <span>Generate Code</span>}
               {isGeneratingCode.value && <LoadingSVG />}
             </button>
-            {generatedCode.value && (
-              <p class="font-mosk text-xl font-bold tracking-widest">{generatedCode.value}</p>
-            )}
+            {generatedCode.value && <p class="font-mosk text-xl font-bold tracking-widest">{generatedCode.value}</p>}
             {generatedCode.value && <p class="text-base">The code is valid for 30 minutes.</p>}
           </div>
           <p class="max-w-[280px] pt-4 text-center text-sm md:max-w-[400px] md:pt-6 md:text-base">
-            Anyone with this code can view and edit your courses. If you don't want other people to
-            edit the course,{" "}
-            <span class="border-b-4 border-tomato dark:border-custom-pink">lock</span> the course
-            before sharing the code. <br />
+            Anyone with this code can view and edit your courses. If you don't want other people to edit the course,{' '}
+            <span class="border-b-4 border-tomato dark:border-custom-pink">lock</span> the course before sharing the
+            code. <br />
             <br />
             You CANNOT revoke the access later.
           </p>

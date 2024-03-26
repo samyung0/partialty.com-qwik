@@ -1,6 +1,6 @@
 /* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
-import { Trash, X } from "lucide-react";
+import { Trash, X } from 'lucide-react';
 // import Prism from "prismjs";
 // import "prismjs/components/prism-c";
 // import "prismjs/components/prism-cpp";
@@ -22,66 +22,66 @@ import { Trash, X } from "lucide-react";
 // import "prismjs/components/prism-typescript";
 
 export const languageList = [
-  "plainText",
-  "html",
-  "css",
-  "tsx",
-  "jsx",
-  "typescript",
-  "javascript",
-  "json",
-  "markdown",
-  "c",
-  "cpp",
-  "csharp",
-  "go",
-  "java",
-  "php",
-  "python",
-  "ruby",
-  "rust",
-  "sql",
+  'plainText',
+  'html',
+  'css',
+  'tsx',
+  'jsx',
+  'typescript',
+  'javascript',
+  'json',
+  'markdown',
+  'c',
+  'cpp',
+  'csharp',
+  'go',
+  'java',
+  'php',
+  'python',
+  'ruby',
+  'rust',
+  'sql',
 ] as const;
 
 export const languageListDisplayNames = {
-  html: "HTML",
-  css: "CSS",
-  c: "C",
-  cpp: "C++",
-  go: "Golang",
-  java: "Java",
-  javascript: "Javascript",
-  jsx: "JSX",
-  markdown: "Markdown",
-  php: "PHP",
-  python: "Python",
-  ruby: "Ruby",
-  rust: "Rust",
-  sql: "SQL",
-  tsx: "TSX",
-  typescript: "Typescript",
-  json: "JSON",
-  plainText: "Plain Text",
-  csharp: "C#",
+  html: 'HTML',
+  css: 'CSS',
+  c: 'C',
+  cpp: 'C++',
+  go: 'Golang',
+  java: 'Java',
+  javascript: 'Javascript',
+  jsx: 'JSX',
+  markdown: 'Markdown',
+  php: 'PHP',
+  python: 'Python',
+  ruby: 'Ruby',
+  rust: 'Rust',
+  sql: 'SQL',
+  tsx: 'TSX',
+  typescript: 'Typescript',
+  json: 'JSON',
+  plainText: 'Plain Text',
+  csharp: 'C#',
 } as const;
 
-import { useEffect, useRef, useState } from "react";
-import type { BaseRange, NodeEntry } from "slate";
-import { Editor, Range, Element as SlateElement, Transforms } from "slate";
-import type { RenderElementProps } from "slate-react";
-import { ReactEditor, useFocused, useSlate } from "slate-react";
+import { useEffect, useRef, useState } from 'react';
+import type { BaseRange, NodeEntry } from 'slate';
+import { Editor, Range, Element as SlateElement, Transforms } from 'slate';
+import type { RenderElementProps } from 'slate-react';
+import { ReactEditor, useFocused, useSlate } from 'slate-react';
 // import "./prism-one-dark.css";
 
-import { isBlockActive } from "~/components/_ContentEditor/blockFn";
+import { isBlockActive } from '~/components/_ContentEditor/blockFn';
 
-import { useCallback } from "react";
-import { Element, Node } from "slate";
+import { useCallback } from 'react';
+import { Element, Node } from 'slate';
 
-import type { HighlighterCore } from "shikiji/core";
-import type { CodeBlockElement } from "~/components/_ContentEditor/types";
+import type { HighlighterCore } from 'shikiji/core';
+import type { CodeBlockElement } from '~/components/_ContentEditor/types';
 
-const CodeBlockType = "codeBlock";
-const CodeLineType = "codeLine";
+const CodeBlockType = 'codeBlock';
+const CodeLineType = 'codeLine';
 
 export const CenterCodeBlockSettings = ({
   editor,
@@ -91,20 +91,17 @@ export const CenterCodeBlockSettings = ({
   setShowCodeBlockSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const matching = editor.above({
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "codeBlock",
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'codeBlock',
   });
   if (!matching) return null;
   const codeBlock = matching[0] as CodeBlockElement;
-  const [filename, setFileName] = useState(codeBlock.filename || "");
+  const [filename, setFileName] = useState(codeBlock.filename || '');
   const [language, setLanguage] = useState(codeBlock.language);
   return (
     <div className="fixed left-0 top-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <div className="relative flex w-[80vw] flex-col items-center justify-center rounded-lg border-2 border-primary-dark-gray bg-light-mint p-8 dark:bg-primary-dark-gray">
         <h2 className="py-8 font-mosk text-[2rem] font-bold tracking-wider">Configure Codeblock</h2>
-        <button
-          onClick={() => setShowCodeBlockSettings(false)}
-          className="absolute right-8 top-8 p-2"
-        >
+        <button onClick={() => setShowCodeBlockSettings(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
         </button>
         <div>
@@ -119,7 +116,7 @@ export const CenterCodeBlockSettings = ({
               name="FileName"
               type="text"
               className={
-                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+                'block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark'
               }
             />
           </div>
@@ -135,7 +132,7 @@ export const CenterCodeBlockSettings = ({
               onChange={(e) => setLanguage(e.target.value)}
               id="CodeLanguage"
               className={
-                "block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark"
+                'block w-[300px] rounded-md border-2 border-primary-dark-gray px-3 py-2 dark:bg-highlight-dark'
               }
             >
               {languageList.map((language) => (
@@ -151,8 +148,7 @@ export const CenterCodeBlockSettings = ({
             editor.setNodes(
               { filename, language },
               {
-                match: (n) =>
-                  SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === "codeBlock",
+                match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === 'codeBlock',
               }
             );
             setShowCodeBlockSettings(false);
@@ -188,26 +184,21 @@ export const HoveringCodeBlock = ({
     const { selection } = editor;
 
     if (!el || !selection) {
-      if (el && !selection) el.style.display = "none";
+      if (el && !selection) el.style.display = 'none';
       return;
     }
 
     prevSelection.current = selection;
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "codeBlock",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'codeBlock',
     });
     if (!node) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
     const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
 
-    const {
-      x: nodeX,
-      height: nodeHeight,
-      y: _nodeY,
-      width: nodeWidth,
-    } = linkDOMNode.getBoundingClientRect();
+    const { x: nodeX, height: nodeHeight, y: _nodeY, width: nodeWidth } = linkDOMNode.getBoundingClientRect();
 
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
@@ -220,27 +211,20 @@ export const HoveringCodeBlock = ({
         (prevSelection.current === undefined || prevSelection.current === null)) ||
       !Range.isCollapsed(selection)
     ) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
 
-    el.style.display = "flex";
-    el.style.top = `${Math.min(
-      nodeY + nodeHeight + offsetY,
-      window.innerHeight * 0.9 - el.offsetHeight
-    )}px`;
+    el.style.display = 'flex';
+    el.style.top = `${Math.min(nodeY + nodeHeight + offsetY, window.innerHeight * 0.9 - el.offsetHeight)}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
-    el.style.transform = "translateX(-50%)";
+    el.style.transform = 'translateX(-50%)';
   });
 
   return (
     <>
-      {isBlockActive(editor, "codeBlock", "type") && (
-        <div
-          ref={ref}
-          className="absolute z-[60] flex flex-col items-center justify-start shadow-xl"
-          role="group"
-        >
+      {isBlockActive(editor, 'codeBlock', 'type') && (
+        <div ref={ref} className="absolute z-[60] flex flex-col items-center justify-start shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
               onClick={() => setShowCodeBlockSettings(true)}
@@ -265,7 +249,7 @@ export const HoveringCodeBlock = ({
 
 export function toggleCodeBlockAtSelection(editor: Editor) {
   Transforms.removeNodes(editor, {
-    match: (n) => SlateElement.isElement(n) && n.type === "codeBlock",
+    match: (n) => SlateElement.isElement(n) && n.type === 'codeBlock',
   });
 }
 
@@ -310,14 +294,12 @@ export const SetNodeToDecorations = ({ shikiji }: { shikiji: HighlighterCore }) 
   const blockEntries = Array.from(
     Editor.nodes(editor, {
       at: [],
-      mode: "highest",
+      mode: 'highest',
       match: (n) => Element.isElement(n) && n.type === CodeBlockType,
     })
   ) as NodeEntry<CodeBlockElement>[];
 
-  const nodeToDecorations = mergeMaps(
-    ...blockEntries.map(getChildNodeToDecorations.bind(null, shikiji))
-  );
+  const nodeToDecorations = mergeMaps(...blockEntries.map(getChildNodeToDecorations.bind(null, shikiji)));
 
   editor.nodeToDecorations = nodeToDecorations;
 
@@ -326,30 +308,27 @@ export const SetNodeToDecorations = ({ shikiji }: { shikiji: HighlighterCore }) 
 
 const fontStyleMap = {
   0: {
-    fontStyle: "normal",
+    fontStyle: 'normal',
   },
   1: {
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   2: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   4: {
-    textDecoration: "underline",
+    textDecoration: 'underline',
   },
 };
 
-const getChildNodeToDecorations = (
-  shikiji: HighlighterCore,
-  [block, blockPath]: NodeEntry<CodeBlockElement>
-) => {
+const getChildNodeToDecorations = (shikiji: HighlighterCore, [block, blockPath]: NodeEntry<CodeBlockElement>) => {
   const nodeToDecorations = new Map<Element, Range[]>();
 
-  const text = block.children.map((line) => Node.string(line)).join("\n");
+  const text = block.children.map((line) => Node.string(line)).join('\n');
   const language = block.language;
   // const tokens = Prism.tokenize(text, Prism.languages[language || "tsx"]);
   // const normalizedTokens = normalizeTokens(tokens);
-  const normalizedTokens = shikiji.codeToThemedTokens(text, { lang: language || "tsx" });
+  const normalizedTokens = shikiji.codeToThemedTokens(text, { lang: language || 'tsx' });
   const blockChildren = block.children as Element[];
 
   for (let index = 0; index < normalizedTokens.length; index++) {
@@ -372,9 +351,8 @@ const getChildNodeToDecorations = (
       const path = [...blockPath, index, 0];
       let newObj: any = {};
       for (const i in token) {
-        if (i !== "content") {
-          if (i === "fontStyle")
-            newObj = { ...newObj, ...((fontStyleMap as any)[token[i] as any] || {}) };
+        if (i !== 'content') {
+          if (i === 'fontStyle') newObj = { ...newObj, ...((fontStyleMap as any)[token[i] as any] || {}) };
           else newObj[i] = (token as any)[i];
         }
       }
@@ -408,7 +386,7 @@ const mergeMaps = <K, V>(...maps: Map<K, V>[]) => {
 };
 const toChildren = (content: string) => [{ text: content }];
 export const toCodeLines = (content: string): Element[] =>
-  content.split("\n").map((line) => ({ type: CodeLineType, children: toChildren(line) }));
+  content.split('\n').map((line) => ({ type: CodeLineType, children: toChildren(line) }));
 
 // export const normalizeTokens = (tokens: Array<PrismToken | string>): Token[][] => {
 //   const typeArrStack: string[][] = [[]];

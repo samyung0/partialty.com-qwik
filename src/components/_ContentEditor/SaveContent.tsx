@@ -1,8 +1,8 @@
 /** @jsxImportSource react */
 
-import { useEffect, useRef, useState } from "react";
-import { useSlateStatic } from "slate-react";
-import serialize from "~/components/_ContentEditor/serialize";
+import { useEffect, useRef, useState } from 'react';
+import { useSlateStatic } from 'slate-react';
+import serialize from '~/components/_ContentEditor/serialize';
 
 export default ({
   hasChanged,
@@ -76,9 +76,9 @@ export default ({
     const audio_track_asset_id = audioTrack?.id;
     const isEmpty =
       editorContent.length === 1 &&
-      (editorContent[0] as any).type === "paragraph" &&
+      (editorContent[0] as any).type === 'paragraph' &&
       (editorContent[0] as any).children.length === 1 &&
-      (editorContent[0] as any).children[0].text === "";
+      (editorContent[0] as any).children[0].text === '';
     await saveChanges(
       isEmpty ? null : JSON.stringify(editorContent),
       renderedHTML,

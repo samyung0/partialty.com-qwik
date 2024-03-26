@@ -1,25 +1,19 @@
-import type { QRL, Signal } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
-import { LuGem, LuX } from "@qwikest/icons/lucide";
-import { v4 as uuidv4 } from "uuid";
-import LoadingSVG from "~/components/LoadingSVG";
-import type { IsLockedValidation } from "~/components/_Creator/Course";
+import type { QRL, Signal } from '@builder.io/qwik';
+import { $, component$, useSignal, useStore } from '@builder.io/qwik';
+import { LuGem, LuX } from '@qwikest/icons/lucide';
+import { v4 as uuidv4 } from 'uuid';
+import LoadingSVG from '~/components/LoadingSVG';
+import type { IsLockedValidation } from '~/components/_Creator/Course';
 import {
   addCategorySchema,
   checkExistingChapter,
   checkExistingChapterLink,
   createChapter,
   saveChapter,
-} from "~/components/_Creator/Course";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import type { Content, NewContent } from "../../../../drizzle_turso/schema/content";
-export {
-  addCategorySchema,
-  checkExistingChapter,
-  checkExistingChapterLink,
-  createChapter,
-  saveChapter,
-};
+} from '~/components/_Creator/Course';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import type { Content, NewContent } from '../../../../drizzle_turso/schema/content';
+export { addCategorySchema, checkExistingChapter, checkExistingChapterLink, createChapter, saveChapter };
 
 export default component$(
   ({
@@ -43,8 +37,8 @@ export default component$(
     const user = useUserLoader().value;
     const formData = useStore<NewContent>({
       id: id.value,
-      name: "",
-      slug: "",
+      name: '',
+      slug: '',
       link: `/courses/${courseSlug.value}/chapters/`,
       index_id: courseId.value,
       renderedHTML: null,
@@ -55,45 +49,42 @@ export default component$(
       audio_track_asset_id: null,
     });
     const formError = useStore({
-      name: "",
-      slug: "",
-      link: "",
+      name: '',
+      slug: '',
+      link: '',
     });
     const ref = useSignal<HTMLInputElement>();
     const ref2 = useSignal<HTMLInputElement>();
     const loading = useSignal(false);
 
     const handleSubmit = $(async () => {
-      if (isLocked && userId !== author && userRole !== "admin") return alert("Unexpected!");
+      if (isLocked && userId !== author && userRole !== 'admin') return alert('Unexpected!');
       if (loading.value) return;
       loading.value = true;
-      formError.name = "";
-      formError.slug = "";
-      formError.link = "";
+      formError.name = '';
+      formError.slug = '';
+      formError.link = '';
       const result = addCategorySchema.safeParse(formData);
       if (!result.success) {
-        formError.name = result.error.formErrors.fieldErrors.name?.join("\n") || "";
-        formError.slug = result.error.formErrors.fieldErrors.slug?.join("\n") || "";
-        formError.link = result.error.formErrors.fieldErrors.link?.join("\n") || "";
+        formError.name = result.error.formErrors.fieldErrors.name?.join('\n') || '';
+        formError.slug = result.error.formErrors.fieldErrors.slug?.join('\n') || '';
+        formError.link = result.error.formErrors.fieldErrors.link?.join('\n') || '';
         loading.value = false;
         return;
       }
-      if (
-        !formData.link!.startsWith("/courses") &&
-        !window.confirm("Are you sure you want to use a custom link?")
-      ) {
+      if (!formData.link!.startsWith('/courses') && !window.confirm('Are you sure you want to use a custom link?')) {
         loading.value = false;
         return;
       }
       const dup = await checkExistingChapter(formData.slug!, courseId.value);
       if (dup.length > 0) {
-        formError.slug = "Slug already exists!";
+        formError.slug = 'Slug already exists!';
         loading.value = false;
         return;
       }
       const dup2 = await checkExistingChapterLink(formData.link!);
       if (dup2.length > 0) {
-        formError.link = "Link already exists!";
+        formError.link = 'Link already exists!';
         loading.value = false;
         return;
       }
@@ -106,7 +97,7 @@ export default component$(
         console.error(e);
         loading.value = false;
         showAddChapter.value = false;
-        alert("An error occured. Please try refreshing the page or contact support.");
+        alert('An error occured. Please try refreshing the page or contact support.');
         return;
       }
     });
@@ -122,11 +113,7 @@ export default component$(
           <h2 class="pb-4 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem]">
             Add Chapter
           </h2>
-          <form
-            preventdefault:submit
-            onsubmit$={() => handleSubmit()}
-            class="flex flex-col gap-2 md:gap-3"
-          >
+          <form preventdefault:submit onsubmit$={() => handleSubmit()} class="flex flex-col gap-2 md:gap-3">
             <div>
               <label for="categoryName" class="cursor-pointer text-base md:text-lg">
                 Name
@@ -140,15 +127,15 @@ export default component$(
                   value={formData.name}
                   onInput$={(_, el) => {
                     formData.name = el.value;
-                    formData.slug = el.value.toLowerCase().replace(/ /g, "-");
+                    formData.slug = el.value.toLowerCase().replace(/ /g, '-');
                     formData.link = `/courses/${courseSlug.value}/chapters/${formData.slug}/`;
                     if (ref.value) ref.value.scrollLeft += 99999;
                     if (ref2.value) ref2.value.scrollLeft += 99999;
                   }}
                   required
                   class={
-                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
-                    (formError.name ? "border-tomato dark:border-tomato" : "border-black/10")
+                    'w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] ' +
+                    (formError.name ? 'border-tomato dark:border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -166,15 +153,15 @@ export default component$(
                   id="categorySlug"
                   name="slug"
                   type="text"
-                  disabled={user.role !== "admin"}
+                  disabled={user.role !== 'admin'}
                   value={formData.slug}
                   onInput$={(_, el) => {
                     formData.slug = el.value;
                   }}
                   required
                   class={
-                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
-                    (formError.slug ? "border-tomato dark:border-tomato" : "border-black/10")
+                    'w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] ' +
+                    (formError.slug ? 'border-tomato dark:border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -192,15 +179,15 @@ export default component$(
                   id="categorLink"
                   name="link"
                   type="text"
-                  disabled={user.role !== "admin"}
+                  disabled={user.role !== 'admin'}
                   value={formData.link}
                   onInput$={(_, el) => {
                     formData.link = el.value;
                   }}
                   required
                   class={
-                    "w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] " +
-                    (formError.link ? "border-tomato dark:border-tomato" : "border-black/10")
+                    'w-[250px] rounded-md border-2 px-3 py-2 dark:border-background-light-gray dark:bg-highlight-dark  dark:text-background-light-gray dark:disabled:border-disabled-dark dark:disabled:bg-disabled-dark md:w-[300px] ' +
+                    (formError.link ? 'border-tomato dark:border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -208,7 +195,7 @@ export default component$(
                 {formError.link}
               </p>
             </div>
-            {user.role === "admin" && (
+            {user.role === 'admin' && (
               <div>
                 <label
                   title="The course is only accessible to subscribed users if checked."

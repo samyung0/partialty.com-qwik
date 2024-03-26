@@ -1,9 +1,9 @@
-import type codeBlock from "~/components/_Index/codeBlock";
-import astroCode from "~/components/_Index/codeBlock/astroCode";
-import qwikCode from "~/components/_Index/codeBlock/qwikCode";
-import reactCode from "~/components/_Index/codeBlock/reactCode";
-import reactCode2 from "~/components/_Index/codeBlock/reactCode2";
-import renderIndexCodeBlock from "~/utils/shikiji/renderIndexCodeBlock";
+import type codeBlock from '~/components/_Index/codeBlock';
+import astroCode from '~/components/_Index/codeBlock/astroCode';
+import qwikCode from '~/components/_Index/codeBlock/qwikCode';
+import reactCode from '~/components/_Index/codeBlock/reactCode';
+import reactCode2 from '~/components/_Index/codeBlock/reactCode2';
+import renderIndexCodeBlock from '~/utils/shikiji/renderIndexCodeBlock';
 
 export default async () => {
   return {

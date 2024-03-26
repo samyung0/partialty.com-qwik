@@ -1,10 +1,10 @@
-import { createQwikCity } from "@builder.io/qwik-city/middleware/node";
-import fastifyStatic from "@fastify/static";
-import qwikCityPlan from "@qwik-city-plan";
-import type { FastifyPluginAsync } from "fastify";
-import fastifyPlugin from "fastify-plugin";
+import { createQwikCity } from '@builder.io/qwik-city/middleware/node';
+import fastifyStatic from '@fastify/static';
+import qwikCityPlan from '@qwik-city-plan';
+import type { FastifyPluginAsync } from 'fastify';
+import fastifyPlugin from 'fastify-plugin';
 
-import render from "../entry.ssr";
+import render from '../entry.ssr';
 
 export interface FastifyQwikOptions {
   distDir: string;
@@ -18,9 +18,9 @@ const qwikPlugin: FastifyPluginAsync<FastifyQwikOptions> = async (fastify, optio
 
   fastify.register(fastifyStatic, {
     root: buildDir,
-    prefix: "/build",
+    prefix: '/build',
     immutable: true,
-    maxAge: "1y",
+    maxAge: '1y',
     decorateReply: false,
   });
 
@@ -36,4 +36,4 @@ const qwikPlugin: FastifyPluginAsync<FastifyQwikOptions> = async (fastify, optio
   });
 };
 
-export default fastifyPlugin(qwikPlugin, { fastify: "4.x" });
+export default fastifyPlugin(qwikPlugin, { fastify: '4.x' });

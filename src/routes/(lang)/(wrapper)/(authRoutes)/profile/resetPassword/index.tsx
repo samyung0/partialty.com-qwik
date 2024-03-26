@@ -1,29 +1,26 @@
-import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
-import { routeLoader$ } from "@builder.io/qwik-city";
-import { useResetPassword } from "~/action/userAction";
-import { auth } from "~/auth/lucia";
+import { component$, useSignal, useStore, useTask$ } from '@builder.io/qwik';
+import type { DocumentHead } from '@builder.io/qwik-city';
+import { routeLoader$ } from '@builder.io/qwik-city';
+import { useResetPassword } from '~/action/userAction';
+import { auth } from '~/auth/lucia';
 
-import { eq } from "drizzle-orm";
-import LoadingSVG from "~/components/LoadingSVG";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import drizzleClient from "~/utils/drizzleClient";
-import { user_key } from "../../../../../../../drizzle_turso/schema/user_key";
+import { eq } from 'drizzle-orm';
+import LoadingSVG from '~/components/LoadingSVG';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import drizzleClient from '~/utils/drizzleClient';
+import { user_key } from '../../../../../../../drizzle_turso/schema/user_key';
 
 export const useCanResetPasswordLoader = routeLoader$<[boolean, string]>(async (requestEvent) => {
   const user = await requestEvent.resolveValue(useUserLoader);
-  const keys = await auth(
-    requestEvent.env,
-    import.meta.env.VITE_USE_PROD_DB === "1"
-  ).getAllUserKeys(user.userId);
-  const emailKey = keys.filter((key) => key.providerId === "email");
+  const keys = await auth(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === '1').getAllUserKeys(user.userId);
+  const emailKey = keys.filter((key) => key.providerId === 'email');
   const hash =
     (
-      await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === "1")
+      await drizzleClient(requestEvent.env, import.meta.env.VITE_USE_PROD_DB === '1')
         .select({ hashed_password: user_key.hashed_password })
         .from(user_key)
         .where(eq(user_key.user_id, user.userId))
-    )[0].hashed_password || "";
+    )[0].hashed_password || '';
   return [emailKey.length > 0, hash];
 });
 
@@ -34,44 +31,41 @@ export default component$(() => {
   const resetPassword = useResetPassword();
   const isSubmitting = useSignal(false);
   const formError = useStore({
-    oldPassword: "",
-    newPassword: "",
-    rePassword: "",
-    wrongInfo: "",
+    oldPassword: '',
+    newPassword: '',
+    rePassword: '',
+    wrongInfo: '',
   });
   const formData = useStore({
     userId: user.userId,
     hash: useCanResetPasswordLoader().value[1],
-    oldPassword: "",
-    newPassword: "",
-    rePassword: "",
+    oldPassword: '',
+    newPassword: '',
+    rePassword: '',
   });
   useTask$(({ track }) => {
     track(resetPassword);
-    formError.oldPassword = "";
-    formError.newPassword = "";
-    formError.rePassword = "";
-    formError.wrongInfo = "";
+    formError.oldPassword = '';
+    formError.newPassword = '';
+    formError.rePassword = '';
+    formError.wrongInfo = '';
     if (resetPassword.status === 400) {
-      formError.newPassword = resetPassword.value?.fieldErrors?.newPassword?.join("\n") ?? "";
-      formError.oldPassword = resetPassword.value?.fieldErrors?.oldPassword?.join("\n") ?? "";
-      formError.rePassword = resetPassword.value?.fieldErrors?.rePassword?.join("\n") ?? "";
+      formError.newPassword = resetPassword.value?.fieldErrors?.newPassword?.join('\n') ?? '';
+      formError.oldPassword = resetPassword.value?.fieldErrors?.oldPassword?.join('\n') ?? '';
+      formError.rePassword = resetPassword.value?.fieldErrors?.rePassword?.join('\n') ?? '';
       if (resetPassword.value?.formErrors && resetPassword.value.formErrors.length > 0)
-        formError.rePassword = resetPassword.value.formErrors.join("\n");
+        formError.rePassword = resetPassword.value.formErrors.join('\n');
     }
     if (resetPassword.status === 500) {
-      if (resetPassword.value?.message === `Wrong old password!`)
-        formError.oldPassword = resetPassword.value.message;
+      if (resetPassword.value?.message === `Wrong old password!`) formError.oldPassword = resetPassword.value.message;
       else formError.wrongInfo = resetPassword.value?.message;
     }
-    if (resetPassword.status === 200) (window as any).location = "/profile/";
+    if (resetPassword.status === 200) (window as any).location = '/profile/';
   });
   return (
     <section class="flex h-[100vh] items-center justify-center bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray">
       <div class="dark:border-trasparent flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-primary-dark-gray bg-background-light-gray py-10 dark:bg-black/20 md:w-[50vw] md:min-w-[400px] md:max-w-[700px] md:gap-6 md:py-16">
-        <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider md:text-[2.5rem]">
-          Reset Password
-        </h1>
+        <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider md:text-[2.5rem]">Reset Password</h1>
         {!canResetPassword && (
           <>
             <p class="block px-8 pb-4 text-center text-[0.875rem] text-tomato md:text-[1rem] lg:w-[500px] lg:px-12 lg:pb-6">
@@ -85,10 +79,10 @@ export default component$(() => {
             onSubmit$={() => {
               if (!canResetPassword) return;
               isSubmitting.value = true;
-              formError.oldPassword = "";
-              formError.newPassword = "";
-              formError.rePassword = "";
-              formError.wrongInfo = "";
+              formError.oldPassword = '';
+              formError.newPassword = '';
+              formError.rePassword = '';
+              formError.wrongInfo = '';
               resetPassword.submit(formData).then(() => {
                 isSubmitting.value = false;
               });
@@ -109,8 +103,8 @@ export default component$(() => {
                   onInput$={(e, eventTarget) => (formData.oldPassword = eventTarget.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20  dark:disabled:bg-black/20 md:text-[1rem] " +
-                    (formError.oldPassword ? "border-tomato" : "border-black/10")
+                    'block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20  dark:disabled:bg-black/20 md:text-[1rem] ' +
+                    (formError.oldPassword ? 'border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -132,8 +126,8 @@ export default component$(() => {
                   onInput$={(e, eventTarget) => (formData.newPassword = eventTarget.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20   dark:disabled:bg-black/20 md:text-[1rem] " +
-                    (formError.newPassword ? "border-tomato" : "border-black/10")
+                    'block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20   dark:disabled:bg-black/20 md:text-[1rem] ' +
+                    (formError.newPassword ? 'border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -155,10 +149,8 @@ export default component$(() => {
                   onInput$={(_, el) => (formData.rePassword = el.value)}
                   required
                   class={
-                    "block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20   dark:disabled:bg-black/20 md:text-[1rem] " +
-                    (formError.rePassword || formError.wrongInfo
-                      ? "border-tomato"
-                      : "border-black/10")
+                    'block w-full rounded-md border-2 px-3 py-2 text-[0.875rem] disabled:bg-gray-300 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20   dark:disabled:bg-black/20 md:text-[1rem] ' +
+                    (formError.rePassword || formError.wrongInfo ? 'border-tomato' : 'border-black/10')
                   }
                 />
               </div>
@@ -187,11 +179,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Reset Password",
+  title: 'Reset Password',
   meta: [
     {
-      name: "description",
-      content: "A page to reset your password.",
+      name: 'description',
+      content: 'A page to reset your password.',
     },
   ],
 };

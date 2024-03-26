@@ -1,28 +1,28 @@
-import { component$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
-import { IoTimeOutline } from "@qwikest/icons/ionicons";
+import { component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
+import { IoTimeOutline } from '@qwikest/icons/ionicons';
 
 const currentGuides = [
   {
-    slug: "Introduction to Web",
+    slug: 'Introduction to Web',
     completed: true,
   },
   {
-    slug: "Introduction to meta-frameworks",
+    slug: 'Introduction to meta-frameworks',
     completed: false,
   },
 ] as const;
 
 const guidesInfo = {
-  "Introduction to Web": {
-    name: "Introduction to Web",
+  'Introduction to Web': {
+    name: 'Introduction to Web',
     readingTime: 20,
-    link: "/members/dashboard/",
+    link: '/members/dashboard/',
   },
-  "Introduction to meta-frameworks": {
-    name: "Introduction to meta-frameworks",
+  'Introduction to meta-frameworks': {
+    name: 'Introduction to meta-frameworks',
     readingTime: 10,
-    link: "/members/dashboard/",
+    link: '/members/dashboard/',
   },
 };
 
@@ -37,22 +37,16 @@ export default component$(() => {
               class=" rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3"
               key={`currentGuides${currentGuide.slug}`}
             >
-              <Link
-                class="flex items-center justify-between "
-                href={guidesInfo[currentGuide.slug].link}
-                prefetch
-              >
+              <Link class="flex items-center justify-between " href={guidesInfo[currentGuide.slug].link} prefetch>
                 <div class="flex flex-col gap-1">
-                  <h2 class="text-base md:text-lg md:tracking-wide">
-                    {guidesInfo[currentGuide.slug].name}
-                  </h2>
+                  <h2 class="text-base md:text-lg md:tracking-wide">{guidesInfo[currentGuide.slug].name}</h2>
                   <p class="flex items-center gap-1">
                     <span class="-mt-[2px] flex items-center text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                       <IoTimeOutline />
                     </span>
                     <span class="text-[0.75rem] md:text-[1rem]">
                       {guidesInfo[currentGuide.slug].readingTime} min
-                      {guidesInfo[currentGuide.slug].readingTime > 1 ? "s" : ""} read
+                      {guidesInfo[currentGuide.slug].readingTime > 1 ? 's' : ''} read
                     </span>
                   </p>
                 </div>

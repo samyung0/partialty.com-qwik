@@ -12,7 +12,7 @@ const code = `export default function MyApp() {
 // export const reactCodeRendered = renderIndexCodeBlock({ code });
 const _reactCodeBlankChar = [0];
 Array.from(code).forEach((char: string) => {
-  if (char === "\n") _reactCodeBlankChar.push(0);
+  if (char === '\n') _reactCodeBlankChar.push(0);
   else _reactCodeBlankChar[_reactCodeBlankChar.length - 1]++;
 });
 export const reactCodeBlankChar = _reactCodeBlankChar;

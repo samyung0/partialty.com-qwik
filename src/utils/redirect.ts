@@ -1,17 +1,14 @@
-import { protectedRoutes } from "~/utils/protectedRoutes";
+import { protectedRoutes } from '~/utils/protectedRoutes';
 
 const removeTrailing = (path: string) => {
-  if (path === "/") return path;
-  if (path.endsWith("/")) return path.slice(0, path.length - 1);
+  if (path === '/') return path;
+  if (path.endsWith('/')) return path.slice(0, path.length - 1);
   return path;
 };
 
-export const checkProtectedPath = (
-  path: string | undefined,
-  role: any
-): [boolean, string, URLSearchParams] => {
+export const checkProtectedPath = (path: string | undefined, role: any): [boolean, string, URLSearchParams] => {
   let shouldRedirect = false,
-    redirectTo = "/"; // default to base
+    redirectTo = '/'; // default to base
   const searchParams = new URLSearchParams();
 
   // in case somehow the path is empty, redirect to homepage and refresh
@@ -23,7 +20,7 @@ export const checkProtectedPath = (
         ? removeTrailing(i.path) === removeTrailing(path)
         : removeTrailing(path).startsWith(removeTrailing(i.path))
     ) {
-      searchParams.append("redirectedFrom", path || "/");
+      searchParams.append('redirectedFrom', path || '/');
       redirectTo = i.redirectTo;
       if (i.authRolesPermitted.length > 0) shouldRedirect = !i.authRolesPermitted.includes(role);
       else shouldRedirect = !!role; // if no roles permitted, then only UNAUTHED persons can access

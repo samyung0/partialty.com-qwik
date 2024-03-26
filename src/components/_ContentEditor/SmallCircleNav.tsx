@@ -1,10 +1,10 @@
 /** @jsxImportSource react */
 
-import { EllipsisVertical, Eye, Menu, NotebookPen, Save } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
-import { useSlateStatic } from "slate-react";
-import serialize from "./serialize";
+import { EllipsisVertical, Eye, Menu, NotebookPen, Save } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import Draggable from 'react-draggable';
+import { useSlateStatic } from 'slate-react';
+import serialize from './serialize';
 
 export default ({
   toggleSmallCircleNav,
@@ -57,11 +57,11 @@ export default ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const eventControl = (event: { type: any }, info: any) => {
-    if (event.type === "mousemove" || event.type === "touchmove") {
+    if (event.type === 'mousemove' || event.type === 'touchmove') {
       setIsDragging(true);
     }
 
-    if (event.type === "mouseup" || event.type === "touchend") {
+    if (event.type === 'mouseup' || event.type === 'touchend') {
       setTimeout(() => {
         setIsDragging(false);
       }, 100);
@@ -105,9 +105,9 @@ export default ({
     const audio_track_asset_id = audioTrack?.id;
     const isEmpty =
       editorContent.length === 1 &&
-      (editorContent[0] as any).type === "paragraph" &&
+      (editorContent[0] as any).type === 'paragraph' &&
       (editorContent[0] as any).children.length === 1 &&
-      (editorContent[0] as any).children[0].text === "";
+      (editorContent[0] as any).children[0].text === '';
     await saveChanges(
       isEmpty ? null : JSON.stringify(editorContent),
       renderedHTML,
@@ -120,7 +120,7 @@ export default ({
   return (
     <Draggable onDrag={eventControl} onStop={eventControl} bounds="parent">
       <div className="content block text-background-light-gray xl:hidden">
-        <ul id="menu" className={openSmallCircleNav ? "menuOpened" : ""}>
+        <ul id="menu" className={openSmallCircleNav ? 'menuOpened' : ''}>
           <button
             className="menu-button flex items-center justify-center bg-primary-dark-gray text-white dark:bg-highlight-dark"
             onClick={() => {

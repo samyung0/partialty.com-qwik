@@ -1,10 +1,10 @@
 /** @jsxImportSource react */
 
-import { qwikify$ } from "@builder.io/qwik-react";
-import { Gem, Rocket, Tags } from "lucide-react";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { cn } from "~/utils/cn";
-import type { Tag } from "../../../../../drizzle_turso/schema/tag";
+import { qwikify$ } from '@builder.io/qwik-react';
+import { Gem, Rocket, Tags } from 'lucide-react';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { cn } from '~/utils/cn';
+import type { Tag } from '../../../../../drizzle_turso/schema/tag';
 
 const component = ({
   course,
@@ -25,7 +25,7 @@ const component = ({
   children?: React.ReactNode[];
 }) => (
   <ResponsiveMasonry columnsCountBreakPoints={{ 640: 1, 768: 2, 1280: 3 }}>
-    <Masonry gutter={"12px"}>
+    <Masonry gutter={'12px'}>
       {course.map((course) => (
         <a
           href={course.link || undefined}
@@ -40,10 +40,10 @@ const component = ({
             </span>
             <p
               className={cn(
-                "self-start border-b-2 pb-1",
-                course.difficulty === "easy" && "border-sea",
-                course.difficulty === "intermediate" && "border-custom-yellow",
-                course.difficulty === "advanced" && "border-custom-pink"
+                'self-start border-b-2 pb-1',
+                course.difficulty === 'easy' && 'border-sea',
+                course.difficulty === 'intermediate' && 'border-custom-yellow',
+                course.difficulty === 'advanced' && 'border-custom-pink'
               )}
             >
               {course.difficulty}
@@ -59,7 +59,7 @@ const component = ({
                   .map((tagId) => tags.find((tag) => tag.id === tagId))
                   .filter((x) => x)
                   .map((tag) => tag!.name)
-                  .join(", ")}
+                  .join(', ')}
               </p>
             </div>
           )}
@@ -79,4 +79,4 @@ const component = ({
   </ResponsiveMasonry>
 );
 
-export default qwikify$(component, { eagerness: "load" });
+export default qwikify$(component, { eagerness: 'load' });

@@ -8,11 +8,9 @@ const protocolAndDomainRE =
  * Loosely validate a URL `string`.
  */
 export const isUrl = (string: any) => {
-  if (typeof string !== "string") {
+  if (typeof string !== 'string') {
     return false;
   }
 
-  return (
-    emailLintRE.test(string) || localhostDomainRE.test(string) || protocolAndDomainRE.test(string)
-  );
+  return emailLintRE.test(string) || localhostDomainRE.test(string) || protocolAndDomainRE.test(string);
 };

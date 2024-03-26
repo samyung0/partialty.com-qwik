@@ -11,7 +11,7 @@ import MySvelteButton from './MySvelteButton.svelte';
 </div>`;
 var _astroCodeBlankChar = [0];
 Array.from(code).forEach((char) => {
-  if (char === "\n") _astroCodeBlankChar.push(0);
+  if (char === '\n') _astroCodeBlankChar.push(0);
   else _astroCodeBlankChar[_astroCodeBlankChar.length - 1]++;
 });
 var astroCodeBlankChar = _astroCodeBlankChar;
@@ -24,7 +24,7 @@ export default component$(() => {
 });`;
 var _qwikCodeBlankChar = [0];
 Array.from(code2).forEach((char) => {
-  if (char === "\n") _qwikCodeBlankChar.push(0);
+  if (char === '\n') _qwikCodeBlankChar.push(0);
   else _qwikCodeBlankChar[_qwikCodeBlankChar.length - 1]++;
 });
 var qwikCodeBlankChar = _qwikCodeBlankChar;
@@ -39,7 +39,7 @@ var code3 = `export default function MyApp() {
 }`;
 var _reactCodeBlankChar = [0];
 Array.from(code3).forEach((char) => {
-  if (char === "\n") _reactCodeBlankChar.push(0);
+  if (char === '\n') _reactCodeBlankChar.push(0);
   else _reactCodeBlankChar[_reactCodeBlankChar.length - 1]++;
 });
 var reactCodeBlankChar = _reactCodeBlankChar;
@@ -59,7 +59,7 @@ var code4 = `export default function MyApp() {
 }`;
 var _reactCode2BlankChar = [0];
 Array.from(code4).forEach((char) => {
-  if (char === "\n") _reactCode2BlankChar.push(0);
+  if (char === '\n') _reactCode2BlankChar.push(0);
   else _reactCode2BlankChar[_reactCode2BlankChar.length - 1]++;
 });
 var reactCode2BlankChar = _reactCode2BlankChar;

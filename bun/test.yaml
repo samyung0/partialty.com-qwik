@@ -1,5 +1,5 @@
 config:
-  target: "wss://api.partialty.com/content/ws"
+  target: 'wss://api.partialty.com/content/ws'
   phases:
     - duration: 20
       arrivalRate: 10
@@ -9,5 +9,5 @@ scenarios:
   - engine: ws
     name: Echo a string
     flow:
-      - connect: "{{ target }}"
+      - connect: '{{ target }}'
       - send: '{"type": "echo"}'

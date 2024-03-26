@@ -1,36 +1,36 @@
 /** @jsxImportSource react */
 
-import { ArrowDown, ArrowUp, Trash } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 export const PredefinedColorList = {
-  yellow: "#fcd34d",
-  "middle-yellow": "#FDE594",
-  "light-yellow": "#fef6db",
-  mint: "#6fdcbf",
-  "middle-mint": "#A9EAD9",
-  "light-mint": "#e2f8f2",
-  lilac: "#ae8fdb",
-  "middle-lilac": "#CFBCEA",
-  "light-lilac": "#efe9f8",
-  sea: "#72cada",
-  "middle-sea": "#ABDFE9",
-  "light-sea": "#e3f4f8",
-  sherbet: "#fef8b4",
-  "mddle-sherbet": "#FFFACB",
-  "light-sherbet": "#fffce1",
-  pink: "#f7b8c2",
-  "middle-pink": "#F7B8C2",
-  "light-pink": "#fdf1f3",
-  rose: "#dc849b",
-  "middle-rose": "#EAB5C3",
-  "light-rose": "#f8e6eb",
-  tomato: "#ff6347",
-  "middle-tomato": "#FFA291",
-  "light-tomato": "#ffe0da",
-  "bright-yellow": "#ffff43",
-  "primary-dark-gray": "#1f2937",
-  "background-light-gray": "#f7f7f7",
+  yellow: '#fcd34d',
+  'middle-yellow': '#FDE594',
+  'light-yellow': '#fef6db',
+  mint: '#6fdcbf',
+  'middle-mint': '#A9EAD9',
+  'light-mint': '#e2f8f2',
+  lilac: '#ae8fdb',
+  'middle-lilac': '#CFBCEA',
+  'light-lilac': '#efe9f8',
+  sea: '#72cada',
+  'middle-sea': '#ABDFE9',
+  'light-sea': '#e3f4f8',
+  sherbet: '#fef8b4',
+  'mddle-sherbet': '#FFFACB',
+  'light-sherbet': '#fffce1',
+  pink: '#f7b8c2',
+  'middle-pink': '#F7B8C2',
+  'light-pink': '#fdf1f3',
+  rose: '#dc849b',
+  'middle-rose': '#EAB5C3',
+  'light-rose': '#f8e6eb',
+  tomato: '#ff6347',
+  'middle-tomato': '#FFA291',
+  'light-tomato': '#ffe0da',
+  'bright-yellow': '#ffff43',
+  'primary-dark-gray': '#1f2937',
+  'background-light-gray': '#f7f7f7',
 };
 
 const ColorChooser = ({
@@ -78,7 +78,7 @@ const ColorChooser = ({
             style={{ background: color[1] }}
           >
             <button onClick={() => setColor(color[1])} className="h-full w-full">
-              {" "}
+              {' '}
             </button>
           </li>
         ))}
@@ -92,7 +92,7 @@ const ColorChooser = ({
             style={{ background: color[1] }}
           >
             <button onClick={() => setColorDarkMode(color[1])} className="h-full w-full">
-              {" "}
+              {' '}
             </button>
           </li>
         ))}
@@ -107,11 +107,7 @@ const ColorChooser = ({
           <label className="tracking-wide" htmlFor="underlineColorCustomize">
             Customize:
           </label>
-          <input
-            onChange={(e) => setColor(e.target.value)}
-            id="underlineColorCustomize"
-            type="color"
-          />
+          <input onChange={(e) => setColor(e.target.value)} id="underlineColorCustomize" type="color" />
         </div>
       </div>
       {canSync && (

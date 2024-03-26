@@ -1,6 +1,6 @@
-import { component$ } from "@builder.io/qwik";
-import { Correctness } from "./statistics/correctness";
-import { HourPerDay } from "./statistics/hourPerDay";
+import { component$ } from '@builder.io/qwik';
+import { Correctness } from './statistics/correctness';
+import { HourPerDay } from './statistics/hourPerDay';
 
 export default component$(() => {
   return (

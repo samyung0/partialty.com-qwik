@@ -1,12 +1,12 @@
 /* eslint-disable */
-const chokidar = require("chokidar");
+const chokidar = require('chokidar');
 
 chokidar
-  .watch(".", {
-    ignored: ["**/node_modules", "**/.git", "**/node_modules/**/*", "**/.git/**/*"],
-    cwd: ".", // needed, otherwise chokidar might return absolute path https://github.com/paulmillr/chokidar/issues/918
+  .watch('.', {
+    ignored: ['**/node_modules', '**/.git', '**/node_modules/**/*', '**/.git/**/*'],
+    cwd: '.', // needed, otherwise chokidar might return absolute path https://github.com/paulmillr/chokidar/issues/918
   })
-  .on("all", (event, path) => {
+  .on('all', (event, path) => {
     console.log(event, path);
   });
 

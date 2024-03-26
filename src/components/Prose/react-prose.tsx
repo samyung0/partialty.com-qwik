@@ -1,33 +1,33 @@
 /** @jsxImportSource react */
 
-import { useEffect, useRef } from "react";
-import { EMBED_URL } from "~/const";
+import { useEffect, useRef } from 'react';
+import { EMBED_URL } from '~/const';
 
 const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?: string }) => {
   const interval = useRef<any>();
   const isDark = useRef<boolean>(false);
   useEffect(() => {
-    console.log("hydrate embed");
-    const darkThemeDiv = document.getElementById("darkThemeDiv");
+    console.log('hydrate embed');
+    const darkThemeDiv = document.getElementById('darkThemeDiv');
     if (!darkThemeDiv) return;
     clearInterval(interval.current);
     interval.current = setInterval(() => {
       const dark = darkThemeDiv.className;
-      const shouldGoDark = dark === "dark" && !isDark.current;
-      const shouldGoLight = dark !== "dark" && isDark.current;
-      const iframeEmbed = Array.from(document.getElementsByClassName("iframeEmbed"));
+      const shouldGoDark = dark === 'dark' && !isDark.current;
+      const shouldGoLight = dark !== 'dark' && isDark.current;
+      const iframeEmbed = Array.from(document.getElementsByClassName('iframeEmbed'));
       iframeEmbed.forEach((iframe) => {
-        const iframeSrc = iframe.getAttribute("src");
+        const iframeSrc = iframe.getAttribute('src');
         if (iframeSrc && iframeSrc.startsWith(EMBED_URL)) {
           if (shouldGoDark) {
             isDark.current = true;
             const url = new URL(iframeSrc);
-            url.searchParams.set("dark", "1");
+            url.searchParams.set('dark', '1');
             (iframe as HTMLIFrameElement).src = url.toString();
           } else if (shouldGoLight) {
             isDark.current = false;
             const url = new URL(iframeSrc);
-            url.searchParams.delete("dark");
+            url.searchParams.delete('dark');
             (iframe as HTMLIFrameElement).src = url.toString();
           }
         }
@@ -36,7 +36,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
     return () => {
       clearInterval(interval.current);
       isDark.current = false;
-    }
+    };
   }, []);
   return innerHTML ? (
     // for preview

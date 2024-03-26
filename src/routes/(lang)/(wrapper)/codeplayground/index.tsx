@@ -1,4 +1,4 @@
-import type { NoSerialize } from "@builder.io/qwik";
+import type { NoSerialize } from '@builder.io/qwik';
 import {
   $,
   component$,
@@ -8,19 +8,19 @@ import {
   useSignal,
   useStore,
   useVisibleTask$,
-} from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
-import playgroundDefaultFiles from "~/__filesTest";
-import { RefreshIcon } from "~/assets/icon/refreshIcon";
-import { TerminalIcon } from "~/assets/icon/terminalIcon";
-import Editor from "~/components/_CodePlayground/editor/editor";
-import SampleCourse from "~/components/_CodePlayground/sampleCourse/sampleCourse";
-import { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
-import Terminal, { type TerminalStore } from "~/components/_CodePlayground/terminal/terminal";
-import { cn } from "~/utils/cn";
-import type { FileStore } from "~/utils/fileUtil";
+} from '@builder.io/qwik';
+import type { DocumentHead } from '@builder.io/qwik-city';
+import playgroundDefaultFiles from '~/__filesTest';
+import { RefreshIcon } from '~/assets/icon/refreshIcon';
+import { TerminalIcon } from '~/assets/icon/terminalIcon';
+import Editor from '~/components/_CodePlayground/editor/editor';
+import SampleCourse from '~/components/_CodePlayground/sampleCourse/sampleCourse';
+import { WebContainerInterface } from '~/components/_CodePlayground/serverInterface/serverInterface';
+import Terminal, { type TerminalStore } from '~/components/_CodePlayground/terminal/terminal';
+import { cn } from '~/utils/cn';
+import type { FileStore } from '~/utils/fileUtil';
 
-export const TerminalContext = createContextId<TerminalStore>("docs.terminal-context");
+export const TerminalContext = createContextId<TerminalStore>('docs.terminal-context');
 
 export default component$(() => {
   const serverInterface = useStore<{
@@ -35,17 +35,17 @@ export default component$(() => {
 
   // !!! file data is not stored in fileStore, it is fetched everytime when opening or saving
   const fileStore = useStore<FileStore>({
-    name: "",
-    path: "/", // root path
-    data: "",
+    name: '',
+    path: '/', // root path
+    data: '',
     isBinary: false,
     isFolder: true,
     entries: [],
     hasChanged: false,
   });
 
-  const displayBaseUrl = useSignal("");
-  const route = useSignal("/");
+  const displayBaseUrl = useSignal('');
+  const route = useSignal('/');
   const displayRef = useSignal<HTMLIFrameElement>(); // for displaying user output
   const terminalStore = useStore<TerminalStore>({
     fitAddon: null,
@@ -56,9 +56,9 @@ export default component$(() => {
   const editorSide = useSignal(true); // true: Editor false: Tutorial
   const terminalOpen = useSignal(false);
 
-  const onPortOpen = $((port: number, type: "open" | "close", url: string) => {
+  const onPortOpen = $((port: number, type: 'open' | 'close', url: string) => {
     console.log(port, type, url);
-    if (type === "open") {
+    if (type === 'open') {
       if (displayRef.value) {
         displayBaseUrl.value = url;
 
@@ -94,7 +94,7 @@ export default component$(() => {
 
       serverInterface.server?.onPort(onPortOpen);
       serverInterface.ready = true;
-      console.log("Server Interface is ready");
+      console.log('Server Interface is ready');
     }
   });
 
@@ -103,14 +103,14 @@ export default component$(() => {
       <div class="flex h-full max-w-[100vw] flex-nowrap overflow-hidden">
         <div
           class={` left-0 top-0 h-full min-w-[100vw] transition-transform duration-500  xl:w-[30%]   xl:min-w-[unset] xl:transform-none ${
-            editorSide.value && "-translate-x-full "
+            editorSide.value && '-translate-x-full '
           }`}
         >
           <SampleCourse />
         </div>
         <div
           class={`relative left-0 top-0 flex h-full max-h-[100vh] min-w-[100vw]  max-w-7xl   flex-col overflow-hidden transition-transform  duration-500 xl:w-[70%]  xl:min-w-[unset] xl:transform-none ${
-            editorSide.value && "-translate-x-full "
+            editorSide.value && '-translate-x-full '
           }`}
         >
           <Editor
@@ -132,7 +132,7 @@ export default component$(() => {
                 class="my-1 h-[25px] w-full rounded-full border border-dark bg-background-light-gray   pl-2  text-sm tracking-wide text-primary-dark-gray outline-none"
                 onInput$={(e, eventTarget) => (route.value = eventTarget.value)}
                 onKeyPress$={(e) => {
-                  if (e.code === "Enter" && displayRef.value) {
+                  if (e.code === 'Enter' && displayRef.value) {
                     console.log(displayBaseUrl.value + route.value);
                     displayRef.value.src = displayBaseUrl.value + route.value;
                   }
@@ -153,8 +153,8 @@ export default component$(() => {
           </div>
           <div
             class={cn(
-              "absolute bottom-0 z-20 w-full translate-y-full bg-white shadow-lg transition-all duration-500",
-              terminalOpen.value && "translate-y-0"
+              'absolute bottom-0 z-20 w-full translate-y-full bg-white shadow-lg transition-all duration-500',
+              terminalOpen.value && 'translate-y-0'
             )}
           >
             <Terminal />
@@ -182,11 +182,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Code Playground",
+  title: 'Code Playground',
   meta: [
     {
-      name: "description",
-      content: "Try out your app or project here!",
+      name: 'description',
+      content: 'Try out your app or project here!',
     },
   ],
 };

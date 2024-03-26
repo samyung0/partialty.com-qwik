@@ -1,33 +1,29 @@
 /* eslint-disable qwik/jsx-img */
 /** @jsxImportSource react */
-import imageExtensions from "image-extensions";
-import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Editor, Element as SlateElement, Transforms } from "slate";
-import type { RenderElementProps } from "slate-react";
-import { ReactEditor, useSlateStatic } from "slate-react";
-import uploadToCloudinary from "~/components/_ContentEditor/uploadToCloudinaryContentEditor";
-import {
-  CLOUDINARY_MAX_IMG_SIZE,
-  CLOUDINARY_MAX_PIXEL_COUNT,
-  CLOUDINARY_NAME,
-} from "~/const/cloudinary";
-import type { CloudinaryPublicPic } from "~/types/Cloudinary";
-import { isUrl } from "~/utils/isUrl";
+import imageExtensions from 'image-extensions';
+import { X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Editor, Element as SlateElement, Transforms } from 'slate';
+import type { RenderElementProps } from 'slate-react';
+import { ReactEditor, useSlateStatic } from 'slate-react';
+import uploadToCloudinary from '~/components/_ContentEditor/uploadToCloudinaryContentEditor';
+import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT, CLOUDINARY_NAME } from '~/const/cloudinary';
+import type { CloudinaryPublicPic } from '~/types/Cloudinary';
+import { isUrl } from '~/utils/isUrl';
 
-import { ExternalLink, Trash } from "lucide-react";
-import type { BaseRange } from "slate";
-import { Range } from "slate";
-import { useFocused, useSlate } from "slate-react";
+import { ExternalLink, Trash } from 'lucide-react';
+import type { BaseRange } from 'slate';
+import { Range } from 'slate';
+import { useFocused, useSlate } from 'slate-react';
 
-import { isBlockActive } from "~/components/_ContentEditor/blockFn";
-import type { ImageElement } from "~/components/_ContentEditor/types";
+import { isBlockActive } from '~/components/_ContentEditor/blockFn';
+import type { ImageElement } from '~/components/_ContentEditor/types';
 
 export const withImages = (editor: Editor) => {
   const { isVoid } = editor;
 
   editor.isVoid = (element) => {
-    return element.type === "image" ? true : isVoid(element);
+    return element.type === 'image' ? true : isVoid(element);
   };
 
   return editor;
@@ -50,33 +46,33 @@ export const HoveringImage = ({
   const editor = useSlate();
   const inFocus = useFocused();
 
-  const initialUrl = useRef("");
+  const initialUrl = useRef('');
   const prevSelection = useRef<BaseRange | null>();
 
   useEffect(() => {
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "image",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'image',
     });
     if (node) {
-      initialUrl.current = (node[0] as ImageElement).url || "";
+      initialUrl.current = (node[0] as ImageElement).url || '';
     }
-  }, [isBlockActive(editor, "image", "type")]);
+  }, [isBlockActive(editor, 'image', 'type')]);
 
   useEffect(() => {
     const el = ref.current;
     const { selection } = editor;
 
     if (!el || !selection) {
-      if (el && !selection) el.style.display = "none";
+      if (el && !selection) el.style.display = 'none';
       return;
     }
 
     prevSelection.current = selection;
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "image",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'image',
     });
     if (!node) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
     const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
@@ -84,12 +80,7 @@ export const HoveringImage = ({
     let parentNodeX: number = 0;
     if (parentRef.current) parentNodeX = parentRef.current.getBoundingClientRect().x;
 
-    const {
-      x: nodeX,
-      height: nodeHeight,
-      y: _nodeY,
-      width: nodeWidth,
-    } = linkDOMNode.getBoundingClientRect();
+    const { x: nodeX, height: nodeHeight, y: _nodeY, width: nodeWidth } = linkDOMNode.getBoundingClientRect();
 
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
@@ -99,22 +90,19 @@ export const HoveringImage = ({
         (prevSelection.current === undefined || prevSelection.current === null)) ||
       !Range.isCollapsed(selection)
     ) {
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
 
-    el.style.display = "flex";
-    el.style.top = `${Math.min(
-      nodeY + nodeHeight + offsetY,
-      window.innerHeight * 0.9 - el.offsetHeight
-    )}px`;
+    el.style.display = 'flex';
+    el.style.top = `${Math.min(nodeY + nodeHeight + offsetY, window.innerHeight * 0.9 - el.offsetHeight)}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
-    el.style.transform = "translateX(-50%)";
+    el.style.transform = 'translateX(-50%)';
   });
 
   return (
     <>
-      {isBlockActive(editor, "image", "type") && (
+      {isBlockActive(editor, 'image', 'type') && (
         <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           <div className="inline-flex rounded-md" role="group">
             <button
@@ -150,13 +138,13 @@ export const HoveringImage = ({
 
 export function toggleImageAtSelection(editor: Editor) {
   Transforms.removeNodes(editor, {
-    match: (n) => SlateElement.isElement(n) && n.type === "image",
+    match: (n) => SlateElement.isElement(n) && n.type === 'image',
   });
 }
 
 export const ImageBlock = ({ attributes, children, element }: RenderElementProps) => {
   const editor = useSlateStatic();
-  const [value, setValue] = useState(element.caption || "");
+  const [value, setValue] = useState(element.caption || '');
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const parentRef = useRef<any>();
@@ -164,25 +152,25 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   const height = (element as ImageElement).imageHeight;
   useEffect(() => {
     if (ref.current) {
-      ref.current.style.height = "auto";
+      ref.current.style.height = 'auto';
       ref.current.style.height = `${ref.current.scrollHeight}px`;
     }
   }, []);
   useEffect(() => {
-    parentRef.current = document.getElementById("ParentRefContainer");
+    parentRef.current = document.getElementById('ParentRefContainer');
   }, []);
   useEffect(() => {
     if (imageRef.current)
       new ResizeObserver((e) => {
-        if (parentRef.current && parentRef.current.className.includes("hidden")) return;
+        if (parentRef.current && parentRef.current.className.includes('hidden')) return;
         if (imageRef.current)
           editor.setNodes(
             {
               imageHeight: imageRef.current.offsetHeight,
             },
             {
-              match: (n) => SlateElement.isElement(n) && n.type === "image",
-              mode: "highest",
+              match: (n) => SlateElement.isElement(n) && n.type === 'image',
+              mode: 'highest',
             }
           );
       }).observe(imageRef.current);
@@ -195,12 +183,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
           className="flex items-center justify-center overflow-hidden [resize:vertical]"
           ref={imageRef}
         >
-          <img
-            width={400}
-            height={400}
-            src={element.url}
-            className="max-h-full w-[80%] flex-auto object-contain"
-          />
+          <img width={400} height={400} src={element.url} className="max-h-full w-[80%] flex-auto object-contain" />
         </div>
         <textarea
           ref={ref}
@@ -218,13 +201,13 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
             });
 
             if (ref.current) {
-              ref.current.style.height = "auto";
+              ref.current.style.height = 'auto';
               ref.current.style.height = `${e.target.scrollHeight}px`;
             }
           }}
           value={value}
           className="min-h-[1.25rem] w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
-          placeholder={"Enter some captions..."}
+          placeholder={'Enter some captions...'}
         />
         {children}
       </figure>
@@ -234,7 +217,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
 export const isImageUrl = (url: string) => {
   if (!url) return false;
   if (!isUrl(url)) return false;
-  const ext = new URL(url).pathname.split(".").pop();
+  const ext = new URL(url).pathname.split('.').pop();
   if (!ext) return false;
   return imageExtensions.includes(ext);
 };
@@ -265,11 +248,8 @@ export const CenterImageChooser = ({
       ][];
       setResolvedUserImages(
         t2
-          .filter((r) => r[0].status === "fulfilled")
-          .map((r) => [(r[0] as PromiseFulfilledResult<string>).value, r[1]]) as [
-          string,
-          CloudinaryPublicPic,
-        ][]
+          .filter((r) => r[0].status === 'fulfilled')
+          .map((r) => [(r[0] as PromiseFulfilledResult<string>).value, r[1]]) as [string, CloudinaryPublicPic][]
       );
     })();
   }, []);
@@ -281,9 +261,7 @@ export const CenterImageChooser = ({
           <X size={20} />
         </button>
         {resolvedUserImages.length === 0 && (
-          <div className="text-lg tracking-wide">
-            Uh Oh. It seems like you haven't uploaded any images yet.
-          </div>
+          <div className="text-lg tracking-wide">Uh Oh. It seems like you haven't uploaded any images yet.</div>
         )}
         {resolvedUserImages.length > 0 && (
           <div className="mx-auto grid max-h-[60vh] w-full  items-start justify-center gap-6 overflow-auto [grid-template-columns:repeat(auto-fill,220px)] [grid-template-rows:repeat(auto-fit,220px)]">
@@ -301,21 +279,18 @@ export const CenterImageChooser = ({
                         public_id: imgData.public_id,
                       },
                       {
-                        match: (n) =>
-                          SlateElement.isElement(n) &&
-                          Editor.isBlock(editor, n) &&
-                          n.type === "image",
-                        mode: "highest",
+                        match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type === 'image',
+                        mode: 'highest',
                       }
                     );
                     ReactEditor.deselect(editor);
                   } else {
                     editor.insertNode(
                       {
-                        type: "image",
+                        type: 'image',
                         url: `https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${imgData.public_id}`,
                         public_id: imgData.public_id,
-                        children: [{ text: "" }],
+                        children: [{ text: '' }],
                       },
                       {
                         at: editor.selection,
@@ -342,9 +317,7 @@ export const CenterImageChooser = ({
           <label htmlFor="uploadImage">
             {!isUploading ? (
               <p className="cursor-pointer text-lg underline decoration-wavy underline-offset-8">
-                {resolvedUserImages.length === 0
-                  ? "start by uploading an image"
-                  : "or upload a new picture"}
+                {resolvedUserImages.length === 0 ? 'start by uploading an image' : 'or upload a new picture'}
               </p>
             ) : (
               <span>
@@ -372,34 +345,28 @@ export const CenterImageChooser = ({
                 const file = e.target.files[0];
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onabort = () => alert("Cannot load image!");
-                reader.onerror = () => alert("Cannot load image!");
+                reader.onabort = () => alert('Cannot load image!');
+                reader.onerror = () => alert('Cannot load image!');
                 reader.onload = () => {
                   if (!reader.result) {
-                    alert("Cannot load image!");
+                    alert('Cannot load image!');
                     return;
                   }
                   const img = new Image();
                   img.src = reader.result as string;
                   img.onload = async () => {
-                    if (
-                      file.size > CLOUDINARY_MAX_IMG_SIZE ||
-                      img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT
-                    ) {
-                      alert("The picture is too large!");
+                    if (file.size > CLOUDINARY_MAX_IMG_SIZE || img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT) {
+                      alert('The picture is too large!');
                       return;
                     }
                     setIsUploading(true);
                     try {
-                      const res = (await uploadToCloudinary(
-                        reader.result as string,
-                        userId
-                      )) as CloudinaryPublicPic;
-                      console.log("URL", res.secure_url);
+                      const res = (await uploadToCloudinary(reader.result as string, userId)) as CloudinaryPublicPic;
+                      console.log('URL', res.secure_url);
                       const blob = await fetch(res.secure_url)
                         .then((res) => res.blob())
                         .then((blob) => URL.createObjectURL(blob));
-                      console.log("BLOB", blob);
+                      console.log('BLOB', blob);
                       // put the new image at front since we sorted it by created_at desc
                       setResolvedUserImages([[blob, res], ...resolvedUserImages]);
                       setIsUploading(false);

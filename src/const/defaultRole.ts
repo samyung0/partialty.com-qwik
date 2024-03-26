@@ -1,1 +1,1 @@
-export const DEFAULTROLE = "free";
+export const DEFAULTROLE = 'free';

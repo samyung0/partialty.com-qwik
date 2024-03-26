@@ -2,8 +2,8 @@
 // it is not systematic at this moment
 // if new routes are added, redirecting needs to be added again for that layout
 
-import { ROLES_PERITTED_TO_EDITCONTENT, ROLES_PERITTED_TO_UPLOAD_R2 } from "~/const";
-import { profiles } from "../../drizzle_turso/schema/profiles";
+import { ROLES_PERITTED_TO_EDITCONTENT, ROLES_PERITTED_TO_UPLOAD_R2 } from '~/const';
+import { profiles } from '../../drizzle_turso/schema/profiles';
 
 export const protectedRoutes: {
   path: string;
@@ -12,40 +12,40 @@ export const protectedRoutes: {
   exact?: boolean;
 }[] = [
   {
-    path: "/members", // also matches for /members /members/a /members/a/b
+    path: '/members', // also matches for /members /members/a /members/a/b
     authRolesPermitted: profiles.role.enumValues, // the roles are matched against the roles in profile, NOT auth
     // if you need to test against profile roles, test it after the page loads, meaning you need to implement a loading screen and redirect if roles doesnt match
-    redirectTo: "/unauth/",
+    redirectTo: '/unauth/',
   },
   {
-    path: "/profile",
+    path: '/profile',
     authRolesPermitted: profiles.role.enumValues,
-    redirectTo: "/unauth/",
+    redirectTo: '/unauth/',
   },
   {
-    path: "/creator",
+    path: '/creator',
     authRolesPermitted: ROLES_PERITTED_TO_EDITCONTENT,
-    redirectTo: "/unauth/",
+    redirectTo: '/unauth/',
   },
   {
-    path: "/login",
+    path: '/login',
     authRolesPermitted: [], // anything but authenticated
-    redirectTo: "/members/dashboard/", // if logged in, redirect to dashboard
+    redirectTo: '/members/dashboard/', // if logged in, redirect to dashboard
   },
   {
-    path: "/signup",
+    path: '/signup',
     authRolesPermitted: [], // anything but authenticated
-    redirectTo: "/members/dashboard/", // if logged in, redirect to dashboard
+    redirectTo: '/members/dashboard/', // if logged in, redirect to dashboard
   },
   {
-    path: "/uploadRepo",
+    path: '/uploadRepo',
     authRolesPermitted: ROLES_PERITTED_TO_UPLOAD_R2,
-    redirectTo: "/unauth/",
+    redirectTo: '/unauth/',
   },
 
   {
-    path: "/contenteditor",
+    path: '/contenteditor',
     authRolesPermitted: ROLES_PERITTED_TO_EDITCONTENT,
-    redirectTo: "/unauth/",
+    redirectTo: '/unauth/',
   },
 ];

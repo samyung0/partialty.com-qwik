@@ -1,26 +1,26 @@
-import { parse as parseJS } from "@babel/parser";
-import { parse as parseVue3 } from "@vue/compiler-dom";
-import * as parseCSS from "css-tree";
-import { parser as parseHTML } from "posthtml-parser";
-import { parse as parseSQL } from "sql-parser-cst";
-import { parse as parseSvelte } from "svelte-parse-markup";
+import { parse as parseJS } from '@babel/parser';
+import { parse as parseVue3 } from '@vue/compiler-dom';
+import * as parseCSS from 'css-tree';
+import { parser as parseHTML } from 'posthtml-parser';
+import { parse as parseSQL } from 'sql-parser-cst';
+import { parse as parseSvelte } from 'svelte-parse-markup';
 
 export default {
   js: (code: string) => {
     const removeASTLocationAndExtra = (ast: any) => {
       if (Array.isArray(ast)) {
         ast.forEach((a) => removeASTLocationAndExtra(a));
-      } else if (typeof ast === "object" && ast !== null) {
-        delete ast["loc"];
-        delete ast["start"];
-        delete ast["end"];
-        delete ast["extra"];
-        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === "object");
+      } else if (typeof ast === 'object' && ast !== null) {
+        delete ast['loc'];
+        delete ast['start'];
+        delete ast['end'];
+        delete ast['extra'];
+        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === 'object');
         removeASTLocationAndExtra(values);
       }
     };
     try {
-      const parsed = parseJS(code, { sourceType: "module", plugins: ["jsx", "typescript"] });
+      const parsed = parseJS(code, { sourceType: 'module', plugins: ['jsx', 'typescript'] });
       removeASTLocationAndExtra(parsed);
       return parsed;
     } catch (e) {
@@ -31,9 +31,9 @@ export default {
     const removeLoc = (ast: any) => {
       if (Array.isArray(ast)) {
         ast.forEach((a) => removeLoc(a));
-      } else if (typeof ast === "object" && ast !== null) {
-        delete ast["loc"];
-        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === "object");
+      } else if (typeof ast === 'object' && ast !== null) {
+        delete ast['loc'];
+        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === 'object');
         removeLoc(values);
       }
     };
@@ -57,12 +57,12 @@ export default {
     const removeASTLocationAndRaw = (ast: any) => {
       if (Array.isArray(ast)) {
         ast.forEach((a) => removeASTLocationAndRaw(a));
-      } else if (typeof ast === "object" && ast !== null) {
-        delete ast["loc"];
-        delete ast["start"];
-        delete ast["end"];
-        delete ast["raw"];
-        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === "object");
+      } else if (typeof ast === 'object' && ast !== null) {
+        delete ast['loc'];
+        delete ast['start'];
+        delete ast['end'];
+        delete ast['raw'];
+        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === 'object');
         removeASTLocationAndRaw(values);
       }
     };
@@ -76,16 +76,16 @@ export default {
     const remove = (ast: any) => {
       if (Array.isArray(ast)) {
         ast.forEach((a) => remove(a));
-      } else if (typeof ast === "object" && ast !== null) {
-        delete ast["loc"];
-        delete ast["start"];
-        delete ast["end"];
-        delete ast["type"];
-        delete ast["codegenNode"];
-        delete ast["tagType"];
-        delete ast["ns"];
+      } else if (typeof ast === 'object' && ast !== null) {
+        delete ast['loc'];
+        delete ast['start'];
+        delete ast['end'];
+        delete ast['type'];
+        delete ast['codegenNode'];
+        delete ast['tagType'];
+        delete ast['ns'];
 
-        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === "object");
+        const values = Object.values(ast).filter((v) => Array.isArray(v) || typeof v === 'object');
         remove(values);
       }
     };
@@ -98,7 +98,7 @@ export default {
   mysql: (code: string) => {
     try {
       return parseSQL(code, {
-        dialect: "mysql",
+        dialect: 'mysql',
       });
     } catch (e) {
       console.error(e);

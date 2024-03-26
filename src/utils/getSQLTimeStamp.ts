@@ -1,1 +1,1 @@
-export default () => new Date().toISOString().slice(0, 19).replace("T", " ");
+export default () => new Date().toISOString().slice(0, 19).replace('T', ' ');

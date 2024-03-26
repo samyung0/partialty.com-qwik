@@ -1,4 +1,4 @@
-import { z } from "@builder.io/qwik-city";
+import { z } from '@builder.io/qwik-city';
 
 export const CloudinaryDefaultPicSchema = z.object({
   width: z.number(),

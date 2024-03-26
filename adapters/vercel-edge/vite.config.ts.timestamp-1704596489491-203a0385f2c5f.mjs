@@ -1,22 +1,22 @@
 // adapters/vercel-edge/vite.config.ts
-import { vercelEdgeAdapter } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/adapters/vercel-edge/vite/index.mjs";
-import { extendConfig } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/vite/index.mjs";
+import { vercelEdgeAdapter } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/adapters/vercel-edge/vite/index.mjs';
+import { extendConfig } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/vite/index.mjs';
 
 // vite.config.ts
-import { qwikCity } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/vite/index.mjs";
-import { qwikVite } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik/optimizer.mjs";
-import { qwikSpeakInline } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/qwik-speak/inline/index.mjs";
-import compileTime from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite-plugin-compile-time/dist/index.mjs";
-import tsconfigPaths from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite-tsconfig-paths/dist/index.mjs";
-import { defineConfig } from "file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite/dist/node/index.js";
+import { qwikCity } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik-city/vite/index.mjs';
+import { qwikVite } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/@builder.io/qwik/optimizer.mjs';
+import { qwikSpeakInline } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/qwik-speak/inline/index.mjs';
+import compileTime from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite-plugin-compile-time/dist/index.mjs';
+import tsconfigPaths from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite-tsconfig-paths/dist/index.mjs';
+import { defineConfig } from 'file:///C:/WEB/PLAYGROUND/qwik/node_modules/vite/dist/node/index.js';
 
 // lang.json
 var lang_default = {
-  defaultLocale: { lang: "en-US", currency: "USD" },
+  defaultLocale: { lang: 'en-US', currency: 'USD' },
   supportedLocales: [
-    { lang: "zh-HK", currency: "HKD" },
-    { lang: "ja-JP", currency: "JPY" },
-    { lang: "en-US", currency: "USD" },
+    { lang: 'zh-HK', currency: 'HKD' },
+    { lang: 'ja-JP', currency: 'JPY' },
+    { lang: 'en-US', currency: 'USD' },
   ],
 };
 
@@ -24,7 +24,7 @@ var lang_default = {
 var config = {
   ...lang_default,
   assets: [
-    "app",
+    'app',
     // Translations shared by the pages
   ],
   runtimeAssets: [
@@ -35,8 +35,8 @@ var config = {
 // vite.config.ts
 var crossOriginIsolationMiddleware = (req, response, next) => {
   if (req.url && /^(\/.*)?\/codeplayground/.test(req.url)) {
-    response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-    response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+    response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    response.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
   }
   next();
 };
@@ -61,11 +61,11 @@ var vite_config_default = defineConfig(() => {
       qwikSpeakInline({
         supportedLangs: lang_default.supportedLocales.map((locale) => locale.lang),
         defaultLang: lang_default.defaultLocale.lang,
-        assetsPath: "i18n",
+        assetsPath: 'i18n',
       }),
       tsconfigPaths(),
       {
-        name: "cross-origin-isolation",
+        name: 'cross-origin-isolation',
         configureServer: (server) => {
           server.middlewares.use(crossOriginIsolationMiddleware);
         },
@@ -76,15 +76,15 @@ var vite_config_default = defineConfig(() => {
       compileTime(),
     ],
     // node_modules\@babel\types\lib\definitions\core.js
-    define: { "process.env.BABEL_TYPES_8_BREAKING": "false" },
+    define: { 'process.env.BABEL_TYPES_8_BREAKING': 'false' },
     dev: {
       headers: {
-        "Cache-Control": "public, max-age=0",
+        'Cache-Control': 'public, max-age=0',
       },
     },
     preview: {
       headers: {
-        "Cache-Control": "public, max-age=600",
+        'Cache-Control': 'public, max-age=600',
       },
     },
   };
@@ -96,9 +96,9 @@ var vite_config_default2 = extendConfig(vite_config_default, () => {
     build: {
       ssr: true,
       rollupOptions: {
-        input: ["src/entry.vercel-edge.tsx", "@qwik-city-plan"],
+        input: ['src/entry.vercel-edge.tsx', '@qwik-city-plan'],
       },
-      outDir: ".vercel/output/functions/_qwik-city.func",
+      outDir: '.vercel/output/functions/_qwik-city.func',
     },
     plugins: [vercelEdgeAdapter()],
   };

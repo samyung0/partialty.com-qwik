@@ -1,10 +1,10 @@
 /** @jsxImportSource react */
-import { ArrowDown, ArrowUp, RotateCcw } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Editor, Range } from "slate";
-import { useSlate } from "slate-react";
-import ColorChooser from "~/components/_ContentEditor/ColorChooser";
-import type { CustomMarkFormat } from "~/components/_ContentEditor/types";
+import { ArrowDown, ArrowUp, RotateCcw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Editor, Range } from 'slate';
+import { useSlate } from 'slate-react';
+import ColorChooser from '~/components/_ContentEditor/ColorChooser';
+import type { CustomMarkFormat } from '~/components/_ContentEditor/types';
 
 export const MarkButton = ({
   format,
@@ -22,7 +22,7 @@ export const MarkButton = ({
       className={
         isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint`
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray'
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -49,12 +49,12 @@ export const BackgroundMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
-      title={"Background"}
+      title={'Background'}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
-        " relative cursor-pointer [&:hover>div]:block"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
+        ' relative cursor-pointer [&:hover>div]:block'
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -66,18 +66,18 @@ export const BackgroundMarkButton = ({
           setSync={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
-            Editor.addMark(editor, "sync", true);
+            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
+            Editor.addMark(editor, 'sync', true);
           }}
           setTimeStamp={(timestamp: number) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, "timeStamp", timestamp);
+            Editor.addMark(editor, 'timeStamp', timestamp);
           }}
           setAnimate={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
-            Editor.addMark(editor, "animate", true);
+            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
+            Editor.addMark(editor, 'animate', true);
           }}
           setColor={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
@@ -89,21 +89,17 @@ export const BackgroundMarkButton = ({
           setColorDarkMode={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (
-              currentMark &&
-              currentMark["backgroundDarkMode"] &&
-              currentMark["backgroundDarkMode"] === color
-            )
-              return Editor.removeMark(editor, "backgroundDarkMode");
-            Editor.addMark(editor, "backgroundDarkMode", color);
+            if (currentMark && currentMark['backgroundDarkMode'] && currentMark['backgroundDarkMode'] === color)
+              return Editor.removeMark(editor, 'backgroundDarkMode');
+            Editor.addMark(editor, 'backgroundDarkMode', color);
           }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
-            Editor.removeMark(editor, "backgroundDarkMode");
-            Editor.removeMark(editor, "timeStamp");
-            Editor.removeMark(editor, "sync");
-            Editor.removeMark(editor, "animate");
+            Editor.removeMark(editor, 'backgroundDarkMode');
+            Editor.removeMark(editor, 'timeStamp');
+            Editor.removeMark(editor, 'sync');
+            Editor.removeMark(editor, 'animate');
           }}
         />
       </div>
@@ -124,12 +120,12 @@ export const UnderlineMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
-      title={"Underline"}
+      title={'Underline'}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
-        " relative cursor-pointer [&:hover>div]:block"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
+        ' relative cursor-pointer [&:hover>div]:block'
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -141,18 +137,18 @@ export const UnderlineMarkButton = ({
           setSync={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
-            Editor.addMark(editor, "sync", true);
+            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
+            Editor.addMark(editor, 'sync', true);
           }}
           setTimeStamp={(timestamp: number) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, "timeStamp", timestamp);
+            Editor.addMark(editor, 'timeStamp', timestamp);
           }}
           setAnimate={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
-            Editor.addMark(editor, "animate", true);
+            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
+            Editor.addMark(editor, 'animate', true);
           }}
           setColor={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
@@ -164,21 +160,17 @@ export const UnderlineMarkButton = ({
           setColorDarkMode={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (
-              currentMark &&
-              currentMark["underlineDarkMode"] &&
-              currentMark["underlineDarkMode"] === color
-            )
-              return Editor.removeMark(editor, "underlineDarkMode");
-            Editor.addMark(editor, "underlineDarkMode", color);
+            if (currentMark && currentMark['underlineDarkMode'] && currentMark['underlineDarkMode'] === color)
+              return Editor.removeMark(editor, 'underlineDarkMode');
+            Editor.addMark(editor, 'underlineDarkMode', color);
           }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
-            Editor.removeMark(editor, "underlineDarkMode");
-            Editor.removeMark(editor, "timeStamp");
-            Editor.removeMark(editor, "sync");
-            Editor.removeMark(editor, "animate");
+            Editor.removeMark(editor, 'underlineDarkMode');
+            Editor.removeMark(editor, 'timeStamp');
+            Editor.removeMark(editor, 'sync');
+            Editor.removeMark(editor, 'animate');
           }}
         />
       </div>
@@ -199,12 +191,12 @@ export const ColorMarkButton = ({
   const mark = Editor.marks(editor) || {};
   return (
     <div
-      title={"Color"}
+      title={'Color'}
       className={
         (isMarkActive(editor, format)
           ? `border-b-2 border-black dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
-        " relative cursor-pointer [&:hover>div]:block"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
+        ' relative cursor-pointer [&:hover>div]:block'
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -218,18 +210,18 @@ export const ColorMarkButton = ({
           setSync={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["sync"]) return Editor.removeMark(editor, "sync");
-            Editor.addMark(editor, "sync", true);
+            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
+            Editor.addMark(editor, 'sync', true);
           }}
           setTimeStamp={(timestamp: number) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, "timeStamp", timestamp);
+            Editor.addMark(editor, 'timeStamp', timestamp);
           }}
           setAnimate={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark["animate"]) return Editor.removeMark(editor, "animate");
-            Editor.addMark(editor, "animate", true);
+            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
+            Editor.addMark(editor, 'animate', true);
           }}
           setColor={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
@@ -241,21 +233,17 @@ export const ColorMarkButton = ({
           setColorDarkMode={(color: string) => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             const currentMark = Editor.marks(editor);
-            if (
-              currentMark &&
-              currentMark["colorDarkMode"] &&
-              currentMark["colorDarkMode"] === color
-            )
-              return Editor.removeMark(editor, "colorDarkMode");
-            Editor.addMark(editor, "colorDarkMode", color);
+            if (currentMark && currentMark['colorDarkMode'] && currentMark['colorDarkMode'] === color)
+              return Editor.removeMark(editor, 'colorDarkMode');
+            Editor.addMark(editor, 'colorDarkMode', color);
           }}
           removeColor={() => {
             if (editor.selection && Range.isCollapsed(editor.selection)) return;
             Editor.removeMark(editor, format);
-            Editor.removeMark(editor, "colorDarkMode");
-            Editor.removeMark(editor, "timeStamp");
-            Editor.removeMark(editor, "sync");
-            Editor.removeMark(editor, "animate");
+            Editor.removeMark(editor, 'colorDarkMode');
+            Editor.removeMark(editor, 'timeStamp');
+            Editor.removeMark(editor, 'sync');
+            Editor.removeMark(editor, 'animate');
           }}
         />
       </div>
@@ -265,7 +253,7 @@ export const ColorMarkButton = ({
 
 export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
   const defaultSize = useRef(18);
-  const defaultFamily = useRef("Varela_Round");
+  const defaultFamily = useRef('Varela_Round');
   const defaultSpacing = useRef(0);
   const editor = useSlate();
   const ref = useRef<any>();
@@ -284,12 +272,12 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
   const [showSelection, setShowSelection] = useState(false);
   return (
     <div
-      title={"Font"}
+      title={'Font'}
       className={
-        (isMarkActive(editor, "fontSize") || isMarkActive(editor, "fontFamily")
+        (isMarkActive(editor, 'fontSize') || isMarkActive(editor, 'fontFamily')
           ? `border-b-2 border-black dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray ") +
-        " relative cursor-pointer [&:hover>div]:block"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
+        ' relative cursor-pointer [&:hover>div]:block'
       }
       onMouseDown={(event) => event.preventDefault()}
     >
@@ -311,7 +299,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 value={fontSize}
                 onChange={(e) => {
                   if (!editor.selection) return;
-                  Editor.addMark(editor, "fontSize", Number(e.target.value));
+                  Editor.addMark(editor, 'fontSize', Number(e.target.value));
                   setFontSize(Number(e.target.value));
                 }}
               />
@@ -321,7 +309,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref.current) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSize", Number(ref.current.value) + 1);
+                    Editor.addMark(editor, 'fontSize', Number(ref.current.value) + 1);
                     setFontSize(Number(ref.current.value) + 1);
                   }
                 }}
@@ -333,7 +321,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref.current && Number(ref.current.value) > 0) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSize", Number(ref.current.value) - 1);
+                    Editor.addMark(editor, 'fontSize', Number(ref.current.value) - 1);
                     setFontSize(Number(ref.current.value) - 1);
                   }
                 }}
@@ -345,7 +333,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref.current) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSize", defaultSize.current);
+                    Editor.addMark(editor, 'fontSize', defaultSize.current);
                     setFontSize(defaultSize.current);
                   }
                 }}
@@ -359,11 +347,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
             <div className="flex cursor-pointer items-center justify-center gap-2 p-2">
               <p>Font Family: </p>
               <div className="relative w-[120px] text-sm tracking-wide underline decoration-wavy underline-offset-4">
-                <span
-                  onClick={() => setShowSelection(!showSelection)}
-                  style={{ fontFamily }}
-                  className="px-2"
-                >
+                <span onClick={() => setShowSelection(!showSelection)} style={{ fontFamily }} className="px-2">
                   {fontFamily}
                 </span>
                 {showSelection && (
@@ -375,12 +359,12 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => {
                           if (!editor.selection) return;
-                          Editor.addMark(editor, "fontFamily", "Varela_Round");
-                          setFontFamily("Varela_Round");
+                          Editor.addMark(editor, 'fontFamily', 'Varela_Round');
+                          setFontFamily('Varela_Round');
                           setShowSelection(false);
                         }}
                         className="block px-4 py-2 text-left"
-                        style={{ fontFamily: "Varela_Round" }}
+                        style={{ fontFamily: 'Varela_Round' }}
                       >
                         Varela Round
                       </button>
@@ -389,12 +373,12 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => {
                           if (!editor.selection) return;
-                          Editor.addMark(editor, "fontFamily", "mosk");
-                          setFontFamily("mosk");
+                          Editor.addMark(editor, 'fontFamily', 'mosk');
+                          setFontFamily('mosk');
                           setShowSelection(false);
                         }}
                         className="block px-4 py-2 text-left"
-                        style={{ fontFamily: "mosk" }}
+                        style={{ fontFamily: 'mosk' }}
                       >
                         mosk
                       </button>
@@ -403,12 +387,12 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => {
                           if (!editor.selection) return;
-                          Editor.addMark(editor, "fontFamily", "Consolas");
-                          setFontFamily("Consolas");
+                          Editor.addMark(editor, 'fontFamily', 'Consolas');
+                          setFontFamily('Consolas');
                           setShowSelection(false);
                         }}
                         className="block px-4 py-2 text-left"
-                        style={{ fontFamily: "Consolas" }}
+                        style={{ fontFamily: 'Consolas' }}
                       >
                         Consolas
                       </button>
@@ -417,12 +401,12 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => {
                           if (!editor.selection) return;
-                          Editor.addMark(editor, "fontFamily", "Cascadia Code");
-                          setFontFamily("Cascadia Code");
+                          Editor.addMark(editor, 'fontFamily', 'Cascadia Code');
+                          setFontFamily('Cascadia Code');
                           setShowSelection(false);
                         }}
                         className="block px-4 py-2 text-left"
-                        style={{ fontFamily: "Cascadia Code" }}
+                        style={{ fontFamily: 'Cascadia Code' }}
                       >
                         Cascadia Code
                       </button>
@@ -435,7 +419,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={() => {
                   if (!editor.selection) return;
-                  Editor.addMark(editor, "fontFamily", defaultFamily.current);
+                  Editor.addMark(editor, 'fontFamily', defaultFamily.current);
                   setFontFamily(defaultFamily.current);
                 }}
                 className="p-1"
@@ -459,7 +443,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 value={fontSpacing}
                 onChange={(e) => {
                   if (!editor.selection) return;
-                  Editor.addMark(editor, "fontSpacing", Number(e.target.value));
+                  Editor.addMark(editor, 'fontSpacing', Number(e.target.value));
                   setFontSpacing(Number(e.target.value));
                 }}
               />
@@ -469,7 +453,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref2.current) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSpacing", Number(ref2.current.value) + 1);
+                    Editor.addMark(editor, 'fontSpacing', Number(ref2.current.value) + 1);
                     setFontSpacing(Number(ref2.current.value) + 1);
                   }
                 }}
@@ -481,7 +465,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref2.current && Number(ref2.current.value) > 0) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSpacing", Number(ref2.current.value) - 1);
+                    Editor.addMark(editor, 'fontSpacing', Number(ref2.current.value) - 1);
                     setFontSpacing(Number(ref2.current.value) - 1);
                   }
                 }}
@@ -493,7 +477,7 @@ export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => {
                   if (ref2.current) {
                     if (!editor.selection) return;
-                    Editor.addMark(editor, "fontSpacing", defaultSpacing.current);
+                    Editor.addMark(editor, 'fontSpacing', defaultSpacing.current);
                     setFontSpacing(defaultSpacing.current);
                   }
                 }}

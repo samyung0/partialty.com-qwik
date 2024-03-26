@@ -1,14 +1,14 @@
 /** @type {import('tailwindcss').Config} */
-import tailwindPlugins from "./tailwind/tailwindPlugins";
-import tailwindThemes from "./tailwind/tailwindThemes/base";
+import tailwindPlugins from './tailwind/tailwindPlugins';
+import tailwindThemes from './tailwind/tailwindThemes/base';
 export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "./node_modules/flowbite/**/*.js"],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './node_modules/flowbite/**/*.js'],
   ...tailwindThemes,
-  darkMode: "class",
+  darkMode: 'class',
   plugins: [
     tailwindPlugins(),
     // require("daisyui"),
-    require("@tailwindcss/typography"),
+    require('@tailwindcss/typography'),
     // Method 1: directly use the variant inline: theme-test:bg-red
     // however it does not work well with prettier plugin rn
     // it automatically puts the classnames with custom variants in front of everything else

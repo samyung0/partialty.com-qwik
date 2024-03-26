@@ -1,5 +1,5 @@
 ```ts
-import type { PathParams } from "./types";
+import type { PathParams } from './types';
 
 /**
  * Match a given route against a path.
@@ -8,11 +8,7 @@ import type { PathParams } from "./types";
  * @param path Actual path to match
  * @returns Returns PathParams or null if did not match.
  */
-export function matchRoute(
-  route: string,
-  path: string,
-  allowedParams?: Record<string, string[]>
-): PathParams | null {
+export function matchRoute(route: string, path: string, allowedParams?: Record<string, string[]>): PathParams | null {
   const routeIdx: number = startIdxSkipSlash(route);
   const routeLength = lengthNoTrailingSlash(route);
   const pathIdx: number = startIdxSkipSlash(path);
@@ -44,10 +40,7 @@ function matchRoutePart(
       const paramNameStart = routeIdx + (isMany ? 3 : 0);
       const paramNameEnd = scan(route, paramNameStart, routeLength, Char.CLOSE_BRACKET);
       const isOptional = route.charCodeAt(paramNameEnd - 1) === Char.DOT;
-      const paramName = route.substring(
-        paramNameStart,
-        isOptional ? paramNameEnd - 1 : paramNameEnd
-      );
+      const paramName = route.substring(paramNameStart, isOptional ? paramNameEnd - 1 : paramNameEnd);
       const paramSuffixEnd = scan(route, paramNameEnd + 1, routeLength, Char.SLASH);
       const suffix = route.substring(paramNameEnd + 1, paramSuffixEnd);
       routeIdx = paramNameEnd + 1;
@@ -89,10 +82,7 @@ function matchRoutePart(
       const paramValue = path.substring(paramValueStart, paramValueEnd);
       if (
         (!isMany && !suffix && !paramValue) ||
-        (isOptional &&
-          allowedParams &&
-          allowedParams[paramName] &&
-          !allowedParams[paramName].includes(paramValue))
+        (isOptional && allowedParams && allowedParams[paramName] && !allowedParams[paramName].includes(paramValue))
       ) {
         // empty value is only allowed with rest or suffix (e.g. '/path/[...rest]' or '/path/[param]suffix')
         return null;
@@ -133,13 +123,11 @@ function startIdxSkipSlash(text: string): 0 | 1 {
 
 function isThreeDots(text: string, idx: number): boolean {
   return (
-    text.charCodeAt(idx) === Char.DOT &&
-    text.charCodeAt(idx + 1) === Char.DOT &&
-    text.charCodeAt(idx + 2) === Char.DOT
+    text.charCodeAt(idx) === Char.DOT && text.charCodeAt(idx + 1) === Char.DOT && text.charCodeAt(idx + 2) === Char.DOT
   );
 }
 
-function scan(text: string, idx: number, end: number, ch: Char, suffix: string = ""): number {
+function scan(text: string, idx: number, end: number, ch: Char, suffix: string = ''): number {
   while (idx < end && text.charCodeAt(idx) !== ch) {
     idx++;
   }
@@ -174,18 +162,10 @@ function recursiveScan(
     pathStart++;
   }
   let pathIdx = pathLength;
-  const sep = suffix + "/";
+  const sep = suffix + '/';
   let depthWatchdog = 5;
   while (pathIdx >= pathStart && depthWatchdog--) {
-    const match = matchRoutePart(
-      route,
-      routeStart,
-      routeLength,
-      path,
-      pathIdx,
-      pathLength,
-      allowedParams
-    );
+    const match = matchRoutePart(route, routeStart, routeLength, path, pathIdx, pathLength, allowedParams);
     if (match) {
       let value = path.substring(pathStart, Math.min(pathIdx, pathLength));
       if (value.endsWith(sep)) {
@@ -199,13 +179,7 @@ function recursiveScan(
   return null;
 }
 
-function lastIndexOf(
-  text: string,
-  start: number,
-  match: string,
-  searchIdx: number,
-  notFoundIdx: number
-): number {
+function lastIndexOf(text: string, start: number, match: string, searchIdx: number, notFoundIdx: number): number {
   let idx = text.lastIndexOf(match, searchIdx);
   if (idx == searchIdx - match.length) {
     // If previous match was right upto the separator, then try to find the match before that.

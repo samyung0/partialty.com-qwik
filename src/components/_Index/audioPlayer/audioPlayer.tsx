@@ -1,9 +1,9 @@
-import type { Signal } from "@builder.io/qwik";
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import type { Signal } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 
-import Song from "~/assets/audio/landing-page-audio.mp3";
-import PauseIcon from "~/assets/svg/pause.svg";
-import PlayIcon from "~/assets/svg/play-arrow-rounded.svg";
+import Song from '~/assets/audio/landing-page-audio.mp3';
+import PauseIcon from '~/assets/svg/pause.svg';
+import PlayIcon from '~/assets/svg/play-arrow-rounded.svg';
 
 interface AudioPlayerProps {
   startPlay: Signal<boolean>;

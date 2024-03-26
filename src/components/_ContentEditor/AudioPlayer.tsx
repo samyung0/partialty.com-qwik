@@ -1,14 +1,14 @@
 /** @jsxImportSource react */
 
-import { server$ } from "@builder.io/qwik-city";
-import MuxPlayer from "@mux/mux-player-react";
-import * as UpChunk from "@mux/upchunk";
-import { Pause, Play, Trash2, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { MUX_AUDIO_MAX_SIZE } from "~/const/mux";
-import type theme from "~/const/theme";
+import { server$ } from '@builder.io/qwik-city';
+import MuxPlayer from '@mux/mux-player-react';
+import * as UpChunk from '@mux/upchunk';
+import { Pause, Play, Trash2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MUX_AUDIO_MAX_SIZE } from '~/const/mux';
+import type theme from '~/const/theme';
 
-import type Mux from "~/types/Mux";
+import type Mux from '~/types/Mux';
 
 export const CenterAudioChooser = ({
   timeStamp,
@@ -22,7 +22,7 @@ export const CenterAudioChooser = ({
   contentWS: WebSocket;
   userId: string;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
-  userAudiosWithName: [Mux["data"][0], string][];
+  userAudiosWithName: [Mux['data'][0], string][];
   setAudioTrack: (
     props:
       | {
@@ -36,7 +36,7 @@ export const CenterAudioChooser = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState("idle");
+  const [status, setStatus] = useState('idle');
   const [newAudio, setNewAudio] = useState<
     [{ id: string; duration: number; created_at: string; playback_ids: { id: string }[] }, string][]
   >([]);
@@ -44,11 +44,11 @@ export const CenterAudioChooser = ({
   const urlRef = useRef<string>();
 
   useEffect(() => {
-    contentWS.addEventListener("message", ({ data }) => {
+    contentWS.addEventListener('message', ({ data }) => {
       try {
         const d = JSON.parse(data);
-        if (d.type === "error") return alert("WS ERROR: " + d.message);
-        if (d.type === "initCreateSuccess") {
+        if (d.type === 'error') return alert('WS ERROR: ' + d.message);
+        if (d.type === 'initCreateSuccess') {
           if (!urlRef.current || !fileRef.current) return;
           const upload = UpChunk.createUpload({
             endpoint: urlRef.current,
@@ -57,25 +57,25 @@ export const CenterAudioChooser = ({
           });
           urlRef.current = undefined;
           fileRef.current = undefined;
-          upload.on("error", (err) => {
-            console.error("💥 🙀", err.detail);
+          upload.on('error', (err) => {
+            console.error('💥 🙀', err.detail);
           });
-          upload.on("progress", (progress) => {
+          upload.on('progress', (progress) => {
             setProgress(progress.detail as number);
-            console.log("Uploaded", progress.detail, "percent of this file.");
+            console.log('Uploaded', progress.detail, 'percent of this file.');
           });
-          upload.on("success", async (details) => {
+          upload.on('success', async (details) => {
             console.log("Wrap it up, we're done here. 👋");
           });
           setIsUploading(true);
-          setStatus("Uploading...");
+          setStatus('Uploading...');
           return;
         }
-        if (d.type === "assetSuccess") {
-          console.log("asset uploaded");
-          setStatus("Uploaded. Preparing...");
+        if (d.type === 'assetSuccess') {
+          console.log('asset uploaded');
+          setStatus('Uploaded. Preparing...');
         }
-        if (d.type === "assetReady") {
+        if (d.type === 'assetReady') {
           const filename = d.message.filename as string;
           const duration = d.message.duration as number;
           const id = d.message.id as string;
@@ -83,20 +83,17 @@ export const CenterAudioChooser = ({
           const playbackId = d.message.playbackId as string;
           console.log(filename, duration, id, created_at, playbackId);
           if (!filename || !duration || !id || !created_at || !playbackId) {
-            setStatus("Errored");
+            setStatus('Errored');
             setTimeout(() => {
               setIsUploading(false);
             }, 1000);
             return;
           }
-          console.log("asset ready");
-          setStatus("Finished");
+          console.log('asset ready');
+          setStatus('Finished');
           setTimeout(() => {
             setIsUploading(false);
-            setNewAudio([
-              [{ id, duration, created_at, playback_ids: [{ id: playbackId }] }, filename],
-              ...newAudio,
-            ]);
+            setNewAudio([[{ id, duration, created_at, playback_ids: [{ id: playbackId }] }, filename], ...newAudio]);
           }, 1000);
         }
       } catch (_) {
@@ -106,19 +103,19 @@ export const CenterAudioChooser = ({
   }, []);
 
   const SERVER1 = server$(async function () {
-    return await fetch("https://api.mux.com/video/v1/uploads/", {
-      method: "POST",
+    return await fetch('https://api.mux.com/video/v1/uploads/', {
+      method: 'POST',
       headers: {
         Authorization: `Basic ${btoa(
-          this.env.get("MUX_PRODUCTION_ID")! + ":" + this.env.get("MUX_PRODUCTION_SECRET")!
+          this.env.get('MUX_PRODUCTION_ID')! + ':' + this.env.get('MUX_PRODUCTION_SECRET')!
         )}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        cors_origin: "*",
+        cors_origin: '*',
         new_asset_settings: {
-          playback_policy: ["public"],
-          mp4_support: "none",
+          playback_policy: ['public'],
+          mp4_support: 'none',
         },
       }),
     })
@@ -134,9 +131,7 @@ export const CenterAudioChooser = ({
           <X size={20} />
         </button>
         {userAudiosWithName.length === 0 && newAudio.length === 0 && (
-          <div className="text-lg tracking-wide">
-            Uh Oh. It seems like you haven't uploaded any audio tracks yet.
-          </div>
+          <div className="text-lg tracking-wide">Uh Oh. It seems like you haven't uploaded any audio tracks yet.</div>
         )}
         {(newAudio.length > 0 || userAudiosWithName.length > 0) && (
           <ul className="flex max-h-[500px] w-full flex-col gap-2 overflow-auto pr-2">
@@ -164,7 +159,7 @@ export const CenterAudioChooser = ({
                   {Math.floor(audioTrack.duration / 60)}:
                   {Math.floor(audioTrack.duration % 60)
                     .toString()
-                    .padStart(2, "0")}
+                    .padStart(2, '0')}
                 </p>
               </li>
             ))}
@@ -192,7 +187,7 @@ export const CenterAudioChooser = ({
                   {Math.floor(audioTrack.duration / 60)}:
                   {Math.floor(audioTrack.duration % 60)
                     .toString()
-                    .padStart(2, "0")}
+                    .padStart(2, '0')}
                 </p>
               </li>
             ))}
@@ -203,8 +198,8 @@ export const CenterAudioChooser = ({
             <label htmlFor="uploadImage">
               <p className="cursor-pointer text-lg underline decoration-wavy underline-offset-8">
                 {userAudiosWithName.length === 0 && newAudio.length === 0
-                  ? "start by uploading an audio track"
-                  : "or upload a new audio track"}
+                  ? 'start by uploading an audio track'
+                  : 'or upload a new audio track'}
               </p>
               <input
                 onChange={async (e) => {
@@ -213,7 +208,7 @@ export const CenterAudioChooser = ({
                   fileRef.current = file;
 
                   if (file.size > MUX_AUDIO_MAX_SIZE) {
-                    alert("Audio file cannot be larger than 100 MiB!");
+                    alert('Audio file cannot be larger than 100 MiB!');
                     return;
                   }
 
@@ -221,7 +216,7 @@ export const CenterAudioChooser = ({
 
                   const url = _url.data.url as string;
                   if (!url) {
-                    alert("Cannot upload audio file to Mux!");
+                    alert('Cannot upload audio file to Mux!');
                     return;
                   }
 
@@ -229,9 +224,9 @@ export const CenterAudioChooser = ({
 
                   contentWS.send(
                     JSON.stringify({
-                      type: "initCreate",
+                      type: 'initCreate',
                       url,
-                      userId: userId + "###" + timeStamp,
+                      userId: userId + '###' + timeStamp,
                       filename: file.name,
                     })
                   );
@@ -267,9 +262,7 @@ export default ({
   isLoadingAudio,
   themeValue,
 }: {
-  audioTrack:
-    | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
-    | undefined;
+  audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
   setShowAudioChooser: React.Dispatch<React.SetStateAction<boolean>>;
   setAudioTrack: (
     props:
@@ -331,12 +324,9 @@ export default ({
                     {Math.floor(timeStamp / 60)}:
                     {Math.floor(timeStamp % 60)
                       .toString()
-                      .padStart(2, "0")}
+                      .padStart(2, '0')}
                   </span>
-                  <label
-                    htmlFor="audioRange"
-                    className="relative flex w-full items-center justify-center"
-                  >
+                  <label htmlFor="audioRange" className="relative flex w-full items-center justify-center">
                     <input
                       id="audioRange"
                       type="range"
@@ -350,7 +340,7 @@ export default ({
                       max={audioTrack.duration}
                       style={{
                         background:
-                          themeValue === "light"
+                          themeValue === 'light'
                             ? `linear-gradient(90deg,#2f3e52 ${
                                 (timeStamp / audioTrack.duration) * 100
                               }%,rgb(229,231,235) ${(timeStamp / audioTrack.duration) * 100}%)`
@@ -366,7 +356,7 @@ export default ({
                     {Math.floor(audioTrack.duration / 60)}:
                     {Math.floor(audioTrack.duration % 60)
                       .toString()
-                      .padStart(2, "0")}
+                      .padStart(2, '0')}
                   </span>
                 </div>
               </div>

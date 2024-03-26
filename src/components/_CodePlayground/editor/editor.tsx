@@ -1,12 +1,12 @@
-import type { NoSerialize, PropFunction } from "@builder.io/qwik";
-import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import LoadingSVG from "~/components/LoadingSVG";
-import type { WebContainerInterface } from "~/components/_CodePlayground/serverInterface/serverInterface";
-import { type Entry, type FileStore } from "~/utils/fileUtil";
-import FileStructureLargeScreen from "../fileStructure/fileStructureLargeScreen";
-import FileTab from "./fileTab";
-import type { IStandaloneCodeEditor } from "./monaco";
-import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from "./monaco";
+import type { NoSerialize, PropFunction } from '@builder.io/qwik';
+import { $, component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import LoadingSVG from '~/components/LoadingSVG';
+import type { WebContainerInterface } from '~/components/_CodePlayground/serverInterface/serverInterface';
+import { type Entry, type FileStore } from '~/utils/fileUtil';
+import FileStructureLargeScreen from '../fileStructure/fileStructureLargeScreen';
+import FileTab from './fileTab';
+import type { IStandaloneCodeEditor } from './monaco';
+import { getMonaco, getUri, initMonacoEditor, openFile, type ICodeEditorViewState } from './monaco';
 
 interface EditorInterface {
   fileStore: FileStore;
@@ -58,10 +58,7 @@ export default component$((props: EditorInterface) => {
             pathSegment[0] === currentEntry.entries[i].name
           )
             return currentEntry.entries[i];
-          return await __getEntryFromPath$._getEntryFromPath$(
-            pathSegment.slice(1),
-            currentEntry.entries[i]
-          );
+          return await __getEntryFromPath$._getEntryFromPath$(pathSegment.slice(1), currentEntry.entries[i]);
         }
       }
       return null;
@@ -70,11 +67,10 @@ export default component$((props: EditorInterface) => {
 
   __getEntryFromPath$.getEntryFromPath$ = $(
     (path: string, currentEntry: Entry | FileStore): Promise<Entry | null> =>
-      __getEntryFromPath$._getEntryFromPath$(path.split("/").slice(1), currentEntry)
+      __getEntryFromPath$._getEntryFromPath$(path.split('/').slice(1), currentEntry)
   );
-  const getEntryFromPath$: PropFunction<
-    (path: string, currentEntry: Entry | FileStore) => Promise<Entry | null>
-  > = __getEntryFromPath$.getEntryFromPath$;
+  const getEntryFromPath$: PropFunction<(path: string, currentEntry: Entry | FileStore) => Promise<Entry | null>> =
+    __getEntryFromPath$.getEntryFromPath$;
 
   const verifyFileExists$ = $(async (path: string) => {
     // file should be in fileStore
@@ -96,9 +92,8 @@ export default component$((props: EditorInterface) => {
     // entry.hasChanged already checks
     // we just do a double check by retrieving the file from fs
     return (
-      editorStore.openedFiles.filter(
-        (entry: Entry) => entry.path === path && entry.data === data && !entry.hasChanged
-      ).length === 1
+      editorStore.openedFiles.filter((entry: Entry) => entry.path === path && entry.data === data && !entry.hasChanged)
+        .length === 1
     );
   });
 
@@ -127,7 +122,7 @@ export default component$((props: EditorInterface) => {
 
     if (
       !(await verifyFileUnchanged(path)) &&
-      !window.confirm("There are unsaved changes! Are you sure you want to close the file?")
+      !window.confirm('There are unsaved changes! Are you sure you want to close the file?')
     )
       return;
 
@@ -154,7 +149,7 @@ export default component$((props: EditorInterface) => {
       const nonBinaryData = currentModel.getValue();
 
       if (!(await verifyFileExists$(path))) {
-        console.error("File not found!");
+        console.error('File not found!');
         closeFile$(path);
         editorStore.editor?.setModel(null);
         return;
@@ -162,7 +157,7 @@ export default component$((props: EditorInterface) => {
 
       // if fileStore is not identical to openedFiles, meaning the original file is changed
       if (!(await verifyFileUnchanged(path))) {
-        console.error("A newer version of the file is detected in the system!");
+        console.error('A newer version of the file is detected in the system!');
         // user tries to save when the original file is altered
         // !!! needs handling
 
@@ -171,7 +166,7 @@ export default component$((props: EditorInterface) => {
 
       props.saveServerFile(path, nonBinaryData);
       updateNonBinaryData$(path, nonBinaryData);
-      console.log("updated", editorStore.openedFiles);
+      console.log('updated', editorStore.openedFiles);
       // viewState data (if any) is now identical to fileStore and fileSnapshot
     }
   });
@@ -236,7 +231,7 @@ export default component$((props: EditorInterface) => {
       await initMonacoEditor(
         hostRef.value,
         editorStore,
-        "File Input",
+        'File Input',
         $((path: string | undefined, code: string) => {
           // console.log(path, code);
         })

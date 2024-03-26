@@ -1,8 +1,8 @@
-import { createClient } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 
 const client = createClient({
-  url: "file:local.db",
+  url: 'file:local.db',
 });
 
 export const tursoClient = client;

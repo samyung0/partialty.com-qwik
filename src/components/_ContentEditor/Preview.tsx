@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
 
-import { Eye, NotebookPen } from "lucide-react";
-import { cn } from "~/utils/cn";
+import { Eye, NotebookPen } from 'lucide-react';
+import { cn } from '~/utils/cn';
 
 export default ({
   setIsPreviewing,
@@ -21,11 +21,11 @@ export default ({
         else setIsPreviewing(false);
       }}
       className={cn(
-        "absolute right-4 z-[50] flex items-center justify-center rounded-lg bg-primary-dark-gray p-3 text-background-light-gray shadow-xl dark:bg-highlight-dark",
-        !isPreviewing && "hidden xl:flex"
+        'absolute right-4 z-[50] flex items-center justify-center rounded-lg bg-primary-dark-gray p-3 text-background-light-gray shadow-xl dark:bg-highlight-dark',
+        !isPreviewing && 'hidden xl:flex'
       )}
       style={{
-        bottom: isPreviewing ? (hasAudioTrack ? "16px" : "calc(10vh + 16px)") : "calc(10vh + 64px)",
+        bottom: isPreviewing ? (hasAudioTrack ? '16px' : 'calc(10vh + 16px)') : 'calc(10vh + 64px)',
       }}
     >
       {isPreviewing ? <NotebookPen size={20} /> : <Eye size={20} />}

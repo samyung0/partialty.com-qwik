@@ -1,22 +1,14 @@
-import type { NoSerialize, QRL } from "@builder.io/qwik";
-import {
-  $,
-  component$,
-  noSerialize,
-  useSignal,
-  useStore,
-  useTask$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
-import ForwardButton from "~/components/AudioPlayer/ForwardButton";
-import MuteButton from "~/components/AudioPlayer/MuteButton";
-import PlayButton from "~/components/AudioPlayer/PlayButton";
-import PlaybackRateButton from "~/components/AudioPlayer/PlaybackRateButton";
-import RewindButton from "~/components/AudioPlayer/RewindButton";
-import Slider from "~/components/AudioPlayer/Slider";
-import LoadingSVG from "~/components/LoadingSVG";
+import type { NoSerialize, QRL } from '@builder.io/qwik';
+import { $, component$, noSerialize, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import ForwardButton from '~/components/AudioPlayer/ForwardButton';
+import MuteButton from '~/components/AudioPlayer/MuteButton';
+import PlayButton from '~/components/AudioPlayer/PlayButton';
+import PlaybackRateButton from '~/components/AudioPlayer/PlaybackRateButton';
+import RewindButton from '~/components/AudioPlayer/RewindButton';
+import Slider from '~/components/AudioPlayer/Slider';
+import LoadingSVG from '~/components/LoadingSVG';
 
-import { QwikMuxAudio } from "~/components/AudioPlayer/MuxPlayer";
+import { QwikMuxAudio } from '~/components/AudioPlayer/MuxPlayer';
 
 interface PlayerState {
   playing: boolean;
@@ -46,9 +38,7 @@ export default component$(
   ({
     audioTrack,
   }: {
-    audioTrack:
-      | { id: string; duration: number; filename: string; playback_ids: { id: string }[] }
-      | undefined;
+    audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
   }) => {
     const player = useStore<PlayerAPI>({
       playing: false,
@@ -56,8 +46,8 @@ export default component$(
       duration: 0,
       currentTime: 0,
       displayCurrentTime: 0,
-      name: "",
-      playback_id: "",
+      name: '',
+      playback_id: '',
       playbackRateNumber: 1,
 
       play: $((player: PlayerAPI) => {
@@ -100,34 +90,33 @@ export default component$(
 
     const dataSync = useSignal<NoSerialize<NodeListOf<Element>> | undefined>();
     const sync = $(() => {
-      console.log("syncing");
+      console.log('syncing');
       if (!dataSync.value) return;
       for (let i = 0; i < dataSync.value.length; i++) {
-        const timeStampToActivate =
-          Number(dataSync.value[i].getAttribute("data-synctimestamp")) || 0;
+        const timeStampToActivate = Number(dataSync.value[i].getAttribute('data-synctimestamp')) || 0;
         if (player.displayCurrentTime >= timeStampToActivate) {
-          if (dataSync.value[i].getAttribute("data-syncactivated") === "1") continue;
+          if (dataSync.value[i].getAttribute('data-syncactivated') === '1') continue;
           let enter: any = {};
           try {
-            enter = JSON.parse(dataSync.value[i].getAttribute("data-syncenter") || "{}");
+            enter = JSON.parse(dataSync.value[i].getAttribute('data-syncenter') || '{}');
           } catch (_) {
             /* empty */
           }
           for (const j in enter) (dataSync.value[i] as HTMLElement).style[j as any] = enter[j];
-          dataSync.value[i].setAttribute("data-syncactivated", "1");
+          dataSync.value[i].setAttribute('data-syncactivated', '1');
         } else {
-          if (dataSync.value[i].getAttribute("data-syncactivated") !== "1") continue;
+          if (dataSync.value[i].getAttribute('data-syncactivated') !== '1') continue;
           let enter: any = {};
           let leave: any = {};
           try {
-            enter = JSON.parse(dataSync.value[i].getAttribute("data-syncenter") || "{}");
-            leave = JSON.parse(dataSync.value[i].getAttribute("data-syncleave") || "{}");
+            enter = JSON.parse(dataSync.value[i].getAttribute('data-syncenter') || '{}');
+            leave = JSON.parse(dataSync.value[i].getAttribute('data-syncleave') || '{}');
           } catch (_) {
             /* empty */
           }
           for (const j in enter) delete (dataSync.value[i] as HTMLElement).style[j as any];
           for (const j in leave) (dataSync.value![i] as HTMLElement).style[j as any] = leave[j];
-          dataSync.value[i].setAttribute("data-syncactivated", "0");
+          dataSync.value[i].setAttribute('data-syncactivated', '0');
         }
       }
     });
@@ -136,7 +125,7 @@ export default component$(
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
         // sync();
       },
-      { strategy: "document-ready" }
+      { strategy: 'document-ready' }
     );
 
     return (
@@ -147,10 +136,7 @@ export default component$(
               <PlayButton player={player} />
             </div>
             <div class="mb-[env(safe-area-inset-bottom)] flex flex-1 flex-col gap-3 overflow-hidden p-1">
-              <p
-                class="truncate text-center text-sm font-bold leading-6 md:text-left"
-                title={player.name}
-              >
+              <p class="truncate text-center text-sm font-bold leading-6 md:text-left" title={player.name}>
                 {player.name}
               </p>
               <div class="flex justify-between gap-6">

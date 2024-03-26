@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
-import { qwikify$ } from "@builder.io/qwik-react";
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone-esm";
+import { qwikify$ } from '@builder.io/qwik-react';
+import { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone-esm';
 
 function imgDropZone({
   secure_url,
@@ -68,4 +68,4 @@ function imgDropZone({
   );
 }
 
-export default qwikify$(imgDropZone, { eagerness: "visible" });
+export default qwikify$(imgDropZone, { eagerness: 'visible' });

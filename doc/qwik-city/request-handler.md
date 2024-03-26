@@ -1,10 +1,10 @@
 ```ts
-import type { Render } from "@builder.io/qwik/server";
-import type { QwikSerializer, ServerRenderOptions, ServerRequestEvent } from "./types";
-import type { QwikCityPlan } from "../../runtime/src/types";
-import { getRouteMatchPathname, type QwikCityRun, runQwikCity } from "./user-response";
-import { renderQwikMiddleware, resolveRequestHandlers } from "./resolve-request-handlers";
-import { loadRoute } from "../../runtime/src/routing";
+import type { Render } from '@builder.io/qwik/server';
+import type { QwikSerializer, ServerRenderOptions, ServerRequestEvent } from './types';
+import type { QwikCityPlan } from '../../runtime/src/types';
+import { getRouteMatchPathname, type QwikCityRun, runQwikCity } from './user-response';
+import { renderQwikMiddleware, resolveRequestHandlers } from './resolve-request-handlers';
+import { loadRoute } from '../../runtime/src/routing';
 
 /**
  * The request handler for QwikCity. Called by every integration.

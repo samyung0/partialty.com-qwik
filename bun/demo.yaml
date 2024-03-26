@@ -1,6 +1,6 @@
 # since we implemented rate-limiting, the success rate should be low
 config:
-  target: "wss://echo.websocket.org"
+  target: 'wss://echo.websocket.org'
   phases:
     - duration: 20
       arrivalRate: 10
@@ -10,5 +10,5 @@ scenarios:
   - engine: ws
     name: Echo a string
     flow:
-      - connect: "{{ target }}/?token={{ token }}"
-      - send: "Hello from Artillery"
+      - connect: '{{ target }}/?token={{ token }}'
+      - send: 'Hello from Artillery'

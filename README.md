@@ -19,7 +19,7 @@ bun run dev
 ```js
 // import theme context
 const layout = useContext(themeContext);
-layout.value = "Theme1";
+layout.value = 'Theme1';
 ```
 
 ### Switching Layout
@@ -29,7 +29,7 @@ layout.value = "Theme1";
 const layout = useContext(layoutContext);
 const loc = ueLocation();
 const nav = useNavigate();
-layout.value = "Layout1";
+layout.value = 'Layout1';
 
 // location.reload can also be used but all states will be lost
 nav(loc.url.href, {
@@ -114,8 +114,8 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
          return { route, params };
        }
 
-       if (ctx.opts.trailingSlash && !pathname.endsWith("/")) {
-         params = matchRoute(route.pathname, pathname + "/", ctx.opts.allowedParams);
+       if (ctx.opts.trailingSlash && !pathname.endsWith('/')) {
+         params = matchRoute(route.pathname, pathname + '/', ctx.opts.allowedParams);
          if (params) {
            return { route, params };
          }
@@ -159,9 +159,7 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    and make sure `allowedParams` is exported like this:
 
    ```ts
-   c.push(
-     `export default { routes, serverPlugins, menus, trailingSlash, allowedParams, basePathname, cacheModules };`
-   );
+   c.push(`export default { routes, serverPlugins, menus, trailingSlash, allowedParams, basePathname, cacheModules };`);
    ```
 
    In packages\qwik-city\runtime\src\qwik-city-component.tsx, for every loadRoute called (should be 3 in total), add `qwikCity.allowedParams` as the last argument.
@@ -200,7 +198,7 @@ Current: Qwik 1.3.1 (Qwik and Qwik-city should have the same version)
    And then in packages\qwik-city\runtime\src\index.ts, add the following to export the function:
 
    ```js
-   export { loadClientData, removeClientDataCache } from "./use-endpoint";
+   export { loadClientData, removeClientDataCache } from './use-endpoint';
    ```
 
 3. **Prefetch links on visible instead of hover**

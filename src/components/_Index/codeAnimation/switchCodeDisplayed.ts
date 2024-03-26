@@ -1,7 +1,7 @@
-import type { Signal } from "@builder.io/qwik";
-import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
-import codeBlock from "~/components/_Index/codeBlock";
-import blankChar from "~/components/_Index/codeBlock/blankChar";
+import type { Signal } from '@builder.io/qwik';
+import type { TypeWriter } from '~/components/_Index/codeAnimation/TypeWriter';
+import codeBlock from '~/components/_Index/codeBlock';
+import blankChar from '~/components/_Index/codeBlock/blankChar';
 
 export default async (
   typeWriter: TypeWriter,

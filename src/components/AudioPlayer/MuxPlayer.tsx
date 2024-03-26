@@ -1,7 +1,7 @@
 /** @jsxImportSource react */
-import { qwikify$ } from "@builder.io/qwik-react";
-import MuxPlayer from "@mux/mux-player-react";
-import { useRef } from "react";
+import { qwikify$ } from '@builder.io/qwik-react';
+import MuxPlayer from '@mux/mux-player-react';
+import { useRef } from 'react';
 export const MuxAudio = ({
   id,
   paused,
@@ -38,4 +38,4 @@ export const MuxAudio = ({
   );
 };
 
-export const QwikMuxAudio = qwikify$(MuxAudio, { eagerness: "load" });
+export const QwikMuxAudio = qwikify$(MuxAudio, { eagerness: 'load' });

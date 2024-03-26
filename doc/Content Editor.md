@@ -7,9 +7,7 @@ Firstly, we create the editor that stores all the state:
 ```ts
 const [editor] = useState(() =>
   withLists(schema)(
-    withTrailingNewLine(
-      withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
-    )
+    withTrailingNewLine(withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor())))))))
   )
 );
 ```
@@ -60,7 +58,7 @@ There are two types of elements in Slate: `Element` and `Leaf`. You can imagine 
 The types are defined in `types.ts` and declared globally as
 
 ```ts
-declare module "slate" {
+declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor &
       ReactEditor &

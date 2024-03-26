@@ -1,16 +1,16 @@
-import type { Signal } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
-import { z } from "@builder.io/qwik-city";
-import { LuArrowLeft } from "@qwikest/icons/lucide";
-import LoadingSVG from "~/components/LoadingSVG";
-import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
+import type { Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
+import { z } from '@builder.io/qwik-city';
+import { LuArrowLeft } from '@qwikest/icons/lucide';
+import LoadingSVG from '~/components/LoadingSVG';
+import type { NewContentIndex } from '../../../../drizzle_turso/schema/content_index';
 
 const schema = z.object({
   short_description: z
     .string()
     .trim()
-    .min(2, "A short description is required")
-    .max(200, "Description is too long (max. 200 chars)"),
+    .min(2, 'A short description is required')
+    .max(200, 'Description is too long (max. 200 chars)'),
 });
 
 export default component$(
@@ -60,21 +60,17 @@ export default component$(
                       if (ref.value) ref.value.value = courseData.short_description;
                     }}
                     class={
-                      "h-[300px] w-[80vw] min-w-[200px] rounded-md border-2 px-3 py-2 text-base dark:border-background-light-gray dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20  md:w-[400px] md:text-lg xl:w-[500px] " +
-                      (courseDataError.short_description
-                        ? "border-tomato dark:border-tomato"
-                        : "border-black/10")
+                      'h-[300px] w-[80vw] min-w-[200px] rounded-md border-2 px-3 py-2 text-base dark:border-background-light-gray dark:bg-highlight-dark dark:text-background-light-gray dark:disabled:border-black/20  md:w-[400px] md:text-lg xl:w-[500px] ' +
+                      (courseDataError.short_description ? 'border-tomato dark:border-tomato' : 'border-black/10')
                     }
                   />
                 </div>
-                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">
-                  {courseDataError.short_description}
-                </p>
+                <p class="w-[250px] pt-1 tracking-wide text-tomato md:w-[300px]">{courseDataError.short_description}</p>
               </div>
               <br />
               <button
                 onClick$={async () => {
-                  courseDataError.short_description = "";
+                  courseDataError.short_description = '';
                   loading.value = true;
                   const result = schema.safeParse(courseData);
                   if (!result.success) {

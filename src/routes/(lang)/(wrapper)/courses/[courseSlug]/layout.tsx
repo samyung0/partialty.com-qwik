@@ -1,17 +1,17 @@
-import { Slot, component$ } from "@builder.io/qwik";
-import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import { and, eq } from "drizzle-orm";
-import { auth, initLuciaIfNeeded } from "~/auth/lucia";
-import type { LuciaSession } from "~/types/LuciaSession";
-import drizzleClient, { initDrizzleIfNeeded } from "~/utils/drizzleClient";
-import { initTursoIfNeeded } from "~/utils/tursoClient";
-import { content } from "../../../../../../drizzle_turso/schema/content";
-import { content_category } from "../../../../../../drizzle_turso/schema/content_category";
-import { content_index } from "../../../../../../drizzle_turso/schema/content_index";
-import { content_user_progress } from "../../../../../../drizzle_turso/schema/content_user_progress";
-import { course_approval } from "../../../../../../drizzle_turso/schema/course_approval";
-import { profiles } from "../../../../../../drizzle_turso/schema/profiles";
-import { tag } from "../../../../../../drizzle_turso/schema/tag";
+import { Slot, component$ } from '@builder.io/qwik';
+import { routeLoader$, type RequestHandler } from '@builder.io/qwik-city';
+import { and, eq } from 'drizzle-orm';
+import { auth, initLuciaIfNeeded } from '~/auth/lucia';
+import type { LuciaSession } from '~/types/LuciaSession';
+import drizzleClient, { initDrizzleIfNeeded } from '~/utils/drizzleClient';
+import { initTursoIfNeeded } from '~/utils/tursoClient';
+import { content } from '../../../../../../drizzle_turso/schema/content';
+import { content_category } from '../../../../../../drizzle_turso/schema/content_category';
+import { content_index } from '../../../../../../drizzle_turso/schema/content_index';
+import { content_user_progress } from '../../../../../../drizzle_turso/schema/content_user_progress';
+import { course_approval } from '../../../../../../drizzle_turso/schema/course_approval';
+import { profiles } from '../../../../../../drizzle_turso/schema/profiles';
+import { tag } from '../../../../../../drizzle_turso/schema/tag';
 
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   cacheControl({
@@ -20,38 +20,36 @@ export const onRequest: RequestHandler = ({ env, cacheControl }) => {
     noStore: true,
     noCache: true,
   });
-  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
-  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === "1");
+  initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
+  initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
+  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
 };
 
 export const useUserLoaderNullable = routeLoader$(async (event) => {
   const courseSlug = event.params.courseSlug;
-  if (!courseSlug) throw event.redirect(302, "/notfound/");
+  if (!courseSlug) throw event.redirect(302, '/notfound/');
 
-  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === "1").handleRequest(
-    event
-  );
+  const authRequest = auth(event.env, import.meta.env.VITE_USE_PROD_DB === '1').handleRequest(event);
 
   let session: LuciaSession | null = null;
   try {
     session = await authRequest.validate();
   } catch (e) {
     console.error(e);
-    throw event.redirect(302, "/");
+    throw event.redirect(302, '/');
   }
 
-  return session?.user as LuciaSession["user"] | undefined;
+  return session?.user as LuciaSession['user'] | undefined;
 });
 
 export const useTagLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .select()
     .from(tag);
 });
 
 export const useCategoryLoader = routeLoader$(async (event) => {
-  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .select()
     .from(content_category);
 });
@@ -63,17 +61,17 @@ export const useCourseLoader = routeLoader$(async (event) => {
   let accessible_courses: string[] = [];
   if (_user) {
     try {
-      accessible_courses = JSON.parse(_user.accessible_courses || "[]");
-      accessible_courses_read = JSON.parse(_user.accessible_courses_read || "[]");
+      accessible_courses = JSON.parse(_user.accessible_courses || '[]');
+      accessible_courses_read = JSON.parse(_user.accessible_courses_read || '[]');
     } catch (e) {
       console.error(e);
-      throw event.redirect(302, "/notfound/");
+      throw event.redirect(302, '/notfound/');
     }
   }
 
   const courseSlug = event.params.courseSlug;
   const course = (
-    await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+    await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
       .select()
       .from(content_index)
       .where(and(eq(content_index.slug, courseSlug), eq(content_index.is_deleted, false)))
@@ -82,15 +80,12 @@ export const useCourseLoader = routeLoader$(async (event) => {
       .innerJoin(profiles, eq(profiles.id, content_index.author))
       .leftJoin(
         content_user_progress,
-        and(
-          eq(content_user_progress.index_id, content_index.id),
-          eq(profiles.id, content_user_progress.user_id)
-        )
+        and(eq(content_user_progress.index_id, content_index.id), eq(profiles.id, content_user_progress.user_id))
       )
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!course) throw event.redirect(302, "/notfound/");
-  const chapters = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  if (!course) throw event.redirect(302, '/notfound/');
+  const chapters = await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .select({
       id: content.id,
       name: content.name,
@@ -103,31 +98,30 @@ export const useCourseLoader = routeLoader$(async (event) => {
   // if (chapters.length < 1) throw event.redirect(302, "/notfound/");
 
   if (
-    course.course_approval.status !== "approved" &&
+    course.course_approval.status !== 'approved' &&
     (!_user ||
       (_user.userId !== course.content_index.author &&
-        _user.role !== "admin" &&
+        _user.role !== 'admin' &&
         !accessible_courses.includes(course.content_index.id) &&
         !accessible_courses_read.includes(course.content_index.id)))
   )
-    throw event.redirect(302, "/notfound/");
+    throw event.redirect(302, '/notfound/');
 
-  if (!_user && course.content_index.is_private) throw event.redirect(302, "/notfound/");
+  if (!_user && course.content_index.is_private) throw event.redirect(302, '/notfound/');
 
   try {
     if (_user && course.content_index.is_private) {
-      const accessible_course_read: string[] = JSON.parse(_user.accessible_courses_read || "[]");
-      if (!accessible_course_read.includes(course.content_index.id))
-        throw event.redirect(302, "/notfound/");
+      const accessible_course_read: string[] = JSON.parse(_user.accessible_courses_read || '[]');
+      if (!accessible_course_read.includes(course.content_index.id)) throw event.redirect(302, '/notfound/');
     }
   } catch (e) {
     console.error(e);
-    throw event.redirect(302, "/notfound/");
+    throw event.redirect(302, '/notfound/');
   }
 
-  const isFavourited = event.cookie.get("favourite" + course.content_index.id) !== null;
+  const isFavourited = event.cookie.get('favourite' + course.content_index.id) !== null;
 
-  return { course, preview: course.course_approval.status !== "approved", chapters, isFavourited };
+  return { course, preview: course.course_approval.status !== 'approved', chapters, isFavourited };
 });
 
 export default component$(() => <Slot />);

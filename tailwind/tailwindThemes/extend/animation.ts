@@ -1,5 +1,5 @@
-import { type ExtendType } from "../extend";
+import { type ExtendType } from '../extend';
 
 export default {
   animation: {},
-} satisfies { animation: NonNullable<ExtendType["animation"]> };
+} satisfies { animation: NonNullable<ExtendType['animation']> };

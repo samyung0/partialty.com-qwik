@@ -1,59 +1,51 @@
 /** @jsxImportSource react */
-import type { QRL } from "@builder.io/qwik";
-import { qwikify$ } from "@builder.io/qwik-react";
+import type { QRL } from '@builder.io/qwik';
+import { qwikify$ } from '@builder.io/qwik-react';
 
-import type { ListsSchema } from "@prezly/slate-lists";
-import { ListType, withLists } from "@prezly/slate-lists";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { HighlighterCore } from "shikiji/core";
-import type { BaseEditor, BaseRange, Node } from "slate";
-import { Editor, Element as SlateElement, Transforms, createEditor } from "slate";
-import { HistoryEditor, withHistory } from "slate-history";
-import type { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
-import { Editable, Slate, withReact } from "slate-react";
-import AudioPlayer, { CenterAudioChooser } from "~/components/_ContentEditor/AudioPlayer";
+import type { ListsSchema } from '@prezly/slate-lists';
+import { ListType, withLists } from '@prezly/slate-lists';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { HighlighterCore } from 'shikiji/core';
+import type { BaseEditor, BaseRange, Node } from 'slate';
+import { Editor, Element as SlateElement, Transforms, createEditor } from 'slate';
+import { HistoryEditor, withHistory } from 'slate-history';
+import type { ReactEditor, RenderElementProps, RenderLeafProps } from 'slate-react';
+import { Editable, Slate, withReact } from 'slate-react';
+import AudioPlayer, { CenterAudioChooser } from '~/components/_ContentEditor/AudioPlayer';
 
-import QuizCodeHydrate from "~/components/Prose/QuizCodeHydrate";
-import QuizHydrate from "~/components/Prose/QuizHydrate";
-import Prose from "~/components/Prose/react-prose";
-import SyncAudio from "~/components/Prose/react-syncAudio";
-import { Element } from "~/components/_ContentEditor/Element";
-import { HoveringEmbed, withEmbeds } from "~/components/_ContentEditor/Embed";
-import { CenterImageChooser, HoveringImage, withImages } from "~/components/_ContentEditor/Images";
-import { Leaf } from "~/components/_ContentEditor/Leaf";
-import { HoveringLink, withLink } from "~/components/_ContentEditor/Link";
-import Preview from "~/components/_ContentEditor/Preview";
-import SaveContent from "~/components/_ContentEditor/SaveContent";
-import Toolbar from "~/components/_ContentEditor/Toolbar";
+import QuizCodeHydrate from '~/components/Prose/QuizCodeHydrate';
+import QuizHydrate from '~/components/Prose/QuizHydrate';
+import Prose from '~/components/Prose/react-prose';
+import SyncAudio from '~/components/Prose/react-syncAudio';
+import { Element } from '~/components/_ContentEditor/Element';
+import { HoveringEmbed, withEmbeds } from '~/components/_ContentEditor/Embed';
+import { CenterImageChooser, HoveringImage, withImages } from '~/components/_ContentEditor/Images';
+import { Leaf } from '~/components/_ContentEditor/Leaf';
+import { HoveringLink, withLink } from '~/components/_ContentEditor/Link';
+import Preview from '~/components/_ContentEditor/Preview';
+import SaveContent from '~/components/_ContentEditor/SaveContent';
+import Toolbar from '~/components/_ContentEditor/Toolbar';
 import {
   CenterCodeBlockSettings,
   HoveringCodeBlock,
   SetNodeToDecorations,
   useDecorate,
-} from "~/components/_ContentEditor/codeBlock";
-import onKeyDown from "~/components/_ContentEditor/hotkey";
-import {
-  CenterQuizBlockSettings,
-  HoveringQuizBlock,
-  withQuiz,
-} from "~/components/_ContentEditor/quiz";
-import {
-  CenterQuizCodeBlockSettings,
-  HoveringQuizCodeBlock,
-  withQuizCode,
-} from "~/components/_ContentEditor/quizCode";
-import { withTrailingNewLine } from "~/components/_ContentEditor/trailingNewLine";
-import type { CustomElement, CustomText } from "~/components/_ContentEditor/types";
-import type theme from "~/const/theme";
-import type { CloudinaryPublicPic } from "~/types/Cloudinary";
-import type { LuciaSession } from "~/types/LuciaSession";
-import type Mux from "~/types/Mux";
-import { getContentEditorHighlighter } from "~/utils/shikiji/OneDarkPro";
+} from '~/components/_ContentEditor/codeBlock';
+import onKeyDown from '~/components/_ContentEditor/hotkey';
+import { CenterQuizBlockSettings, HoveringQuizBlock, withQuiz } from '~/components/_ContentEditor/quiz';
+import { CenterQuizCodeBlockSettings, HoveringQuizCodeBlock, withQuizCode } from '~/components/_ContentEditor/quizCode';
+import { withTrailingNewLine } from '~/components/_ContentEditor/trailingNewLine';
+import type { CustomElement, CustomText } from '~/components/_ContentEditor/types';
+import type theme from '~/const/theme';
+import type { CloudinaryPublicPic } from '~/types/Cloudinary';
+import type { LuciaSession } from '~/types/LuciaSession';
+import type Mux from '~/types/Mux';
+import { getContentEditorHighlighter } from '~/utils/shikiji/OneDarkPro';
 
-import SmallCircleNav from "~/components/_ContentEditor/SmallCircleNav";
-import "./SmallCircleNav.css";
+import SmallCircleNav from '~/components/_ContentEditor/SmallCircleNav';
+import './SmallCircleNav.css';
 
-declare module "slate" {
+declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor &
       ReactEditor &
@@ -66,41 +58,38 @@ declare module "slate" {
 }
 const schema: ListsSchema = {
   isConvertibleToListTextNode(node: Node) {
-    return SlateElement.isElementType(node, "paragraph");
+    return SlateElement.isElementType(node, 'paragraph');
   },
   isDefaultTextNode(node: Node) {
-    return SlateElement.isElementType(node, "paragraph");
+    return SlateElement.isElementType(node, 'paragraph');
   },
   isListNode(node: Node, type?: ListType) {
     if (type === ListType.ORDERED) {
-      return SlateElement.isElementType(node, "numbered-list");
+      return SlateElement.isElementType(node, 'numbered-list');
     }
     if (type === ListType.UNORDERED) {
-      return SlateElement.isElementType(node, "bulleted-list");
+      return SlateElement.isElementType(node, 'bulleted-list');
     }
-    return (
-      SlateElement.isElementType(node, "numbered-list") ||
-      SlateElement.isElementType(node, "bulleted-list")
-    );
+    return SlateElement.isElementType(node, 'numbered-list') || SlateElement.isElementType(node, 'bulleted-list');
   },
   isListItemNode(node: Node) {
-    return SlateElement.isElementType(node, "list-item");
+    return SlateElement.isElementType(node, 'list-item');
   },
   isListItemTextNode(node: Node) {
-    return SlateElement.isElementType(node, "list-item-text");
+    return SlateElement.isElementType(node, 'list-item-text');
   },
   createDefaultTextNode(props = {}) {
-    return { children: [{ text: "" }], ...props, type: "paragraph" };
+    return { children: [{ text: '' }], ...props, type: 'paragraph' };
   },
   createListNode(type: ListType = ListType.UNORDERED, props = {}) {
-    const nodeType = type === ListType.ORDERED ? "numbered-list" : "bulleted-list";
-    return { children: [{ text: "" }], ...props, type: nodeType };
+    const nodeType = type === ListType.ORDERED ? 'numbered-list' : 'bulleted-list';
+    return { children: [{ text: '' }], ...props, type: nodeType };
   },
   createListItemNode(props = {}) {
-    return { children: [{ text: "" }], ...props, type: "list-item" };
+    return { children: [{ text: '' }], ...props, type: 'list-item' };
   },
   createListItemTextNode(props = {}) {
-    return { children: [{ text: "" }], ...props, type: "list-item-text" };
+    return { children: [{ text: '' }], ...props, type: 'list-item-text' };
   },
 };
 const ContentEditorReact = ({
@@ -132,9 +121,9 @@ const ContentEditorReact = ({
   timeStamp: string;
   initialUserAssets: {
     cloudinaryImages: CloudinaryPublicPic[];
-    muxAudiosWithNames: [Mux["data"][0], string][];
+    muxAudiosWithNames: [Mux['data'][0], string][];
   };
-  user: LuciaSession["user"];
+  user: LuciaSession['user'];
   contentWS: WebSocket;
   initialValue: any;
   renderedHTML: string | undefined;
@@ -152,7 +141,7 @@ const ContentEditorReact = ({
   audioAssetId: string | undefined;
   fetchAudio: QRL<
     (id: string) => Promise<{
-      data: Mux["data"][0];
+      data: Mux['data'][0];
       filename: string;
     }>
   >;
@@ -163,8 +152,7 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue ?? //   { // ?? [
-  //     type: "quizCodeBlock",
+  const normalizedInitialValue = initialValue ?? //     type: "quizCodeBlock", //   { // ?? [
   //     ans: {
   //       type: "ast",
   //       matchInput: { blablabla: "=" },
@@ -277,10 +265,10 @@ const ContentEditorReact = ({
   // ];
   [
     {
-      type: "paragraph",
+      type: 'paragraph',
       children: [
         {
-          text: "",
+          text: '',
         },
       ],
     },
@@ -290,15 +278,13 @@ const ContentEditorReact = ({
   const [editor] = useState(() =>
     withLists(schema)(
       withTrailingNewLine(
-        withQuizCode(
-          withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor()))))))
-        )
+        withQuizCode(withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor())))))))
       )
     )
   );
 
   const userImages = useRef<[Promise<string>, CloudinaryPublicPic][]>([]);
-  const userAudiosWithName = useRef<[Mux["data"][0], string][]>([]);
+  const userAudiosWithName = useRef<[Mux['data'][0], string][]>([]);
 
   useEffect(() => {
     const images: [Promise<string>, CloudinaryPublicPic][] = [];
@@ -349,7 +335,7 @@ const ContentEditorReact = ({
         }
       | undefined
   ) => {
-    console.log("Setting audio track");
+    console.log('Setting audio track');
     _setAudioTrack(props);
     setHasChanged();
   };
@@ -357,7 +343,7 @@ const ContentEditorReact = ({
   const [isChangingContent, setIsChangingContent] = useState(false);
 
   useEffect(() => {
-    console.log("Chapter ID:", chapterId);
+    console.log('Chapter ID:', chapterId);
     setIsChangingContent(true);
   }, [chapterId]);
 
@@ -367,7 +353,7 @@ const ContentEditorReact = ({
       setIsChangingContent(false);
       return;
     }
-    console.log("rendering", normalizedInitialValue);
+    console.log('rendering', normalizedInitialValue);
     // HistoryEditor.withoutSaving(editor, () =>
     //   Transforms.insertNodes(
     //     editor,
@@ -380,23 +366,23 @@ const ContentEditorReact = ({
     // );
     while (editor.children.length > 1) {
       HistoryEditor.withoutSaving(editor, () =>
-        Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
+        Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: 'highest' })
       );
     }
     if (
       normalizedInitialValue.length === 1 &&
-      normalizedInitialValue[0].type === "paragraph" &&
+      normalizedInitialValue[0].type === 'paragraph' &&
       normalizedInitialValue[0].children.length === 1 &&
-      normalizedInitialValue[0].children[0].text === ""
+      normalizedInitialValue[0].children[0].text === ''
     ) {
       //
     } else {
       for (let i = 0; i < normalizedInitialValue.length; i++) {
-        const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: "block" });
+        const beforeEnd = Editor.before(editor, Editor.end(editor, []), { unit: 'block' });
         HistoryEditor.withoutSaving(editor, () =>
           Transforms.insertNodes(editor, normalizedInitialValue[i], {
             at: beforeEnd || [0],
-            mode: "highest",
+            mode: 'highest',
           })
         );
       }
@@ -404,7 +390,7 @@ const ContentEditorReact = ({
       //   Transforms.removeNodes(editor, { at: Editor.start(editor, []), mode: "highest" })
       // );
       HistoryEditor.withoutSaving(editor, () =>
-        Transforms.removeNodes(editor, { at: Editor.end(editor, []), mode: "highest" })
+        Transforms.removeNodes(editor, { at: Editor.end(editor, []), mode: 'highest' })
       );
     }
 
@@ -426,7 +412,7 @@ const ContentEditorReact = ({
   useEffect(() => {
     if (audioAssetId) {
       setIsLoadingAudio(true);
-      console.log("Loading audio: " + audioAssetId);
+      console.log('Loading audio: ' + audioAssetId);
       (async () => {
         const res = await fetchAudio(audioAssetId);
         _setAudioTrack({
@@ -457,8 +443,8 @@ const ContentEditorReact = ({
             ref={parentRef}
             id="ParentRefContainer"
             className={
-              "relative flex h-full w-[100vw] flex-col items-center justify-center dark:bg-primary-dark-gray  dark:text-background-light-gray xl:w-[80vw] " +
-              (isPreviewing ? " hidden " : " block ")
+              'relative flex h-full w-[100vw] flex-col items-center justify-center dark:bg-primary-dark-gray  dark:text-background-light-gray xl:w-[80vw] ' +
+              (isPreviewing ? ' hidden ' : ' block ')
             }
           >
             <Slate
@@ -468,7 +454,7 @@ const ContentEditorReact = ({
                 setChangingValue(changingValue + 1);
               }}
               editor={editor}
-              initialValue={[{ type: "paragraph", children: [{ text: "" }] }]}
+              initialValue={[{ type: 'paragraph', children: [{ text: '' }] }]}
             >
               <SmallCircleNav
                 toggleSmallCircleNav={toggleSmallCircleNav}
@@ -519,16 +505,10 @@ const ContentEditorReact = ({
                 />
               )}
               {showCodeBlockSettings && (
-                <CenterCodeBlockSettings
-                  setShowCodeBlockSettings={setShowCodeBlockSettings}
-                  editor={editor}
-                />
+                <CenterCodeBlockSettings setShowCodeBlockSettings={setShowCodeBlockSettings} editor={editor} />
               )}
               {showQuizBlockSettings && (
-                <CenterQuizBlockSettings
-                  setShowQuizBlockSettings={setShowQuizBlockSettings}
-                  editor={editor}
-                />
+                <CenterQuizBlockSettings setShowQuizBlockSettings={setShowQuizBlockSettings} editor={editor} />
               )}
               {showQuizCodeBlockSettings && (
                 <CenterQuizCodeBlockSettings
@@ -545,14 +525,8 @@ const ContentEditorReact = ({
               />
               <HoveringEmbed parentRef={parentRef} />
               <HoveringLink parentRef={parentRef} />
-              <HoveringCodeBlock
-                parentRef={parentRef}
-                setShowCodeBlockSettings={setShowCodeBlockSettings}
-              />
-              <HoveringQuizBlock
-                parentRef={parentRef}
-                setShowQuizBlockSettings={setShowQuizBlockSettings}
-              />
+              <HoveringCodeBlock parentRef={parentRef} setShowCodeBlockSettings={setShowCodeBlockSettings} />
+              <HoveringQuizBlock parentRef={parentRef} setShowQuizBlockSettings={setShowQuizBlockSettings} />
               <HoveringQuizCodeBlock
                 parentRef={parentRef}
                 setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
@@ -582,12 +556,12 @@ const ContentEditorReact = ({
           </div>
 
           {isPreviewing && (
-            <div className={"flex h-full w-[100vw] flex-col overflow-hidden xl:w-[80vw]"}>
+            <div className={'flex h-full w-[100vw] flex-col overflow-hidden xl:w-[80vw]'}>
               <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               {/* <EmbedHydrate /> */}
-              <div className="overflow-auto" style={{ height: audioTrack ? "90vh" : "100vh" }}>
-                <Prose children={<></>} innerHTML={renderedHTML || ""} />
+              <div className="overflow-auto" style={{ height: audioTrack ? '90vh' : '100vh' }}>
+                <Prose children={<></>} innerHTML={renderedHTML || ''} />
               </div>
               <SyncAudio audioTrack={audioTrack} />
             </div>
@@ -601,20 +575,15 @@ const ContentEditorReact = ({
               Welcome to the Content Editor
             </h1>
             <p className="text-sm md:text-base">
-              Start by selecting a course and chapter to edit in the navigation bar. You might need
-              to click on the three dots to show it. If it is empty, go to{" "}
-              <a
-                target="_blank"
-                href="/creator/"
-                className="underline decoration-wavy underline-offset-4"
-              >
+              Start by selecting a course and chapter to edit in the navigation bar. You might need to click on the
+              three dots to show it. If it is empty, go to{' '}
+              <a target="_blank" href="/creator/" className="underline decoration-wavy underline-offset-4">
                 Creator
-              </a>{" "}
+              </a>{' '}
               and create a course :D
             </p>
             <p className="text-sm text-tomato md:text-base">
-              Note: Content Editor is still in beta mode! Please kindly report any bugs and glitches
-              to{" "}
+              Note: Content Editor is still in beta mode! Please kindly report any bugs and glitches to{' '}
               <a
                 href="mailto:customer@partialty.com"
                 target="_blank"
@@ -629,11 +598,11 @@ const ContentEditorReact = ({
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Ctrl
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Z
-                  </kbd>{" "}
+                  </kbd>{' '}
                   :
                 </p>
                 <p>Undo</p>
@@ -642,15 +611,15 @@ const ContentEditorReact = ({
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Ctrl
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Shift
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Z
-                  </kbd>{" "}
+                  </kbd>{' '}
                   :
                 </p>
                 <p>Redo</p>
@@ -659,11 +628,11 @@ const ContentEditorReact = ({
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Shift
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Enter
-                  </kbd>{" "}
+                  </kbd>{' '}
                   :
                 </p>
                 <p>Soft Break</p>
@@ -672,11 +641,11 @@ const ContentEditorReact = ({
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Ctrl
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Enter
-                  </kbd>{" "}
+                  </kbd>{' '}
                   :
                 </p>
                 <p>Hard Break (bottom)</p>
@@ -685,15 +654,15 @@ const ContentEditorReact = ({
                 <p className="w-[200px]">
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Ctrl
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Shift
-                  </kbd>{" "}
-                  +{" "}
+                  </kbd>{' '}
+                  +{' '}
                   <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800 dark:border-gray-500 dark:bg-highlight-dark dark:text-gray-100">
                     Enter
-                  </kbd>{" "}
+                  </kbd>{' '}
                   :
                 </p>
                 <p>Hard Break (top)</p>
@@ -706,4 +675,4 @@ const ContentEditorReact = ({
   );
 };
 
-export default qwikify$(ContentEditorReact, { eagerness: "load" });
+export default qwikify$(ContentEditorReact, { eagerness: 'load' });

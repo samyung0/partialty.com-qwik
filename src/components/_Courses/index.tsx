@@ -1,26 +1,26 @@
-import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { Link, server$, useNavigate } from "@builder.io/qwik-city";
-import { IoReaderOutline, IoRocketOutline } from "@qwikest/icons/ionicons";
-import { LuArrowRight, LuGem } from "@qwikest/icons/lucide";
-import { eq } from "drizzle-orm";
-import Footer from "~/components/Footer";
-import HeartSVG from "~/components/HeartSVG";
-import Nav from "~/components/Nav";
-import { difficultyLabels } from "~/const/difficulty";
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { Link, server$, useNavigate } from '@builder.io/qwik-city';
+import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
+import { LuArrowRight, LuGem } from '@qwikest/icons/lucide';
+import { eq } from 'drizzle-orm';
+import Footer from '~/components/Footer';
+import HeartSVG from '~/components/HeartSVG';
+import Nav from '~/components/Nav';
+import { difficultyLabels } from '~/const/difficulty';
 import {
   useCategoryLoader,
   useCourseLoader,
   useTagLoader,
   useUserLoaderNullable,
-} from "~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../../drizzle_turso/schema/profiles";
-import { listSupportedLang } from "../../../lang";
+} from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
+import drizzleClient from '~/utils/drizzleClient';
+import { profiles } from '../../../drizzle_turso/schema/profiles';
+import { listSupportedLang } from '../../../lang';
 
 const getFavourite = server$(async function (id: string) {
   return (
     (
-      await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+      await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
         .select({ favourite_courses: profiles.favourite_courses })
         .from(profiles)
         .where(eq(profiles.id, id))
@@ -31,7 +31,7 @@ const getFavourite = server$(async function (id: string) {
 const setFavouriteDB = server$(async function (userId: string, courseId: string) {
   const favourite_courses = await getFavourite(userId);
   favourite_courses.push(courseId);
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .update(profiles)
     .set({ favourite_courses })
     .where(eq(profiles.id, userId))
@@ -42,7 +42,7 @@ const removeFavouriteDB = server$(async function (userId: string, courseId: stri
   const favourite_courses = await getFavourite(userId);
   const index = favourite_courses.indexOf(courseId);
   if (index >= 0) favourite_courses.splice(index, 1);
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .update(profiles)
     .set({ favourite_courses })
     .where(eq(profiles.id, userId))
@@ -50,18 +50,18 @@ const removeFavouriteDB = server$(async function (userId: string, courseId: stri
 });
 
 const setFavouriteCookie = server$(function (courseId: string) {
-  this.cookie.set("favourite" + courseId, 1, {
-    path: "/",
-    maxAge: [12, "weeks"],
+  this.cookie.set('favourite' + courseId, 1, {
+    path: '/',
+    maxAge: [12, 'weeks'],
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: 'lax',
     secure: true,
   });
 });
 
 const removeFavouriteCookie = server$(function (courseId: string) {
-  this.cookie.delete("favourite" + courseId, {
-    path: "/",
+  this.cookie.delete('favourite' + courseId, {
+    path: '/',
   });
 });
 
@@ -75,7 +75,7 @@ export default component$(() => {
   const nav = useNavigate();
 
   const toggleFavourite = $(() => {
-    if (!userNullable) return nav("/login/");
+    if (!userNullable) return nav('/login/');
     isFavourite.value = !isFavourite.value;
     if (isFavourite.value) {
       setFavouriteDB(userNullable.userId, course.content_index.id).catch(() => {
@@ -108,22 +108,19 @@ export default component$(() => {
     ? chapters.find(
         (chapter) =>
           chapter.id ===
-          course.content_index.chapter_order.filter(
-            (id) => !course.content_user_progress!.progress.includes(id)
-          )[0]
-      )?.link ||
-      chapters.find((chapter) => chapter.id === course.content_index.chapter_order[0])!.link!
-    : "";
+          course.content_index.chapter_order.filter((id) => !course.content_user_progress!.progress.includes(id))[0]
+      )?.link || chapters.find((chapter) => chapter.id === course.content_index.chapter_order[0])!.link!
+    : '';
 
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={userNullable} />
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <Link
-          href={"/catalog/"}
+          href={'/catalog/'}
           class="ml-2 flex items-center gap-2 self-start  text-sm tracking-wide  md:-mb-4 md:text-base"
         >
-          <span>All courses</span>{" "}
+          <span>All courses</span>{' '}
           <span class="-mt-[2px] block text-[15px] text-primary-dark-gray dark:text-background-light-gray md:mt-0 md:text-[20px]">
             <LuArrowRight />
           </span>
@@ -131,9 +128,7 @@ export default component$(() => {
         <section class="flex flex-col gap-3 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray p-4 dark:bg-highlight-dark dark:text-background-light-gray  md:gap-4 md:p-6 lg:p-8">
           <h1 class="font-mosk text-xl tracking-wider md:text-2xl lg:text-3xl">
             {course.content_index.name}
-            {preview && (
-              <span class="pl-4 text-xs tracking-normal md:text-sm lg:text-base">Preview Mode</span>
-            )}
+            {preview && <span class="pl-4 text-xs tracking-normal md:text-sm lg:text-base">Preview Mode</span>}
           </h1>
           <p class="whitespace-pre-line text-base tracking-wide md:text-lg lg:text-xl">
             {course.content_index.short_description}
@@ -145,7 +140,7 @@ export default component$(() => {
               <IoReaderOutline />
             </span>
             {course.content_index.chapter_order.length} chapter
-            {course.content_index.chapter_order.length > 1 ? "s" : ""}
+            {course.content_index.chapter_order.length > 1 ? 's' : ''}
           </p>
           <p class="flex items-center gap-2 text-base tracking-wide md:gap-4 md:text-lg lg:text-xl">
             <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
@@ -153,11 +148,11 @@ export default component$(() => {
             </span>
             <span
               class={`border-b-2 md:border-b-4 ${
-                course.content_index.difficulty === "easy"
-                  ? "border-sea"
-                  : course.content_index.difficulty === "intermediate"
-                  ? "border-custom-yellow"
-                  : "border-custom-pink"
+                course.content_index.difficulty === 'easy'
+                  ? 'border-sea'
+                  : course.content_index.difficulty === 'intermediate'
+                  ? 'border-custom-yellow'
+                  : 'border-custom-pink'
               }`}
             >
               {difficultyLabels[course.content_index.difficulty]}
@@ -177,9 +172,7 @@ export default component$(() => {
               </div>
             )}
             <div class="flex flex-col gap-1 md:gap-2">
-              <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
-                Course Description
-              </h2>
+              <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Description</h2>
               <p class="text-sm md:text-base">
                 {course.content_index.description}
                 {/* Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, sit doloribus?
@@ -191,9 +184,7 @@ export default component$(() => {
             </div>
             {!course.content_index.is_single_page && (
               <div class="flex flex-col gap-1 md:gap-2">
-                <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
-                  Course Chapters
-                </h2>
+                <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Chapters</h2>
 
                 <ul class="flex flex-col gap-2 text-base md:gap-3 lg:text-lg">
                   {chapters.map((chapter) => (
@@ -225,18 +216,13 @@ export default component$(() => {
               </p>
             </div>
             <div class="flex flex-col gap-1 md:gap-2">
-              <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">
-                Course Language
-              </h2>
+              <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Language</h2>
               <p class="text-sm md:text-base">
-                {
-                  listSupportedLang.find((_lang) => _lang.value === course.content_index.lang)
-                    ?.label
-                }
+                {listSupportedLang.find((_lang) => _lang.value === course.content_index.lang)?.label}
               </p>
             </div>
             <p class="text-gary-500 pt-3 text-xs italic dark:text-gray-300 md:pt-6">
-              Last Edited On: {course.content_index.updated_at.toString().split(" ")[0]}
+              Last Edited On: {course.content_index.updated_at.toString().split(' ')[0]}
             </p>
           </div>
           <div class="order-1 flex w-full flex-col gap-3 text-sm md:order-2 md:w-[280px] md:text-base">
@@ -245,14 +231,10 @@ export default component$(() => {
                 <span>Category:</span>
                 <p class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                   <Link
-                    href={
-                      categories.find((_category) => _category.id === course.content_index.category)
-                        ?.link
-                    }
+                    href={categories.find((_category) => _category.id === course.content_index.category)?.link}
                     prefetch
                   >
-                    {categories.find((_category) => _category.id === course.content_index.category)
-                      ?.name || ""}
+                    {categories.find((_category) => _category.id === course.content_index.category)?.name || ''}
                   </Link>
                 </p>
               </div>
@@ -263,10 +245,7 @@ export default component$(() => {
                     const tagObj = tags.find((__tag) => __tag.id === _tag);
                     if (!tagObj) return null;
                     return (
-                      <li
-                        key={_tag}
-                        class="border-b-2 border-primary-dark-gray dark:border-background-light-gray"
-                      >
+                      <li key={_tag} class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
                         <Link href={tagObj.link} prefetch>
                           {tagObj.name}
                         </Link>
@@ -279,8 +258,7 @@ export default component$(() => {
             {!course.content_user_progress && (
               <Link
                 href={
-                  chapters.find((chapter) => course.content_index.chapter_order[0] === chapter.id)
-                    ?.link || undefined
+                  chapters.find((chapter) => course.content_index.chapter_order[0] === chapter.id)?.link || undefined
                 }
                 prefetch
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
@@ -303,7 +281,7 @@ export default component$(() => {
                 class="flex items-center justify-center text-sm tracking-wide underline decoration-wavy underline-offset-4 md:text-base lg:underline-offset-[6px]"
               >
                 <span class="flex items-center gap-3">
-                  <span>{isFavourite.value ? "Remove from Favourite" : "Add to Favourite"}</span>
+                  <span>{isFavourite.value ? 'Remove from Favourite' : 'Add to Favourite'}</span>
                   {/* <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
                     <LuHeart />
                   </span> */}

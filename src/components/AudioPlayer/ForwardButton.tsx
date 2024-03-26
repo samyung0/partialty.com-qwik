@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
-import type { PlayerAPI } from "~/components/AudioPlayer";
+import { component$ } from '@builder.io/qwik';
+import type { PlayerAPI } from '~/components/AudioPlayer';
 
 export const ForwardIcon = component$((props: any) => {
   return (

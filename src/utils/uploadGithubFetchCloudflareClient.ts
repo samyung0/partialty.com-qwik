@@ -1,15 +1,15 @@
-import { $ } from "@builder.io/qwik";
-import { graphql } from "@octokit/graphql";
-import { request } from "@octokit/request";
+import { $ } from '@builder.io/qwik';
+import { graphql } from '@octokit/graphql';
+import { request } from '@octokit/request';
 
-import { MAX_NUMBER_OF_FILES_R2_FETCHGITHUB, MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB } from "~/const";
-import { isBinary } from "~/utils/fileUtil";
-import { uploadGithubFetchCloudflare } from "~/utils/uploadGithubFetchCloudflareServer";
+import { MAX_NUMBER_OF_FILES_R2_FETCHGITHUB, MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB } from '~/const';
+import { isBinary } from '~/utils/fileUtil';
+import { uploadGithubFetchCloudflare } from '~/utils/uploadGithubFetchCloudflareServer';
 
 export const uploadRepoToCloudflare = async (
   owner: string,
   repo: string,
-  branch: string = "main",
+  branch: string = 'main',
   token: string
 ): Promise<[boolean, string]> => {
   // const GITHUB_PUBLIC_TOKEN = import.meta.env.VITE_GITHUB_PUBLIC_TOKEN;
@@ -18,7 +18,7 @@ export const uploadRepoToCloudflare = async (
   if (!data[0]) return data;
 
   const size = (data[1] as FetchedFile[]).reduce((prev, curr) => prev + curr.size, 0);
-  if (size > MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB) return [false, "Exceeded maximum repo size!"];
+  if (size > MAX_SIZE_TO_UPLOAD_R2_FETCHGITHUB) return [false, 'Exceeded maximum repo size!'];
 
   console.log(data);
 
@@ -26,30 +26,30 @@ export const uploadRepoToCloudflare = async (
 };
 
 export const test = $(async function (token: string) {
-  const res = await request("GET /installation/repositories", {
+  const res = await request('GET /installation/repositories', {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
-  const res2 = await request("GET /repos/samyung0/qwik-project/branches", {
+  const res2 = await request('GET /repos/samyung0/qwik-project/branches', {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
-  console.log("RES", res.data);
+  console.log('RES', res.data);
   console.log(res2.data);
 });
 
 const directFetchGithub = async (
   owner: string,
   repo: string,
-  branch: string = "main",
+  branch: string = 'main',
   GITHUB_PUBLIC_TOKEN: string
 ): Promise<[false, string] | [true, FetchedFile[]]> => {
-  let errored: [boolean, string] = [false, ""];
+  let errored: [boolean, string] = [false, ''];
   let apiRateLimit = false;
   try {
-    const res = await request("GET /repos/{owner}/{repo}/git/trees/{branch}?recursive=1", {
+    const res = await request('GET /repos/{owner}/{repo}/git/trees/{branch}?recursive=1', {
       owner,
       repo,
       branch,
@@ -63,18 +63,18 @@ const directFetchGithub = async (
     if (errored[0] || apiRateLimit) throw new Error();
 
     // will not cache this response to ensure latest file can be fetched
-    const files = (res.data.tree as GithubEntry[]).filter((entry) => entry.type !== "tree");
-    if (files.length > MAX_NUMBER_OF_FILES_R2_FETCHGITHUB) return [false, "Too many files!"];
+    const files = (res.data.tree as GithubEntry[]).filter((entry) => entry.type !== 'tree');
+    if (files.length > MAX_NUMBER_OF_FILES_R2_FETCHGITHUB) return [false, 'Too many files!'];
 
     const ret: FetchedFile[] = files.map((entry) => {
-      return { path: entry.path, data: "", resolved: false, isBinary: false, size: 0 };
+      return { path: entry.path, data: '', resolved: false, isBinary: false, size: 0 };
     });
 
     // files cooresponds to the latest commit
     // everytime there is a new commit, the sha value of the file changes
     // and invalidates the cache (more precisely since the url changed, the cache will result in a miss)
     // so we dont need to  manually delete the cache
-    const cacheStorage = await caches.open("GithubUpload");
+    const cacheStorage = await caches.open('GithubUpload');
     const cacheMatchesPromises: Promise<Response | undefined>[] = files.map((entry) =>
       cacheStorage.match(new Request(entry.url))
     );
@@ -99,7 +99,7 @@ const directFetchGithub = async (
                }
        }`;
       } else {
-        console.log("CACHE HIT");
+        console.log('CACHE HIT');
         // cache hit, add to return list
 
         // check performance
@@ -125,7 +125,7 @@ const directFetchGithub = async (
         },
       });
 
-      if (!Object.prototype.hasOwnProperty.call(res, "repository")) {
+      if (!Object.prototype.hasOwnProperty.call(res, 'repository')) {
         apiRateLimit = true;
         throw new Error();
       }
@@ -139,7 +139,7 @@ const directFetchGithub = async (
         ret[index].size = repository[i].byteSize;
         if (repository[i].isTruncated || repository[i].isBinary !== false) {
           // refetch using rest api
-          restAPIPromise[index] = request("GET /repos/{owner}/{repo}/git/blobs/{oid}", {
+          restAPIPromise[index] = request('GET /repos/{owner}/{repo}/git/blobs/{oid}', {
             owner,
             repo,
             oid: files[index].sha,
@@ -189,7 +189,7 @@ const directFetchGithub = async (
 
     for (let i = 0; i < ret.length; i++) {
       if (!ret[i].resolved) {
-        errored = [true, "Unable to load " + ret[i].path];
+        errored = [true, 'Unable to load ' + ret[i].path];
         throw new Error();
       }
     }
@@ -197,8 +197,8 @@ const directFetchGithub = async (
     return [true, ret];
   } catch (e: any) {
     if (apiRateLimit) {
-      return [false, "Api rate limit hit!"];
-    } else return [false, errored[1] === "" ? e.toString() : errored[1]];
+      return [false, 'Api rate limit hit!'];
+    } else return [false, errored[1] === '' ? e.toString() : errored[1]];
   }
 };
 
@@ -207,7 +207,7 @@ type GithubEntry = {
   path: string;
   sha: string;
   size: number;
-  type: "blob" | "tree";
+  type: 'blob' | 'tree';
   url: string;
 };
 

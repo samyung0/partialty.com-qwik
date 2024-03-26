@@ -1,41 +1,28 @@
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 
-import styles from "./index.module.css";
+import styles from './index.module.css';
 
 const texts = [
-  <p
-    key="text1"
-    class={"text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]"}
-  >
-    <strong>React</strong> is a JavaScript framework that helps build{" "}
-    <span class="border-b-4 border-bright-yellow xl:border-b-8">
-      interactive and reusable user interfaces
-    </span>
-    . It simplifies UI development by breaking it down into smaller components that{" "}
+  <p key="text1" class={'text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]'}>
+    <strong>React</strong> is a JavaScript framework that helps build{' '}
+    <span class="border-b-4 border-bright-yellow xl:border-b-8">interactive and reusable user interfaces</span>. It
+    simplifies UI development by breaking it down into smaller components that{' '}
     <span class="highlight-pink whitespace-nowrap">update efficiently</span>.
   </p>,
-  <p
-    key="text2"
-    class="text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]"
-  >
-    <strong>Next.js</strong> is a framework for building web applications with{" "}
-    <strong>React</strong>. It simplifies{" "}
-    <span class="highbright-yellow">server-side rendering</span>, routing, and code splitting,
-    making it easier to create{" "}
-    <span class="highlight-pink whitespace-nowrap">fast and optimized</span> websites with React.
+  <p key="text2" class="text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]">
+    <strong>Next.js</strong> is a framework for building web applications with <strong>React</strong>. It simplifies{' '}
+    <span class="highbright-yellow">server-side rendering</span>, routing, and code splitting, making it easier to
+    create <span class="highlight-pink whitespace-nowrap">fast and optimized</span> websites with React.
   </p>,
-  <p
-    key="text3"
-    class="text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]"
-  >
-    <strong>Astro</strong> is a framework that enables developers to build websites using a mix of{" "}
-    <span class="border-b-4 border-lilac xl:border-b-8">static and dynamic</span> content. It allows
-    for faster performance, easier maintenance, and seamless integration with{" "}
+  <p key="text3" class="text-base md:tracking-wide lg:text-lg lg:leading-[2rem] xl:text-xl xl:leading-[2.5rem]">
+    <strong>Astro</strong> is a framework that enables developers to build websites using a mix of{' '}
+    <span class="border-b-4 border-lilac xl:border-b-8">static and dynamic</span> content. It allows for faster
+    performance, easier maintenance, and seamless integration with{' '}
     <span class="highbright-yellow whitespace-nowrap">other frameworks</span>.
   </p>,
 ];
 
-const titles = ["React", "Next.js", "Astro"];
+const titles = ['React', 'Next.js', 'Astro'];
 
 export default component$(() => {
   const delay = useSignal(2000);
@@ -56,10 +43,10 @@ export default component$(() => {
           <h1 class="p-2 text-center font-mosk text-2xl font-[900] md:text-3xl lg:text-[2rem] lg:leading-[3rem] xl:text-[2.5rem] xl:leading-[3.5rem]">
             There is a wide variety of tutorials on your favourite framework,
             <br />
-            written in{" "}
+            written in{' '}
             <span class="underline decoration-wavy underline-offset-[8px] lg:[text-underline-offset:12px] ">
               simple
-            </span>{" "}
+            </span>{' '}
             words.
           </h1>
         </div>
@@ -74,9 +61,7 @@ export default component$(() => {
                     {titles.map((title, index) => (
                       <div
                         key={`title${index}`}
-                        class={`inline-block ${
-                          textIndex.value === index ? styles.titleAppear : "hidden"
-                        }`}
+                        class={`inline-block ${textIndex.value === index ? styles.titleAppear : 'hidden'}`}
                       >
                         {title}
                       </div>
@@ -85,13 +70,13 @@ export default component$(() => {
                 </h2>
                 <div
                   class={
-                    " left-[50%] top-[130px] w-full md:absolute md:w-[80%] md:-translate-x-[50%] md:p-0 md:px-4 lg:top-[160px] xl:top-[180px]"
+                    ' left-[50%] top-[130px] w-full md:absolute md:w-[80%] md:-translate-x-[50%] md:p-0 md:px-4 lg:top-[160px] xl:top-[180px]'
                   }
                 >
                   {texts.map((text, index) => (
                     <div
                       key={`textWrapper${index}`}
-                      class={`${textIndex.value === index ? styles.textAppear : "hidden"}`}
+                      class={`${textIndex.value === index ? styles.textAppear : 'hidden'}`}
                     >
                       {text}
                     </div>

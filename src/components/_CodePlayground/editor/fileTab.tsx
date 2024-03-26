@@ -1,11 +1,11 @@
-import type { PropFunction } from "@builder.io/qwik";
-import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import { LuFile } from "@qwikest/icons/lucide";
-import { CrossIcon } from "~/assets/icon/crossIcon";
-import { MenuIcon } from "~/assets/icon/menuIcon";
-import { SaveIcon } from "~/assets/icon/saveIcon";
-import type { Entry } from "~/utils/fileUtil";
-import FileStructureSmallScreen from "../fileStructure/fileStructureSmallScreen";
+import type { PropFunction } from '@builder.io/qwik';
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import { LuFile } from '@qwikest/icons/lucide';
+import { CrossIcon } from '~/assets/icon/crossIcon';
+import { MenuIcon } from '~/assets/icon/menuIcon';
+import { SaveIcon } from '~/assets/icon/saveIcon';
+import type { Entry } from '~/utils/fileUtil';
+import FileStructureSmallScreen from '../fileStructure/fileStructureSmallScreen';
 
 interface FileTab {
   entries: Entry[];
@@ -20,20 +20,17 @@ export default component$<FileTab>(
   ({ entries, openedFiles, addToStage, openStagedFile, saveOpenedFiles, closeFile }) => {
     useVisibleTask$(() => {
       // toggle button for the file structure
-      const toggleButton = document.getElementById("file-structure-toggle");
-      const fileStructure = document.getElementById("file-structure");
+      const toggleButton = document.getElementById('file-structure-toggle');
+      const fileStructure = document.getElementById('file-structure');
 
-      toggleButton?.addEventListener("click", (e) => {
-        fileStructure?.classList.toggle("drawer-open");
+      toggleButton?.addEventListener('click', (e) => {
+        fileStructure?.classList.toggle('drawer-open');
       });
 
-      document.addEventListener("click", (event) => {
+      document.addEventListener('click', (event) => {
         const targetElement = event.target;
-        if (
-          !fileStructure?.contains(targetElement as Node) &&
-          !toggleButton?.contains(targetElement as Node)
-        ) {
-          fileStructure?.classList.add("drawer-open");
+        if (!fileStructure?.contains(targetElement as Node) && !toggleButton?.contains(targetElement as Node)) {
+          fileStructure?.classList.add('drawer-open');
         }
       });
     });
@@ -44,10 +41,7 @@ export default component$<FileTab>(
           <div class=" flex h-full items-center overflow-auto">
             {/* toggle file structure in smaller screen */}
             <div class=" block h-full   p-1 md:hidden">
-              <div
-                id="file-structure-toggle"
-                class="inline-block rounded-lg transition-transform duration-500 "
-              >
+              <div id="file-structure-toggle" class="inline-block rounded-lg transition-transform duration-500 ">
                 <MenuIcon width={25} height={25} />
               </div>
             </div>
@@ -56,7 +50,7 @@ export default component$<FileTab>(
               {openedFiles.map((file, idx) => (
                 <button
                   class={`group flex items-center gap-1 border-r border-dark py-1 pl-2 pr-1 ${
-                    openedFiles.length - 1 === idx && "border-r"
+                    openedFiles.length - 1 === idx && 'border-r'
                   }`}
                   key={`file-${idx}`}
                   onClick$={() => {
@@ -91,11 +85,7 @@ export default component$<FileTab>(
           id="file-structure"
           class="fixed left-0 top-[34px] -z-20 w-full  bg-white shadow-lg  transition-all duration-500 peer-checked:translate-y-0 md:hidden "
         >
-          <FileStructureSmallScreen
-            entries={entries}
-            addToStage={addToStage}
-            openStagedFile={openStagedFile}
-          />
+          <FileStructureSmallScreen entries={entries} addToStage={addToStage} openStagedFile={openStagedFile} />
         </div>
       </div>
     );

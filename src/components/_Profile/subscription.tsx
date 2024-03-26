@@ -1,15 +1,15 @@
-import { $, component$ } from "@builder.io/qwik";
-import { server$ } from "@builder.io/qwik-city";
+import { $, component$ } from '@builder.io/qwik';
+import { server$ } from '@builder.io/qwik-city';
 
-import { eq } from "drizzle-orm";
-import bunApp from "~/_api/bun/util/edenTreaty";
-import CheckIcon from "~/assets/svg/fitbit-check-small.svg";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import drizzleClient from "~/utils/drizzleClient";
-import { profiles } from "../../../drizzle_turso/schema/profiles";
+import { eq } from 'drizzle-orm';
+import bunApp from '~/_api/bun/util/edenTreaty';
+import CheckIcon from '~/assets/svg/fitbit-check-small.svg';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import drizzleClient from '~/utils/drizzleClient';
+import { profiles } from '../../../drizzle_turso/schema/profiles';
 
 const getCustomerId = server$(async function (userId: string) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1")
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .select({
       customerId: profiles.stripe_id,
     })
@@ -20,9 +20,9 @@ const getCustomerId = server$(async function (userId: string) {
 export default component$(() => {
   const user = useUserLoader().value;
   const handleUpgrade = $(async () => {
-    if (user.role !== "free") return;
+    if (user.role !== 'free') return;
     try {
-      if (!user.email) return alert("No Email Address detected! Please contact support.");
+      if (!user.email) return alert('No Email Address detected! Please contact support.');
       let id = (await getCustomerId(user.userId))[0]?.customerId;
       if (!id) {
         id = (
@@ -32,18 +32,18 @@ export default component$(() => {
             userId: user.userId,
           })
         ).data;
-        if (!id) throw new Error("Server Error! Please contact support.");
+        if (!id) throw new Error('Server Error! Please contact support.');
       }
       const url = (
-        await bunApp.stripe["create-session"].post({
+        await bunApp.stripe['create-session'].post({
           customerId: id,
-          dev: import.meta.env.MODE !== "production",
+          dev: import.meta.env.MODE !== 'production',
         })
       ).data?.url;
-      if (!url) throw new Error("Server Error! Please contact support.");
+      if (!url) throw new Error('Server Error! Please contact support.');
       window.location.assign(url);
     } catch (e) {
-      return alert("Error! " + (e as any).toString());
+      return alert('Error! ' + (e as any).toString());
     }
   });
   return (
@@ -60,10 +60,10 @@ export default component$(() => {
         <div class="flex flex-col items-center gap-4 pt-4 text-primary-dark-gray lg:gap-8 lg:pt-8">
           <div
             class={
-              "flex w-full flex-col rounded-lg bg-white p-5 md:px-8 lg:h-[300px] lg:w-[600px] lg:p-8  " +
-              (["paid", "admin", "teacher"].includes(user.role)
-                ? " border-4 border-mint"
-                : " border-2 border-primary-dark-gray shadow-xl")
+              'flex w-full flex-col rounded-lg bg-white p-5 md:px-8 lg:h-[300px] lg:w-[600px] lg:p-8  ' +
+              (['paid', 'admin', 'teacher'].includes(user.role)
+                ? ' border-4 border-mint'
+                : ' border-2 border-primary-dark-gray shadow-xl')
             }
           >
             <div class="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between md:gap-0">
@@ -96,9 +96,9 @@ export default component$(() => {
             </div>
 
             <div class="relative mt-3 flex flex-1 items-center lg:mt-6">
-              {["paid", "admin", "teacher"].includes(user.role) ? (
+              {['paid', 'admin', 'teacher'].includes(user.role) ? (
                 <button
-                  disabled={user.role === "admin" || user.role === "teacher"}
+                  disabled={user.role === 'admin' || user.role === 'teacher'}
                   class="mx-auto rounded-lg bg-middle-tomato px-4 py-2 text-sm lg:px-6 lg:py-3 lg:text-base"
                 >
                   Cancel Subscription
@@ -113,20 +113,16 @@ export default component$(() => {
               )}
             </div>
           </div>
-          {user.role === "free" && (
+          {user.role === 'free' && (
             <p class="text-base dark:text-background-light-gray lg:text-sm">
               You current do not have any active subscription 🥲
             </p>
           )}
-          {user.role === "admin" && (
-            <p class="text-base dark:text-background-light-gray lg:text-sm">
-              You have an admin role!
-            </p>
+          {user.role === 'admin' && (
+            <p class="text-base dark:text-background-light-gray lg:text-sm">You have an admin role!</p>
           )}
-          {user.role === "teacher" && (
-            <p class="text-base dark:text-background-light-gray lg:text-sm">
-              You have a teacher role!
-            </p>
+          {user.role === 'teacher' && (
+            <p class="text-base dark:text-background-light-gray lg:text-sm">You have a teacher role!</p>
           )}
         </div>
       </div>

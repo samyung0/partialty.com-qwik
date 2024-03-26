@@ -1,5 +1,5 @@
-import { component$, useSignal } from "@builder.io/qwik";
-import type { PlayerAPI } from "~/components/AudioPlayer";
+import { component$, useSignal } from '@builder.io/qwik';
+import type { PlayerAPI } from '~/components/AudioPlayer';
 
 export const Rate1 = component$((props: any) => (
   <svg

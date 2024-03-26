@@ -1,11 +1,11 @@
-import type { Auth } from "~/auth/lucia";
+import type { Auth } from '~/auth/lucia';
 
 export type LuciaSession = {
   created_at: string;
-  user: ReturnType<Auth["getUserAttributes"]> & { userId: string };
+  user: ReturnType<Auth['getUserAttributes']> & { userId: string };
   sessionId: string;
   activePeriodExpiresAt: Date;
   idlePeriodExpiresAt: Date;
-  state: "active" | "idle" | "dead";
+  state: 'active' | 'idle' | 'dead';
   fresh: boolean;
 };

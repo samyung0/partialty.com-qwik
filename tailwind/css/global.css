@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "mosk";
-  src: url("/font/Mosk/Mosk-Ultra-Bold.ttf") format("truetype");
+  font-family: 'mosk';
+  src: url('/font/Mosk/Mosk-Ultra-Bold.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -43,24 +43,24 @@
 } */
 
 @font-face {
-  font-family: "Cascadia Code";
-  src: url("/font/Cascadia Code/CascadiaCode.ttf") format("truetype");
+  font-family: 'Cascadia Code';
+  src: url('/font/Cascadia Code/CascadiaCode.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Cascadia Code";
-  src: url("/font/Cascadia Code/CascadiaCode.ttf") format("truetype");
+  font-family: 'Cascadia Code';
+  src: url('/font/Cascadia Code/CascadiaCode.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Varela_Round";
-  src: url("/font/Varela_Round/VarelaRound-Regular.ttf") format("truetype");
+  font-family: 'Varela_Round';
+  src: url('/font/Varela_Round/VarelaRound-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -73,21 +73,21 @@ html {
   -o-tab-size: 4;
   tab-size: 4;
   font-family:
-    "Varela_Round",
+    'Varela_Round',
     ui-sans-serif,
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
-    "Helvetica Neue",
+    'Helvetica Neue',
     Arial,
-    "Noto Sans",
+    'Noto Sans',
     sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji';
 
   --foreground-rgb: #f7f7f7;
   --background-start-rgb: #f7f7f7;

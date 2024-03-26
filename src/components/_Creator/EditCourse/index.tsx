@@ -1,55 +1,36 @@
-import {
-  $,
-  component$,
-  useOnWindow,
-  useSignal,
-  useStore,
-  useTask$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
-import { server$ } from "@builder.io/qwik-city";
-import { and, eq } from "drizzle-orm";
-import Step1 from "~/components/_Creator/CreateCourse/step1";
-import Step1_2 from "~/components/_Creator/CreateCourse/step1_2";
-import Step2 from "~/components/_Creator/CreateCourse/step2";
-import Step3 from "~/components/_Creator/CreateCourse/step3";
-import Step4 from "~/components/_Creator/CreateCourse/step4";
-import Step5 from "~/components/_Creator/CreateCourse/step5";
-import Step6 from "~/components/_Creator/CreateCourse/step6";
-import Step7 from "~/components/_Creator/CreateCourse/step7";
-import { useLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/creator/edit-course/[id]/layout";
-import { useCategories, useTags } from "~/routes/(lang)/(wrapper)/(authRoutes)/creator/layout";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import drizzleClient from "~/utils/drizzleClient";
-import useWS from "~/utils/useWS";
-import {
-  content_category,
-  type ContentCategory,
-} from "../../../../drizzle_turso/schema/content_category";
-import type { ContentIndex } from "../../../../drizzle_turso/schema/content_index";
-import { content_index } from "../../../../drizzle_turso/schema/content_index";
-import type { NewCourseApproval } from "../../../../drizzle_turso/schema/course_approval";
-import { course_approval } from "../../../../drizzle_turso/schema/course_approval";
-import { tag, type Tag } from "../../../../drizzle_turso/schema/tag";
+import { $, component$, useOnWindow, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { server$ } from '@builder.io/qwik-city';
+import { and, eq } from 'drizzle-orm';
+import Step1 from '~/components/_Creator/CreateCourse/step1';
+import Step1_2 from '~/components/_Creator/CreateCourse/step1_2';
+import Step2 from '~/components/_Creator/CreateCourse/step2';
+import Step3 from '~/components/_Creator/CreateCourse/step3';
+import Step4 from '~/components/_Creator/CreateCourse/step4';
+import Step5 from '~/components/_Creator/CreateCourse/step5';
+import Step6 from '~/components/_Creator/CreateCourse/step6';
+import Step7 from '~/components/_Creator/CreateCourse/step7';
+import { useLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/creator/edit-course/[id]/layout';
+import { useCategories, useTags } from '~/routes/(lang)/(wrapper)/(authRoutes)/creator/layout';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import drizzleClient from '~/utils/drizzleClient';
+import useWS from '~/utils/useWS';
+import { content_category, type ContentCategory } from '../../../../drizzle_turso/schema/content_category';
+import type { ContentIndex } from '../../../../drizzle_turso/schema/content_index';
+import { content_index } from '../../../../drizzle_turso/schema/content_index';
+import type { NewCourseApproval } from '../../../../drizzle_turso/schema/course_approval';
+import { course_approval } from '../../../../drizzle_turso/schema/course_approval';
+import { tag, type Tag } from '../../../../drizzle_turso/schema/tag';
 
-import type { ResultSet } from "@libsql/client/.";
-import type { ExtractTablesWithRelations } from "drizzle-orm";
-import type { SQLiteTransaction } from "drizzle-orm/sqlite-core";
-import getSQLTimeStamp from "~/utils/getSQLTimeStamp";
-import type schemaExport from "../../../../drizzle_turso/schemaExport";
+import type { ResultSet } from '@libsql/client/.';
+import type { ExtractTablesWithRelations } from 'drizzle-orm';
+import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
+import getSQLTimeStamp from '~/utils/getSQLTimeStamp';
+import type schemaExport from '../../../../drizzle_turso/schemaExport';
 
-type Tx = SQLiteTransaction<
-  "async",
-  ResultSet,
-  typeof schemaExport,
-  ExtractTablesWithRelations<typeof schemaExport>
->;
+type Tx = SQLiteTransaction<'async', ResultSet, typeof schemaExport, ExtractTablesWithRelations<typeof schemaExport>>;
 
 const updateCourseApproval = server$(async (tx: Tx, courseApproval: NewCourseApproval) => {
-  await tx
-    .update(course_approval)
-    .set(courseApproval)
-    .where(eq(course_approval.id, courseApproval.id));
+  await tx.update(course_approval).set(courseApproval).where(eq(course_approval.id, courseApproval.id));
 });
 
 const updateCourse = server$(async (tx: Tx, course: ContentIndex) => {
@@ -87,38 +68,34 @@ const removeTagContentIndex = server$(async (tx: Tx, contentIndexId: string, tag
   await tx.update(tag).set({ content_index_id: content_index_id }).where(eq(tag.id, tagId));
 });
 
-const addCategoryContentIndex = server$(
-  async (tx: Tx, contentIndexId: string, categoryId: string) => {
-    const content_index_id = (
-      await tx
-        .select({ content_index_id: content_category.content_index_id })
-        .from(content_category)
-        .where(eq(content_category.id, categoryId))
-    )[0].content_index_id;
-    content_index_id.push(contentIndexId);
+const addCategoryContentIndex = server$(async (tx: Tx, contentIndexId: string, categoryId: string) => {
+  const content_index_id = (
     await tx
-      .update(content_category)
-      .set({ content_index_id: content_index_id })
-      .where(eq(content_category.id, categoryId));
-  }
-);
+      .select({ content_index_id: content_category.content_index_id })
+      .from(content_category)
+      .where(eq(content_category.id, categoryId))
+  )[0].content_index_id;
+  content_index_id.push(contentIndexId);
+  await tx
+    .update(content_category)
+    .set({ content_index_id: content_index_id })
+    .where(eq(content_category.id, categoryId));
+});
 
-const removeCategoryContentIndex = server$(
-  async (tx: Tx, contentIndexId: string, categoryId: string) => {
-    const content_index_id = (
-      await tx
-        .select({ content_index_id: content_category.content_index_id })
-        .from(content_category)
-        .where(eq(content_category.id, categoryId))
-    )[0].content_index_id;
-    const index = content_index_id.indexOf(contentIndexId);
-    if (index >= 0) content_index_id.splice(index, 1);
+const removeCategoryContentIndex = server$(async (tx: Tx, contentIndexId: string, categoryId: string) => {
+  const content_index_id = (
     await tx
-      .update(content_category)
-      .set({ content_index_id: content_index_id })
-      .where(eq(content_category.id, categoryId));
-  }
-);
+      .select({ content_index_id: content_category.content_index_id })
+      .from(content_category)
+      .where(eq(content_category.id, categoryId))
+  )[0].content_index_id;
+  const index = content_index_id.indexOf(contentIndexId);
+  if (index >= 0) content_index_id.splice(index, 1);
+  await tx
+    .update(content_category)
+    .set({ content_index_id: content_index_id })
+    .where(eq(content_category.id, categoryId));
+});
 
 const handleCourseUpdate = server$(async function (
   courseApproval: NewCourseApproval,
@@ -130,78 +107,75 @@ const handleCourseUpdate = server$(async function (
   prevCategory: ContentCategory | undefined,
   prevTags: Tag[]
 ) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === "1").transaction(
-    async (tx) => {
-      if (category && course.category !== category.id) courseApproval.added_categories = null;
-      if (course.tags && courseApproval.added_tags) {
-        for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
-          if (!course.tags!.includes(courseApproval.added_tags![i]))
-            courseApproval.added_tags!.splice(i, 1);
-        }
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1').transaction(async (tx) => {
+    if (category && course.category !== category.id) courseApproval.added_categories = null;
+    if (course.tags && courseApproval.added_tags) {
+      for (let i = courseApproval.added_tags!.length - 1; i >= 0; i--) {
+        if (!course.tags!.includes(courseApproval.added_tags![i])) courseApproval.added_tags!.splice(i, 1);
       }
-      await updateCourseApproval(tx, { ...courseApproval, updated_at: getSQLTimeStamp() });
-      if (prevCategory && prevCourseApproval.added_categories !== courseApproval.added_categories) {
-        await deleteCategory(tx, prevCategory);
-      }
-      if (
-        prevCourse.category &&
-        prevCourse.category !== prevCourseApproval.added_categories &&
-        prevCourse.category !== course.category
-      ) {
-        await removeCategoryContentIndex(tx, course.id, prevCourse.category);
-      }
-      if (
-        category &&
-        courseApproval.added_categories &&
-        course.category === category.id &&
-        prevCourseApproval.added_categories !== courseApproval.added_categories
-      ) {
-        await tx.insert(content_category).values(category);
-      }
-      if (
-        course.category &&
-        courseApproval.added_categories !== course.category &&
-        prevCourse.category !== course.category
-      ) {
-        await addCategoryContentIndex(tx, course.id, course.category);
-      }
-      for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
-        if (
-          !course.tags!.includes(prevCourseApproval.added_tags![i]) &&
-          prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])
-        ) {
-          await deleteTag(tx, prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])!);
-        }
-      }
-      for (let i = 0; i < courseApproval.added_tags!.length; i++) {
-        if (
-          !prevCourseApproval.added_tags!.includes(courseApproval.added_tags![i]) &&
-          tags.find((t) => t.id === courseApproval.added_tags![i])
-        ) {
-          await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
-        }
-      }
-      for (let i = 0; i < prevCourse.tags!.length; i++) {
-        if (
-          !course.tags!.includes(prevCourse.tags![i]) &&
-          !prevTags.find((t) => t.id === prevCourse.tags![i]) &&
-          !prevCourseApproval.added_tags!.find((t) => t === prevCourse.tags![i])
-        ) {
-          await removeTagContentIndex(tx, course.id, prevCourse.tags![i]);
-        }
-      }
-      for (let i = 0; i < course.tags!.length; i++) {
-        if (
-          !prevCourse.tags!.includes(course.tags![i]) &&
-          !tags.find((t) => t.id === course.tags![i]) &&
-          !courseApproval.added_tags!.find((t) => t === course.tags![i])
-        ) {
-          await addTagContentIndex(tx, course.id, course.tags![i]);
-        }
-      }
-      return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
     }
-  );
+    await updateCourseApproval(tx, { ...courseApproval, updated_at: getSQLTimeStamp() });
+    if (prevCategory && prevCourseApproval.added_categories !== courseApproval.added_categories) {
+      await deleteCategory(tx, prevCategory);
+    }
+    if (
+      prevCourse.category &&
+      prevCourse.category !== prevCourseApproval.added_categories &&
+      prevCourse.category !== course.category
+    ) {
+      await removeCategoryContentIndex(tx, course.id, prevCourse.category);
+    }
+    if (
+      category &&
+      courseApproval.added_categories &&
+      course.category === category.id &&
+      prevCourseApproval.added_categories !== courseApproval.added_categories
+    ) {
+      await tx.insert(content_category).values(category);
+    }
+    if (
+      course.category &&
+      courseApproval.added_categories !== course.category &&
+      prevCourse.category !== course.category
+    ) {
+      await addCategoryContentIndex(tx, course.id, course.category);
+    }
+    for (let i = 0; i < prevCourseApproval.added_tags!.length; i++) {
+      if (
+        !course.tags!.includes(prevCourseApproval.added_tags![i]) &&
+        prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])
+      ) {
+        await deleteTag(tx, prevTags.find((t) => t.id === prevCourseApproval.added_tags![i])!);
+      }
+    }
+    for (let i = 0; i < courseApproval.added_tags!.length; i++) {
+      if (
+        !prevCourseApproval.added_tags!.includes(courseApproval.added_tags![i]) &&
+        tags.find((t) => t.id === courseApproval.added_tags![i])
+      ) {
+        await insertTag(tx, tags.find((t) => t.id === courseApproval.added_tags![i])!);
+      }
+    }
+    for (let i = 0; i < prevCourse.tags!.length; i++) {
+      if (
+        !course.tags!.includes(prevCourse.tags![i]) &&
+        !prevTags.find((t) => t.id === prevCourse.tags![i]) &&
+        !prevCourseApproval.added_tags!.find((t) => t === prevCourse.tags![i])
+      ) {
+        await removeTagContentIndex(tx, course.id, prevCourse.tags![i]);
+      }
+    }
+    for (let i = 0; i < course.tags!.length; i++) {
+      if (
+        !prevCourse.tags!.includes(course.tags![i]) &&
+        !tags.find((t) => t.id === course.tags![i]) &&
+        !courseApproval.added_tags!.find((t) => t === course.tags![i])
+      ) {
+        await addTagContentIndex(tx, course.id, course.tags![i]);
+      }
+    }
+    return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
+  });
 });
 
 export default component$(() => {
@@ -210,7 +184,7 @@ export default component$(() => {
     onOpen$: $((ws, useTimeStamp) => {
       ws.send(
         JSON.stringify({
-          type: "init",
+          type: 'init',
           userId: useTimeStamp,
           accessible_courses: [],
         })
@@ -224,9 +198,7 @@ export default component$(() => {
   const formSteps = useSignal(0);
   const createdTags = useStore<Tag[]>(() =>
     approval[0].added_tags
-      ? (approval[0].added_tags
-          .map((tagId) => tags.find((t) => t.id === tagId))
-          .filter((x) => x) as Tag[])
+      ? (approval[0].added_tags.map((tagId) => tags.find((t) => t.id === tagId)).filter((x) => x) as Tag[])
       : []
   );
   const prevCreatedTags = useSignal(JSON.parse(JSON.stringify(createdTags)));
@@ -241,10 +213,10 @@ export default component$(() => {
   const courseData = useStore<ContentIndex>(() => course[0]);
   const prevCourseData = useSignal(JSON.parse(JSON.stringify(courseData)));
   const courseDataError = useStore({
-    name: "",
-    chapter_order: "",
-    description: "",
-    short_description: "",
+    name: '',
+    chapter_order: '',
+    description: '',
+    short_description: '',
   });
   useTask$(({ track }) => {
     track(() => courseData.slug);
@@ -274,11 +246,11 @@ export default component$(() => {
       );
     } catch (e) {
       console.error(e);
-      alert("Something went wrong! Please try again later or contact support.");
+      alert('Something went wrong! Please try again later or contact support.');
     }
     ws.value?.send(
       JSON.stringify({
-        type: "editContentIndexDetails",
+        type: 'editContentIndexDetails',
         courseId: courseData.id,
         details: courseData,
       })
@@ -290,18 +262,14 @@ export default component$(() => {
     track(formSteps);
     track(ref);
     if (ref.value) {
-      ref.value.style.transform = `translate3d(-${
-        formSteps.value * (window.innerWidth < 768 ? 95 : 80)
-      }vw, 0, 0)`;
+      ref.value.style.transform = `translate3d(-${formSteps.value * (window.innerWidth < 768 ? 95 : 80)}vw, 0, 0)`;
     }
   });
   useOnWindow(
-    "resize",
+    'resize',
     $(() => {
       if (ref.value) {
-        ref.value.style.transform = `translate3d(-${
-          formSteps.value * (window.innerWidth < 768 ? 95 : 80)
-        }vw, 0, 0)`;
+        ref.value.style.transform = `translate3d(-${formSteps.value * (window.innerWidth < 768 ? 95 : 80)}vw, 0, 0)`;
       }
     })
   );
@@ -317,22 +285,9 @@ export default component$(() => {
             }}
             ref={ref}
           >
-            <Step1
-              courseData={courseData}
-              courseDataError={courseDataError}
-              formSteps={formSteps}
-              isEditing={true}
-            />
-            <Step1_2
-              courseData={courseData}
-              courseDataError={courseDataError}
-              formSteps={formSteps}
-            />
-            <Step2
-              courseData={courseData}
-              courseDataError={courseDataError}
-              formSteps={formSteps}
-            />
+            <Step1 courseData={courseData} courseDataError={courseDataError} formSteps={formSteps} isEditing={true} />
+            <Step1_2 courseData={courseData} courseDataError={courseDataError} formSteps={formSteps} />
+            <Step2 courseData={courseData} courseDataError={courseDataError} formSteps={formSteps} />
             <Step3
               courseData={courseData}
               courseDataError={courseDataError}

@@ -1,6 +1,6 @@
-import { createHmac } from "crypto";
-import Elysia, { t } from "elysia";
-import { turso } from "../turso";
+import { createHmac } from 'crypto';
+import Elysia, { t } from 'elysia';
+import { turso } from '../turso';
 
 const wsContentArr = new Map<string, any>();
 const userIdToAccessibleCourses = new Map<string, string[]>();
@@ -11,78 +11,71 @@ const uploadIdMapUploadUrl = new Map<string, string>();
 const courseIdToUserId = new Map<string, [string, string]>();
 const userIdToCourseId = new Map<string, [string, string]>();
 
-if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET)
-  throw new Error("Server Mux env var Error!");
+if (!Bun.env.MUX_PRODUCTION_ID || !Bun.env.MUX_PRODUCTION_SECRET) throw new Error('Server Mux env var Error!');
 
 const deleteMuxAsset = (id: string) => {
-  fetch("https://api.mux.com/video/v1/assets/" + id, {
-    method: "DELETE",
+  fetch('https://api.mux.com/video/v1/assets/' + id, {
+    method: 'DELETE',
     headers: {
-      Authorization: `Basic ${btoa(
-        Bun.env.MUX_PRODUCTION_ID! + ":" + Bun.env.MUX_PRODUCTION_SECRET!
-      )}`,
-      "Content-Type": "application/json",
+      Authorization: `Basic ${btoa(Bun.env.MUX_PRODUCTION_ID! + ':' + Bun.env.MUX_PRODUCTION_SECRET!)}`,
+      'Content-Type': 'application/json',
     },
   });
   deleteMuxAssetDB(id);
 };
 
 const insertMuxAssetDB = (id: string, userId: string, filename: string) =>
-  turso.execute(
-    `INSERT INTO mux_assets (id, user_id, name) values ('${id}', '${userId}', '${filename}')`
-  );
+  turso.execute(`INSERT INTO mux_assets (id, user_id, name) values ('${id}', '${userId}', '${filename}')`);
 
 const deleteMuxAssetDB = (id: string) => turso.execute(`DELETE FROM mux_assets where id='${id}'`);
 
 const getUser = (id: string) =>
   turso.execute({
-    sql: "SELECT * FROM profiles WHERE id = ? LIMIT 1",
+    sql: 'SELECT * FROM profiles WHERE id = ? LIMIT 1',
     args: [id],
   });
 
 const getContentIndexAuthor = (id: string) =>
   turso.execute({
-    sql: "SELECT author FROM content_index WHERE id = ? LIMIT 1",
+    sql: 'SELECT author FROM content_index WHERE id = ? LIMIT 1',
     args: [id],
   });
 
 const getContentIndexLocked = (id: string) =>
   turso.execute({
-    sql: "SELECT author, is_locked FROM content_index WHERE id = ? LIMIT 1",
+    sql: 'SELECT author, is_locked FROM content_index WHERE id = ? LIMIT 1',
     args: [id],
   });
 
 const getContentLocked = (id: string) =>
   turso.execute({
-    sql: "SELECT is_locked FROM content WHERE id = ? LIMIT 1",
+    sql: 'SELECT is_locked FROM content WHERE id = ? LIMIT 1',
     args: [id],
   });
 
 const app = new Elysia()
-  .group("/mux", (app) => {
+  .group('/mux', (app) => {
     return app.post(
-      "/",
+      '/',
       async ({ body, headers }) => {
-        if (!headers["mux-signature"]) {
-          throw new Error("Invalid signature!");
+        if (!headers['mux-signature']) {
+          throw new Error('Invalid signature!');
         }
-        const [_t, _v1] = headers["mux-signature"].split(",");
+        const [_t, _v1] = headers['mux-signature'].split(',');
         const t = _t.slice(2);
         const expected_signature = _v1.slice(3);
-        const payload = t + "." + body;
-        const hmac = createHmac("sha256", Bun.env.MUX_SIGNING_SECRET!)
-          .update(payload)
-          .digest("hex");
+        const payload = t + '.' + body;
+        const hmac = createHmac('sha256', Bun.env.MUX_SIGNING_SECRET!).update(payload).digest('hex');
         if (hmac !== expected_signature) {
-          throw new Error("Invalid signature!");
+          throw new Error('Invalid signature!');
         }
         try {
           const data = JSON.parse(body as any);
           const type = data.type;
           if (!type) {
-            throw new Error("Unknown asset from Mux!");
+            throw new Error('Unknown asset from Mux!');
           }
-          if (type === "video.upload.created") {
+          if (type === 'video.upload.created') {
             const url = data.data.url;
             const id = data.object.id;
             if (url && id) {
@@ -90,62 +83,62 @@ const app = new Elysia()
             }
             return;
           }
-          if (type === "video.asset.created") {
+          if (type === 'video.asset.created') {
             const upload_id = data.data.upload_id;
             const id = data.object.id;
             if (!upload_id) {
-              console.error("Upload Id not found in video.asset.created!");
+              console.error('Upload Id not found in video.asset.created!');
               deleteMuxAsset(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
-              console.error("Url not found in uploadIdMapUploadUrl!");
+              console.error('Url not found in uploadIdMapUploadUrl!');
               deleteMuxAsset(id);
               return;
             }
             if (!uploadUrlMapUserId.get(url)) {
-              console.error("UserId or Filename not found in uploadUrlMapUserId!");
+              console.error('UserId or Filename not found in uploadUrlMapUserId!');
               deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url)!;
             return wsContentArr.get(userId).send(
               JSON.stringify({
-                type: "assetSuccess",
-                message: "OK",
+                type: 'assetSuccess',
+                message: 'OK',
               })
             );
           }
-          if (type === "video.asset.ready") {
+          if (type === 'video.asset.ready') {
             const id = data.object.id;
             const upload_id = data.data.upload_id;
             if (!upload_id) {
-              console.error("Upload Id not found in video.asset.created!");
+              console.error('Upload Id not found in video.asset.created!');
               deleteMuxAsset(id);
               return;
             }
             const url = uploadIdMapUploadUrl.get(upload_id);
             if (!url) {
-              console.error("Url not found in uploadIdMapUploadUrl!");
+              console.error('Url not found in uploadIdMapUploadUrl!');
               deleteMuxAsset(id);
               return;
             }
             if (!uploadUrlMapUserId.get(url)) {
-              console.error("UserId or Filename not found in uploadUrlMapUserId!");
+              console.error('UserId or Filename not found in uploadUrlMapUserId!');
               deleteMuxAsset(id);
               return;
             }
             const { userId, filename } = uploadUrlMapUserId.get(url)!;
             try {
-              await insertMuxAssetDB(id, userId.split("###")[0], filename);
+              await insertMuxAssetDB(id, userId.split('###')[0], filename);
             } catch (e) {
               console.error(e);
               deleteMuxAsset(id);
             }
             wsContentArr.get(userId).send(
               JSON.stringify({
-                type: "assetReady",
+                type: 'assetReady',
                 message: {
                   id: id,
                   filename: filename,
@@ -159,7 +152,7 @@ const app = new Elysia()
             uploadUrlMapUserId.delete(url);
             return;
           }
-          if (type === "video.asset.deleted") {
+          if (type === 'video.asset.deleted') {
             const id = data.object.id;
             deleteMuxAssetDB(id);
             return;
@@ -176,18 +169,18 @@ const app = new Elysia()
       }
     );
   })
-  .ws("/content/ws", {
+  .ws('/content/ws', {
     async message(ws, msg: any) {
       // console.log(msg);
       try {
-        if (msg.type === "init") {
+        if (msg.type === 'init') {
           const userId = msg.userId;
           const accessible_courses = msg.accessible_courses;
           wsContentArrClear.set(
             userId,
             setTimeout(
               () => {
-                console.error("deleting" + userId);
+                console.error('deleting' + userId);
                 const serverContentId = userIdToCourseId.get(userId);
                 const message: any = {};
                 if (serverContentId) {
@@ -196,14 +189,13 @@ const app = new Elysia()
                   message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId[1]))
-                      userIdAccessible.push(key);
+                    if (val[0] === '*' || val.includes(serverContentId[1])) userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
                       wsContentArr.get(userId).send(
                         JSON.stringify({
-                          type: "removeUserEditing",
+                          type: 'removeUserEditing',
                           message,
                         })
                       );
@@ -224,56 +216,52 @@ const app = new Elysia()
           uuidToUserId.set(ws.id, userId);
           const entries: Record<string, [string, string]> = {};
           courseIdToUserId.forEach((val, key) => {
-            if (accessible_courses[0] === "*" || accessible_courses.includes(key))
-              entries[key] = [val[0].split("###")[0], val[1]];
+            if (accessible_courses[0] === '*' || accessible_courses.includes(key))
+              entries[key] = [val[0].split('###')[0], val[1]];
           });
           ws.send(
             JSON.stringify({
-              type: "initUserEditing",
+              type: 'initUserEditing',
               message: entries,
             })
           );
           return;
         }
-        if (msg.type === "openContent") {
+        if (msg.type === 'openContent') {
           const userId = msg.userId;
           const contentId = msg.contentId;
           const avatar_url = msg.avatar_url;
           const courseId = msg.courseId;
           if (!userId || !contentId || !avatar_url || !courseId) {
-            console.error("User ID, Content ID or Avatar url is empty!");
+            console.error('User ID, Content ID or Avatar url is empty!');
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "User ID, Content ID or Avatar url is empty!",
+                type: 'openContentError',
+                message: 'User ID, Content ID or Avatar url is empty!',
               })
             );
           }
-          const user = (await getUser(userId.split("###")[0])).rows[0];
+          const user = (await getUser(userId.split('###')[0])).rows[0];
           if (!user)
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Badly formatted request",
+                type: 'openContentError',
+                message: 'Badly formatted request',
               })
             );
           const isLocked = (await getContentIndexLocked(courseId)).rows[0];
           if (!isLocked)
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Badly formatted request",
+                type: 'openContentError',
+                message: 'Badly formatted request',
               })
             );
-          if (
-            (isLocked.author as string) !== userId &&
-            !!isLocked.is_locked &&
-            user.role !== "admin"
-          ) {
+          if ((isLocked.author as string) !== userId && !!isLocked.is_locked && user.role !== 'admin') {
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Content is locked!",
+                type: 'openContentError',
+                message: 'Content is locked!',
               })
             );
           }
@@ -281,19 +269,15 @@ const app = new Elysia()
           if (!isLockedChapter)
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Badly formatted request",
+                type: 'openContentError',
+                message: 'Badly formatted request',
               })
             );
-          if (
-            (isLocked.author as string) !== userId &&
-            !!isLockedChapter.is_locked &&
-            user.role !== "admin"
-          ) {
+          if ((isLocked.author as string) !== userId && !!isLockedChapter.is_locked && user.role !== 'admin') {
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Content is locked!",
+                type: 'openContentError',
+                message: 'Content is locked!',
               })
             );
           }
@@ -301,8 +285,8 @@ const app = new Elysia()
             if (courseIdToUserId.get(contentId) === userId) return;
             return ws.send(
               JSON.stringify({
-                type: "openContentError",
-                message: "Another Person is already editing the content!",
+                type: 'openContentError',
+                message: 'Another Person is already editing the content!',
               })
             );
           }
@@ -312,25 +296,25 @@ const app = new Elysia()
           message[contentId] = [userId, avatar_url];
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "addUserEditing",
+                  type: 'addUserEditing',
                   message,
                 })
               );
           });
           return ws.send(
             JSON.stringify({
-              type: "openContentSuccess",
-              message: "OK",
+              type: 'openContentSuccess',
+              message: 'OK',
             })
           );
         }
-        if (msg.type === "closeContent") {
+        if (msg.type === 'closeContent') {
           const userId = msg.userId;
           const contentId = msg.contentId;
           const courseId = msg.courseId;
@@ -345,42 +329,42 @@ const app = new Elysia()
             message[serverContentId] = true;
             const userIdAccessible: string[] = [];
             userIdToAccessibleCourses.forEach((val, key) => {
-              if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+              if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
             });
             userIdAccessible.forEach((userId) => {
               if (wsContentArr.get(userId))
                 wsContentArr.get(userId).send(
                   JSON.stringify({
-                    type: "removeUserEditing",
+                    type: 'removeUserEditing',
                     message,
                   })
                 );
             });
           }
         }
-        if (msg.type === "createContent") {
+        if (msg.type === 'createContent') {
           const details = msg.details;
           const courseId = msg.courseId;
           if (!details || !courseId) {
-            return ws.send(JSON.stringify({ type: "createContentFail", msg: "Content is empty!" }));
+            return ws.send(JSON.stringify({ type: 'createContentFail', msg: 'Content is empty!' }));
           }
           const message = { details, courseId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentCreated",
+                  type: 'contentCreated',
                   message,
                 })
               );
           });
-          return ws.send(JSON.stringify({ type: "createContentSuccess", msg: "OK" }));
+          return ws.send(JSON.stringify({ type: 'createContentSuccess', msg: 'OK' }));
         }
-        if (msg.type === "createChapter") {
+        if (msg.type === 'createChapter') {
           const details = msg.details;
           const courseId = msg.courseId;
           const chapterId = msg.chapterId;
@@ -388,20 +372,20 @@ const app = new Elysia()
           const message = { details, courseId, chapterId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "chapterCreated",
+                  type: 'chapterCreated',
                   message,
                 })
               );
           });
-          return ws.send(JSON.stringify({ type: "createChapterSuccess", msg: "OK" }));
+          return ws.send(JSON.stringify({ type: 'createChapterSuccess', msg: 'OK' }));
         }
-        if (msg.type === "editContentDetails") {
+        if (msg.type === 'editContentDetails') {
           const details = msg.details;
           const courseId = msg.courseId;
           const chapterId = msg.chapterId;
@@ -409,48 +393,48 @@ const app = new Elysia()
           const message = { details, courseId, chapterId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentDetailsEdited",
+                  type: 'contentDetailsEdited',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "editContentIndexDetails") {
+        if (msg.type === 'editContentIndexDetails') {
           const details = msg.details;
           const courseId = msg.courseId;
           if (!details || !courseId) return;
           const message = { details, courseId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentIndexDetailsEdited",
+                  type: 'contentIndexDetailsEdited',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "deleteContent") {
+        if (msg.type === 'deleteContent') {
           const userId = msg.userId;
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           if (!userId || !contentId || !courseId) {
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Badly formatted request",
+                type: 'deleteContentError',
+                message: 'Badly formatted request',
               })
             );
           }
@@ -458,19 +442,19 @@ const app = new Elysia()
           if (!user)
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Badly formatted request",
+                type: 'deleteContentError',
+                message: 'Badly formatted request',
               })
             );
           try {
             let accessible_courses: string[] = [];
-            if (user.role !== "admin") {
-              accessible_courses = JSON.parse((user.accessible_courses as string) || "[]");
+            if (user.role !== 'admin') {
+              accessible_courses = JSON.parse((user.accessible_courses as string) || '[]');
               if (!accessible_courses.includes(courseId))
                 return ws.send(
                   JSON.stringify({
-                    type: "deleteContentError",
-                    message: "No permission!",
+                    type: 'deleteContentError',
+                    message: 'No permission!',
                   })
                 );
             }
@@ -478,35 +462,35 @@ const app = new Elysia()
             console.error(e);
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Server error occured. Please try again later.",
+                type: 'deleteContentError',
+                message: 'Server error occured. Please try again later.',
               })
             );
           }
           if (courseIdToUserId.get(contentId)) {
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Someone is editing the content!",
+                type: 'deleteContentError',
+                message: 'Someone is editing the content!',
               })
             );
           }
           return ws.send(
             JSON.stringify({
-              type: "deleteContentSuccess",
-              message: "OK",
+              type: 'deleteContentSuccess',
+              message: 'OK',
             })
           );
         }
-        if (msg.type === "deleteContentIndex") {
+        if (msg.type === 'deleteContentIndex') {
           const userId = msg.userId;
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           if (!userId || !_contentId || !courseId) {
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Badly formatted request",
+                type: 'deleteContentError',
+                message: 'Badly formatted request',
               })
             );
           }
@@ -514,19 +498,19 @@ const app = new Elysia()
           if (!user)
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Badly formatted request",
+                type: 'deleteContentError',
+                message: 'Badly formatted request',
               })
             );
           try {
             let accessible_courses: string[] = [];
-            if (user.role !== "admin") {
-              accessible_courses = JSON.parse((user.accessible_courses as string) || "[]");
+            if (user.role !== 'admin') {
+              accessible_courses = JSON.parse((user.accessible_courses as string) || '[]');
               if (!accessible_courses.includes(courseId))
                 return ws.send(
                   JSON.stringify({
-                    type: "deleteContentError",
-                    message: "No permission!",
+                    type: 'deleteContentError',
+                    message: 'No permission!',
                   })
                 );
             }
@@ -534,8 +518,8 @@ const app = new Elysia()
             console.error(e);
             return ws.send(
               JSON.stringify({
-                type: "deleteContentError",
-                message: "Server error occured. Please try again later.",
+                type: 'deleteContentError',
+                message: 'Server error occured. Please try again later.',
               })
             );
           }
@@ -544,20 +528,20 @@ const app = new Elysia()
             if (courseIdToUserId.get(contentId)) {
               return ws.send(
                 JSON.stringify({
-                  type: "deleteContentIndexError",
-                  message: "Someone is editing the content!",
+                  type: 'deleteContentIndexError',
+                  message: 'Someone is editing the content!',
                 })
               );
             }
           }
           return ws.send(
             JSON.stringify({
-              type: "deleteContentIndexSuccess",
-              message: "OK",
+              type: 'deleteContentIndexSuccess',
+              message: 'OK',
             })
           );
         }
-        if (msg.type === "deleteContentCB") {
+        if (msg.type === 'deleteContentCB') {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           if (!contentId || !courseId) {
@@ -568,41 +552,41 @@ const app = new Elysia()
           message.courseId = courseId;
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentDeleted",
+                  type: 'contentDeleted',
                   message,
                 })
               );
           });
         }
-        if (msg.type === "deleteContentIndexCB") {
+        if (msg.type === 'deleteContentIndexCB') {
           const courseId = msg.courseId;
           if (!courseId) {
-            console.log("missing", msg.contentId);
+            console.log('missing', msg.contentId);
             return;
           }
           const message: any = {};
           message.courseId = courseId;
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentIndexDeleted",
+                  type: 'contentIndexDeleted',
                   message,
                 })
               );
           });
         }
-        if (msg.type === "lockContent") {
+        if (msg.type === 'lockContent') {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
@@ -617,28 +601,28 @@ const app = new Elysia()
             if (wsContentArr.get(courseIdToUserId.get(contentId)![0]))
               wsContentArr.get(courseIdToUserId.get(contentId)![0]).send(
                 JSON.stringify({
-                  type: "forceCloseContent",
-                  message: "Chapter locked by author!",
+                  type: 'forceCloseContent',
+                  message: 'Chapter locked by author!',
                 })
               );
           }
           const message = { courseId, contentId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentLocked",
+                  type: 'contentLocked',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "lockContentIndex") {
+        if (msg.type === 'lockContentIndex') {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
@@ -655,8 +639,8 @@ const app = new Elysia()
               if (wsContentArr.get(courseIdToUserId.get(contentId)![0]))
                 wsContentArr.get(courseIdToUserId.get(contentId)![0]).send(
                   JSON.stringify({
-                    type: "forceCloseContent",
-                    message: "Course locked by author!",
+                    type: 'forceCloseContent',
+                    message: 'Course locked by author!',
                   })
                 );
             }
@@ -664,20 +648,20 @@ const app = new Elysia()
           const message = { courseId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentIndexLocked",
+                  type: 'contentIndexLocked',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "unlockContent") {
+        if (msg.type === 'unlockContent') {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
@@ -691,20 +675,20 @@ const app = new Elysia()
           const message = { courseId, contentId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentUnlocked",
+                  type: 'contentUnlocked',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "unlockContentIndex") {
+        if (msg.type === 'unlockContentIndex') {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
@@ -718,27 +702,27 @@ const app = new Elysia()
           const message = { courseId };
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === "*" || val.includes(courseId)) userIdAccessible.push(key);
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
           });
           userIdAccessible.forEach((userId) => {
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: "contentIndexUnlocked",
+                  type: 'contentIndexUnlocked',
                   message,
                 })
               );
           });
           return;
         }
-        if (msg.type === "heartBeat") {
+        if (msg.type === 'heartBeat') {
           const userId = msg.userId;
           if (!userId || !wsContentArrClear.get(userId)) {
-            console.error("Hearbeat Error! unknown id!");
+            console.error('Hearbeat Error! unknown id!');
             return ws.send(
               JSON.stringify({
-                type: "error",
-                message: "User ID is empty or User ID not found in connection map!",
+                type: 'error',
+                message: 'User ID is empty or User ID not found in connection map!',
               })
             );
           }
@@ -747,7 +731,7 @@ const app = new Elysia()
             userId,
             setTimeout(
               () => {
-                console.error("deleting" + userId);
+                console.error('deleting' + userId);
                 const serverContentId = userIdToCourseId.get(userId);
                 const message: any = {};
                 if (serverContentId) {
@@ -756,14 +740,13 @@ const app = new Elysia()
                   message[serverContentId[0]] = true;
                   const userIdAccessible: string[] = [];
                   userIdToAccessibleCourses.forEach((val, key) => {
-                    if (val[0] === "*" || val.includes(serverContentId[1]))
-                      userIdAccessible.push(key);
+                    if (val[0] === '*' || val.includes(serverContentId[1])) userIdAccessible.push(key);
                   });
                   userIdAccessible.forEach((userId) => {
                     if (wsContentArr.get(userId))
                       wsContentArr.get(userId).send(
                         JSON.stringify({
-                          type: "removeUserEditing",
+                          type: 'removeUserEditing',
                           message,
                         })
                       );
@@ -780,27 +763,27 @@ const app = new Elysia()
             )
           );
         }
-        if (msg.type === "initCreate") {
+        if (msg.type === 'initCreate') {
           const url = msg.url,
             userId = msg.userId,
             filename = msg.filename;
           if (!url || !userId || !filename) {
             return ws.send(
               JSON.stringify({
-                type: "initCreateError",
-                message: "Upload Url or userId or filename is empty!",
+                type: 'initCreateError',
+                message: 'Upload Url or userId or filename is empty!',
               })
             );
           }
           uploadUrlMapUserId.set(url, { userId, filename });
           return ws.send(
             JSON.stringify({
-              type: "initCreateSuccess",
-              message: "OK",
+              type: 'initCreateSuccess',
+              message: 'OK',
             })
           );
         }
-        if (msg.type === "terminate") {
+        if (msg.type === 'terminate') {
           const userId = msg.userId;
           clearTimeout(wsContentArrClear.get(userId));
           const serverContentId = userIdToCourseId.get(userId);
@@ -811,13 +794,13 @@ const app = new Elysia()
             message[serverContentId[0]] = true;
             const userIdAccessible: string[] = [];
             userIdToAccessibleCourses.forEach((val, key) => {
-              if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
+              if (val[0] === '*' || val.includes(serverContentId[1])) userIdAccessible.push(key);
             });
             userIdAccessible.forEach((userId) => {
               if (wsContentArr.get(userId))
                 wsContentArr.get(userId).send(
                   JSON.stringify({
-                    type: "removeUserEditing",
+                    type: 'removeUserEditing',
                     message,
                   })
                 );
@@ -832,7 +815,7 @@ const app = new Elysia()
           userIdToAccessibleCourses.delete(userId);
           return wsContentArr.delete(userId);
         }
-        if (msg.type === "echo") {
+        if (msg.type === 'echo') {
           return ws.send(JSON.stringify(msg));
         }
       } catch (e) {
@@ -853,13 +836,13 @@ const app = new Elysia()
         message[serverContentId[0]] = true;
         const userIdAccessible: string[] = [];
         userIdToAccessibleCourses.forEach((val, key) => {
-          if (val[0] === "*" || val.includes(serverContentId[1])) userIdAccessible.push(key);
+          if (val[0] === '*' || val.includes(serverContentId[1])) userIdAccessible.push(key);
         });
         userIdAccessible.forEach((userId) => {
           if (wsContentArr.get(userId))
             wsContentArr.get(userId).send(
               JSON.stringify({
-                type: "removeUserEditing",
+                type: 'removeUserEditing',
                 message,
               })
             );

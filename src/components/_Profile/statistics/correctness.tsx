@@ -1,16 +1,16 @@
-import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import type { ApexOptions } from "apexcharts";
-import ApexCharts from "apexcharts";
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import type { ApexOptions } from 'apexcharts';
+import ApexCharts from 'apexcharts';
 
-const chartElementId = "correctness";
+const chartElementId = 'correctness';
 const options: ApexOptions = {
   series: [17, 7],
-  colors: ["#6fdcbf", "#ff6347"],
+  colors: ['#6fdcbf', '#ff6347'],
   chart: {
     offsetY: -10,
     height: 200,
-    width: "100%",
-    type: "pie",
+    width: '100%',
+    type: 'pie',
   },
 
   plotOptions: {
@@ -20,7 +20,7 @@ const options: ApexOptions = {
       },
     },
   },
-  labels: ["Correct", "Wrong"],
+  labels: ['Correct', 'Wrong'],
   // dataLabels: {
   //   enabled: true,
   //   style: {
@@ -28,7 +28,7 @@ const options: ApexOptions = {
   //   },
   // },
   legend: {
-    position: "bottom",
+    position: 'bottom',
     fontFamily: "'Varela_Round'",
     fontWeight: 500,
     offsetY: 7,
@@ -47,7 +47,7 @@ const options: ApexOptions = {
 export const Correctness = component$(() => {
   useVisibleTask$(() => {
     const chartElement = document.getElementById(chartElementId);
-    if (chartElement && typeof ApexCharts != "undefined") {
+    if (chartElement && typeof ApexCharts != 'undefined') {
       const chart = new ApexCharts(chartElement, options);
       chart.render();
     }

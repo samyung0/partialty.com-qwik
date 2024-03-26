@@ -1,30 +1,30 @@
 /** @jsxImportSource react */
 
-import { Editor, Element as SlateElement, Transforms } from "slate";
-import { ReactEditor, useSlateStatic, type RenderElementProps } from "slate-react";
+import { Editor, Element as SlateElement, Transforms } from 'slate';
+import { ReactEditor, useSlateStatic, type RenderElementProps } from 'slate-react';
 
-import urlParser from "js-video-url-parser";
-import { isUrl } from "~/utils/isUrl";
+import urlParser from 'js-video-url-parser';
+import { isUrl } from '~/utils/isUrl';
 
-import { ArrowLeft, Check, Link2, RotateCcw, Trash } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { BaseRange } from "slate";
-import { Range } from "slate";
-import { useFocused, useSlate } from "slate-react";
+import { ArrowLeft, Check, Link2, RotateCcw, Trash } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { BaseRange } from 'slate';
+import { Range } from 'slate';
+import { useFocused, useSlate } from 'slate-react';
 
-import { isBlockActive } from "~/components/_ContentEditor/blockFn";
-import type { UrlLink, VideoEmbed } from "~/components/_ContentEditor/types";
-import { EMBED_URL } from "~/const";
+import { isBlockActive } from '~/components/_ContentEditor/blockFn';
+import type { UrlLink, VideoEmbed } from '~/components/_ContentEditor/types';
+import { EMBED_URL } from '~/const';
 
-const YOUTUBE_PREFIX = "https://www.youtube.com/embed/";
-const VIMEO_PREFIX = "https://player.vimeo.com/video/";
-const DAILYMOTION_PREFIX = "https://www.dailymotion.com/embed/video/";
-const YOUKU_PREFIX = "https://player.youku.com/embed/";
-const COUB_PREFIX = "https://coub.com/embed/";
+const YOUTUBE_PREFIX = 'https://www.youtube.com/embed/';
+const VIMEO_PREFIX = 'https://player.vimeo.com/video/';
+const DAILYMOTION_PREFIX = 'https://www.dailymotion.com/embed/video/';
+const YOUKU_PREFIX = 'https://player.youku.com/embed/';
+const COUB_PREFIX = 'https://coub.com/embed/';
 
 export const withEmbeds = (editor: Editor) => {
   const { isVoid } = editor;
-  editor.isVoid = (element) => (element.type === "embed" ? true : isVoid(element));
+  editor.isVoid = (element) => (element.type === 'embed' ? true : isVoid(element));
   return editor;
 };
 
@@ -42,19 +42,19 @@ export const HoveringEmbed = ({
   const inFocus = useFocused();
 
   const [linkOpen, setLinkOpen] = useState(false);
-  const [url, setUrl] = useState("");
-  const initialUrl = useRef("");
+  const [url, setUrl] = useState('');
+  const initialUrl = useRef('');
   const prevSelection = useRef<BaseRange | null>();
 
   useEffect(() => {
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "embed",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'embed',
     });
     if (node) {
-      setUrl((node[0] as UrlLink).url || "");
-      initialUrl.current = (node[0] as UrlLink).url || "";
+      setUrl((node[0] as UrlLink).url || '');
+      initialUrl.current = (node[0] as UrlLink).url || '';
     }
-  }, [isBlockActive(editor, "embed", "type")]);
+  }, [isBlockActive(editor, 'embed', 'type')]);
 
   useEffect(() => {
     const el = ref.current;
@@ -67,7 +67,7 @@ export const HoveringEmbed = ({
 
     prevSelection.current = selection;
     const node = Editor.above(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "embed",
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'embed',
     });
     if (!node) {
       setLinkOpen(false);
@@ -75,12 +75,7 @@ export const HoveringEmbed = ({
     }
     const linkDOMNode = ReactEditor.toDOMNode(editor, node[0]);
 
-    const {
-      x: nodeX,
-      height: nodeHeight,
-      y: _nodeY,
-      width: nodeWidth,
-    } = linkDOMNode.getBoundingClientRect();
+    const { x: nodeX, height: nodeHeight, y: _nodeY, width: nodeWidth } = linkDOMNode.getBoundingClientRect();
     const nodeY = _nodeY + document.documentElement.scrollTop;
 
     let parentNodeX: number = 0;
@@ -92,24 +87,21 @@ export const HoveringEmbed = ({
         (prevSelection.current === undefined || prevSelection.current === null)) ||
       !Range.isCollapsed(selection)
     ) {
-      console.log("nah");
+      console.log('nah');
       setLinkOpen(false);
-      el.style.display = "none";
+      el.style.display = 'none';
       return;
     }
 
-    el.style.display = "flex";
-    el.style.top = `${Math.min(
-      nodeY + nodeHeight + offsetY,
-      window.innerHeight * 0.9 - el.offsetHeight
-    )}px`;
+    el.style.display = 'flex';
+    el.style.top = `${Math.min(nodeY + nodeHeight + offsetY, window.innerHeight * 0.9 - el.offsetHeight)}px`;
     el.style.left = `${nodeX + nodeWidth / 2 + offsetX - parentNodeX}px`;
-    el.style.transform = "translateX(-50%)";
+    el.style.transform = 'translateX(-50%)';
   });
 
   return (
     <>
-      {isBlockActive(editor, "embed", "type") && (
+      {isBlockActive(editor, 'embed', 'type') && (
         <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
@@ -135,8 +127,7 @@ export const HoveringEmbed = ({
                         url: url,
                       },
                       {
-                        match: (n) =>
-                          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "embed",
+                        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'embed',
                       }
                     );
                     prevSelection.current = null;
@@ -195,29 +186,29 @@ const removeEmbed = (editor: Editor) => {
 export const EmbedElement = ({ attributes, children, element }: RenderElementProps) => {
   const editor = useSlateStatic();
   const { url, caption } = element;
-  let embedType = url ? (url.trim() === "" ? "Blank" : "Embed") : "Blank";
-  const parse = urlParser.parse(url || "");
+  let embedType = url ? (url.trim() === '' ? 'Blank' : 'Embed') : 'Blank';
+  const parse = urlParser.parse(url || '');
   let parsedUrl = url;
 
   if (parse && parse.provider && parse.id) {
     embedType = parse.provider
-      .split(" ")
+      .split(' ')
       .map((seg) => seg.slice(0, 1).toUpperCase() + seg.slice(1))
-      .join(" ");
+      .join(' ');
     switch (parse.provider) {
-      case "youtube":
+      case 'youtube':
         parsedUrl = YOUTUBE_PREFIX + parse.id;
         break;
-      case "vimeo":
+      case 'vimeo':
         parsedUrl = VIMEO_PREFIX + parse.id;
         break;
-      case "dailymotion":
+      case 'dailymotion':
         parsedUrl = DAILYMOTION_PREFIX + parse.id;
         break;
-      case "youku":
+      case 'youku':
         parsedUrl = YOUKU_PREFIX + parse.id;
         break;
-      case "coub":
+      case 'coub':
         parsedUrl = COUB_PREFIX + parse.id;
         break;
       default:
@@ -226,7 +217,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
 
   const shouldDisplay = isUrl(parsedUrl);
 
-  const [value, setValue] = useState(caption || "");
+  const [value, setValue] = useState(caption || '');
   const ref = useRef<HTMLTextAreaElement>(null);
   const parentRef = useRef<any>();
   const iframeRef = useRef<HTMLDivElement>(null);
@@ -239,18 +230,18 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.style.height = "auto";
+      ref.current.style.height = 'auto';
       ref.current.style.height = `${ref.current.scrollHeight}px`;
     }
   }, []);
   useEffect(() => {
-    parentRef.current = document.getElementById("ParentRefContainer");
-    darkThemeDivRef.current = document.getElementById("darkThemeDiv");
+    parentRef.current = document.getElementById('ParentRefContainer');
+    darkThemeDivRef.current = document.getElementById('darkThemeDiv');
     darkThemeDivInterval.current = setInterval(() => {
       const dark = darkThemeDivRef.current.className;
-      if (dark === "dark" && !isDark) {
+      if (dark === 'dark' && !isDark) {
         setIsDark(true);
-      } else if (dark !== "dark" && isDark) {
+      } else if (dark !== 'dark' && isDark) {
         setIsDark(false);
       }
     }, 100);
@@ -258,15 +249,15 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
   useEffect(() => {
     if (iframeRef.current)
       new ResizeObserver((e) => {
-        if (parentRef.current && parentRef.current.className.includes("hidden")) return;
+        if (parentRef.current && parentRef.current.className.includes('hidden')) return;
         if (iframeRef.current)
           editor.setNodes(
             {
               embedHeight: iframeRef.current.offsetHeight,
             },
             {
-              match: (n) => SlateElement.isElement(n) && n.type === "embed",
-              mode: "highest",
+              match: (n) => SlateElement.isElement(n) && n.type === 'embed',
+              mode: 'highest',
             }
           );
       }).observe(iframeRef.current);
@@ -274,10 +265,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
 
   return (
     <div {...attributes}>
-      <div
-        className="flex w-full flex-col items-center justify-center gap-2"
-        contentEditable={false}
-      >
+      <div className="flex w-full flex-col items-center justify-center gap-2" contentEditable={false}>
         <div className="w-full border-2 border-sea object-contain dark:border-disabled-dark">
           <div className="bg-light-sea p-2 font-mosk text-sm font-bold tracking-wide dark:bg-highlight-dark">
             {embedType}
@@ -293,9 +281,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
                 allowFullScreen
                 className="iframeEmbed size-full"
                 src={`${
-                  parsedUrl && parsedUrl.startsWith(EMBED_URL) && isDark
-                    ? `${parsedUrl}?dark=1`
-                    : parsedUrl
+                  parsedUrl && parsedUrl.startsWith(EMBED_URL) && isDark ? `${parsedUrl}?dark=1` : parsedUrl
                 }?title=0&byline=0&portrait=0`}
                 frameBorder="0"
               />
@@ -319,13 +305,13 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
             });
 
             if (ref.current) {
-              ref.current.style.height = "auto";
+              ref.current.style.height = 'auto';
               ref.current.style.height = `${e.target.scrollHeight}px`;
             }
           }}
           value={value}
           className="w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
-          placeholder={"Enter some captions..."}
+          placeholder={'Enter some captions...'}
         />
       </div>
       {children}

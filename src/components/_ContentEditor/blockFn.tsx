@@ -1,16 +1,11 @@
 /** @jsxImportSource react */
-import { Editor, Element as SlateElement, Transforms } from "slate";
-import { useSlate } from "slate-react";
-import { v4 as uuidv4 } from "uuid";
-import { toggleLinkAtSelection } from "~/components/_ContentEditor/Link";
-import { toCodeLines } from "~/components/_ContentEditor/codeBlock";
-import type {
-  Align,
-  BlockFormat,
-  CustomElementType,
-  List,
-} from "~/components/_ContentEditor/types";
-import { LIST_TYPES, TEXT_ALIGN_TYPES } from "~/components/_ContentEditor/types";
+import { Editor, Element as SlateElement, Transforms } from 'slate';
+import { useSlate } from 'slate-react';
+import { v4 as uuidv4 } from 'uuid';
+import { toggleLinkAtSelection } from '~/components/_ContentEditor/Link';
+import { toCodeLines } from '~/components/_ContentEditor/codeBlock';
+import type { Align, BlockFormat, CustomElementType, List } from '~/components/_ContentEditor/types';
+import { LIST_TYPES, TEXT_ALIGN_TYPES } from '~/components/_ContentEditor/types';
 
 export const BlockButton = ({
   format,
@@ -26,9 +21,9 @@ export const BlockButton = ({
     <button
       title={title}
       className={
-        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -55,16 +50,16 @@ export const LineBreakButton = ({
     <button
       title={title}
       className={
-        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
         event.preventDefault();
         editor.insertNode({
-          type: "line-break",
-          children: [{ text: "" }],
+          type: 'line-break',
+          children: [{ text: '' }],
         });
       }}
     >
@@ -73,21 +68,15 @@ export const LineBreakButton = ({
   );
 };
 
-export const LinkButton = ({
-  format,
-  children,
-}: {
-  format: BlockFormat;
-  children: React.ReactNode;
-}) => {
+export const LinkButton = ({ format, children }: { format: BlockFormat; children: React.ReactNode }) => {
   const editor = useSlate();
   return (
     <button
-      title={"Link"}
+      title={'Link'}
       className={
-        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? "align" : "type")
+        isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray'
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -100,21 +89,15 @@ export const LinkButton = ({
   );
 };
 
-export const EmbedButton = ({
-  format,
-  children,
-}: {
-  format: BlockFormat;
-  children: React.ReactNode;
-}) => {
+export const EmbedButton = ({ format, children }: { format: BlockFormat; children: React.ReactNode }) => {
   const editor = useSlate();
   return (
     <button
-      title={"Embed"}
+      title={'Embed'}
       className={
-        isBlockActive(editor, format, "type")
+        isBlockActive(editor, format, 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       // onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -124,13 +107,13 @@ export const EmbedButton = ({
         if (!editor.selection) return;
         editor.insertNode(
           {
-            type: "embed",
-            url: "",
-            children: [{ text: "" }],
+            type: 'embed',
+            url: '',
+            children: [{ text: '' }],
           },
           {
             at: editor.selection,
-            mode: "highest",
+            mode: 'highest',
           }
         );
       }}
@@ -152,11 +135,11 @@ export const ImageButton = ({
   const editor = useSlate();
   return (
     <button
-      title={"Image"}
+      title={'Image'}
       className={
-        isBlockActive(editor, format, "type")
+        isBlockActive(editor, format, 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       onMouseDown={(event) => {
         event.preventDefault();
@@ -171,21 +154,15 @@ export const ImageButton = ({
   );
 };
 
-export const CodeBlockButton = ({
-  format,
-  children,
-}: {
-  format: BlockFormat;
-  children: React.ReactNode;
-}) => {
+export const CodeBlockButton = ({ format, children }: { format: BlockFormat; children: React.ReactNode }) => {
   const editor = useSlate();
   return (
     <button
-      title={"Code Block"}
+      title={'Code Block'}
       className={
-        isBlockActive(editor, format, "type")
+        isBlockActive(editor, format, 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray"
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray'
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -195,13 +172,13 @@ export const CodeBlockButton = ({
         if (!editor.selection) return;
         editor.insertNode(
           {
-            type: "codeBlock",
-            language: "tsx",
-            children: toCodeLines("// default language: TSX"),
+            type: 'codeBlock',
+            language: 'tsx',
+            children: toCodeLines('// default language: TSX'),
           },
           {
             at: editor.selection,
-            mode: "highest",
+            mode: 'highest',
           }
         );
       }}
@@ -215,11 +192,11 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
   const editor = useSlate();
   return (
     <button
-      title={"Multiple Choice Quiz"}
+      title={'Multiple Choice Quiz'}
       className={
-        isBlockActive(editor, "quizBlock", "type")
+        isBlockActive(editor, 'quizBlock', 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -227,30 +204,30 @@ export const QuizBlockButton = ({ children }: { children: React.ReactNode }) => 
         event.preventDefault();
         // ReactEditor.focus(editor);
         if (!editor.selection) return;
-        const formName = "a" + uuidv4();
+        const formName = 'a' + uuidv4();
         editor.insertNode(
           {
-            type: "quizBlock",
+            type: 'quizBlock',
             formName: formName,
-            ans: "1",
-            quizTitle: "Quiz Title",
+            ans: '1',
+            quizTitle: 'Quiz Title',
             children: [
               {
-                type: "quizOption",
+                type: 'quizOption',
                 formName: formName,
-                optionValue: "1",
-                children: [{ text: "Option 1" }],
+                optionValue: '1',
+                children: [{ text: 'Option 1' }],
               },
               {
-                type: "quizOption",
+                type: 'quizOption',
                 formName: formName,
-                optionValue: "2",
-                children: [{ text: "Option 2" }],
+                optionValue: '2',
+                children: [{ text: 'Option 2' }],
               },
             ],
           },
           {
-            mode: "highest",
+            mode: 'highest',
           }
         );
       }}
@@ -264,11 +241,11 @@ export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode })
   const editor = useSlate();
   return (
     <button
-      title={"Quiz (Code/Fill in the Blanks)"}
+      title={'Quiz (Code/Fill in the Blanks)'}
       className={
-        isBlockActive(editor, "quizCodeBlock", "type")
+        isBlockActive(editor, 'quizCodeBlock', 'type')
           ? `border-b-2 border-primary-dark-gray dark:border-light-mint `
-          : "border-b-2 border-light-mint dark:border-primary-dark-gray "
+          : 'border-b-2 border-light-mint dark:border-primary-dark-gray '
       }
       onMouseDown={(event) => event.preventDefault()}
       onClick={(event) => {
@@ -276,34 +253,34 @@ export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode })
         event.preventDefault();
         // ReactEditor.focus(editor);
         if (!editor.selection) return;
-        const formName = "a" + uuidv4();
+        const formName = 'a' + uuidv4();
         editor.insertNode(
           {
-            type: "quizCodeBlock",
+            type: 'quizCodeBlock',
             formName: formName,
-            quizTitle: "Quiz Title",
+            quizTitle: 'Quiz Title',
             ans: {
-              type: "matchInput",
+              type: 'matchInput',
               matchInput: {},
-              ast: "",
+              ast: '',
             },
-            astLang: "js",
-            combinedText: "",
-            displayAst: "",
-            codeInput: "",
+            astLang: 'js',
+            combinedText: '',
+            displayAst: '',
+            codeInput: '',
             removeTrailingSpaces: true,
             isCode: true,
             inputCount: 0,
             inputWidth: 500,
             children: [
               {
-                type: "quizCodeParagraph",
-                children: [{ text: "Some code..." }],
+                type: 'quizCodeParagraph',
+                children: [{ text: 'Some code...' }],
               },
             ],
           },
           {
-            mode: "highest",
+            mode: 'highest',
           }
         );
       }}
@@ -314,11 +291,7 @@ export const QuizCodeBlockButton = ({ children }: { children: React.ReactNode })
 };
 
 export const toggleBlock = (editor: Editor, format: BlockFormat) => {
-  const isActive = isBlockActive(
-    editor,
-    format,
-    TEXT_ALIGN_TYPES.includes(format) ? "align" : "type"
-  );
+  const isActive = isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type');
   const isList = LIST_TYPES.includes(format);
 
   Transforms.unwrapNodes(editor, {
@@ -336,7 +309,7 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
     };
   } else {
     newProperties = {
-      type: isActive ? "paragraph" : isList ? "list-item" : (format as CustomElementType),
+      type: isActive ? 'paragraph' : isList ? 'list-item' : (format as CustomElementType),
     };
   }
   Transforms.setNodes<SlateElement>(editor, newProperties);
@@ -345,17 +318,13 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
     const block = {
       type: format as List,
       children: [],
-      listStyle: format === "bulleted-list" ? "disc" : "decimal",
+      listStyle: format === 'bulleted-list' ? 'disc' : 'decimal',
     };
     Transforms.wrapNodes(editor, block);
   }
 };
 
-export const isBlockActive = (
-  editor: Editor,
-  format: BlockFormat,
-  blockType: "type" | "align" = "type"
-) => {
+export const isBlockActive = (editor: Editor, format: BlockFormat, blockType: 'type' | 'align' = 'type') => {
   const { selection } = editor;
   if (!selection) return false;
 

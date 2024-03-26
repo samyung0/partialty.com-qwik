@@ -1,35 +1,23 @@
-import type { Signal } from "@builder.io/qwik";
-import {
-  $,
-  component$,
-  useComputed$,
-  useSignal,
-  useStore,
-  useTask$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
-import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
-import { useSetBio, useSignupWithPassword } from "~/auth/signup";
-import recaptcha from "~/components/_Signup/recaptcha";
+import type { Signal } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { useSetBio, useSignupWithPassword } from '~/auth/signup';
+import recaptcha from '~/components/_Signup/recaptcha';
 export { recaptcha };
 
-import GithubIcon from "~/assets/svg/logo-github.svg";
-import GoogleIcon from "~/assets/svg/logo-google.svg";
-import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
-import type { CloudinaryDefaultPic } from "~/types/Cloudinary";
+import GithubIcon from '~/assets/svg/logo-github.svg';
+import GoogleIcon from '~/assets/svg/logo-google.svg';
+import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from '~/const/cloudinary';
+import type { CloudinaryDefaultPic } from '~/types/Cloudinary';
 
-import RandomAvatar from "~/assets/svg/shuffle-outline.svg";
-import DeleteAvatar from "~/assets/svg/trash-outline.svg";
+import RandomAvatar from '~/assets/svg/shuffle-outline.svg';
+import DeleteAvatar from '~/assets/svg/trash-outline.svg';
 
-import DragndropLarge from "~/components/_Signup/dragndropLarge";
-import LoadingSVG from "~/components/LoadingSVG";
+import DragndropLarge from '~/components/_Signup/dragndropLarge';
+import LoadingSVG from '~/components/LoadingSVG';
 
 export default component$(
-  ({
-    cloudinaryDefaultPics,
-  }: {
-    cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[] | null | undefined>;
-  }) => {
+  ({ cloudinaryDefaultPics }: { cloudinaryDefaultPics: Signal<CloudinaryDefaultPic[] | null | undefined> }) => {
     const params = useLocation().url.searchParams;
     const setBio = useSetBio();
     const signupWithPassword = useSignupWithPassword();
@@ -37,39 +25,37 @@ export default component$(
     const recaptchaReady = useSignal(false);
 
     const firstForm = useStore({
-      email: "",
-      password: "",
-      rePassword: "",
+      email: '',
+      password: '',
+      rePassword: '',
     });
     const loadingStepOne = useSignal(false);
     const loadingStepTwo = useSignal(false);
 
     const formError = useStore({
-      email: "",
-      password: "",
-      wrongRePassword: "",
-      wrongInfo: "",
-      error: "",
+      email: '',
+      password: '',
+      wrongRePassword: '',
+      wrongInfo: '',
+      error: '',
     });
     const bioError = useStore({
-      avatar: "",
-      nickname: "",
-      wrongInfo: "",
+      avatar: '',
+      nickname: '',
+      wrongInfo: '',
     });
     const nav = useNavigate();
     const isSetBio = useSignal(false);
     const originalAvatar = useComputed$(() =>
       cloudinaryDefaultPics.value
-        ? cloudinaryDefaultPics.value[
-            Math.floor(Math.random() * cloudinaryDefaultPics.value.length)
-          ]
+        ? cloudinaryDefaultPics.value[Math.floor(Math.random() * cloudinaryDefaultPics.value.length)]
         : {
             width: 0,
             height: 0,
             bytes: 0,
             pixels: 0,
-            secure_url: "",
-            public_id: "",
+            secure_url: '',
+            public_id: '',
           }
     );
     const defaultBio = useStore<{
@@ -78,7 +64,7 @@ export default component$(
       userId: string | null;
     }>({
       avatar: JSON.parse(JSON.stringify(originalAvatar.value)),
-      nickname: "Anonymous",
+      nickname: 'Anonymous',
       userId: null,
     });
     useTask$(({ track }) => {
@@ -88,22 +74,22 @@ export default component$(
     const customAvatar = useSignal(false);
 
     useTask$(({ track }) => {
-      track(() => params.get("errMessage"));
-      formError.wrongInfo = params.get("errMessage") ?? "";
+      track(() => params.get('errMessage'));
+      formError.wrongInfo = params.get('errMessage') ?? '';
     });
 
     useTask$(({ track }) => {
       track(signupWithPassword);
-      formError.email = "";
-      formError.password = "";
-      formError.wrongRePassword = "";
-      formError.wrongInfo = "";
-      formError.error = "";
+      formError.email = '';
+      formError.password = '';
+      formError.wrongRePassword = '';
+      formError.wrongInfo = '';
+      formError.error = '';
       if (signupWithPassword.status === 400) {
-        formError.email = signupWithPassword.value?.fieldErrors?.email?.join("\n") ?? "";
-        formError.password = signupWithPassword.value?.fieldErrors?.password?.join("\n") ?? "";
+        formError.email = signupWithPassword.value?.fieldErrors?.email?.join('\n') ?? '';
+        formError.password = signupWithPassword.value?.fieldErrors?.password?.join('\n') ?? '';
         if (signupWithPassword.value?.formErrors && signupWithPassword.value.formErrors.length > 0)
-          formError.wrongRePassword = signupWithPassword.value.formErrors.join("\n");
+          formError.wrongRePassword = signupWithPassword.value.formErrors.join('\n');
       }
       if (signupWithPassword.status === 500) {
         if (signupWithPassword.value?.message === `Error! User already exists`)
@@ -112,39 +98,37 @@ export default component$(
       }
       if (signupWithPassword.status === 200) {
         if (!signupWithPassword.value?.userId) {
-          formError.error = "Server Error! Please try again later";
+          formError.error = 'Server Error! Please try again later';
           return;
         }
         isSetBio.value = true;
-        firstForm.email = "";
-        firstForm.password = "";
-        firstForm.rePassword = "";
+        firstForm.email = '';
+        firstForm.password = '';
+        firstForm.rePassword = '';
         defaultBio.userId = signupWithPassword.value.userId;
       }
     });
 
     useTask$(({ track }) => {
       track(setBio);
-      bioError.nickname = "";
-      bioError.wrongInfo = "";
+      bioError.nickname = '';
+      bioError.wrongInfo = '';
       if (setBio.status === 400) {
-        bioError.nickname = setBio.value?.fieldErrors?.nickname?.join("\n") ?? "";
+        bioError.nickname = setBio.value?.fieldErrors?.nickname?.join('\n') ?? '';
       }
       if (setBio.status === 500) {
-        bioError.wrongInfo = setBio.value?.message || "";
+        bioError.wrongInfo = setBio.value?.message || '';
       }
       if (setBio.status === 200) {
         // (window as any).location = "/members/dashboard/";
-        if (params.get("redirectedFrom")) nav(params.get("redirectedFrom")!);
-        else nav("/members/dashboard/");
+        if (params.get('redirectedFrom')) nav(params.get('redirectedFrom')!);
+        else nav('/members/dashboard/');
       }
     });
 
     useVisibleTask$(() => {
-      const recaptcha = document.createElement("script");
-      recaptcha.src =
-        "https://www.google.com/recaptcha/api.js?render=" +
-        import.meta.env.VITE_GOOGLE_RECAPTCHA_V3;
+      const recaptcha = document.createElement('script');
+      recaptcha.src = 'https://www.google.com/recaptcha/api.js?render=' + import.meta.env.VITE_GOOGLE_RECAPTCHA_V3;
       recaptcha.async = true;
       recaptcha.onload = () => {
         (globalThis as any).grecaptcha.ready(function () {
@@ -157,40 +141,33 @@ export default component$(
     const restoreOriginalAvatar = $(() => {
       defaultBio.avatar = JSON.parse(JSON.stringify(originalAvatar.value));
       customAvatar.value = false;
-      bioError.avatar = "";
+      bioError.avatar = '';
     });
 
     const randomizeDefaultAvatar = $(() => {
       if (!cloudinaryDefaultPics.value) return;
       defaultBio.avatar = JSON.parse(
-        JSON.stringify(
-          cloudinaryDefaultPics.value[
-            Math.floor(Math.random() * cloudinaryDefaultPics.value.length)
-          ]
-        )
+        JSON.stringify(cloudinaryDefaultPics.value[Math.floor(Math.random() * cloudinaryDefaultPics.value.length)])
       );
       customAvatar.value = false;
-      bioError.avatar = "";
+      bioError.avatar = '';
     });
 
     const handleImage = $((file: File) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onabort = () => (bioError.avatar = "Cannot load image!");
-      reader.onerror = () => (bioError.avatar = "Cannot load image!");
+      reader.onabort = () => (bioError.avatar = 'Cannot load image!');
+      reader.onerror = () => (bioError.avatar = 'Cannot load image!');
       reader.onload = () => {
         if (!reader.result) {
-          bioError.avatar = "Cannot load image!";
+          bioError.avatar = 'Cannot load image!';
           return;
         }
         const img = new Image();
         img.src = reader.result as string;
         img.onload = () => {
-          if (
-            file.size > CLOUDINARY_MAX_IMG_SIZE ||
-            img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT
-          ) {
-            bioError.avatar = "The picture is too large!";
+          if (file.size > CLOUDINARY_MAX_IMG_SIZE || img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT) {
+            bioError.avatar = 'The picture is too large!';
             return;
           }
 
@@ -200,29 +177,29 @@ export default component$(
           defaultBio.avatar.height = img.height;
           defaultBio.avatar.pixels = img.width * img.height;
           defaultBio.avatar.bytes = file.size;
-          defaultBio.avatar.public_id = "";
-          bioError.avatar = "";
+          defaultBio.avatar.public_id = '';
+          bioError.avatar = '';
         };
       };
     });
 
     const handleSubmitPartOne = $(async () => {
       if (!recaptchaReady.value) {
-        formError.error = "Holdon, we are still loading google captcha :P";
+        formError.error = 'Holdon, we are still loading google captcha :P';
         return;
       }
       loadingStepOne.value = true;
-      formError.email = "";
-      formError.password = "";
-      formError.wrongRePassword = "";
-      formError.wrongInfo = "";
-      formError.error = "";
+      formError.email = '';
+      formError.password = '';
+      formError.wrongRePassword = '';
+      formError.wrongInfo = '';
+      formError.error = '';
       const captchaResult = await (globalThis as any).grecaptcha
-        .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: "submit" })
+        .execute(import.meta.env.VITE_GOOGLE_RECAPTCHA_V3, { action: 'submit' })
         .then(async (token: string) => await recaptcha(token));
       if (!captchaResult.success) {
         loadingStepOne.value = false;
-        formError.error = "Looks like captcha thinks that you are not a human (。_。)";
+        formError.error = 'Looks like captcha thinks that you are not a human (。_。)';
         return;
       }
       await signupWithPassword.submit({
@@ -239,8 +216,8 @@ export default component$(
           <div class="flex w-[190vw] items-center justify-start overflow-hidden md:w-[100vw] md:min-w-[1000px] md:max-w-[1200px]">
             <div
               class={
-                " max-h-[95vh] w-[95vw] overflow-auto rounded-lg border-2 border-black bg-white transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] " +
-                (isSetBio.value ? "translate-x-[-101%]" : "")
+                ' max-h-[95vh] w-[95vw] overflow-auto rounded-lg border-2 border-black bg-white transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] ' +
+                (isSetBio.value ? 'translate-x-[-101%]' : '')
               }
             >
               <div class="flex flex-col items-center justify-center py-10 md:py-16">
@@ -249,11 +226,7 @@ export default component$(
                     Sign up
                   </h1>
                   <br />
-                  <form
-                    preventdefault:submit
-                    onSubmit$={handleSubmitPartOne}
-                    class="space-y-3 md:space-y-6"
-                  >
+                  <form preventdefault:submit onSubmit$={handleSubmitPartOne} class="space-y-3 md:space-y-6">
                     <input
                       type="text"
                       name="avatar_cloudinary_id"
@@ -262,14 +235,7 @@ export default component$(
                       aria-hidden
                       value={defaultBio.avatar.public_id}
                     />
-                    <input
-                      type="text"
-                      name="nickname"
-                      hidden
-                      class="hidden"
-                      aria-hidden
-                      value={defaultBio.nickname}
-                    />
+                    <input type="text" name="nickname" hidden class="hidden" aria-hidden value={defaultBio.nickname} />
                     <div>
                       <label for="email" class="cursor-pointer text-base md:text-lg">
                         Email address
@@ -284,10 +250,8 @@ export default component$(
                           value={firstForm.email}
                           onInput$={(_, el) => (firstForm.email = el.value)}
                           class={
-                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                            (formError.email || formError.wrongInfo
-                              ? "border-tomato"
-                              : "border-black/10")
+                            'block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] ' +
+                            (formError.email || formError.wrongInfo ? 'border-tomato' : 'border-black/10')
                           }
                         />
                       </div>
@@ -309,8 +273,8 @@ export default component$(
                           value={firstForm.password}
                           onInput$={(_, el) => (firstForm.password = el.value)}
                           class={
-                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                            (formError.password ? "border-tomato" : "border-black/10")
+                            'block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] ' +
+                            (formError.password ? 'border-tomato' : 'border-black/10')
                           }
                         />
                       </div>
@@ -332,8 +296,8 @@ export default component$(
                           value={firstForm.rePassword}
                           onInput$={(_, el) => (firstForm.rePassword = el.value)}
                           class={
-                            "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                            (formError.wrongRePassword ? "border-tomato" : "border-black/10")
+                            'block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] ' +
+                            (formError.wrongRePassword ? 'border-tomato' : 'border-black/10')
                           }
                         />
                       </div>
@@ -348,7 +312,7 @@ export default component$(
                     <button
                       type="submit"
                       class={
-                        "relative block w-full rounded-lg bg-primary-dark-gray p-3 text-background-light-gray transition-all md:p-4"
+                        'relative block w-full rounded-lg bg-primary-dark-gray p-3 text-background-light-gray transition-all md:p-4'
                       }
                       disabled={isSetBio.value || loadingStepOne.value}
                     >
@@ -357,9 +321,7 @@ export default component$(
                           <LoadingSVG />
                         </span>
                       )}
-                      {!loadingStepOne.value && (
-                        <span class="text-[0.875rem] md:text-[1rem]">Yup, Next</span>
-                      )}
+                      {!loadingStepOne.value && <span class="text-[0.875rem] md:text-[1rem]">Yup, Next</span>}
                     </button>
                   </form>
 
@@ -404,8 +366,8 @@ export default component$(
             </div>
             <div
               class={
-                "flex w-[95vw] items-center justify-center rounded-lg border-2 border-black bg-white py-10 transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] md:py-16 " +
-                (isSetBio.value ? "translate-x-[-100%]" : "")
+                'flex w-[95vw] items-center justify-center rounded-lg border-2 border-black bg-white py-10 transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] md:py-16 ' +
+                (isSetBio.value ? 'translate-x-[-100%]' : '')
               }
             >
               <div class="flex flex-col items-center justify-center">
@@ -416,22 +378,10 @@ export default component$(
                 <form preventdefault:submit class="relative space-y-3 md:space-y-6">
                   <div class="absolute right-0 top-0 flex flex-col gap-2 p-2">
                     <button type="button" onClick$={restoreOriginalAvatar}>
-                      <img
-                        src={DeleteAvatar}
-                        alt="Delete"
-                        width={25}
-                        height={25}
-                        class="object-contain"
-                      />
+                      <img src={DeleteAvatar} alt="Delete" width={25} height={25} class="object-contain" />
                     </button>
                     <button type="button" onClick$={randomizeDefaultAvatar}>
-                      <img
-                        src={RandomAvatar}
-                        alt="Randomize"
-                        width={25}
-                        height={25}
-                        class="object-contain"
-                      />
+                      <img src={RandomAvatar} alt="Randomize" width={25} height={25} class="object-contain" />
                     </button>
                   </div>
                   <DragndropLarge
@@ -455,10 +405,8 @@ export default component$(
                         autoComplete="off"
                         required
                         class={
-                          "block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] " +
-                          (bioError.nickname || bioError.wrongInfo
-                            ? "border-tomato"
-                            : "border-black/10")
+                          'block w-[250px] rounded-md border-2 px-3 py-2 text-[0.875rem] md:w-[300px] md:text-[1rem] ' +
+                          (bioError.nickname || bioError.wrongInfo ? 'border-tomato' : 'border-black/10')
                         }
                       />
                     </div>
@@ -471,12 +419,12 @@ export default component$(
                     onClick$={async () => {
                       if (loadingStepTwo.value) return;
                       if (!defaultBio.userId) {
-                        bioError.wrongInfo = "Server Error! Refresh the page and try again.";
+                        bioError.wrongInfo = 'Server Error! Refresh the page and try again.';
                         return;
                       }
                       loadingStepTwo.value = true;
-                      bioError.nickname = "";
-                      bioError.wrongInfo = "";
+                      bioError.nickname = '';
+                      bioError.wrongInfo = '';
                       await setBio.submit({
                         nickname: defaultBio.nickname,
                         customAvatar: customAvatar.value,
@@ -494,9 +442,7 @@ export default component$(
                         <LoadingSVG />
                       </span>
                     )}
-                    {!loadingStepTwo.value && (
-                      <span class="text-[0.875rem] md:text-[1rem]">Sign up</span>
-                    )}
+                    {!loadingStepTwo.value && <span class="text-[0.875rem] md:text-[1rem]">Sign up</span>}
                   </button>
                 </form>
               </div>

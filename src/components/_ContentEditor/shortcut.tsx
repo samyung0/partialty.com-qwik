@@ -1,15 +1,15 @@
-import { Editor, Point, Range, Element as SlateElement, Transforms } from "slate";
-import type { BulletedList } from "~/components/_ContentEditor/types";
+import { Editor, Point, Range, Element as SlateElement, Transforms } from 'slate';
+import type { BulletedList } from '~/components/_ContentEditor/types';
 
 const SHORTCUTS = {
-  "*": "list-item",
-  "-": "list-item",
-  "+": "list-item",
-  ">": "block-quote",
-  "#": "heading-one",
-  "##": "heading-two",
-  "###": "heading-three",
-  "####": "heading-four",
+  '*': 'list-item',
+  '-': 'list-item',
+  '+': 'list-item',
+  '>': 'block-quote',
+  '#': 'heading-one',
+  '##': 'heading-two',
+  '###': 'heading-three',
+  '####': 'heading-four',
 };
 
 export const withShortcuts = (editor: Editor) => {
@@ -18,7 +18,7 @@ export const withShortcuts = (editor: Editor) => {
   editor.insertText = (text) => {
     const { selection } = editor;
 
-    if (text.endsWith(" ") && selection && Range.isCollapsed(selection)) {
+    if (text.endsWith(' ') && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection;
       const block = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
@@ -43,14 +43,13 @@ export const withShortcuts = (editor: Editor) => {
           match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
         });
 
-        if (type === "list-item") {
+        if (type === 'list-item') {
           const list: BulletedList = {
-            type: "bulleted-list",
+            type: 'bulleted-list',
             children: [],
           };
           Transforms.wrapNodes(editor, list, {
-            match: (n) =>
-              !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "list-item",
+            match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'list-item',
           });
         }
 
@@ -76,18 +75,17 @@ export const withShortcuts = (editor: Editor) => {
         if (
           !Editor.isEditor(block) &&
           SlateElement.isElement(block) &&
-          block.type !== "paragraph" &&
+          block.type !== 'paragraph' &&
           Point.equals(selection.anchor, start)
         ) {
           const newProperties: Partial<SlateElement> = {
-            type: "paragraph",
+            type: 'paragraph',
           };
           Transforms.setNodes(editor, newProperties);
 
-          if (block.type === "list-item") {
+          if (block.type === 'list-item') {
             Transforms.unwrapNodes(editor, {
-              match: (n) =>
-                !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "bulleted-list",
+              match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'bulleted-list',
               split: true,
             });
           }

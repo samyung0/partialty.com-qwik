@@ -1,14 +1,14 @@
-import type { QRL, Signal } from "@builder.io/qwik";
-import { component$, useSignal } from "@builder.io/qwik";
-import { useNavigate } from "@builder.io/qwik-city";
-import { LuArrowLeft } from "@qwikest/icons/lucide";
-import LoadingSVG from "~/components/LoadingSVG";
-import { useCategories, useTags } from "~/routes/(lang)/(wrapper)/(authRoutes)/creator/layout";
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
-import type { ContentCategory } from "../../../../drizzle_turso/schema/content_category";
-import type { NewContentIndex } from "../../../../drizzle_turso/schema/content_index";
-import type { Tag } from "../../../../drizzle_turso/schema/tag";
-import { listSupportedLang } from "../../../../lang";
+import type { QRL, Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
+import { LuArrowLeft } from '@qwikest/icons/lucide';
+import LoadingSVG from '~/components/LoadingSVG';
+import { useCategories, useTags } from '~/routes/(lang)/(wrapper)/(authRoutes)/creator/layout';
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+import type { ContentCategory } from '../../../../drizzle_turso/schema/content_category';
+import type { NewContentIndex } from '../../../../drizzle_turso/schema/content_index';
+import type { Tag } from '../../../../drizzle_turso/schema/tag';
+import { listSupportedLang } from '../../../../lang';
 
 export default component$(
   ({
@@ -59,14 +59,13 @@ export default component$(
               {!courseData.is_private && (
                 <div class="w-full">
                   <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                    <span>Category:</span>{" "}
+                    <span>Category:</span>{' '}
                     <span>
                       {courseData.category
                         ? createdCategory.value && createdCategory.value.id === courseData.category
                           ? `${createdCategory.value.name} (new)`
-                          : categories.find((category) => category.id === courseData.category)
-                              ?.name || ""
-                        : ""}
+                          : categories.find((category) => category.id === courseData.category)?.name || ''
+                        : ''}
                     </span>
                   </p>
                 </div>
@@ -74,18 +73,14 @@ export default component$(
               {!courseData.is_private && (
                 <div class="w-full">
                   <div class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                    <span>Tags:</span>{" "}
+                    <span>Tags:</span>{' '}
                     <ul class="flex max-w-[250px] flex-wrap gap-2 md:max-w-[300px]">
                       {courseData.tags!.map((tag) => {
                         const cTag = createdTags.find((tag2) => tag2.id === tag);
                         if (cTag) {
                           return <li key={`CourseReview${tag}`}>{cTag.name} (new)</li>;
                         }
-                        return (
-                          <li key={`CourseReview${tag}`}>
-                            {tags.find((tag2) => tag2.id === tag)?.name || ""}
-                          </li>
-                        );
+                        return <li key={`CourseReview${tag}`}>{tags.find((tag2) => tag2.id === tag)?.name || ''}</li>;
                       })}
                     </ul>
                   </div>
@@ -93,44 +88,27 @@ export default component$(
               )}
               <div class="w-full">
                 <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                  <span>Language:</span>{" "}
-                  <span>
-                    {listSupportedLang.find((lang) => lang.value === courseData.lang)?.label || ""}
-                  </span>
+                  <span>Language:</span>{' '}
+                  <span>{listSupportedLang.find((lang) => lang.value === courseData.lang)?.label || ''}</span>
                 </p>
               </div>
               <div class="w-full">
                 <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                  <span>Private:</span>{" "}
-                  <input
-                    type="checkbox"
-                    class="h-4 w-4"
-                    checked={courseData.is_private}
-                    disabled={true}
-                  />
+                  <span>Private:</span>{' '}
+                  <input type="checkbox" class="h-4 w-4" checked={courseData.is_private} disabled={true} />
                 </p>
               </div>
               <div class="w-full">
                 <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                  <span>Multiple Chapters:</span>{" "}
-                  <input
-                    type="checkbox"
-                    class="h-4 w-4"
-                    checked={!courseData.is_single_page}
-                    disabled={true}
-                  />
+                  <span>Multiple Chapters:</span>{' '}
+                  <input type="checkbox" class="h-4 w-4" checked={!courseData.is_single_page} disabled={true} />
                 </p>
               </div>
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <div class="w-full">
                   <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
-                    <span>Subscription Required:</span>{" "}
-                    <input
-                      type="checkbox"
-                      class="h-4 w-4"
-                      checked={courseData.is_premium}
-                      disabled={true}
-                    />
+                    <span>Subscription Required:</span>{' '}
+                    <input type="checkbox" class="h-4 w-4" checked={courseData.is_premium} disabled={true} />
                   </p>
                 </div>
               )}
@@ -150,10 +128,10 @@ export default component$(
                     await handleSubmit();
                     loading.value = false;
                     window.close();
-                    nav("/creator/", { forceReload: true });
+                    nav('/creator/', { forceReload: true });
                   } catch (e) {
                     console.error(e);
-                    alert("Something went wrong! Please try again later or contact support.");
+                    alert('Something went wrong! Please try again later or contact support.');
                   }
                 }}
                 class="block w-[250px] rounded-lg bg-primary-dark-gray p-4 text-background-light-gray dark:bg-primary-dark-gray md:w-[300px]"
@@ -164,9 +142,7 @@ export default component$(
                   </span>
                 )}
                 {!loading.value && (
-                  <span class="text-[0.875rem] md:text-[1rem]">
-                    {isEditing ? "Update Course" : "Submit Course"}
-                  </span>
+                  <span class="text-[0.875rem] md:text-[1rem]">{isEditing ? 'Update Course' : 'Submit Course'}</span>
                 )}
               </button>
             </div>

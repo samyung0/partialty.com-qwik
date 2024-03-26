@@ -5,21 +5,21 @@ export default {
     directory: {
       b: {
         directory: {
-          "testb.js": {
+          'testb.js': {
             file: {
               contents: `const fs = require("fs")`,
             },
           },
         },
       },
-      "test.js": {
+      'test.js': {
         file: {
           contents: `const fs = require("fs")`,
         },
       },
     },
   },
-  "index.js": {
+  'index.js': {
     file: {
       contents: `const express = require('express'); 
 const app = express();
@@ -42,7 +42,7 @@ app.listen(port, () => {
 });`,
     },
   },
-  "package.json": {
+  'package.json': {
     file: {
       contents: `{
   "name": "example-app",

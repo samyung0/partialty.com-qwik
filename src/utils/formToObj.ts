@@ -8,9 +8,9 @@ export default (formData: FormData): Record<string, any> => {
    * Create values object by form data entries
    */
   const values = [...formData.entries()].reduce<any>((values, [name, value]) => {
-    name.split(".").reduce((object: any, key: string, index: number, keys: any) => {
+    name.split('.').reduce((object: any, key: string, index: number, keys: any) => {
       // Backet notation for arrays, notibly for multi selects
-      if (key.endsWith("[]")) {
+      if (key.endsWith('[]')) {
         const arrayKey = key.slice(0, -2);
         object[arrayKey] = object[arrayKey] || [];
         return (object[arrayKey] = [...object[arrayKey], value]);

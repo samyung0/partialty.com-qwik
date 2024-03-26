@@ -1,9 +1,9 @@
-import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import type { DocumentHead } from '@builder.io/qwik-city';
 
-import SignupComponent from "~/components/_Signup";
-import { getCloudinaryDefaultPic } from "~/routes/(lang)/(wrapper)/signup/layout";
-import type { CloudinaryDefaultPic } from "~/types/Cloudinary";
+import SignupComponent from '~/components/_Signup';
+import { getCloudinaryDefaultPic } from '~/routes/(lang)/(wrapper)/signup/layout';
+import type { CloudinaryDefaultPic } from '~/types/Cloudinary';
 export { getCloudinaryDefaultPic };
 
 export default component$(() => {
@@ -17,11 +17,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Signup",
+  title: 'Signup',
   meta: [
     {
-      name: "description",
-      content: "Signup Page",
+      name: 'description',
+      content: 'Signup Page',
     },
   ],
 };

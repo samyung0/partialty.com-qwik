@@ -1,14 +1,14 @@
-import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 
-import { useUserLoader } from "~/routes/(lang)/(wrapper)/(authRoutes)/layout";
+import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
 
-import { useUpdateProfile } from "~/action/userAction";
-import Dragndrop from "~/components/_Signup/dragndrop";
-import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from "~/const/cloudinary";
+import { useUpdateProfile } from '~/action/userAction';
+import Dragndrop from '~/components/_Signup/dragndrop';
+import { CLOUDINARY_MAX_IMG_SIZE, CLOUDINARY_MAX_PIXEL_COUNT } from '~/const/cloudinary';
 
-import LoadingSVG from "~/components/LoadingSVG";
-import type Lang from "../../../lang";
+import LoadingSVG from '~/components/LoadingSVG';
+import type Lang from '../../../lang';
 
 export default component$(() => {
   const user = useUserLoader().value;
@@ -23,12 +23,12 @@ export default component$(() => {
       bytes: 0,
       pixels: 0,
       secure_url: user.avatar_url as string,
-      public_id: "",
+      public_id: '',
     },
   });
 
   const localStorageData = useStore<{
-    lang: (typeof Lang)["supportedLocales"][number]["lang"] | undefined;
+    lang: (typeof Lang)['supportedLocales'][number]['lang'] | undefined;
   }>({
     lang: undefined,
   });
@@ -36,14 +36,14 @@ export default component$(() => {
   useVisibleTask$(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!localStorage) return;
-    localStorageData.lang = localStorage["lang"] || "en-US";
+    localStorageData.lang = localStorage['lang'] || 'en-US';
   });
 
   const isUpdating = useSignal(false);
   const bioError = useStore({
-    avatar: "",
-    nickname: "",
-    wrongInfo: "",
+    avatar: '',
+    nickname: '',
+    wrongInfo: '',
   });
 
   const handleImage = $((file: File) => {
@@ -51,18 +51,15 @@ export default component$(() => {
     reader.readAsDataURL(file);
     reader.onload = () => {
       if (!reader.result) {
-        bioError.avatar = "Cannot load image!";
+        bioError.avatar = 'Cannot load image!';
         return;
       }
 
       const img = new Image();
       img.src = reader.result as string;
       img.onload = () => {
-        if (
-          file.size > CLOUDINARY_MAX_IMG_SIZE ||
-          img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT
-        ) {
-          bioError.avatar = "The picture is too large!";
+        if (file.size > CLOUDINARY_MAX_IMG_SIZE || img.width * img.height > CLOUDINARY_MAX_PIXEL_COUNT) {
+          bioError.avatar = 'The picture is too large!';
           return;
         }
 
@@ -78,15 +75,15 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(updateProfile);
     if (updateProfile.status === 400) {
-      bioError.nickname = updateProfile.value?.fieldErrors?.nickname?.join("\n") ?? "";
+      bioError.nickname = updateProfile.value?.fieldErrors?.nickname?.join('\n') ?? '';
     }
     if (updateProfile.status === 500) {
-      bioError.wrongInfo = updateProfile.value?.message || "";
+      bioError.wrongInfo = updateProfile.value?.message || '';
     }
     if (updateProfile.status === 200) {
-      bioError.avatar = "";
-      bioError.nickname = "";
-      bioError.wrongInfo = "";
+      bioError.avatar = '';
+      bioError.nickname = '';
+      bioError.wrongInfo = '';
     }
   });
 
@@ -102,7 +99,7 @@ export default component$(() => {
           await updateProfile.submit(formData);
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (localStorage) {
-            localStorage["lang"] = localStorageData.lang;
+            localStorage['lang'] = localStorageData.lang;
           }
           isUpdating.value = false;
         }}
@@ -128,8 +125,8 @@ export default component$(() => {
                   id="nickname"
                   name="nickname"
                   class={
-                    "w-[250px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 lg:w-[400px] " +
-                    (bioError.nickname || bioError.wrongInfo ? "border-tomato" : "border-black/10")
+                    'w-[250px] rounded-md border-2 px-3 py-1 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 lg:w-[400px] ' +
+                    (bioError.nickname || bioError.wrongInfo ? 'border-tomato' : 'border-black/10')
                   }
                   value={formData.nickname}
                   type="text"
@@ -145,14 +142,14 @@ export default component$(() => {
                 <label class=" font-bold">Password</label>
                 <Link
                   class="text-sm underline decoration-wavy underline-offset-4 lg:text-base "
-                  href={"/profile/resetPassword"}
+                  href={'/profile/resetPassword'}
                 >
                   Change
                 </Link>
               </div>
               <input
                 class="w-[250px] rounded-md border-2 px-3 py-1 disabled:bg-gray-200 dark:border-primary-dark-gray dark:bg-highlight-dark dark:disabled:border-black/20 dark:disabled:bg-black/20 lg:w-[400px]"
-                value={"●●●●●●"}
+                value={'●●●●●●'}
                 readOnly
                 disabled
               />
@@ -205,13 +202,13 @@ export default component$(() => {
                   <LoadingSVG />
                 </span>
               ) : (
-                "Save"
+                'Save'
               )}
             </button>
             <p class="text-[0.875rem] lg:text-[1rem]">
-              Need help? Contact us at{" "}
+              Need help? Contact us at{' '}
               <a
-                href={"mailto://customer@partialty.com"}
+                href={'mailto://customer@partialty.com'}
                 class="underline decoration-wavy underline-offset-[6px] lg:tracking-wide"
               >
                 customer@partialty.com

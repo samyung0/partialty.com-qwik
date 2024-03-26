@@ -1,13 +1,13 @@
-import { $, Slot, component$, useContextProvider, useOnDocument, useStore } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
-import { QwikCityNprogress } from "@quasarwork/qwik-city-nprogress";
+import { $, Slot, component$, useContextProvider, useOnDocument, useStore } from '@builder.io/qwik';
+import { routeLoader$ } from '@builder.io/qwik-city';
+import { QwikCityNprogress } from '@quasarwork/qwik-city-nprogress';
 
-import type theme from "~/const/theme";
-import { themeContext } from "~/context/themeContext";
+import type theme from '~/const/theme';
+import { themeContext } from '~/context/themeContext';
 
 export const useTheme = routeLoader$((event) => {
-  const userTheme = event.cookie.get("theme")?.value as (typeof theme)[number] | undefined;
-  return userTheme ?? "default";
+  const userTheme = event.cookie.get('theme')?.value as (typeof theme)[number] | undefined;
+  return userTheme ?? 'default';
 });
 
 export default component$(() => {
@@ -19,13 +19,10 @@ export default component$(() => {
   // edit: there is no more flicker with qinit listener
 
   useOnDocument(
-    "qinit",
+    'qinit',
     $(() => {
-      if (
-        window.matchMedia("(prefers-color-scheme: dark)").matches &&
-        themeStore.value === "default"
-      ) {
-        themeStore.value = "dark";
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches && themeStore.value === 'default') {
+        themeStore.value = 'dark';
       }
     })
   );
@@ -34,7 +31,7 @@ export default component$(() => {
     <>
       <QwikCityNprogress
         options={{
-          color: themeStore.value === "dark" ? "#72cada" : "#72cada",
+          color: themeStore.value === 'dark' ? '#72cada' : '#72cada',
         }}
       />
       <div id="darkThemeDiv" class={themeStore.value}>

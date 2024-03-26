@@ -1,18 +1,11 @@
-import type { NoSerialize } from "@builder.io/qwik";
-import {
-  component$,
-  noSerialize,
-  useContext,
-  useSignal,
-  useStyles$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import type { NoSerialize } from '@builder.io/qwik';
+import { component$, noSerialize, useContext, useSignal, useStyles$, useVisibleTask$ } from '@builder.io/qwik';
 
-import { Terminal } from "xterm";
-import { FitAddon } from "xterm-addon-fit";
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
 
-import xtermStyles from "xterm/css/xterm.css?inline";
-import { TerminalContext } from "~/routes/(lang)/(wrapper)/codeplayground";
+import xtermStyles from 'xterm/css/xterm.css?inline';
+import { TerminalContext } from '~/routes/(lang)/(wrapper)/codeplayground';
 
 export interface TerminalStore {
   fitAddon: NoSerialize<FitAddon> | null;
@@ -42,18 +35,18 @@ export default component$(() => {
       terminal.loadAddon(fitAddon);
       fitAddon.fit();
 
-      resizeListener = window.addEventListener("resize", () => {
+      resizeListener = window.addEventListener('resize', () => {
         fitAddon.fit();
       });
     } else {
-      console.error("Unable to initialize terminal!!");
+      console.error('Unable to initialize terminal!!');
     }
 
     // terminalStore.fitAddon = noSerialize(fitAddon);
     terminalStore.terminal = noSerialize(terminal);
 
     cleanup(() => {
-      if (resizeListener) window.removeEventListener("resize", resizeListener);
+      if (resizeListener) window.removeEventListener('resize', resizeListener);
     });
   });
 

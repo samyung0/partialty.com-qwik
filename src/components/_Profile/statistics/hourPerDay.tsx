@@ -1,29 +1,29 @@
-import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import type { ApexOptions } from "apexcharts";
-import ApexCharts from "apexcharts";
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import type { ApexOptions } from 'apexcharts';
+import ApexCharts from 'apexcharts';
 
-const chartElementId = "hour-per-day";
+const chartElementId = 'hour-per-day';
 const options: ApexOptions = {
-  colors: ["#1A56DB", "#FDBA8C"],
+  colors: ['#1A56DB', '#FDBA8C'],
   series: [
     {
-      name: "Hours of studying",
-      color: "#72cada",
+      name: 'Hours of studying',
+      color: '#72cada',
       data: [
-        { x: "Mon", y: 7 },
-        { x: "Tue", y: 3 },
-        { x: "Wed", y: 1 },
-        { x: "Thu", y: 2 },
-        { x: "Fri", y: 5 },
-        { x: "Sat", y: 6 },
-        { x: "Sun", y: 8 },
+        { x: 'Mon', y: 7 },
+        { x: 'Tue', y: 3 },
+        { x: 'Wed', y: 1 },
+        { x: 'Thu', y: 2 },
+        { x: 'Fri', y: 5 },
+        { x: 'Sat', y: 6 },
+        { x: 'Sun', y: 8 },
       ],
     },
   ],
   chart: {
-    type: "bar",
-    height: "175px",
-    fontFamily: "mosk",
+    type: 'bar',
+    height: '175px',
+    fontFamily: 'mosk',
     toolbar: {
       show: false,
     },
@@ -31,8 +31,8 @@ const options: ApexOptions = {
   plotOptions: {
     bar: {
       horizontal: false,
-      columnWidth: "30%",
-      borderRadiusApplication: "end",
+      columnWidth: '30%',
+      borderRadiusApplication: 'end',
       borderRadius: 4,
     },
   },
@@ -40,13 +40,13 @@ const options: ApexOptions = {
     shared: true,
     intersect: false,
     style: {
-      fontFamily: "Varela_Round",
+      fontFamily: 'Varela_Round',
     },
   },
   states: {
     hover: {
       filter: {
-        type: "darken",
+        type: 'darken',
         value: 1,
       },
     },
@@ -54,7 +54,7 @@ const options: ApexOptions = {
   stroke: {
     show: true,
     width: 0,
-    colors: ["transparent"],
+    colors: ['transparent'],
   },
   grid: {
     show: true,
@@ -70,8 +70,8 @@ const options: ApexOptions = {
     labels: {
       show: true,
       style: {
-        fontFamily: "Inter, sans-serif",
-        cssClass: "font-bold text-sm",
+        fontFamily: 'Inter, sans-serif',
+        cssClass: 'font-bold text-sm',
       },
     },
     axisBorder: {
@@ -92,7 +92,7 @@ const options: ApexOptions = {
 export const HourPerDay = component$(() => {
   useVisibleTask$(() => {
     const chartElement = document.getElementById(chartElementId);
-    if (chartElement && typeof ApexCharts != "undefined") {
+    if (chartElement && typeof ApexCharts != 'undefined') {
       const chart = new ApexCharts(chartElement, options);
       chart.render();
     }
@@ -104,9 +104,7 @@ export const HourPerDay = component$(() => {
         <div class="flex items-center">
           <div>
             <h5 class="pb-1 text-2xl font-bold leading-none text-gray-900 ">24 Hours</h5>
-            <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
-              spent on studying last week
-            </p>
+            <p class="text-sm font-normal text-gray-500 dark:text-gray-400">spent on studying last week</p>
           </div>
         </div>
         <div>

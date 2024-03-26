@@ -1,11 +1,11 @@
-import { component$, useComputed$, useSignal } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
-import { useLocation, useNavigate } from "@builder.io/qwik-city";
-import Footer from "~/components/Footer";
-import Nav from "~/components/Nav";
-import { useCategories, useCourseLoader, useTags } from "~/routes/(lang)/(wrapper)/catalog/layout";
-import Masonry from "~/routes/(lang)/(wrapper)/catalog/masonry";
-import { cn } from "~/utils/cn";
+import { component$, useComputed$, useSignal } from '@builder.io/qwik';
+import type { DocumentHead } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
+import Footer from '~/components/Footer';
+import Nav from '~/components/Nav';
+import { useCategories, useCourseLoader, useTags } from '~/routes/(lang)/(wrapper)/catalog/layout';
+import Masonry from '~/routes/(lang)/(wrapper)/catalog/masonry';
+import { cn } from '~/utils/cn';
 
 // const Masonry = _Masonry as any;
 
@@ -57,28 +57,28 @@ export default component$(() => {
 
   const urlStateManager = useComputed$<{
     type: null | string;
-    category: (typeof categories)[number]["slug"][];
-    tag: (typeof tags)[number]["slug"][];
+    category: (typeof categories)[number]['slug'][];
+    tag: (typeof tags)[number]['slug'][];
     sort: string;
   }>(() => ({
-    type: loc.url.searchParams.get("type"),
-    category: loc.url.searchParams.getAll("category"),
-    tag: loc.url.searchParams.getAll("tag"),
-    sort: loc.url.searchParams.get("sort") || "difficulty-increasing",
+    type: loc.url.searchParams.get('type'),
+    category: loc.url.searchParams.getAll('category'),
+    tag: loc.url.searchParams.getAll('tag'),
+    sort: loc.url.searchParams.get('sort') || 'difficulty-increasing',
   }));
 
   const coursesDisplay = useComputed$(() =>
-    urlStateManager.value.type === "project" || urlStateManager.value.type === "guide"
+    urlStateManager.value.type === 'project' || urlStateManager.value.type === 'guide'
       ? []
-      : urlStateManager.value.type === "course"
+      : urlStateManager.value.type === 'course'
       ? courses.map((x) => x.content_index).filter((course) => !course.is_guide)
       : courses.map((x) => x.content_index)
   );
 
   const guidesDisplay = useComputed$(() =>
-    urlStateManager.value.type === "project" || urlStateManager.value.type === "course"
+    urlStateManager.value.type === 'project' || urlStateManager.value.type === 'course'
       ? []
-      : urlStateManager.value.type === "guide"
+      : urlStateManager.value.type === 'guide'
       ? courses.map((x) => x.content_index).filter((course) => course.is_guide)
       : []
   );
@@ -99,7 +99,7 @@ export default component$(() => {
       .filter((course) =>
         urlStateManager.value.category.length > 0
           ? urlStateManager.value.category.includes(
-              categories.find((category) => category.id === course.category)?.slug || ""
+              categories.find((category) => category.id === course.category)?.slug || ''
             )
           : true
       )
@@ -121,23 +121,19 @@ export default component$(() => {
 
   const sortedDisplay = useComputed$(() => {
     switch (urlStateManager.value.sort) {
-      case "difficulty-increasing":
+      case 'difficulty-increasing':
         return display.value.toSorted(
           (a, b) => difficultyMap.value[a.difficulty] || 0 - difficultyMap.value[b.difficulty] || 0
         );
-      case "difficulty-decreasing":
+      case 'difficulty-decreasing':
         return display.value.toSorted(
           (a, b) => difficultyMap.value[b.difficulty] || 0 - difficultyMap.value[a.difficulty] || 0
         );
-      case "newest":
-        return display.value.toSorted(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
+      case 'newest':
+        return display.value.toSorted((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-      case "oldest":
-        return display.value.toSorted(
-          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
+      case 'oldest':
+        return display.value.toSorted((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
       default:
         return display.value;
     }
@@ -150,16 +146,13 @@ export default component$(() => {
         <div class="flex flex-auto ">
           <div class="flex-auto">
             <div
-              class={cn("relative z-40 hidden lg:hidden", showMobileFilter.value && "block")}
+              class={cn('relative z-40 hidden lg:hidden', showMobileFilter.value && 'block')}
               role="dialog"
               aria-modal="true"
             >
               <div class="fixed inset-0 bg-black bg-opacity-25"></div>
 
-              <div
-                class="fixed inset-0 z-40 flex"
-                onClick$={() => (showMobileFilter.value = !showMobileFilter.value)}
-              >
+              <div class="fixed inset-0 z-40 flex" onClick$={() => (showMobileFilter.value = !showMobileFilter.value)}>
                 <div
                   class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto  bg-pale-yellow py-4 pb-12 shadow-xl dark:bg-primary-dark-gray"
                   onClick$={(e) => e.stopPropagation()}
@@ -180,11 +173,7 @@ export default component$(() => {
                         stroke="currentColor"
                         aria-hidden="true"
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
                   </div>
@@ -197,7 +186,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.delete("type");
+                            url.searchParams.delete('type');
                             nav(url.toString());
                             showMobileFilter.value = false;
                           }}
@@ -210,7 +199,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "course");
+                            url.searchParams.set('type', 'course');
                             nav(url.toString());
                             showMobileFilter.value = false;
                           }}
@@ -223,7 +212,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "project");
+                            url.searchParams.set('type', 'project');
                             nav(url.toString());
                             showMobileFilter.value = false;
                           }}
@@ -236,7 +225,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "guide");
+                            url.searchParams.set('type', 'guide');
                             nav(url.toString());
                             showMobileFilter.value = false;
                           }}
@@ -258,22 +247,12 @@ export default component$(() => {
                           <span class="font-medium ">Category</span>
                           <span class="ml-6 flex items-center">
                             {!categoryOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                               </svg>
                             )}
                             {categoryOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path
                                   fill-rule="evenodd"
                                   d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
@@ -284,10 +263,7 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div
-                        class={cn("hidden pt-6", categoryOpened.value && "block")}
-                        id="filter-section-mobile-0"
-                      >
+                      <div class={cn('hidden pt-6', categoryOpened.value && 'block')} id="filter-section-mobile-0">
                         <div class="space-y-6">
                           {categories.map((category) => (
                             <div key={category.id} class="flex items-center">
@@ -299,9 +275,9 @@ export default component$(() => {
                                 onChange$={(e, ct) => {
                                   const url = new URL(loc.url);
                                   if (ct.checked) {
-                                    url.searchParams.append("category", category.slug);
+                                    url.searchParams.append('category', category.slug);
                                   } else {
-                                    url.searchParams.delete("category", category.slug);
+                                    url.searchParams.delete('category', category.slug);
                                   }
                                   nav(url.toString());
                                 }}
@@ -329,22 +305,12 @@ export default component$(() => {
                           <span class="font-medium ">Tag</span>
                           <span class="ml-6 flex items-center">
                             {!tagOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                               </svg>
                             )}
                             {tagOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path
                                   fill-rule="evenodd"
                                   d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
@@ -355,10 +321,7 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div
-                        class={cn("hidden pt-6", tagOpened.value && "block")}
-                        id="filter-section-mobile-1"
-                      >
+                      <div class={cn('hidden pt-6', tagOpened.value && 'block')} id="filter-section-mobile-1">
                         <div class="space-y-6">
                           {tags.map((tag) => (
                             <div key={tag.id} class="flex items-center">
@@ -370,17 +333,14 @@ export default component$(() => {
                                 onChange$={(e, ct) => {
                                   const url = new URL(loc.url);
                                   if (ct.checked) {
-                                    url.searchParams.append("tag", tag.slug);
+                                    url.searchParams.append('tag', tag.slug);
                                   } else {
-                                    url.searchParams.delete("tag", tag.slug);
+                                    url.searchParams.delete('tag', tag.slug);
                                   }
                                   nav(url.toString());
                                 }}
                               />
-                              <label
-                                for={`filter-tag-${tag.id}`}
-                                class="ml-3 text-sm text-gray-600 dark:text-gray-300"
-                              >
+                              <label for={`filter-tag-${tag.id}`} class="ml-3 text-sm text-gray-600 dark:text-gray-300">
                                 {tag.name}
                               </label>
                             </div>
@@ -425,8 +385,8 @@ export default component$(() => {
                     </div>
                     <div
                       class={cn(
-                        "absolute right-0 z-10 mt-2 hidden w-[220px] origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 focus:outline-none dark:border-disabled-dark dark:bg-highlight-dark",
-                        showSort.value && "block"
+                        'absolute right-0 z-10 mt-2 hidden w-[220px] origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 focus:outline-none dark:border-disabled-dark dark:bg-highlight-dark',
+                        showSort.value && 'block'
                       )}
                       role="menu"
                       aria-orientation="vertical"
@@ -436,15 +396,15 @@ export default component$(() => {
                       <div class="py-1" role="none">
                         <button
                           class={cn(
-                            "block px-4 py-2 text-base",
-                            urlStateManager.value.sort === "difficulty-increasing" && "font-bold"
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'difficulty-increasing' && 'font-bold'
                           )}
                           role="menuitem"
                           tabIndex={-1}
                           id="menu-item-0"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("sort", "difficulty-increasing");
+                            url.searchParams.set('sort', 'difficulty-increasing');
                             nav(url.toString());
                           }}
                         >
@@ -453,12 +413,12 @@ export default component$(() => {
                         <button
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("sort", "difficulty-decreasing");
+                            url.searchParams.set('sort', 'difficulty-decreasing');
                             nav(url.toString());
                           }}
                           class={cn(
-                            "block px-4 py-2 text-base",
-                            urlStateManager.value.sort === "difficulty-decreasing" && "font-bold"
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'difficulty-decreasing' && 'font-bold'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -469,12 +429,12 @@ export default component$(() => {
                         <button
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("sort", "newest");
+                            url.searchParams.set('sort', 'newest');
                             nav(url.toString());
                           }}
                           class={cn(
-                            "block px-4 py-2 text-base",
-                            urlStateManager.value.sort === "newest" && "font-bold"
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'newest' && 'font-bold'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -485,12 +445,12 @@ export default component$(() => {
                         <button
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("sort", "oldest");
+                            url.searchParams.set('sort', 'oldest');
                             nav(url.toString());
                           }}
                           class={cn(
-                            "block px-4 py-2 text-base",
-                            urlStateManager.value.sort === "oldest" && "font-bold"
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'oldest' && 'font-bold'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -540,16 +500,13 @@ export default component$(() => {
                 <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                   <form class="hidden lg:block" preventdefault:submit>
                     <h3 class="sr-only">Type</h3>
-                    <ul
-                      role="list"
-                      class="space-y-4 border-b border-gray-300 pb-6 text-sm font-medium "
-                    >
+                    <ul role="list" class="space-y-4 border-b border-gray-300 pb-6 text-sm font-medium ">
                       <li>
                         <button
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.delete("type");
+                            url.searchParams.delete('type');
                             nav(url.toString());
                           }}
                         >
@@ -561,7 +518,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "course");
+                            url.searchParams.set('type', 'course');
                             nav(url.toString());
                           }}
                         >
@@ -573,7 +530,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "project");
+                            url.searchParams.set('type', 'project');
                             nav(url.toString());
                           }}
                         >
@@ -585,7 +542,7 @@ export default component$(() => {
                           type="button"
                           onClick$={() => {
                             const url = new URL(loc.url);
-                            url.searchParams.set("type", "guide");
+                            url.searchParams.set('type', 'guide');
                             nav(url.toString());
                           }}
                         >
@@ -606,22 +563,12 @@ export default component$(() => {
                           <span class="font-medium ">Category</span>
                           <span class="ml-6 flex items-center">
                             {!categoryOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                               </svg>
                             )}
                             {categoryOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path
                                   fill-rule="evenodd"
                                   d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
@@ -632,10 +579,7 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div
-                        class={cn("hidden pt-6", categoryOpened.value && "block")}
-                        id="filter-section-0"
-                      >
+                      <div class={cn('hidden pt-6', categoryOpened.value && 'block')} id="filter-section-0">
                         <div class="space-y-4">
                           {categories.map((category) => (
                             <div key={category.id} class="flex items-center">
@@ -647,9 +591,9 @@ export default component$(() => {
                                 onChange$={(e, ct) => {
                                   const url = new URL(loc.url);
                                   if (ct.checked) {
-                                    url.searchParams.append("category", category.slug);
+                                    url.searchParams.append('category', category.slug);
                                   } else {
-                                    url.searchParams.delete("category", category.slug);
+                                    url.searchParams.delete('category', category.slug);
                                   }
                                   nav(url.toString());
                                 }}
@@ -678,22 +622,12 @@ export default component$(() => {
                           <span class="font-medium ">Tags</span>
                           <span class="ml-6 flex items-center">
                             {!tagOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                               </svg>
                             )}
                             {tagOpened.value && (
-                              <svg
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                              >
+                              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path
                                   fill-rule="evenodd"
                                   d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
@@ -704,10 +638,7 @@ export default component$(() => {
                           </span>
                         </button>
                       </h3>
-                      <div
-                        class={cn("hidden pt-6", tagOpened.value && "block")}
-                        id="filter-section-0"
-                      >
+                      <div class={cn('hidden pt-6', tagOpened.value && 'block')} id="filter-section-0">
                         <div class="space-y-4">
                           {tags.map((tag) => (
                             <div key={tag.id} class="flex items-center">
@@ -719,17 +650,14 @@ export default component$(() => {
                                 onChange$={(e, ct) => {
                                   const url = new URL(loc.url);
                                   if (ct.checked) {
-                                    url.searchParams.append("tag", tag.slug);
+                                    url.searchParams.append('tag', tag.slug);
                                   } else {
-                                    url.searchParams.delete("tag", tag.slug);
+                                    url.searchParams.delete('tag', tag.slug);
                                   }
                                   nav(url.toString());
                                 }}
                               />
-                              <label
-                                for={`filter-tag-${tag.id}`}
-                                class="ml-3 text-sm text-gray-600 dark:text-gray-300"
-                              >
+                              <label for={`filter-tag-${tag.id}`} class="ml-3 text-sm text-gray-600 dark:text-gray-300">
                                 {tag.name}
                               </label>
                             </div>
@@ -747,10 +675,7 @@ export default component$(() => {
                           <span class="sr-only">, active</span>
                         </h3>
 
-                        <div
-                          aria-hidden="true"
-                          class="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"
-                        ></div>
+                        <div aria-hidden="true" class="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"></div>
 
                         <div class="mt-2 sm:ml-4 sm:mt-0">
                           <div class="-m-1 flex flex-wrap items-center">
@@ -760,26 +685,15 @@ export default component$(() => {
                                 <button
                                   onClick$={() => {
                                     const url = new URL(loc.url);
-                                    url.searchParams.delete("type");
+                                    url.searchParams.delete('type');
                                     nav(url.toString());
                                   }}
                                   type="button"
                                   class="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
                                 >
-                                  <span class="sr-only">
-                                    Remove filter for {urlStateManager.value.type}
-                                  </span>
-                                  <svg
-                                    class="h-2 w-2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 8 8"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-width="1.5"
-                                      d="M1 1l6 6m0-6L1 7"
-                                    />
+                                  <span class="sr-only">Remove filter for {urlStateManager.value.type}</span>
+                                  <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                                    <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                                   </svg>
                                 </button>
                               </span>
@@ -794,27 +708,18 @@ export default component$(() => {
                                 <button
                                   onClick$={() => {
                                     const url = new URL(loc.url);
-                                    url.searchParams.delete("category");
+                                    url.searchParams.delete('category');
                                     urlStateManager.value.category
                                       .filter((slug) => slug !== category)
-                                      .forEach((slug) => url.searchParams.append("category", slug));
+                                      .forEach((slug) => url.searchParams.append('category', slug));
                                     nav(url.toString());
                                   }}
                                   type="button"
                                   class="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
                                 >
                                   <span class="sr-only">Remove filter for {category}</span>
-                                  <svg
-                                    class="h-2 w-2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 8 8"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-width="1.5"
-                                      d="M1 1l6 6m0-6L1 7"
-                                    />
+                                  <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                                    <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                                   </svg>
                                 </button>
                               </span>
@@ -829,27 +734,18 @@ export default component$(() => {
                                 <button
                                   onClick$={() => {
                                     const url = new URL(loc.url);
-                                    url.searchParams.delete("tag");
+                                    url.searchParams.delete('tag');
                                     urlStateManager.value.tag
                                       .filter((slug) => slug !== tag)
-                                      .forEach((slug) => url.searchParams.append("tag", slug));
+                                      .forEach((slug) => url.searchParams.append('tag', slug));
                                     nav(url.toString());
                                   }}
                                   type="button"
                                   class="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
                                 >
                                   <span class="sr-only">Remove filter for {tag}</span>
-                                  <svg
-                                    class="h-2 w-2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 8 8"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-width="1.5"
-                                      d="M1 1l6 6m0-6L1 7"
-                                    />
+                                  <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
+                                    <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" />
                                   </svg>
                                 </button>
                               </span>
@@ -931,11 +827,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Catalog",
+  title: 'Catalog',
   meta: [
     {
-      name: "description",
-      content: "Browse all the courses and projects available.",
+      name: 'description',
+      content: 'Browse all the courses and projects available.',
     },
   ],
 };

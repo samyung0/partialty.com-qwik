@@ -1,3 +1,3 @@
-import { createContextId } from "@builder.io/qwik";
+import { createContextId } from '@builder.io/qwik';
 
-export const layoutContext = createContextId<{ value: string }>("layout");
+export const layoutContext = createContextId<{ value: string }>('layout');

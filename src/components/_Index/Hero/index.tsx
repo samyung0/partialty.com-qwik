@@ -1,15 +1,15 @@
-import { component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
-import type { TypeWriter } from "~/components/_Index/codeAnimation/TypeWriter";
-import animateShow from "~/components/_Index/codeAnimation/animateShow";
-import displayCodeOrder from "~/components/_Index/codeAnimation/displayCodeOrder";
-import rendered from "~/components/_Index/codeBlock/rendered";
+import { component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import type { TypeWriter } from '~/components/_Index/codeAnimation/TypeWriter';
+import animateShow from '~/components/_Index/codeAnimation/animateShow';
+import displayCodeOrder from '~/components/_Index/codeAnimation/displayCodeOrder';
+import rendered from '~/components/_Index/codeBlock/rendered';
 
-import codeBlock from "~/components/_Index/codeBlock";
-import blankChar from "~/components/_Index/codeBlock/blankChar";
+import codeBlock from '~/components/_Index/codeBlock';
+import blankChar from '~/components/_Index/codeBlock/blankChar';
 
-import { Link } from "@builder.io/qwik-city";
-import Nav from "~/components/Nav";
-import styles from "./index.module.css";
+import { Link } from '@builder.io/qwik-city';
+import Nav from '~/components/Nav';
+import styles from './index.module.css';
 
 export default component$(() => {
   // rendered (syntax highlighted) codes at COMPILE TIME
@@ -70,29 +70,23 @@ export default component$(() => {
                   {typeWriter.blankCharArr.map((blankCount, index) => {
                     currentCharWithoutNewLine--;
                     return [
-                      <span
-                        key={`typeWriterBlankLine${
-                          displayCodeOrder[typeWriter.displayIndex]
-                        }${index}`}
-                      >
+                      <span key={`typeWriterBlankLine${displayCodeOrder[typeWriter.displayIndex]}${index}`}>
                         {Array.from(Array(blankCount)).map((_, index2) => {
                           blankCharSum++;
                           return (
                             <span
-                              key={`typeWriterBlankChar${
-                                displayCodeOrder[typeWriter.displayIndex]
-                              }${index}-${index2}`}
+                              key={`typeWriterBlankChar${displayCodeOrder[typeWriter.displayIndex]}${index}-${index2}`}
                               class={
                                 (typeWriter.revealedCharArr[index] > index2
-                                  ? "bg-transparent "
-                                  : "bg-code-editor-one-dark-pro ") +
+                                  ? 'bg-transparent '
+                                  : 'bg-code-editor-one-dark-pro ') +
                                 (currentCharWithoutNewLine === blankCharSum
                                   ? typeWriter.appearStart === 0
                                     ? styles.blinkingCursorDisappearing
                                     : styles.blinkingCursorAppearing
                                   : currentCharWithoutNewLine === -1 && blankCharSum === 1
                                   ? styles.blinkingCursorEmptyCode
-                                  : "")
+                                  : '')
                               }
                             >
                               &nbsp;
@@ -100,7 +94,7 @@ export default component$(() => {
                           );
                         })}
                       </span>,
-                      "\n",
+                      '\n',
                     ];
                   })}
                 </pre>
@@ -117,16 +111,16 @@ export default component$(() => {
               </Link>
             </h1>
             <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] xl:pb-8 xl:text-[2.5rem] xl:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
-              Learn{" "}
+              Learn{' '}
               <span class="relative inline-block p-1">
                 <span
                   class={
-                    "-z-1 test absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-bright-yellow " +
+                    '-z-1 test absolute left-0 top-[50%] inline-block h-[100%] w-full translate-y-[-50%] bg-bright-yellow ' +
                     styles.animateInitialText
                   }
                 ></span>
                 <span class="relative z-10">Web Development</span>
-              </span>{" "}
+              </span>{' '}
               like you have <i>never</i> before.
             </h2>
             <Link

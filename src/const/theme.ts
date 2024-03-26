@@ -1,1 +1,1 @@
-export default ["light", "dark"] as const;
+export default ['light', 'dark'] as const;

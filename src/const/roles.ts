@@ -1,1 +1,1 @@
-export default ["free", "paid", "teacher", "admin"] as const;
+export default ['free', 'paid', 'teacher', 'admin'] as const;

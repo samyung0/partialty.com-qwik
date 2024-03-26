@@ -1,4 +1,4 @@
-import type codeBlock from "~/components/_Index/codeBlock";
+import type codeBlock from '~/components/_Index/codeBlock';
 export type TypeWriter = {
   displayIndex: number;
   displayCodeOrder: (keyof typeof codeBlock)[];
