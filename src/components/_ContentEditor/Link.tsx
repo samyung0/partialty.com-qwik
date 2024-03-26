@@ -315,7 +315,7 @@ export const HoveringLink = ({
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
               <div className="flex gap-4 border-l border-r border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark">
-                <Link2 className="invert-[0.8]" strokeWidth={1.5} size={20} />
+                <Link2 className="invert-[0.8] dark:text-background-light-gray dark:invert-0" strokeWidth={1.5} size={20} />
                 <input
                   className="bg-light-yellow/50 outline-none dark:bg-highlight-dark"
                   type="text"
