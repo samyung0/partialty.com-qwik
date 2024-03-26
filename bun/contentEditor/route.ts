@@ -277,7 +277,7 @@ const app = new Elysia()
               })
             );
           }
-          const isLockedChapter = (await getContentLocked(courseId)).rows[0];
+          const isLockedChapter = (await getContentLocked(contentId)).rows[0];
           if (!isLockedChapter)
             return ws.send(
               JSON.stringify({
