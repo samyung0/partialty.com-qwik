@@ -1,5 +1,5 @@
 import type { RequestEventBase } from "@builder.io/qwik-city";
-import { createClient, type Client } from "@libsql/client";
+import { createClient, type Client } from "@libsql/client/web";
 
 let client: Client | null = null;
 

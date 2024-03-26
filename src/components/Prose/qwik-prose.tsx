@@ -4,7 +4,7 @@ import { EMBED_URL } from "~/const";
 export default component$(({ innerHTML }: { innerHTML: string }) => {
   const interval = useSignal<any>();
   const isDark = useSignal<boolean>(false);
-  useVisibleTask$(() => {
+  useVisibleTask$(({ cleanup }) => {
     console.log("hydrate embed");
     const darkThemeDiv = document.getElementById("darkThemeDiv");
     if (!darkThemeDiv) return;
@@ -31,10 +31,10 @@ export default component$(({ innerHTML }: { innerHTML: string }) => {
         }
       });
     }, 100);
-    return () => {
+    cleanup(() => {
       clearInterval(interval.value);
       isDark.value = false;
-    }
+    });
   });
   return (
     <>
