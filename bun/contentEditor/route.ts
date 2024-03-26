@@ -54,7 +54,7 @@ const getContentIndexLocked = (id: string) =>
 
 const getContentLocked = (id: string) =>
   turso.execute({
-    sql: "SELECT author, is_locked FROM content WHERE id = ? LIMIT 1",
+    sql: "SELECT is_locked FROM content WHERE id = ? LIMIT 1",
     args: [id],
   });
 
