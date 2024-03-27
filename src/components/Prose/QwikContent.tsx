@@ -1,6 +1,7 @@
 import type { QRL } from '@builder.io/qwik';
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
+import moment from 'moment';
 import AudioPlayer from '~/components/AudioPlayer';
 import ProgressTracker from '~/components/Prose/ProgressTracker';
 import { QwikQuizCodeHydrate } from '~/components/Prose/QuizCodeHydrate';
@@ -18,6 +19,7 @@ export default component$(
     saveProress,
     prevChapter,
     nextChapter,
+    lastEdited,
   }: {
     innerHTML: string | undefined;
     audioTrack:
@@ -34,6 +36,7 @@ export default component$(
     saveProress: QRL<() => any>;
     prevChapter?: string | undefined;
     nextChapter?: string | undefined;
+    lastEdited: string;
   }) => (
     <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
       <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
@@ -45,6 +48,9 @@ export default component$(
           <ProgressTracker saveProress={saveProress} />
         </div>
         <div class="flex flex-col gap-3">
+          <p class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 italic text-gray-500 dark:text-gray-300 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
+            Last edited on {moment(lastEdited).format('DD/MM/YYYY').toString()}
+          </p>
           <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
             {!!prevChapter && (
               <Link href={prevChapter} class="mr-auto text-sm underline md:text-base">

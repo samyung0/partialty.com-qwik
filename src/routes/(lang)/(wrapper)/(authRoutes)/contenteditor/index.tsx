@@ -57,22 +57,18 @@ const saveContentServer = server$(async function (
   courseId: string
 ) {
   try {
+    const time = getSQLTimeStamp();
     const contentVal: any = {
       content_slate: contentEditorValue2,
       renderedHTML: renderedHTML2,
-      updated_at: getSQLTimeStamp(),
+      updated_at: time,
     };
     contentVal['audio_track_playback_id'] = audio_track_playback_id || null;
     contentVal['audio_track_asset_id'] = audio_track_asset_id || null;
-    await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-      .update(content_index)
-      .set({ updated_at: getSQLTimeStamp() })
-      .where(eq(content_index.id, courseId));
-    return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-      .update(content)
-      .set(contentVal)
-      .where(eq(content.id, chapterId))
-      .returning();
+    return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1').transaction(async (tx) => {
+      await tx.update(content_index).set({ updated_at: time }).where(eq(content_index.id, courseId));
+      return await tx.update(content).set(contentVal).where(eq(content.id, chapterId)).returning();
+    });
   } catch (e) {
     return [false, e];
   }

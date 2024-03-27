@@ -183,7 +183,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
           className="flex items-center justify-center overflow-hidden [resize:vertical]"
           ref={imageRef}
         >
-          <img width={400} height={400} src={element.url} className="max-h-full w-[80%] flex-auto object-contain" />
+          <img width={400} height={400} src={element.url} className="max-h-full flex-auto object-contain" />
         </div>
         <textarea
           ref={ref}

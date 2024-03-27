@@ -477,8 +477,7 @@ export default component$(
                                               renderedHTML.value = val.renderedHTML || undefined;
                                               chapterId.value = chapter.id;
                                               courseId.value = currentCourse.id;
-                                              if (chapter.audio_track_asset_id)
-                                                audioAssetId.value = chapter.audio_track_asset_id;
+                                              audioAssetId.value = chapter.audio_track_asset_id || undefined;
                                               isEditing.value = true;
                                               isRequestingChapter.value = '';
                                               chapterName.value = chapter.name;

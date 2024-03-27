@@ -36,7 +36,7 @@ const saveProgressServer = server$(async function (
 
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
-  const { course, preview, chapters, isFavourited } = useCourseLoader().value;
+  const { course, preview, chapters } = useCourseLoader().value;
   const tags = useTagLoader().value;
   const categories = useCategoryLoader().value;
   const { currentChapter } = useCurrentChapter().value;
@@ -47,8 +47,9 @@ export default component$(() => {
     filename: string;
     playback_ids: { id: string }[];
   }>();
-  useVisibleTask$(async () => {
-    if (!currentChapter || !currentChapter.audio_track_asset_id) return;
+  useVisibleTask$(async ({ track }) => {
+    track(() => currentChapter);
+    if (!currentChapter || !currentChapter.audio_track_asset_id) return (audioTrack.value = undefined);
     const res = await fetchAudioServer(currentChapter.audio_track_asset_id);
     audioTrack.value = {
       id: res.data.id,
@@ -69,14 +70,9 @@ export default component$(() => {
     const notFinished = course.content_index.chapter_order.filter((id) => !newProgress.includes(id)).length > 0;
     await saveProgressServer([...newProgress], course.content_index.id, userNullable.userId, notFinished);
   });
-  const a =
-    chapters.find(
-      (chapter) =>
-        chapter.id ===
-        course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter!.id) - 1]
-    )?.link || undefined;
   return currentChapter ? (
     <QwikContent
+      lastEdited={currentChapter.updated_at}
       innerHTML={currentChapter.renderedHTML || undefined}
       audioTrack={audioTrack.value}
       saveToDBQuiz={saveToDB}

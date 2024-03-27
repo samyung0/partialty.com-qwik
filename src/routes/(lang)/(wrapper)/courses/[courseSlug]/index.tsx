@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import type { DocumentHead } from '@builder.io/qwik-city';
+import type { DocumentHead, StaticGenerateHandler } from '@builder.io/qwik-city';
 
 import CoursePage from '~/components/_Courses';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
@@ -18,5 +18,11 @@ export const head: DocumentHead = ({ resolveValue }) => {
         content: `${course.content_index.short_description} - ${course.content_index.description}`,
       },
     ],
+  };
+};
+
+export const onStaticGenerate: StaticGenerateHandler = async ({ env }) => {
+  return {
+    params: [],
   };
 };

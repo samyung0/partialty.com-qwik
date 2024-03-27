@@ -576,11 +576,21 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         justify-content: center;
         gap: 0.5rem
       ">
-        <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" style="
-        height: ${height ? height : 400}px;
-        object-fit: contain;
-        "/>
-        <p
+      <div style="
+      ${height ? `height: ${height}px` : ""}
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      ">
+      <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" 
+      width="400" height="400"
+      style="
+      max-height: 100%;
+      flex: 1 1 auto;
+      object-fit: contain;
+      "/>
+      </div>
+        <caption
           style="
             width: 100%;
             padding: 0.25rem;
@@ -589,7 +599,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             line-height: 1.25rem;
             white-space: pre-line;
           "
-        >${escapeHtml(caption)}</p>
+        >${escapeHtml(caption)}</caption>
       </figure>
     </div>`;
     }

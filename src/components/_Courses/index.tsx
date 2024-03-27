@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useComputed$, useOnDocument, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, server$, useNavigate } from '@builder.io/qwik-city';
 import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
 import { LuArrowRight, LuGem } from '@qwikest/icons/lucide';
@@ -65,14 +65,25 @@ const removeFavouriteCookie = server$(function (courseId: string) {
   });
 });
 
+const getCookie = server$(function(courseId: string) {
+  return this.cookie.get('favourite' + courseId) !== null
+})
+
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
-  const { course, preview, chapters, isFavourited } = useCourseLoader().value;
+  const { course, preview, chapters,  } = useCourseLoader().value;
+  const filteredChapterOrder = useComputed$(() =>
+    course.content_index.chapter_order.filter((id) => chapters.find((_chapter) => _chapter.id === id))
+  );
   const tags = useTagLoader().value;
   const categories = useCategoryLoader().value;
 
-  const isFavourite = useSignal(isFavourited);
+  const isFavourite = useSignal(false);
   const nav = useNavigate();
+
+  useOnDocument("qinit", $(async () => {
+    isFavourite.value = await getCookie(course.content_index.id)
+  }))
 
   const toggleFavourite = $(() => {
     if (!userNullable) return nav('/login/');
@@ -108,8 +119,8 @@ export default component$(() => {
     ? chapters.find(
         (chapter) =>
           chapter.id ===
-          course.content_index.chapter_order.filter((id) => !course.content_user_progress!.progress.includes(id))[0]
-      )?.link || chapters.find((chapter) => chapter.id === course.content_index.chapter_order[0])!.link!
+          filteredChapterOrder.value.filter((id) => !course.content_user_progress!.progress.includes(id))[0]
+      )?.link || chapters.find((chapter) => chapter.id === filteredChapterOrder.value[0])!.link!
     : '';
 
   return (
@@ -139,8 +150,8 @@ export default component$(() => {
             <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
               <IoReaderOutline />
             </span>
-            {course.content_index.chapter_order.length} chapter
-            {course.content_index.chapter_order.length > 1 ? 's' : ''}
+            {chapters.length} chapter
+            {chapters.length > 1 ? 's' : ''}
           </p>
           <p class="flex items-center gap-2 text-base tracking-wide md:gap-4 md:text-lg lg:text-xl">
             <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
@@ -186,17 +197,24 @@ export default component$(() => {
               <div class="flex flex-col gap-1 md:gap-2">
                 <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Chapters</h2>
 
-                <ul class="flex flex-col gap-2 text-base md:gap-3 lg:text-lg">
-                  {chapters.map((chapter) => (
-                    <li key={chapter.id} class="flex items-center gap-2">
-                      <span>{chapter.name}</span>
-                      {chapter.is_premium && (
-                        <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
-                          <LuGem />
-                        </span>
-                      )}
-                    </li>
-                  ))}
+                <ul class="flex flex-col gap-2 pl-3 text-base md:gap-3 md:pl-6 lg:text-lg">
+                  {filteredChapterOrder.value
+                    .map((id) => chapters.find((_chapter) => _chapter.id === id)!)
+                    .map((chapter) => (
+                      <li
+                        key={chapter.id}
+                        class="flex items-center gap-2 [counter-increment:chapter] before:[content:counter(chapter)_'.']"
+                      >
+                        <Link class="flex items-center underline" href={chapter.link || undefined}>
+                          <span>{chapter.name}</span>
+                          {chapter.is_premium && (
+                            <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
+                              <LuGem />
+                            </span>
+                          )}
+                        </Link>
+                      </li>
+                    ))}
                 </ul>
               </div>
             )}
@@ -257,9 +275,7 @@ export default component$(() => {
             </div>
             {!course.content_user_progress && (
               <Link
-                href={
-                  chapters.find((chapter) => course.content_index.chapter_order[0] === chapter.id)?.link || undefined
-                }
+                href={chapters.find((chapter) => filteredChapterOrder.value[0] === chapter.id)?.link || undefined}
                 prefetch
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
               >

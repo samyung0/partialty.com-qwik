@@ -423,6 +423,8 @@ const ContentEditorReact = ({
         });
         setIsLoadingAudio(false);
       })();
+    }else {
+      _setAudioTrack(undefined);
     }
   }, [audioAssetId]);
 

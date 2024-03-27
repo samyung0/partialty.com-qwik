@@ -3,7 +3,7 @@ import { component$, useSignal, useStore } from '@builder.io/qwik';
 import { LuFile, LuFolderClosed, LuFolderOpen } from '@qwikest/icons/lucide';
 import { RightArrow } from '~/assets/icon/rightArrow';
 
-import { Entry } from '~/utils/fileUtil';
+import type { Entry } from '~/utils/fileUtil';
 
 interface EntryInterface {
   entry: Entry;

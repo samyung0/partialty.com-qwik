@@ -162,6 +162,7 @@
     "lucide-react": "^0.354.0",
     "macy": "^2.5.1",
     "mime-db": "^1.52.0",
+    "moment": "^2.30.1",
     "octokit": "^3.1.2",
     "posthtml-parser": "^0.12.0",
     "prismjs": "^1.29.0",
