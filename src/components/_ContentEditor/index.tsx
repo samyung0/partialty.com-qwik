@@ -152,8 +152,7 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue ?? //     type: "quizCodeBlock", //   { // ?? [
-  //     ans: {
+  const normalizedInitialValue = initialValue ?? //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //       type: "ast",
   //       matchInput: { blablabla: "=" },
   //       ast: "{}",
@@ -423,7 +422,7 @@ const ContentEditorReact = ({
         });
         setIsLoadingAudio(false);
       })();
-    }else {
+    } else {
       _setAudioTrack(undefined);
     }
   }, [audioAssetId]);

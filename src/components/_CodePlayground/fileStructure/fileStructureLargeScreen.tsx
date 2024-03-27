@@ -92,7 +92,13 @@ export default component$<FileStructureInterface>(({ entries, addToStage, openSt
       </div>
       <div class={`${!projectExpanded.value && 'hidden'} overflow-auto`}>
         {entries.map((entry, idx) => (
-          <EntryComponent key={`entry-${idx}`} entry={entry} level={1} addToStage={addToStage} openStagedFile={openStagedFile} />
+          <EntryComponent
+            key={`entry-${idx}`}
+            entry={entry}
+            level={1}
+            addToStage={addToStage}
+            openStagedFile={openStagedFile}
+          />
         ))}
       </div>
     </div>

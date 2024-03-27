@@ -65,13 +65,13 @@ const removeFavouriteCookie = server$(function (courseId: string) {
   });
 });
 
-const getCookie = server$(function(courseId: string) {
-  return this.cookie.get('favourite' + courseId) !== null
-})
+const getCookie = server$(function (courseId: string) {
+  return this.cookie.get('favourite' + courseId) !== null;
+});
 
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
-  const { course, preview, chapters,  } = useCourseLoader().value;
+  const { course, preview, chapters } = useCourseLoader().value;
   const filteredChapterOrder = useComputed$(() =>
     course.content_index.chapter_order.filter((id) => chapters.find((_chapter) => _chapter.id === id))
   );
@@ -81,9 +81,12 @@ export default component$(() => {
   const isFavourite = useSignal(false);
   const nav = useNavigate();
 
-  useOnDocument("qinit", $(async () => {
-    isFavourite.value = await getCookie(course.content_index.id)
-  }))
+  useOnDocument(
+    'qinit',
+    $(async () => {
+      isFavourite.value = await getCookie(course.content_index.id);
+    })
+  );
 
   const toggleFavourite = $(() => {
     if (!userNullable) return nav('/login/');

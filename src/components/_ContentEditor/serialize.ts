@@ -577,7 +577,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         gap: 0.5rem
       ">
       <div style="
-      ${height ? `height: ${height}px` : ""}
+      ${height ? `height: ${height}px` : ''}
       display: flex;
       align-items: center;
       justify-content: center;

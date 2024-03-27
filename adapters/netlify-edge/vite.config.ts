@@ -30,7 +30,7 @@ export default extendConfig(baseConfig, () => {
             '/purchase',
           ],
           origin: 'https://www.partialty.com',
-          sitemapOutFile: 'sitemap.xml',
+          sitemapOutFile: 'sitemap-ssg.xml',
         },
       }),
     ],

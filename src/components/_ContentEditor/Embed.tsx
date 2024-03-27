@@ -247,10 +247,10 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
     }, 100);
   }, []);
   useEffect(() => {
-    if (iframeRef.current && parentRef.current){
+    if (iframeRef.current && parentRef.current) {
       const slateNode = ReactEditor.toSlateNode(editor, iframeRef.current);
       const path = ReactEditor.findPath(editor, slateNode);
-      if(!path) console.error("Unable to find path for embed!")
+      if (!path) console.error('Unable to find path for embed!');
       new ResizeObserver((e) => {
         if (parentRef.current && parentRef.current.className.includes('hidden')) return;
         if (iframeRef.current)
@@ -261,7 +261,7 @@ export const EmbedElement = ({ attributes, children, element }: RenderElementPro
             {
               match: (n) => SlateElement.isElement(n) && n.type === 'embed',
               mode: 'highest',
-              at: path
+              at: path,
             }
           );
       }).observe(iframeRef.current);
