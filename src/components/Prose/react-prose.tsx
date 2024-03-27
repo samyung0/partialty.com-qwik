@@ -37,7 +37,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
       clearInterval(interval.current);
       isDark.current = false;
     };
-  }, []);
+  }, [children, innerHTML]);
   return innerHTML ? (
     // for preview
     <section
