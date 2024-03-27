@@ -1,0 +1,9 @@
+---
+import Layout from "../../../../layout/Layout.astro";
+---
+<Layout>
+  <video autoplay muted width="400" height="200" loop controls>
+    <source src="/sample-guitar.avi" /> <!-- this file does not exist -->
+    <source src="/sample-guitar.mp4" /> <!-- this one will play -->
+  </video>
+</Layout>

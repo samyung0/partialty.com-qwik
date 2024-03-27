@@ -21,7 +21,7 @@ export const head: DocumentHead = ({ resolveValue }) => {
   };
 };
 
-export const onStaticGenerate: StaticGenerateHandler = async ({ env }) => {
+export const onStaticGenerate: StaticGenerateHandler = async () => {
   return {
     params: [],
   };
