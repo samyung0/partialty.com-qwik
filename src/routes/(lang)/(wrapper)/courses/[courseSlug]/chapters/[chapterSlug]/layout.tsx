@@ -15,6 +15,7 @@ import {
   LuFileTerminal,
   LuFileText,
   LuGem,
+  LuGoal,
   LuHome,
   LuLogOut,
   LuMoon,
@@ -145,13 +146,21 @@ export default component$(() => {
                           key={chapter.id}
                           class={cn(
                             'relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ',
-                            isActive && 'text-deep-sea after:block after:bg-sea dark:text-sea',
                             userProgress?.progress.includes(chapter.id) &&
-                              'text-mint-down after:block after:bg-mint dark:text-mint'
+                              'text-mint-down after:block after:bg-mint dark:text-mint',
+                            isActive && 'text-deep-sea after:block after:bg-sea dark:text-sea'
                           )}
                         >
                           <Link prefetch href={chapter.link || undefined}>
-                            {chapter.name}
+                            <span class="flex items-center gap-2">
+                              <span>{chapter.name}</span>
+                              <span class=" text-[15px] text-tomato dark:text-custom-pink">
+                                <LuGoal />
+                              </span>
+                              <span class=" text-[15px] text-tomato dark:text-custom-pink">
+                                <LuGem />
+                              </span>
+                            </span>
                           </Link>
                           {userProgress?.progress.includes(chapter.id) && (
                             <span class="text-[15px] text-mint-down dark:text-mint">
@@ -332,7 +341,15 @@ export default component$(() => {
                               )}
                             >
                               <Link prefetch href={chapter.link || undefined}>
-                                {chapter.name}
+                                <span class="flex items-center gap-2">
+                                  <span>{chapter.name}</span>
+                                  <span class="text-[15px] text-tomato dark:text-custom-pink">
+                                    <LuGoal />
+                                  </span>
+                                  <span class="text-[15px] text-tomato dark:text-custom-pink">
+                                    <LuGem />
+                                  </span>
+                                </span>
                               </Link>
                               {userProgress?.progress.includes(chapter.id) && (
                                 <span class="text-[15px] text-mint-down dark:text-mint">

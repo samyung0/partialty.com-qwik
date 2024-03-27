@@ -92,6 +92,7 @@ export const useCourseLoader = routeLoader$(async (event) => {
       is_premium: content.is_premium,
       slug: content.slug,
       link: content.link,
+      is_checkpoint: content.is_checkpoint,
     })
     .from(content)
     .where(and(eq(content.index_id, course.content_index.id), eq(content.is_deleted, false)));

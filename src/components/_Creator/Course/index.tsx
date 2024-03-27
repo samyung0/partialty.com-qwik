@@ -18,6 +18,7 @@ import {
   LuEye,
   LuEyeOff,
   LuGem,
+  LuGoal,
   LuHourglass,
   LuInfo,
   LuLock,
@@ -1221,6 +1222,7 @@ export default component$(
                                               (c) => c.id === _chapterId
                                             );
                                             if (!chapter) return;
+                                            console.log(chapter);
                                             return (
                                               <li
                                                 key={`Course${currentCourse.id}Chapter${chapter.id}`}
@@ -1232,18 +1234,18 @@ export default component$(
                                                       {chapter.name ? chapter.name : ''}
                                                     </a>
                                                   </h4>
-                                                  {user.role === 'admin' && (
-                                                    <p class="flex items-center gap-2">
-                                                      <span
-                                                        class={
-                                                          'text-[14px] lg:text-[18px] ' +
-                                                          (chapter.is_premium ? 'text-tomato' : 'text-gray-300')
-                                                        }
-                                                      >
+                                                  <p class="flex items-center gap-2">
+                                                    {chapter.is_checkpoint && (
+                                                      <span class={'text-[14px] text-tomato lg:text-[18px]'}>
+                                                        <LuGoal />
+                                                      </span>
+                                                    )}
+                                                    {user.role === 'admin' && chapter.is_premium && (
+                                                      <span class={'text-[14px] text-tomato lg:text-[18px]'}>
                                                         <LuGem />
                                                       </span>
-                                                    </p>
-                                                  )}
+                                                    )}
+                                                  </p>
                                                 </div>
                                                 <div class="flex items-center gap-2 text-[15px] text-primary-dark-gray dark:text-background-light-gray lg:text-[20px]">
                                                   {!!courseIdToEditingUser[chapter.id] && (

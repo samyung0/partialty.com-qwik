@@ -1,0 +1,1 @@
+ALTER TABLE content ADD `is_checkpoint` integer DEFAULT false NOT NULL;

@@ -91,11 +91,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           z-index: 1;
           ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
       }
-      @media (min-width: 1024px) {
-        #${uuid}upper, #${uuid}lower {
-          height: 6px;
-        }
-      }
        </style>
        `;
         str += `<span style="position:relative;background:inherit;color:inherit;">
@@ -136,11 +131,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           background: inherit;
           z-index: 1;
       }
-      @media (min-width: 1024px) {
-        #${uuid}upper, #${uuid}lower {
-          height: 6px;
-        }
-      }
        </style>
        `;
         str += `<span style="position:relative;background:inherit;color:inherit;">
@@ -155,7 +145,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         position: absolute;
           top:100%;
           left:0;
-          height:6px;
+          height:4px;
           width:100%;
           display:block;
           background:${node.underline};

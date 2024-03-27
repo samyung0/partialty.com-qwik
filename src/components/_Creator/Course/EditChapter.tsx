@@ -1,6 +1,6 @@
 import type { QRL, Signal } from '@builder.io/qwik';
 import { $, component$, useSignal, useStore } from '@builder.io/qwik';
-import { LuGem, LuX } from '@qwikest/icons/lucide';
+import { LuGem, LuGoal, LuX } from '@qwikest/icons/lucide';
 import LoadingSVG from '~/components/LoadingSVG';
 import type { IsLockedValidation } from '~/components/_Creator/Course';
 import {
@@ -179,6 +179,27 @@ export default component$(
               <p class="w-[250px] whitespace-pre-wrap break-words pt-1 tracking-wide text-tomato md:w-[300px]">
                 {formError.link}
               </p>
+            </div>
+            <div>
+              <label
+                title="A checkpoint usually contains exercises for the user as revision."
+                for="isCheckpoint"
+                class="flex cursor-pointer items-center gap-3  text-base md:gap-5 md:text-lg"
+              >
+                <span class="flex items-center gap-2">
+                  <span class="text-[15px] text-primary-dark-gray dark:text-background-light-gray md:text-[20px]">
+                    <LuGoal />
+                  </span>
+                  Checkpoint
+                </span>
+                <input
+                  id="isCheckpoint"
+                  type="checkbox"
+                  class="h-4 w-4"
+                  checked={formData.is_checkpoint}
+                  onChange$={(e, currentTarget) => (formData.is_checkpoint = currentTarget.checked)}
+                />
+              </label>
             </div>
             {user.role === 'admin' && (
               <div>

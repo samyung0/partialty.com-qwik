@@ -1,7 +1,7 @@
 import { $, component$, useComputed$, useOnDocument, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, server$, useNavigate } from '@builder.io/qwik-city';
 import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
-import { LuArrowRight, LuGem } from '@qwikest/icons/lucide';
+import { LuArrowRight, LuGem, LuGoal } from '@qwikest/icons/lucide';
 import { eq } from 'drizzle-orm';
 import Footer from '~/components/Footer';
 import HeartSVG from '~/components/HeartSVG';
@@ -209,12 +209,19 @@ export default component$(() => {
                         class="flex items-center gap-2 [counter-increment:chapter] before:[content:counter(chapter)_'.']"
                       >
                         <Link class="flex items-center underline" href={chapter.link || undefined}>
-                          <span>{chapter.name}</span>
-                          {chapter.is_premium && (
-                            <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
-                              <LuGem />
-                            </span>
-                          )}
+                          <span class="flex items-center gap-2">
+                            <span>{chapter.name}</span>
+                            {chapter.is_checkpoint && (
+                              <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
+                                <LuGoal />
+                              </span>
+                            )}
+                            {chapter.is_premium && (
+                              <span class="text-[14px] text-tomato dark:text-custom-pink md:text-[16px] lg:text-[18px]">
+                                <LuGem />
+                              </span>
+                            )}
+                          </span>
                         </Link>
                       </li>
                     ))}

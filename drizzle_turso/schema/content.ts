@@ -23,6 +23,7 @@ export const content = sqliteTable('content', {
   audio_track_playback_id: text('audio_track_playback_id'),
   audio_track_asset_id: text('audio_track_asset_id'),
   is_deleted: integer('is_deleted', { mode: 'boolean' }).notNull().default(false),
+  is_checkpoint: integer('is_checkpoint', { mode: 'boolean' }).notNull().default(false),
 });
 
 export type Content = InferSelectModel<typeof content>;

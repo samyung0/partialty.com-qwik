@@ -42,12 +42,7 @@ export const Leaf = ({ attributes, children, leaf }: RenderLeafProps) => {
           }}
           contentEditable={false}
         ></style>
-        <span
-          id={uuid}
-          className={`border-b-[4px] lg:border-b-[6px]`}
-          style={{ ...style, borderColor: leaf.underline }}
-          {...attributes}
-        >
+        <span id={uuid} className={`border-b-[4px]`} style={{ ...style, borderColor: leaf.underline }} {...attributes}>
           {children}
         </span>
       </span>

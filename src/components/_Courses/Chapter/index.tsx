@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import QwikContent from '~/components/Prose/QwikContent';
 import {
   useCurrentChapter,
@@ -37,6 +37,15 @@ const saveProgressServer = server$(async function (
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
   const { course, preview, chapters } = useCourseLoader().value;
+  const filteredChapterOrder = useComputed$(() =>
+    course.content_index.chapter_order.filter((id) => !!chapters.find((chapter) => chapter.id === id))
+  );
+  const filteredChapters = useComputed$(
+    () =>
+      course.content_index.chapter_order
+        .map((id) => chapters.find((chapter) => chapter.id === id))
+        .filter((x) => x) as typeof chapters
+  );
   const tags = useTagLoader().value;
   const categories = useCategoryLoader().value;
   const { currentChapter } = useCurrentChapter().value;
@@ -80,17 +89,15 @@ export default component$(() => {
       hasAudioTrack={!!currentChapter.audio_track_asset_id}
       saveProress={saveProress}
       prevChapter={
-        chapters.find(
+        filteredChapters.value.find(
           (chapter) =>
-            chapter.id ===
-            course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter.id) - 1]
+            chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) - 1]
         )?.link || undefined
       }
       nextChapter={
-        chapters.find(
+        filteredChapters.value.find(
           (chapter) =>
-            chapter.id ===
-            course.content_index.chapter_order[course.content_index.chapter_order.indexOf(currentChapter.id) + 1]
+            chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) + 1]
         )?.link || undefined
       }
     />
