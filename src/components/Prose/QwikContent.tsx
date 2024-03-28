@@ -54,12 +54,12 @@ export default component$(
           <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
             {!!prevChapter && (
               <Link href={prevChapter} class="mr-auto text-sm underline md:text-base">
-                Previous Chapter
+                Previous
               </Link>
             )}
             {!!nextChapter && (
               <Link href={nextChapter} class="ml-auto text-sm underline md:text-base">
-                Next Chapter
+                Next
               </Link>
             )}
           </nav>

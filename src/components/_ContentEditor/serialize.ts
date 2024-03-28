@@ -557,6 +557,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
     case 'image': {
       const height = node.imageHeight;
+      const width = node.imageWidth;
       const caption = node.caption || '';
       return `<div style="${style}">
       <figure style="
@@ -567,7 +568,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         gap: 0.5rem
       ">
       <div style="
-      ${height ? `height: ${height}px` : ''}
+      ${height ? `height: ${height}px;` : ''}
+      ${width ? `width: ${width}px;` : ''}
       display: flex;
       align-items: center;
       justify-content: center;
@@ -576,20 +578,17 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       width="400" height="400"
       style="
       max-height: 100%;
+      max-width: 95dvw;
       flex: 1 1 auto;
       object-fit: contain;
       "/>
-      </div>
-        <caption
-          style="
+      </div><figcaption style="
             width: 100%;
             padding: 0.25rem;
             text-align: center;
             font-size: 0.875rem;
             line-height: 1.25rem;
-            white-space: pre-line;
-          "
-        >${escapeHtml(caption)}</caption>
+            white-space: pre-line;">${escapeHtml(caption)}</figcaption>
       </figure>
     </div>`;
     }

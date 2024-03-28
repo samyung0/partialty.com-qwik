@@ -23,15 +23,12 @@ export const QuizCodeInput = ({ attributes, children, element }: RenderElementPr
   }, []);
   useEffect(() => {
     if (ref.current) {
+      const slateNode = ReactEditor.toSlateNode(editor, ref.current);
+      const path = ReactEditor.findPath(editor, slateNode);
+      if (!path) console.error('Unable to find path for embed!');
       new ResizeObserver((e) => {
         if (ref.current) {
           if (parentRef.current && parentRef.current.className.includes('hidden')) return;
-          const slateNode = ReactEditor.toSlateNode(editor, ref.current);
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (!slateNode) return;
-          const path = ReactEditor.findPath(editor, slateNode);
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (!path) return;
           editor.setNodes(
             {
               inputWidth: ref.current.offsetWidth,
@@ -90,7 +87,10 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
     parentRef.current = document.getElementById('ParentRefContainer');
   }, []);
   useEffect(() => {
-    if (ref.current)
+    if (ref.current) {
+      const slateNode = ReactEditor.toSlateNode(editor, ref.current);
+      const path = ReactEditor.findPath(editor, slateNode);
+      if (!path) console.error('Unable to find path for embed!');
       new ResizeObserver((e) => {
         if (parentRef.current && parentRef.current.className.includes('hidden')) return;
         if (ref.current)
@@ -101,9 +101,11 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
             {
               match: (n) => SlateElement.isElement(n) && n.type === 'quizCodeBlock',
               mode: 'highest',
+              at: path,
             }
           );
       }).observe(ref.current);
+    }
   }, [ref.current]);
   return (
     <div {...attributes} className="mb-[1.25rem] mt-[1.25rem] bg-inherit text-inherit">

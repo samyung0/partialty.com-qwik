@@ -3,7 +3,15 @@
 import { useEffect, useRef } from 'react';
 import { EMBED_URL } from '~/const';
 
-const Prose = ({ chapter, children, innerHTML }: { chapter: string, children: React.ReactNode; innerHTML?: string }) => {
+const Prose = ({
+  chapter,
+  children,
+  innerHTML,
+}: {
+  chapter: string;
+  children: React.ReactNode;
+  innerHTML?: string;
+}) => {
   const interval = useRef<any>();
   const isDark = useRef<boolean>(false);
   useEffect(() => {
@@ -47,10 +55,11 @@ const Prose = ({ chapter, children, innerHTML }: { chapter: string, children: Re
     prose-a:underline-offset-4 prose-blockquote:pr-[1em]
     prose-strong:tracking-wider
     prose-code:text-[unset]
-    prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-sm  prose-pre:leading-5
-    prose-img:m-0
+    prose-pre:bg-code-editor-one-dark-pro
+    prose-pre:font-cascadiaCode prose-pre:text-sm prose-pre:leading-5  prose-img:m-0
     dark:bg-primary-dark-gray
-    dark:text-background-light-gray md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-base lg:prose-pre:leading-6
+    dark:text-background-light-gray
+    dark:prose-figcaption:text-gray-300 md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-base lg:prose-pre:leading-6
     "
       dangerouslySetInnerHTML={{ __html: innerHTML }}
     ></section>
@@ -62,10 +71,11 @@ const Prose = ({ chapter, children, innerHTML }: { chapter: string, children: Re
   prose-a:underline-offset-4 prose-blockquote:pr-[1em]
   prose-strong:tracking-wider
   prose-code:text-[unset]
-  prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-sm  prose-pre:leading-5
-  prose-img:m-0
+  prose-pre:bg-code-editor-one-dark-pro
+  prose-pre:font-cascadiaCode prose-pre:text-sm prose-pre:leading-5  prose-img:m-0
   dark:bg-primary-dark-gray
-  dark:text-background-light-gray md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-base lg:prose-pre:leading-6
+  dark:text-background-light-gray
+  dark:prose-figcaption:text-gray-300 md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-base lg:prose-pre:leading-6
   "
     >
       {children}

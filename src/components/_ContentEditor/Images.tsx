@@ -150,6 +150,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
   const parentRef = useRef<any>();
   const imageRef = useRef<HTMLDivElement>(null);
   const height = (element as ImageElement).imageHeight;
+  const width = (element as ImageElement).imageWidth;
   useEffect(() => {
     if (ref.current) {
       ref.current.style.height = 'auto';
@@ -160,30 +161,41 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
     parentRef.current = document.getElementById('ParentRefContainer');
   }, []);
   useEffect(() => {
-    if (imageRef.current)
+    if (imageRef.current) {
+      const slateNode = ReactEditor.toSlateNode(editor, imageRef.current);
+      const path = ReactEditor.findPath(editor, slateNode);
+      if (!path) console.error('Unable to find path for embed!');
       new ResizeObserver((e) => {
         if (parentRef.current && parentRef.current.className.includes('hidden')) return;
         if (imageRef.current)
           editor.setNodes(
             {
               imageHeight: imageRef.current.offsetHeight,
+              imageWidth: imageRef.current.offsetWidth,
             },
             {
               match: (n) => SlateElement.isElement(n) && n.type === 'image',
               mode: 'highest',
+              at: path,
             }
           );
       }).observe(imageRef.current);
+    }
   }, [imageRef.current]);
   return (
     <div {...attributes}>
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
         <div
-          style={{ height: `${height}px` }}
-          className="flex items-center justify-center overflow-hidden [resize:vertical]"
+          style={{ height: `${height}px`, width: `${width}px` }}
+          className="flex items-center justify-center overflow-hidden [resize:both]"
           ref={imageRef}
         >
-          <img width={400} height={400} src={element.url} className="max-h-full flex-auto object-contain" />
+          <img
+            width={400}
+            height={400}
+            src={element.url}
+            className="max-h-full max-w-[95dvw] flex-auto object-contain"
+          />
         </div>
         <textarea
           ref={ref}
@@ -206,7 +218,7 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
             }
           }}
           value={value}
-          className="min-h-[1.25rem] w-full resize-none bg-[unset] p-1 text-center text-sm outline-none placeholder:text-primary-dark-gray/50 dark:placeholder:text-gray-300"
+          className="min-h-[1.25rem] w-full resize-none bg-[unset] p-1 text-center text-sm text-[#6b7280] outline-none placeholder:text-primary-dark-gray/50 dark:text-gray-300 dark:placeholder:text-gray-300"
           placeholder={'Enter some captions...'}
         />
         {children}
@@ -240,6 +252,7 @@ export const CenterImageChooser = ({
   const [resolvedUserImages, setResolvedUserImages] = useState<[string, CloudinaryPublicPic][]>([]);
   const [isUploading, setIsUploading] = useState(false);
   useEffect(() => {
+    if (resolvedUserImages.length !== 0) return;
     (async () => {
       const t = await Promise.allSettled(userImages.map((x) => x[0]));
       const t2 = t.map((res, index) => [res, userImages[index][1]]) as [
