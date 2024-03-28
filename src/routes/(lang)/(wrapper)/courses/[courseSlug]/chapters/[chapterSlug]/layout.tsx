@@ -133,6 +133,13 @@ export default component$(() => {
                     </span>
                   </Link>
                   {preview && <p class="font-mosk text-xs tracking-wide text-deep-sea lg:text-sm">Preview Mode</p>}
+                  {!preview && course.content_index.is_private && (
+                    <p class="font-mosk text-xs tracking-wide text-deep-sea ">Public</p>
+                  )}
+                  {!preview && !course.content_index.is_private && (
+                    <p class="dark:text-pink font-mosk text-xs tracking-wide text-tomato">Private</p>
+                  )}
+
                   <p class="text-base lg:text-lg">{course.content_index.name}</p>
                 </div>
                 {!course.content_index.is_single_page && (
@@ -326,6 +333,13 @@ export default component$(() => {
                         </span>
                       </Link>
                       {preview && <p class="font-mosk text-xs tracking-wide text-deep-sea lg:text-sm">Preview Mode</p>}
+                      {!preview && course.content_index.is_private && (
+                        <p class="font-mosk text-xs tracking-wide text-deep-sea ">Public</p>
+                      )}
+                      {!preview && !course.content_index.is_private && (
+                        <p class="dark:text-pink font-mosk text-xs tracking-wide text-tomato">Private</p>
+                      )}
+
                       <p class="text-base lg:text-lg">{course.content_index.name}</p>
                     </div>
                     {!course.content_index.is_single_page && (

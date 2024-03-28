@@ -48,7 +48,7 @@ const Prose = ({
   }, [chapter]);
   return innerHTML ? (
     // for preview
-    <section
+    <article
       // SHOULD add a background
       id="sectionProse"
       className="prose mx-auto w-[90%] max-w-[unset] bg-background-light-gray px-4 py-6 text-base prose-a:decoration-wavy
@@ -62,7 +62,7 @@ const Prose = ({
     dark:prose-figcaption:text-gray-300 md:px-10 md:py-12 lg:text-lg lg:prose-pre:text-base lg:prose-pre:leading-6
     "
       dangerouslySetInnerHTML={{ __html: innerHTML }}
-    ></section>
+    ></article>
   ) : (
     <section
       // SHOULD add a background

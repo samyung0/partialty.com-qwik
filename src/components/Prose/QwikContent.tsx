@@ -42,7 +42,7 @@ export default component$(
       <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
       <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
       {/* <QwikEmbedHydrate /> */}
-      <div class={cn('max-h-full flex-auto overflow-auto')}>
+      <main class={cn('max-h-full flex-auto overflow-auto')}>
         <QwikProse innerHTML={innerHTML || ''} />
         <div class="">
           <ProgressTracker saveProress={saveProress} />
@@ -69,7 +69,7 @@ export default component$(
             </p>
           )}
         </div>
-      </div>
+      </main>
       {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
       {audioTrack && (
         <div class="mt-auto">
