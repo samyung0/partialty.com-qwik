@@ -92,6 +92,14 @@ export default component$(
                   <span>{listSupportedLang.find((lang) => lang.value === courseData.lang)?.label || ''}</span>
                 </p>
               </div>
+              {user.role === 'admin' && (
+                <div class="w-full">
+                  <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
+                    <span>Guide:</span>{' '}
+                    <input type="checkbox" class="h-4 w-4" checked={courseData.is_guide} disabled={true} />
+                  </p>
+                </div>
+              )}
               <div class="w-full">
                 <p class="flex w-full items-center justify-between gap-3 text-base md:gap-5 md:text-lg">
                   <span>Private:</span>{' '}

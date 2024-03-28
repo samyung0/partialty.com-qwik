@@ -1,5 +1,5 @@
 import { $, component$, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useNavigate } from '@builder.io/qwik-city';
 
 import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
 
@@ -12,6 +12,7 @@ import type Lang from '../../../lang';
 
 export default component$(() => {
   const user = useUserLoader().value;
+  const nav = useNavigate();
 
   const updateProfile = useUpdateProfile();
   const formData = useStore({
@@ -102,6 +103,7 @@ export default component$(() => {
             localStorage['lang'] = localStorageData.lang;
           }
           isUpdating.value = false;
+          nav();
         }}
       >
         <div class="flex flex-col items-start text-lg tracking-wide xl:flex-row">

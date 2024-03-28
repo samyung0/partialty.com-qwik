@@ -5,7 +5,6 @@ import { server$, useNavigate, z } from '@builder.io/qwik-city';
 import { IoCaretDown } from '@qwikest/icons/ionicons';
 import {
   LuAlertTriangle,
-  LuArrowRight,
   LuBan,
   LuCheck,
   LuEye,
@@ -293,6 +292,7 @@ export default component$(
               courseApproval: course_approval,
               isPublishing: false,
               openedChaptersActions: null as null | string,
+              openedCourseActions: false,
               lockUnlockContentIndexCallback: $(() => {}) as QRL<() => any> | null,
               lockContentIndexTimeout: null as ReturnType<typeof setTimeout> | null,
               lockContentIndexError: $(() => {}) as QRL<() => any> | null,
@@ -307,11 +307,11 @@ export default component$(
       const keys = Object.keys(courses);
       userAccessibleCourseWriteResolved.value.forEach(async ({ content_index, profiles, course_approval }) => {
         keys.splice(keys.indexOf(content_index.id), 1);
-        const isOpen = courses[content_index.id]?.isOpen || false;
-        const chapters = await getChapters(content_index.id);
-        if (isOpen) {
+        const hasLoadedChapter = courses[content_index.id]?.hasLoadedChapter || false;
+        if (hasLoadedChapter) {
+          const chapters = await getChapters(content_index.id);
           courses[content_index.id] = Object.assign({}, content_index, {
-            isOpen: true,
+            isOpen: courses[content_index.id]?.isOpen || false,
             chapters,
             isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
             hasLoadedChapter: true,
@@ -332,33 +332,23 @@ export default component$(
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
             openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
+            openedCourseActions: !!courses[content_index.id]?.openedChaptersActions,
             lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
             lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
             lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
           });
         } else {
           courses[content_index.id] = Object.assign({}, content_index, {
-            isOpen: false,
+            isOpen: courses[content_index.id]?.isOpen || false,
             chapters: [],
             isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
             hasLoadedChapter: false,
             profile: profiles,
-            chaptersMap: Object.fromEntries(
-              chapters.map((c) => [
-                c.id,
-                {
-                  isDeleting: false,
-                  movingUp: false,
-                  movingDown: false,
-                  lockUnlockContentCallback: courses[content_index.id]?.chaptersMap[c.id]?.lockUnlockContentCallback,
-                  lockContentTimeout: courses[content_index.id]?.chaptersMap[c.id]?.lockContentTimeout,
-                  lockContentError: courses[content_index.id]?.chaptersMap[c.id]?.lockContentError,
-                },
-              ])
-            ),
+            chaptersMap: {},
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
             openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
+            openedCourseActions: !!courses[content_index.id]?.openedChaptersActions,
             lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
             lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
             lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
@@ -598,6 +588,7 @@ export default component$(
     });
 
     const handlePublish = $(async (courseId: string, userId: string) => {
+      if (courses[courseId].isPublishing) return;
       if (courses[courseId].is_locked && courses[courseId].author !== userId && user.role !== 'admin')
         return alert('Course is locked. You cannot publish the course!');
       if (!window.confirm('Are you sure you want to publish this course?')) return;
@@ -951,7 +942,7 @@ export default component$(
                       return (
                         <li
                           class={
-                            'flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3'
+                            'flex flex-col gap-2 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:gap-4 md:px-6 md:py-3'
                           }
                           key={`currentCourses${currentCourse.slug}`}
                         >
@@ -962,6 +953,7 @@ export default component$(
                               refreshChapters(currentCourse.id);
                             }}
                             class="flex cursor-pointer items-center justify-between"
+                            role="button"
                           >
                             <div class="flex flex-col lg:gap-1">
                               <h2 class="text-lg font-bold tracking-wide">{courses[currentCourse.id].name}</h2>
@@ -981,7 +973,7 @@ export default component$(
                                 </span>
                               </p>
                               {currentCourse.is_single_page && (
-                                <p class="-ml-1 mt-2 md:hidden">
+                                <p class="-ml-1 mt-2 flex items-center gap-2 p-1 md:hidden">
                                   <span class="items-center gap-3">
                                     <a
                                       class="whitespace-nowrap rounded-lg bg-primary-dark-gray px-3 py-1 text-[0.875rem] text-background-light-gray md:px-6 md:py-3 md:shadow-md lg:text-[1rem]"
@@ -993,6 +985,17 @@ export default component$(
                                       Edit Content
                                     </a>
                                   </span>
+                                  {!!courseIdToEditingUser[currentCourse.chapter_order[0]] && (
+                                    <span>
+                                      <img
+                                        src={courseIdToEditingUser[currentCourse.chapter_order[0]][1]}
+                                        alt=""
+                                        width={30}
+                                        height={30}
+                                        class="h-[20px] w-[20px] rounded-full"
+                                      />
+                                    </span>
+                                  )}
                                 </p>
                               )}
                             </div>
@@ -1021,22 +1024,190 @@ export default component$(
                                   </a>
                                 </div>
                               )}
-                              <button class="p-1 md:p-2">
-                                <span
-                                  style={{
-                                    transform: courses[currentCourse.id].isOpen ? 'rotateZ(180deg)' : '',
-                                  }}
-                                  class={
-                                    'inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray'
-                                  }
-                                >
-                                  <IoCaretDown />
-                                </span>
-                              </button>
+                              <div class="flex items-center gap-2">
+                                <div class="p-1 md:p-2">
+                                  <span
+                                    style={{
+                                      transform: courses[currentCourse.id].isOpen ? 'rotateZ(180deg)' : '',
+                                    }}
+                                    class={
+                                      'inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray'
+                                    }
+                                  >
+                                    <IoCaretDown />
+                                  </span>
+                                </div>
+                                <div class="relative inline-block text-left">
+                                  <div>
+                                    <button
+                                      type="button"
+                                      class="flex items-center rounded-full p-1 focus:outline-none "
+                                      id={'menu-button-course' + currentCourse.id}
+                                      aria-expanded={courses[currentCourse.id].openedCourseActions}
+                                      aria-haspopup={courses[currentCourse.id].openedCourseActions}
+                                      onClick$={(e) => {
+                                        e.stopPropagation();
+                                        courses[currentCourse.id].openedCourseActions =
+                                          !courses[currentCourse.id].openedCourseActions;
+                                      }}
+                                    >
+                                      <span class="sr-only">Open options</span>
+                                      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  {courses[currentCourse.id].openedCourseActions && (
+                                    <div
+                                      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+                                      role="menu"
+                                      aria-orientation="vertical"
+                                      aria-labelledby={'menu-button-course' + currentCourse.id}
+                                      tabIndex={-1}
+                                    >
+                                      <div class="flex flex-col py-1 [&>button]:text-left" role="none">
+                                        <a
+                                          target="_blank"
+                                          href={`/creator/edit-course/${currentCourse.id}/`}
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-0' + currentCourse.id}
+                                          onClick$={(e) => e.stopPropagation()}
+                                        >
+                                          Edit Settings
+                                        </a>
+                                        <a
+                                          target="_blank"
+                                          href={courses[currentCourse.id].link!}
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-1' + currentCourse.id}
+                                          onClick$={(e) => e.stopPropagation()}
+                                        >
+                                          View Course
+                                        </a>
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-2' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            handleLockUnlockCourse(currentCourse.id, user.userId);
+                                          }}
+                                        >
+                                          {courses[currentCourse.id].is_locked && <span>Unlock Course</span>}
+                                          {!courses[currentCourse.id].is_locked && <span>Lock Course</span>}
+                                        </button>
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-3' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            if (
+                                              courses[currentCourse.id].is_locked &&
+                                              user.userId !== courses[currentCourse.id].author &&
+                                              user.role !== 'admin'
+                                            )
+                                              return alert('The Course is locked! You cannot add a chapter!.');
+
+                                            showAddChapter.value = true;
+                                            showAddCourseId.value = currentCourse.id;
+                                          }}
+                                        >
+                                          Add Chapter
+                                        </button>
+                                        {!courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                            <button
+                                              class="block px-4 py-2 text-sm "
+                                              role="menuitem"
+                                              tabIndex={-1}
+                                              id={'menu-item-4' + currentCourse.id}
+                                              onClick$={(e) => {
+                                                e.stopPropagation();
+                                                handlePublish(currentCourse.id, user.userId);
+                                              }}
+                                            >
+                                              {courses[currentCourse.id].isPublishing && (
+                                                <span>
+                                                  <LoadingSVG />
+                                                </span>
+                                              )}
+                                              {!courses[currentCourse.id].isPublishing && <span>Publish Course</span>}
+                                            </button>
+                                          )}
+                                        {courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                            <button
+                                              class="block px-4 py-2 text-sm "
+                                              role="menuitem"
+                                              tabIndex={-1}
+                                              id={'menu-item-5' + currentCourse.id}
+                                              onClick$={(e) => {
+                                                e.stopPropagation();
+                                                handleUnpublish(currentCourse.id, user.userId);
+                                              }}
+                                            >
+                                              {courses[currentCourse.id].isPublishing && (
+                                                <span>
+                                                  <LoadingSVG />
+                                                </span>
+                                              )}
+                                              {!courses[currentCourse.id].isPublishing && <span>Cancel Publish</span>}
+                                            </button>
+                                          )}
+                                        {courses[currentCourse.id].courseApproval.status === 'approved' && (
+                                          <button
+                                            class="block px-4 py-2 text-sm "
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            id={'menu-item-6' + currentCourse.id}
+                                            onClick$={(e) => {
+                                              e.stopPropagation();
+                                              handleUnpublish(currentCourse.id, user.userId);
+                                            }}
+                                          >
+                                            {courses[currentCourse.id].isPublishing && (
+                                              <span>
+                                                <LoadingSVG />
+                                              </span>
+                                            )}
+                                            {!courses[currentCourse.id].isPublishing && <span>Unpublish Course</span>}
+                                          </button>
+                                        )}
+                                        {courses[currentCourse.id].courseApproval.status === 'need_amendment' && (
+                                          <button
+                                            class="block px-4 py-2 text-sm "
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            id={'menu-item-7' + currentCourse.id}
+                                            onClick$={(e) => {
+                                              e.stopPropagation();
+                                              handleAmendment(currentCourse.id, user.userId);
+                                            }}
+                                          >
+                                            {courses[currentCourse.id].isPublishing && (
+                                              <span>
+                                                <LoadingSVG />
+                                              </span>
+                                            )}
+                                            {!courses[currentCourse.id].isPublishing && <span>Publish Again</span>}
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <div class="flex flex-col gap-2">
-                            <p class="mt-3 flex flex-col gap-2 text-[0.875rem] md:mt-4 lg:gap-3 lg:text-[1rem]">
+                            <p class="flex flex-col gap-2 text-[0.875rem] lg:gap-3 lg:text-[1rem]">
                               {!courses[currentCourse.id].courseApproval.ready_for_approval &&
                                 courses[currentCourse.id].courseApproval.status === 'pending' && (
                                   <span class="inline-flex items-center gap-2">
@@ -1044,19 +1215,6 @@ export default component$(
                                       <LuInfo />
                                     </span>
                                     Not Published
-                                    {courses[currentCourse.id].isPublishing && (
-                                      <span class="ml-3 lg:ml-6">
-                                        <LoadingSVG />
-                                      </span>
-                                    )}
-                                    {!courses[currentCourse.id].isPublishing && (
-                                      <button
-                                        onClick$={() => handlePublish(currentCourse.id, user.userId)}
-                                        class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                      >
-                                        <span>Publish</span>
-                                      </button>
-                                    )}
                                   </span>
                                 )}
 
@@ -1067,19 +1225,6 @@ export default component$(
                                       <LuHourglass />
                                     </span>
                                     Pending for Approval
-                                    {courses[currentCourse.id].isPublishing && (
-                                      <span class="ml-3 lg:ml-6">
-                                        <LoadingSVG />
-                                      </span>
-                                    )}
-                                    {!courses[currentCourse.id].isPublishing && (
-                                      <button
-                                        onClick$={() => handleUnpublish(currentCourse.id, user.userId)}
-                                        class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                      >
-                                        <span>Cancel Publish</span>
-                                      </button>
-                                    )}
                                   </span>
                                 )}
 
@@ -1089,19 +1234,6 @@ export default component$(
                                     <LuCheck />
                                   </span>
                                   Published
-                                  {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-3 lg:ml-6">
-                                      <LoadingSVG />
-                                    </span>
-                                  )}
-                                  {!courses[currentCourse.id].isPublishing && (
-                                    <button
-                                      onClick$={() => handleUnpublish(currentCourse.id, user.userId)}
-                                      class="ml-3 rounded-lg bg-tomato px-4 py-2 text-background-light-gray shadow-md lg:ml-6"
-                                    >
-                                      <span>Unpublish</span>
-                                    </button>
-                                  )}
                                 </span>
                               )}
 
@@ -1120,19 +1252,6 @@ export default component$(
                                     <LuAlertTriangle />
                                   </span>
                                   Amendment Needed
-                                  {courses[currentCourse.id].isPublishing && (
-                                    <span class="ml-3 lg:ml-6">
-                                      <LoadingSVG />
-                                    </span>
-                                  )}
-                                  {!courses[currentCourse.id].isPublishing && (
-                                    <button
-                                      onClick$={() => handleAmendment(currentCourse.id, user.userId)}
-                                      class="ml-3 underline decoration-wavy underline-offset-[6px] lg:ml-6"
-                                    >
-                                      <span>Re-Publish</span>
-                                    </button>
-                                  )}
                                 </span>
                               )}
                             </p>
@@ -1153,34 +1272,6 @@ export default component$(
                               </p>
                             )}
                           </div>
-                          <div class="mt-3 flex items-center gap-3 text-[0.875rem] md:mt-4 lg:text-[1rem]">
-                            <a
-                              target="_blank"
-                              href={`/creator/edit-course/${currentCourse.id}/`}
-                              class="flex gap-1 self-start lg:gap-2"
-                            >
-                              <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
-                                Edit Details
-                              </span>
-                              <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray lg:text-[15px]">
-                                <LuArrowRight />
-                              </span>
-                            </a>
-                            {courses[currentCourse.id].link && (
-                              <a
-                                target="_blank"
-                                href={courses[currentCourse.id].link!}
-                                class="flex gap-1 self-start lg:gap-2"
-                              >
-                                <span class="border-b-2 border-primary-dark-gray dark:border-background-light-gray">
-                                  View Course
-                                </span>
-                                <span class="text-[12px] text-primary-dark-gray dark:text-background-light-gray lg:text-[15px]">
-                                  <LuArrowRight />
-                                </span>
-                              </a>
-                            )}
-                          </div>
                           {courses[currentCourse.id].isOpen ? (
                             courses[currentCourse.id].isLoadingChapter ? (
                               <span class="mt-4 lg:mt-6">
@@ -1188,7 +1279,7 @@ export default component$(
                               </span>
                             ) : (
                               <div class="text-[0.875rem] lg:text-[1rem]">
-                                <div class="mt-4 flex items-center pb-2 lg:mt-6">
+                                <div class="flex items-center pb-2">
                                   <h3 class="w-[30%]">Author:</h3>
                                   <p class={`w-[70%]`}>
                                     <span class="flex items-center gap-2">
@@ -1326,7 +1417,7 @@ export default component$(
                                       <span>
                                         {courses[currentCourse.id].is_premium
                                           ? 'Subscription Required'
-                                          : 'Subscrtiption Not Required'}
+                                          : 'Subscription Not Required'}
                                       </span>
                                     </p>
                                   </div>
@@ -1346,20 +1437,22 @@ export default component$(
                                         ? 'Only you can edit'
                                         : 'Anyone with permission can edit'}
                                     </span>
-                                    <button
-                                      onClick$={() => handleLockUnlockCourse(currentCourse.id, user.userId)}
-                                      class="ml-3 inline-block underline decoration-wavy underline-offset-4 lg:ml-6 lg:underline-offset-[6px]"
-                                    >
-                                      {courses[currentCourse.id].is_locked ? 'unlock' : 'lock'}
-                                    </button>
                                   </p>
                                 </div>
 
-                                <div class="mt-4 flex items-start gap-4 py-2 lg:mt-6">
-                                  <h3 class="w-[30%] leading-5">Description:</h3>
-                                  <p class={`w-[80%] whitespace-pre leading-5`}>
-                                    {courses[currentCourse.id].description}
-                                  </p>
+                                <div class="mt-4 flex flex-col gap-2 py-2 lg:mt-6">
+                                  <div class="flex items-start gap-4">
+                                    <h3 class="w-[30%] leading-5">Short Description:</h3>
+                                    <p class={`w-[80%] whitespace-pre-line leading-5`}>
+                                      {courses[currentCourse.id].short_description}
+                                    </p>
+                                  </div>
+                                  <div class="flex items-start gap-4">
+                                    <h3 class="w-[30%] leading-5">Description:</h3>
+                                    <p class={`w-[80%] whitespace-pre-line leading-5`}>
+                                      {courses[currentCourse.id].description}
+                                    </p>
+                                  </div>
                                 </div>
                                 {!courses[currentCourse.id].is_single_page &&
                                   courses[currentCourse.id].isLoadingChapter && (
@@ -1372,23 +1465,6 @@ export default component$(
                                     <>
                                       <div class="flex items-center gap-2 py-4">
                                         <h3 class="font-bold tracking-wide">Chapters</h3>
-                                        <button
-                                          onClick$={(e) => {
-                                            e.stopPropagation();
-                                            if (
-                                              courses[currentCourse.id].is_locked &&
-                                              user.userId !== courses[currentCourse.id].author &&
-                                              user.role !== 'admin'
-                                            )
-                                              return alert('The Course is locked! You cannot add a chapter!.');
-
-                                            showAddChapter.value = true;
-                                            showAddCourseId.value = currentCourse.id;
-                                          }}
-                                          class="pl-3 text-[0.75rem] text-primary-dark-gray underline decoration-wavy underline-offset-4 dark:text-background-light-gray lg:pl-6 lg:text-[15px] lg:underline-offset-[6px]"
-                                        >
-                                          add chapter
-                                        </button>
                                       </div>
                                       {displayChapters.length === 0 && (
                                         <p class="pb-4">No chapters yet. Start by adding a chapter :P</p>
@@ -1446,9 +1522,13 @@ export default component$(
                                                       <button
                                                         type="button"
                                                         class="flex items-center rounded-full focus:outline-none "
-                                                        id="menu-button"
-                                                        aria-expanded="true"
-                                                        aria-haspopup="true"
+                                                        id={'menu-button-chapter' + chapter.id}
+                                                        aria-expanded={
+                                                          courses[currentCourse.id].openedChaptersActions === chapter.id
+                                                        }
+                                                        aria-haspopup={
+                                                          courses[currentCourse.id].openedChaptersActions === chapter.id
+                                                        }
                                                         onClick$={() => {
                                                           if (
                                                             courses[currentCourse.id].openedChaptersActions ===
@@ -1476,7 +1556,7 @@ export default component$(
                                                         class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
                                                         role="menu"
                                                         aria-orientation="vertical"
-                                                        aria-labelledby="menu-button"
+                                                        aria-labelledby={'menu-button-chapter' + chapter.id}
                                                         tabIndex={-1}
                                                       >
                                                         <div
@@ -1487,7 +1567,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm "
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-0"
+                                                            id={'menu-item-0' + chapter.id}
                                                             onClick$={() =>
                                                               handleEditChapter(chapter.id, currentCourse.id)
                                                             }
@@ -1498,7 +1578,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm "
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-1"
+                                                            id={'menu-item-1' + chapter.id}
                                                             onClick$={() => {
                                                               if (
                                                                 courses[currentCourse.id].is_locked &&
@@ -1519,7 +1599,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm "
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-2"
+                                                            id={'menu-item-2' + chapter.id}
                                                             onClick$={() => {
                                                               if (
                                                                 courses[currentCourse.id].is_locked &&
@@ -1549,7 +1629,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm "
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-3"
+                                                            id={'menu-item-3' + chapter.id}
                                                             onClick$={() => {
                                                               if (
                                                                 courses[currentCourse.id].is_locked &&
@@ -1579,7 +1659,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm "
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-4"
+                                                            id={'menu-item-4' + chapter.id}
                                                             onClick$={() =>
                                                               handleLockUnlockChapter(
                                                                 chapter.id,
@@ -1595,7 +1675,7 @@ export default component$(
                                                             class="block px-4 py-2 text-sm text-tomato"
                                                             role="menuitem"
                                                             tabIndex={-1}
-                                                            id="menu-item-5"
+                                                            id={'menu-item-5' + chapter.id}
                                                             onClick$={() => {
                                                               if (
                                                                 courses[currentCourse.id].is_locked &&
@@ -1629,7 +1709,7 @@ export default component$(
                                       )}
                                     </>
                                   )}
-                                <div class="flex w-full flex-col items-start justify-start gap-3 lg:flex-row lg:items-center">
+                                <div class="flex w-full flex-col items-start justify-start gap-3 pt-3 lg:flex-row lg:items-center">
                                   {user.userId === courses[currentCourse.id].profile.id && (
                                     <button
                                       onClick$={() => {
