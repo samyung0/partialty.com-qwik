@@ -154,12 +154,16 @@ export default component$(() => {
                           <Link prefetch href={chapter.link || undefined}>
                             <span class="flex items-center gap-2">
                               <span>{chapter.name}</span>
-                              <span class=" text-[15px] text-tomato dark:text-custom-pink">
-                                <LuGoal />
-                              </span>
-                              <span class=" text-[15px] text-tomato dark:text-custom-pink">
-                                <LuGem />
-                              </span>
+                              {chapter.is_checkpoint && (
+                                <span class=" text-[15px] text-tomato dark:text-custom-pink">
+                                  <LuGoal />
+                                </span>
+                              )}
+                              {chapter.is_premium && (
+                                <span class=" text-[15px] text-tomato dark:text-custom-pink">
+                                  <LuGem />
+                                </span>
+                              )}
                             </span>
                           </Link>
                           {userProgress?.progress.includes(chapter.id) && (
@@ -343,12 +347,16 @@ export default component$(() => {
                               <Link prefetch href={chapter.link || undefined}>
                                 <span class="flex items-center gap-2">
                                   <span>{chapter.name}</span>
-                                  <span class="text-[15px] text-tomato dark:text-custom-pink">
-                                    <LuGoal />
-                                  </span>
-                                  <span class="text-[15px] text-tomato dark:text-custom-pink">
-                                    <LuGem />
-                                  </span>
+                                  {chapter.is_checkpoint && (
+                                    <span class="text-[15px] text-tomato dark:text-custom-pink">
+                                      <LuGoal />
+                                    </span>
+                                  )}
+                                  {chapter.is_premium && (
+                                    <span class="text-[15px] text-tomato dark:text-custom-pink">
+                                      <LuGem />
+                                    </span>
+                                  )}
                                 </span>
                               </Link>
                               {userProgress?.progress.includes(chapter.id) && (

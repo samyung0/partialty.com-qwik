@@ -1,5 +1,14 @@
 import type { NoSerialize, QRL } from '@builder.io/qwik';
-import { $, component$, noSerialize, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import {
+  $,
+  component$,
+  noSerialize,
+  useOnWindow,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from '@builder.io/qwik';
 import ForwardButton from '~/components/AudioPlayer/ForwardButton';
 import MuteButton from '~/components/AudioPlayer/MuteButton';
 import PlayButton from '~/components/AudioPlayer/PlayButton';
@@ -9,6 +18,8 @@ import Slider from '~/components/AudioPlayer/Slider';
 import LoadingSVG from '~/components/LoadingSVG';
 
 import { QwikMuxAudio } from '~/components/AudioPlayer/MuxPlayer';
+
+import isHotkey from 'is-hotkey';
 
 interface PlayerState {
   playing: boolean;
@@ -77,6 +88,24 @@ export default component$(
         return player.playing;
       }),
     });
+
+    useOnWindow(
+      'keydown',
+      $((e) => {
+        if (isHotkey('space', e)) {
+          e.preventDefault();
+          player.toggle(player);
+        }
+        if (isHotkey('left', e)) {
+          e.preventDefault();
+          player.seekBy(player, -5);
+        }
+        if (isHotkey('right', e)) {
+          e.preventDefault();
+          player.seekBy(player, 5);
+        }
+      })
+    );
 
     useTask$(({ track }) => {
       track(() => audioTrack);
