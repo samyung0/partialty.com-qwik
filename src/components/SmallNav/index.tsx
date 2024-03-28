@@ -75,7 +75,7 @@ export default component$(({ user }: { user?: LuciaSession['user'] | undefined }
               </span>
             </div>
             <div class="absolute left-[0] top-[100%] z-10 hidden w-[180px] -translate-x-[50%] pt-2">
-              <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-black/40 dark:bg-primary-dark-gray dark:text-background-light-gray ">
+              <div class="flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-black/40 dark:bg-highlight-dark dark:text-background-light-gray ">
                 <ul class="flex flex-col p-2 text-base [&>li]:p-1">
                   <li>
                     <Link prefetch href="/members/dashboard/" class="flex items-center gap-3">

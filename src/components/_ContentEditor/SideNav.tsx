@@ -146,7 +146,7 @@ export default component$(
             d.type === 'contentIndexLockedUnlocked' ||
             d.type === 'contentLockedUnlocked' ||
             d.type === 'contentDetailsEdited' ||
-            d.type === "contentPositionMoved"
+            d.type === 'contentPositionMoved'
           ) {
             nav();
             return;

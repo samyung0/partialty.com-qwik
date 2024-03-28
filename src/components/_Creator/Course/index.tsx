@@ -235,11 +235,11 @@ export const lockCourse = server$(async function (courseId: string) {
     .where(eq(content_index.id, courseId));
 });
 
-export const updateCourse = server$(async function (courseId: string, args: Partial<Omit<ContentIndex, 'id'>>) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-    .update(content)
-    .set(args)
-    .where(eq(content.id, courseId));
+export const updateCourse = server$(async function (courseId: string, courseData: Partial<Omit<ContentIndex, 'id'>>) {
+  await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+    .update(content_index)
+    .set(courseData)
+    .where(eq(content_index.id, courseId));
 });
 
 export default component$(
@@ -440,7 +440,7 @@ export default component$(
             clearTimeout(isDeletingChapterIndexTimeout.value);
             return;
           }
-          if (d.type === 'lockContentIndexSuccess') {
+          if (d.type === 'lockContentIndexSuccess' || d.type === 'unlockContentIndexSuccess') {
             const courseId = d.message?.courseId;
             if (courseId && courses[courseId].lockUnlockContentIndexCallback) {
               courses[courseId].lockUnlockContentIndexCallback!();
@@ -449,7 +449,7 @@ export default component$(
             if (courses[courseId].lockContentIndexTimeout) clearTimeout(courses[courseId].lockContentIndexTimeout!);
             return;
           }
-          if (d.type === 'lockContentIndexFailed') {
+          if (d.type === 'lockContentIndexFailed' || d.type === 'unlockContentIndexFailed') {
             alert(d.message);
             const courseId = d.courseId;
             courses[courseId].lockUnlockContentIndexCallback = null;
@@ -457,9 +457,9 @@ export default component$(
             return;
           }
 
-          if (d.type === 'lockContentSuccess') {
+          if (d.type === 'lockContentSuccess' || d.type === 'unlockContentSuccess') {
             const courseId = d.message?.courseId;
-            const chapterId = d.message?.chapterId;
+            const chapterId = d.message?.contentId;
             if (courseId && chapterId && courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback) {
               courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback!();
             }
@@ -468,10 +468,10 @@ export default component$(
               clearTimeout(courses[courseId].chaptersMap[chapterId].lockContentTimeout!);
             return;
           }
-          if (d.type === 'lockContentFailed') {
+          if (d.type === 'lockContentFailed' || d.type === 'unlockContentFailed') {
             alert(d.message);
             const courseId = d.courseId;
-            const chapterId = d.chapterId;
+            const chapterId = d.contentId;
             courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback = null;
             if (courses[courseId].chaptersMap[chapterId].lockContentTimeout)
               clearTimeout(courses[courseId].chaptersMap[chapterId].lockContentTimeout!);
@@ -486,7 +486,7 @@ export default component$(
             d.type === 'contentIndexLockedUnlocked' ||
             d.type === 'contentLockedUnlocked' ||
             d.type === 'contentDetailsEdited' ||
-            d.stype === 'contentPositionMoved'
+            d.type === 'contentPositionMoved'
           ) {
             nav();
             return;
@@ -682,7 +682,7 @@ export default component$(
         )
           return;
         else if (
-          !window.confirm('Are you sure you wnat to lock this chapter? Only you will be able to edit this chapter.')
+          !window.confirm('Are you sure you want to lock this chapter? Only you will be able to edit this chapter.')
         )
           return;
         ws.value?.send(
@@ -772,17 +772,26 @@ export default component$(
     });
 
     const handleMoveContentUp = $(async (chapterId: string, courseId: string, chapter_order: string[]) => {
-      const index = chapter_order.indexOf(chapterId);
+      const filteredChapterOrder = chapter_order.filter(
+        (chapter) =>
+          courses[courseId].chapters.find((c) => c.id === chapter) &&
+          !courses[courseId].chapters.find((c) => c.id === chapter)!.is_deleted
+      );
+      const index = filteredChapterOrder.indexOf(chapterId);
       if (index <= 0) return;
+      const mappedChapter = chapter_order.indexOf(filteredChapterOrder[index]);
+      const mappedPrevChapter = chapter_order.indexOf(filteredChapterOrder[index - 1]);
+      if (mappedPrevChapter < -1 || mappedChapter < -1)
+        return window.alert('Something went wrong! Please refresh the page again try again or contact support.');
 
       courses[courseId].chaptersMap[chapterId].movingUp = true;
 
       const newChapterOrder = [...chapter_order];
-      const temp = newChapterOrder[index - 1];
-      newChapterOrder[index - 1] = newChapterOrder[index];
-      newChapterOrder[index] = temp;
+      const temp = newChapterOrder[mappedPrevChapter];
+      newChapterOrder[mappedPrevChapter] = newChapterOrder[mappedChapter];
+      newChapterOrder[mappedChapter] = temp;
 
-      await updateCourse(chapterId, { chapter_order: newChapterOrder } as const);
+      await updateCourse(courseId, { chapter_order: newChapterOrder } as const);
 
       ws.value?.send(
         JSON.stringify({
@@ -796,17 +805,26 @@ export default component$(
     });
 
     const handleMoveContentDown = $(async (chapterId: string, courseId: string, chapter_order: string[]) => {
-      const index = chapter_order.indexOf(chapterId);
-      if (index < 0 || index >= chapter_order.length - 1) return;
+      const filteredChapterOrder = chapter_order.filter(
+        (chapter) =>
+          courses[courseId].chapters.find((c) => c.id === chapter) &&
+          !courses[courseId].chapters.find((c) => c.id === chapter)!.is_deleted
+      );
+      const index = filteredChapterOrder.indexOf(chapterId);
+      if (index < 0 || index >= filteredChapterOrder.length - 1) return;
+      const mappedChapter = chapter_order.indexOf(filteredChapterOrder[index]);
+      const mappedPrevChapter = chapter_order.indexOf(filteredChapterOrder[index + 1]);
+      if (mappedPrevChapter < -1 || mappedChapter < -1)
+        return window.alert('Something went wrong! Please refresh the page again try again or contact support.');
 
       courses[courseId].chaptersMap[chapterId].movingDown = true;
 
       const newChapterOrder = [...chapter_order];
-      const temp = newChapterOrder[index + 1];
-      newChapterOrder[index + 1] = newChapterOrder[index];
-      newChapterOrder[index] = temp;
+      const temp = newChapterOrder[mappedPrevChapter];
+      newChapterOrder[mappedPrevChapter] = newChapterOrder[mappedChapter];
+      newChapterOrder[mappedChapter] = temp;
 
-      await updateCourse(chapterId, { chapter_order: newChapterOrder } as const);
+      await updateCourse(courseId, { chapter_order: newChapterOrder } as const);
 
       ws.value?.send(
         JSON.stringify({
@@ -1394,6 +1412,11 @@ export default component$(
                                                     </a>
                                                   </h4>
                                                   <p class="flex items-center gap-2">
+                                                    {chapter.is_locked && (
+                                                      <span class={'text-[14px] text-tomato lg:text-[18px]'}>
+                                                        <LuLock />
+                                                      </span>
+                                                    )}
                                                     {chapter.is_checkpoint && (
                                                       <span class={'text-[14px] text-tomato lg:text-[18px]'}>
                                                         <LuGoal />
@@ -1598,69 +1621,6 @@ export default component$(
                                                       </div>
                                                     )}
                                                   </div>
-                                                  {/* <button
-                                                    onClick$={() => handleEditChapter(chapter.id, currentCourse.id)}
-                                                    class="md:p-1"
-                                                  >
-                                                    <FaPenToSquareRegular />
-                                                  </button>
-                                                  <button
-                                                    onClick$={() => {
-                                                      if (
-                                                        courses[currentCourse.id].is_locked &&
-                                                        user.userId !== courses[currentCourse.id].author &&
-                                                        user.role !== 'admin'
-                                                      )
-                                                        return alert('Course is locked! You cannot edit a chapter.');
-                                                      showEditChapter.value = true;
-                                                      showEditChapterId.value = chapter.id;
-                                                      showEditCourseId.value = currentCourse.id;
-                                                    }}
-                                                    class="md:p-1"
-                                                  >
-                                                    <FaSlidersSolid />
-                                                  </button>
-                                                  {user.userId === courses[currentCourse.id].profile.id && (
-                                                    <button
-                                                      class="md:p-1"
-                                                      onClick$={() =>
-                                                        handleLockUnlockChapter(
-                                                          chapter.id,
-                                                          currentCourse.id,
-                                                          user.userId
-                                                        )
-                                                      }
-                                                    >
-                                                      <span
-                                                        class={
-                                                          'text-[18px] text-primary-dark-gray dark:text-background-light-gray'
-                                                        }
-                                                      >
-                                                        {chapter.is_locked && <FaLockSolid />}
-                                                        {!chapter.is_locked && <FaLockOpenSolid />}
-                                                      </span>
-                                                    </button>
-                                                  )}
-                                                  <button
-                                                    onClick$={() => {
-                                                      if (
-                                                        courses[currentCourse.id].is_locked &&
-                                                        user.userId !== courses[currentCourse.id].author &&
-                                                        user.role !== 'admin'
-                                                      )
-                                                        return alert(
-                                                          'The Course is locked! You cannot delete a chapter.'
-                                                        );
-                                                      handleDeleteContent(chapter.id, currentCourse.id);
-                                                    }}
-                                                    class="rounded-sm bg-tomato p-1 text-[13px] text-background-light-gray lg:p-2 lg:text-[16px]"
-                                                  >
-                                                    {courses[currentCourse.id].chaptersMap[chapter.id].isDeleting ? (
-                                                      <LoadingSVG />
-                                                    ) : (
-                                                      <FaTrashSolid />
-                                                    )}
-                                                  </button> */}
                                                 </div>
                                               </li>
                                             );

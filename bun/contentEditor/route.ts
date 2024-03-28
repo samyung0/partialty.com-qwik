@@ -616,7 +616,7 @@ const app = new Elysia()
                 type: 'lockContentFailed',
                 contentId,
                 courseId,
-                message: "Badly formatted message"
+                message: 'Badly formatted message',
               })
             );
           }
@@ -627,7 +627,7 @@ const app = new Elysia()
                 type: 'lockContentFailed',
                 contentId,
                 courseId,
-                message: "Unexpected!"
+                message: 'Unexpected!',
               })
             );
           }
@@ -657,7 +657,7 @@ const app = new Elysia()
           return ws.send(
             JSON.stringify({
               type: 'lockContentSuccess',
-              message
+              message,
             })
           );
         }
@@ -670,7 +670,7 @@ const app = new Elysia()
               JSON.stringify({
                 type: 'lockContentIndexFailed',
                 courseId,
-                message: "Badly formatted message"
+                message: 'Badly formatted message',
               })
             );
           }
@@ -680,7 +680,7 @@ const app = new Elysia()
               JSON.stringify({
                 type: 'lockContentIndexFailed',
                 courseId,
-                message: "Unexpected!"
+                message: 'Unexpected!',
               })
             );
           }
@@ -713,7 +713,7 @@ const app = new Elysia()
           return ws.send(
             JSON.stringify({
               type: 'lockContentIndexSuccess',
-              message
+              message,
             })
           );
         }
@@ -727,7 +727,7 @@ const app = new Elysia()
                 type: 'unlockContentFailed',
                 courseId,
                 contentId,
-                message: "Badly formatted message"
+                message: 'Badly formatted message',
               })
             );
           }
@@ -738,7 +738,7 @@ const app = new Elysia()
                 type: 'unlockContentFailed',
                 courseId,
                 contentId,
-                message: "Unexpected"
+                message: 'Unexpected',
               })
             );
           }
@@ -772,7 +772,7 @@ const app = new Elysia()
               JSON.stringify({
                 type: 'unlockContentIndexFailed',
                 courseId,
-                message: "Badly formatted message"
+                message: 'Badly formatted message',
               })
             );
           }
@@ -782,7 +782,7 @@ const app = new Elysia()
               JSON.stringify({
                 type: 'unlockContentIndexFailed',
                 courseId,
-                message: "Unexpected"
+                message: 'Unexpected',
               })
             );
           }
