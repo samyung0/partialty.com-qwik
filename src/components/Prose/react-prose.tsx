@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { EMBED_URL } from '~/const';
 
-const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?: string }) => {
+const Prose = ({ chapter, children, innerHTML }: { chapter: string, children: React.ReactNode; innerHTML?: string }) => {
   const interval = useRef<any>();
   const isDark = useRef<boolean>(false);
   useEffect(() => {
@@ -37,7 +37,7 @@ const Prose = ({ children, innerHTML }: { children: React.ReactNode; innerHTML?:
       clearInterval(interval.current);
       isDark.current = false;
     };
-  }, [children, innerHTML]);
+  }, [chapter]);
   return innerHTML ? (
     // for preview
     <section

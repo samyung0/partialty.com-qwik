@@ -531,7 +531,7 @@ const ContentEditorReact = ({
                 setShowQuizCodeBlockSettings={setShowQuizCodeBlockSettings}
               />
               {/* <HoveringToolbar /> */}
-              <Prose>
+              <Prose chapter={chapterName}>
                 <Editable
                   className="outline-none"
                   placeholder="Enter some rich text…"
@@ -560,7 +560,7 @@ const ContentEditorReact = ({
               <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               {/* <EmbedHydrate /> */}
               <div className="overflow-auto" style={{ height: audioTrack ? '90vh' : '100vh' }}>
-                <Prose children={<></>} innerHTML={renderedHTML || ''} />
+                <Prose chapter={chapterName} children={<></>} innerHTML={renderedHTML || ''} />
               </div>
               <SyncAudio audioTrack={audioTrack} />
             </div>
