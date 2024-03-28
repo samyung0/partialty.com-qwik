@@ -143,11 +143,10 @@ export default component$(
             d.type === 'contentIndexDetailsEdited' ||
             d.type === 'chapterCreated' ||
             d.type === 'contentCreated' ||
-            d.type === 'contentLocked' ||
-            d.type === 'contentIndexLocked' ||
-            d.type === 'contentIndexUnlocked' ||
-            d.type === 'contentUnlocked' ||
-            d.type === 'contentDetailsEdited'
+            d.type === 'contentIndexLockedUnlocked' ||
+            d.type === 'contentLockedUnlocked' ||
+            d.type === 'contentDetailsEdited' ||
+            d.type === "contentPositionMoved"
           ) {
             nav();
             return;

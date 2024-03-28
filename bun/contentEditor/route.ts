@@ -406,6 +406,26 @@ const app = new Elysia()
           });
           return;
         }
+        if (msg.type === 'moveContentPosition') {
+          const details = msg.details;
+          const courseId = msg.courseId;
+          if (!details || !courseId) return;
+          const message = { details, courseId };
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: 'contentPositionMoved',
+                  message,
+                })
+              );
+          });
+          return;
+        }
         if (msg.type === 'editContentIndexDetails') {
           const details = msg.details;
           const courseId = msg.courseId;
@@ -591,11 +611,25 @@ const app = new Elysia()
           const courseId = msg.courseId;
           const userId = msg.userId;
           if (!contentId || !courseId || !userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'lockContentFailed',
+                contentId,
+                courseId,
+                message: "Badly formatted message"
+              })
+            );
           }
           const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'lockContentFailed',
+                contentId,
+                courseId,
+                message: "Unexpected!"
+              })
+            );
           }
           if (courseIdToUserId.get(contentId)) {
             if (wsContentArr.get(courseIdToUserId.get(contentId)![0]))
@@ -607,31 +641,48 @@ const app = new Elysia()
               );
           }
           const message = { courseId, contentId };
-          const userIdAccessible: string[] = [];
-          userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
-          });
-          userIdAccessible.forEach((userId) => {
-            if (wsContentArr.get(userId))
-              wsContentArr.get(userId).send(
-                JSON.stringify({
-                  type: 'contentLocked',
-                  message,
-                })
-              );
-          });
-          return;
+          // const userIdAccessible: string[] = [];
+          // userIdToAccessibleCourses.forEach((val, key) => {
+          //   if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          // });
+          // userIdAccessible.forEach((userId) => {
+          //   if (wsContentArr.get(userId))
+          //     wsContentArr.get(userId).send(
+          //       JSON.stringify({
+          //         type: 'contentLocked',
+          //         message,
+          //       })
+          //     );
+          // });
+          return ws.send(
+            JSON.stringify({
+              type: 'lockContentSuccess',
+              message
+            })
+          );
         }
         if (msg.type === 'lockContentIndex') {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
           if (!_contentId || !courseId || !userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'lockContentIndexFailed',
+                courseId,
+                message: "Badly formatted message"
+              })
+            );
           }
           const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'lockContentIndexFailed',
+                courseId,
+                message: "Unexpected!"
+              })
+            );
           }
           for (let i = 0; i < _contentId.length; i++) {
             const contentId = _contentId[i];
@@ -646,60 +697,125 @@ const app = new Elysia()
             }
           }
           const message = { courseId };
-          const userIdAccessible: string[] = [];
-          userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
-          });
-          userIdAccessible.forEach((userId) => {
-            if (wsContentArr.get(userId))
-              wsContentArr.get(userId).send(
-                JSON.stringify({
-                  type: 'contentIndexLocked',
-                  message,
-                })
-              );
-          });
-          return;
+          // const userIdAccessible: string[] = [];
+          // userIdToAccessibleCourses.forEach((val, key) => {
+          //   if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          // });
+          // userIdAccessible.forEach((userId) => {
+          //   if (wsContentArr.get(userId))
+          //     wsContentArr.get(userId).send(
+          //       JSON.stringify({
+          //         type: 'contentIndexLocked',
+          //         message,
+          //       })
+          //     );
+          // });
+          return ws.send(
+            JSON.stringify({
+              type: 'lockContentIndexSuccess',
+              message
+            })
+          );
         }
         if (msg.type === 'unlockContent') {
           const contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
           if (!contentId || !courseId || !userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'unlockContentFailed',
+                courseId,
+                contentId,
+                message: "Badly formatted message"
+              })
+            );
           }
           const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'unlockContentFailed',
+                courseId,
+                contentId,
+                message: "Unexpected"
+              })
+            );
           }
           const message = { courseId, contentId };
-          const userIdAccessible: string[] = [];
-          userIdToAccessibleCourses.forEach((val, key) => {
-            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
-          });
-          userIdAccessible.forEach((userId) => {
-            if (wsContentArr.get(userId))
-              wsContentArr.get(userId).send(
-                JSON.stringify({
-                  type: 'contentUnlocked',
-                  message,
-                })
-              );
-          });
-          return;
+          // const userIdAccessible: string[] = [];
+          // userIdToAccessibleCourses.forEach((val, key) => {
+          //   if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          // });
+          // userIdAccessible.forEach((userId) => {
+          //   if (wsContentArr.get(userId))
+          //     wsContentArr.get(userId).send(
+          //       JSON.stringify({
+          //         type: 'contentUnlocked',
+          //         message,
+          //       })
+          //     );
+          // });
+          return ws.send(
+            JSON.stringify({
+              type: 'unlockContentSuccess',
+              message,
+            })
+          );
         }
         if (msg.type === 'unlockContentIndex') {
           const _contentId = msg.contentId;
           const courseId = msg.courseId;
           const userId = msg.userId;
           if (!_contentId || !courseId || !userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'unlockContentIndexFailed',
+                courseId,
+                message: "Badly formatted message"
+              })
+            );
           }
           const contentIndex = (await getContentIndexAuthor(courseId)).rows[0];
           if (!contentIndex || (contentIndex.author as string) !== userId) {
-            return;
+            return ws.send(
+              JSON.stringify({
+                type: 'unlockContentIndexFailed',
+                courseId,
+                message: "Unexpected"
+              })
+            );
           }
           const message = { courseId };
+          // const userIdAccessible: string[] = [];
+          // userIdToAccessibleCourses.forEach((val, key) => {
+          //   if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          // });
+          // userIdAccessible.forEach((userId) => {
+          //   if (wsContentArr.get(userId))
+          //     wsContentArr.get(userId).send(
+          //       JSON.stringify({
+          //         type: 'contentIndexUnlocked',
+          //         message,
+          //       })
+          //     );
+          // });
+          return ws.send(
+            JSON.stringify({
+              type: 'unlockContentIndexSuccess',
+              message,
+            })
+          );
+        }
+        if (msg.type === 'lockUnlockContentCB') {
+          const contentId = msg.contentId;
+          const courseId = msg.courseId;
+          if (!contentId || !courseId) {
+            return;
+          }
+          const message: any = {};
+          message.contentId = contentId;
+          message.courseId = courseId;
           const userIdAccessible: string[] = [];
           userIdToAccessibleCourses.forEach((val, key) => {
             if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
@@ -708,12 +824,33 @@ const app = new Elysia()
             if (wsContentArr.get(userId))
               wsContentArr.get(userId).send(
                 JSON.stringify({
-                  type: 'contentIndexUnlocked',
+                  type: 'contentLockedUnlocked',
                   message,
                 })
               );
           });
-          return;
+        }
+        if (msg.type === 'lockUnlockContentIndexCB') {
+          const courseId = msg.courseId;
+          if (!courseId) {
+            console.log('missing', msg.contentId);
+            return;
+          }
+          const message: any = {};
+          message.courseId = courseId;
+          const userIdAccessible: string[] = [];
+          userIdToAccessibleCourses.forEach((val, key) => {
+            if (val[0] === '*' || val.includes(courseId)) userIdAccessible.push(key);
+          });
+          userIdAccessible.forEach((userId) => {
+            if (wsContentArr.get(userId))
+              wsContentArr.get(userId).send(
+                JSON.stringify({
+                  type: 'contentIndexLockedUnlocked',
+                  message,
+                })
+              );
+          });
         }
         if (msg.type === 'heartBeat') {
           const userId = msg.userId;

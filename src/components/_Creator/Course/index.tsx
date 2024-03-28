@@ -2,13 +2,6 @@
 import type { NoSerialize, QRL, Signal } from '@builder.io/qwik';
 import { $, component$, useComputed$, useSignal, useStore, useTask$ } from '@builder.io/qwik';
 import { server$, useNavigate, z } from '@builder.io/qwik-city';
-import {
-  FaLockOpenSolid,
-  FaLockSolid,
-  FaPenToSquareRegular,
-  FaSlidersSolid,
-  FaTrashSolid,
-} from '@qwikest/icons/font-awesome';
 import { IoCaretDown } from '@qwikest/icons/ionicons';
 import {
   LuAlertTriangle,
@@ -242,6 +235,13 @@ export const lockCourse = server$(async function (courseId: string) {
     .where(eq(content_index.id, courseId));
 });
 
+export const updateCourse = server$(async function (courseId: string, args: Partial<Omit<ContentIndex, 'id'>>) {
+  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+    .update(content)
+    .set(args)
+    .where(eq(content.id, courseId));
+});
+
 export default component$(
   ({
     ws,
@@ -279,9 +279,23 @@ export default component$(
               isLoadingChapter: false,
               hasLoadedChapter: false,
               profile: profiles,
-              chaptersMap: {} as Record<string, { isDeleting: boolean }>,
+              chaptersMap: {} as Record<
+                string,
+                {
+                  isDeleting: boolean;
+                  movingUp: boolean;
+                  movingDown: boolean;
+                  lockUnlockContentCallback: QRL<() => any> | null;
+                  lockContentTimeout: ReturnType<typeof setTimeout> | null;
+                  lockContentError: QRL<() => any> | null;
+                }
+              >,
               courseApproval: course_approval,
               isPublishing: false,
+              openedChaptersActions: null as null | string,
+              lockUnlockContentIndexCallback: $(() => {}) as QRL<() => any> | null,
+              lockContentIndexTimeout: null as ReturnType<typeof setTimeout> | null,
+              lockContentIndexError: $(() => {}) as QRL<() => any> | null,
             }),
           ];
         })
@@ -294,8 +308,8 @@ export default component$(
       userAccessibleCourseWriteResolved.value.forEach(async ({ content_index, profiles, course_approval }) => {
         keys.splice(keys.indexOf(content_index.id), 1);
         const isOpen = courses[content_index.id]?.isOpen || false;
+        const chapters = await getChapters(content_index.id);
         if (isOpen) {
-          const chapters = await getChapters(content_index.id);
           courses[content_index.id] = Object.assign({}, content_index, {
             isOpen: true,
             chapters,
@@ -307,11 +321,20 @@ export default component$(
                 c.id,
                 {
                   isDeleting: false,
+                  movingUp: false,
+                  movingDown: false,
+                  lockUnlockContentCallback: courses[content_index.id]?.chaptersMap[c.id]?.lockUnlockContentCallback,
+                  lockContentTimeout: courses[content_index.id]?.chaptersMap[c.id]?.lockContentTimeout,
+                  lockContentError: courses[content_index.id]?.chaptersMap[c.id]?.lockContentError,
                 },
               ])
             ),
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
+            openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
+            lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
+            lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
+            lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
           });
         } else {
           courses[content_index.id] = Object.assign({}, content_index, {
@@ -320,9 +343,25 @@ export default component$(
             isLoadingChapter: courses[content_index.id]?.isLoadingChapter || false,
             hasLoadedChapter: false,
             profile: profiles,
-            chaptersMap: {},
+            chaptersMap: Object.fromEntries(
+              chapters.map((c) => [
+                c.id,
+                {
+                  isDeleting: false,
+                  movingUp: false,
+                  movingDown: false,
+                  lockUnlockContentCallback: courses[content_index.id]?.chaptersMap[c.id]?.lockUnlockContentCallback,
+                  lockContentTimeout: courses[content_index.id]?.chaptersMap[c.id]?.lockContentTimeout,
+                  lockContentError: courses[content_index.id]?.chaptersMap[c.id]?.lockContentError,
+                },
+              ])
+            ),
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
+            openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
+            lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
+            lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
+            lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
           });
         }
       });
@@ -374,8 +413,7 @@ export default component$(
         try {
           const d = JSON.parse(data);
           if (d.type === 'deleteContentSuccess') {
-            if (!isDeletingChapterCallback.value) return;
-            isDeletingChapterCallback.value();
+            if (isDeletingChapterCallback.value) isDeletingChapterCallback.value();
             isDeletingChapterCallback.value = undefined;
             isDeletingChapterCallbackErr.value = undefined;
             clearTimeout(isDeletingChapterTimeout.value);
@@ -390,8 +428,7 @@ export default component$(
             return;
           }
           if (d.type === 'deleteContentIndexSuccess') {
-            if (!isDeletingChapterIndexCallback.value) return;
-            isDeletingChapterIndexCallback.value();
+            if (isDeletingChapterIndexCallback.value) isDeletingChapterIndexCallback.value();
             isDeletingChapterIndexCallback.value = undefined;
             clearTimeout(isDeletingChapterIndexTimeout.value);
             return;
@@ -403,17 +440,53 @@ export default component$(
             clearTimeout(isDeletingChapterIndexTimeout.value);
             return;
           }
+          if (d.type === 'lockContentIndexSuccess') {
+            const courseId = d.message?.courseId;
+            if (courseId && courses[courseId].lockUnlockContentIndexCallback) {
+              courses[courseId].lockUnlockContentIndexCallback!();
+            }
+            courses[courseId].lockUnlockContentIndexCallback = null;
+            if (courses[courseId].lockContentIndexTimeout) clearTimeout(courses[courseId].lockContentIndexTimeout!);
+            return;
+          }
+          if (d.type === 'lockContentIndexFailed') {
+            alert(d.message);
+            const courseId = d.courseId;
+            courses[courseId].lockUnlockContentIndexCallback = null;
+            if (courses[courseId].lockContentIndexTimeout) clearTimeout(courses[courseId].lockContentIndexTimeout!);
+            return;
+          }
+
+          if (d.type === 'lockContentSuccess') {
+            const courseId = d.message?.courseId;
+            const chapterId = d.message?.chapterId;
+            if (courseId && chapterId && courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback) {
+              courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback!();
+            }
+            courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback = null;
+            if (courses[courseId].chaptersMap[chapterId].lockContentTimeout)
+              clearTimeout(courses[courseId].chaptersMap[chapterId].lockContentTimeout!);
+            return;
+          }
+          if (d.type === 'lockContentFailed') {
+            alert(d.message);
+            const courseId = d.courseId;
+            const chapterId = d.chapterId;
+            courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback = null;
+            if (courses[courseId].chaptersMap[chapterId].lockContentTimeout)
+              clearTimeout(courses[courseId].chaptersMap[chapterId].lockContentTimeout!);
+            return;
+          }
           if (
             d.type === 'contentDeleted' ||
             d.type === 'contentIndexDeleted' ||
             d.type === 'contentIndexDetailsEdited' ||
             d.type === 'chapterCreated' ||
             d.type === 'contentCreated' ||
-            d.type === 'contentLocked' ||
-            d.type === 'contentIndexLocked' ||
-            d.type === 'contentIndexUnlocked' ||
-            d.type === 'contentUnlocked' ||
-            d.type === 'contentDetailsEdited'
+            d.type === 'contentIndexLockedUnlocked' ||
+            d.type === 'contentLockedUnlocked' ||
+            d.type === 'contentDetailsEdited' ||
+            d.stype === 'contentPositionMoved'
           ) {
             nav();
             return;
@@ -469,6 +542,11 @@ export default component$(
           c.id,
           {
             isDeleting: false,
+            movingUp: false,
+            movingDown: false,
+            lockUnlockContentCallback: null,
+            lockContentTimeout: null,
+            lockContentError: null,
           },
         ])
       );
@@ -477,7 +555,7 @@ export default component$(
     });
 
     const handleDeleteContent = $(async (chapterId: string, courseId: string) => {
-      if (courses[courseId].chaptersMap[chapterId].isDeleting || !ws.value) return;
+      if (courses[courseId].chaptersMap[chapterId].isDeleting || !ws.value || !!isDeletingChapterCallback.value) return;
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!courses[courseId]) return alert('Something went wrong! Please refresh the page and try again.');
@@ -571,14 +649,13 @@ export default component$(
     });
 
     const handleLockUnlockChapter = $(async (chapterId: string, courseId: string, userId: string) => {
-      if (!courses[courseId]) return alert('Something went wrong! Please refresh the page and try again.');
+      if (!courses[courseId] || !ws.value) return alert('Something went wrong! Please refresh the page and try again.');
       if (courses[courseId].profile.id !== userId)
         return alert('You do not have permission to lock/unlock the course!');
       const chapter = courses[courseId].chapters.find((chapter) => chapter.id === chapterId);
       if (!chapter) return alert('Something went wrong! Please refresh the page and try again.');
       if (chapter.is_locked) {
-        await unlockChapter(chapterId);
-        ws.value?.send(
+        ws.value.send(
           JSON.stringify({
             type: 'unlockContent',
             contentId: chapterId,
@@ -586,6 +663,16 @@ export default component$(
             userId,
           })
         );
+        courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback = $(async () => {
+          await unlockChapter(chapterId);
+          ws.value?.send(
+            JSON.stringify({
+              type: 'lockUnlockContentCB',
+              contentId: chapterId,
+              courseId,
+            })
+          );
+        });
       } else {
         if (
           courseIdToEditingUser[chapterId] &&
@@ -598,7 +685,6 @@ export default component$(
           !window.confirm('Are you sure you wnat to lock this chapter? Only you will be able to edit this chapter.')
         )
           return;
-        await lockChapter(chapterId);
         ws.value?.send(
           JSON.stringify({
             type: 'lockContent',
@@ -607,6 +693,16 @@ export default component$(
             userId,
           })
         );
+        courses[courseId].chaptersMap[chapterId].lockUnlockContentCallback = $(async () => {
+          await lockChapter(chapterId);
+          ws.value?.send(
+            JSON.stringify({
+              type: 'lockUnlockContentCB',
+              contentId: chapterId,
+              courseId,
+            })
+          );
+        });
       }
     });
 
@@ -615,7 +711,6 @@ export default component$(
       if (courses[courseId].profile.id !== userId)
         return alert('You do not have permission to lock/unlock the course!');
       if (courses[courseId].is_locked) {
-        await unlockCourse(courseId);
         ws.value?.send(
           JSON.stringify({
             type: 'unlockContentIndex',
@@ -624,6 +719,15 @@ export default component$(
             userId,
           })
         );
+        courses[courseId].lockUnlockContentIndexCallback = $(async () => {
+          await unlockCourse(courseId);
+          ws.value?.send(
+            JSON.stringify({
+              type: 'lockUnlockContentIndexCB',
+              courseId,
+            })
+          );
+        });
       } else {
         const isEditing = courses[courseId].chapter_order.filter((id) => !!courseIdToEditingUser[id]);
         if (
@@ -634,10 +738,9 @@ export default component$(
         )
           return;
         else if (
-          !window.confirm('Are you sure you wnat to lock this course? Only you will be able to edit this course.')
+          !window.confirm('Are you sure you want to lock this course? Only you will be able to edit this course.')
         )
           return;
-        await lockCourse(courseId);
         ws.value?.send(
           JSON.stringify({
             type: 'lockContentIndex',
@@ -646,6 +749,15 @@ export default component$(
             userId,
           })
         );
+        courses[courseId].lockUnlockContentIndexCallback = $(async () => {
+          await lockCourse(courseId);
+          ws.value?.send(
+            JSON.stringify({
+              type: 'lockUnlockContentIndexCB',
+              courseId,
+            })
+          );
+        });
       }
     });
 
@@ -657,6 +769,54 @@ export default component$(
         return alert('This course is locked!');
       }
       window.open(`/contenteditor?courseId=${courseId}&chapterId=${chapterId}`);
+    });
+
+    const handleMoveContentUp = $(async (chapterId: string, courseId: string, chapter_order: string[]) => {
+      const index = chapter_order.indexOf(chapterId);
+      if (index <= 0) return;
+
+      courses[courseId].chaptersMap[chapterId].movingUp = true;
+
+      const newChapterOrder = [...chapter_order];
+      const temp = newChapterOrder[index - 1];
+      newChapterOrder[index - 1] = newChapterOrder[index];
+      newChapterOrder[index] = temp;
+
+      await updateCourse(chapterId, { chapter_order: newChapterOrder } as const);
+
+      ws.value?.send(
+        JSON.stringify({
+          type: 'moveContentPosition',
+          courseId,
+          details: {
+            chapter_order: newChapterOrder,
+          },
+        })
+      );
+    });
+
+    const handleMoveContentDown = $(async (chapterId: string, courseId: string, chapter_order: string[]) => {
+      const index = chapter_order.indexOf(chapterId);
+      if (index < 0 || index >= chapter_order.length - 1) return;
+
+      courses[courseId].chaptersMap[chapterId].movingDown = true;
+
+      const newChapterOrder = [...chapter_order];
+      const temp = newChapterOrder[index + 1];
+      newChapterOrder[index + 1] = newChapterOrder[index];
+      newChapterOrder[index] = temp;
+
+      await updateCourse(chapterId, { chapter_order: newChapterOrder } as const);
+
+      ws.value?.send(
+        JSON.stringify({
+          type: 'moveContentPosition',
+          courseId,
+          details: {
+            chapter_order: newChapterOrder,
+          },
+        })
+      );
     });
 
     return (
@@ -764,7 +924,7 @@ export default component$(
                   <p class="mt-3 lg:mt-6">You have not created any courses yet. ヾ(•ω•`)o</p>
                 )}
                 {displayCourses.value.length > 0 && (
-                  <ul class="flex flex-col gap-2 py-3 lg:py-6">
+                  <ul class="flex flex-col gap-2 py-3 pb-48 lg:py-6 lg:pb-48">
                     {displayCourses.value.map((currentCourse) => {
                       const displayChapters = courses[currentCourse.id].chapter_order.filter((chapter) => {
                         const t = courses[currentCourse.id].chapters.find((c) => c.id === chapter);
@@ -1222,7 +1382,6 @@ export default component$(
                                               (c) => c.id === _chapterId
                                             );
                                             if (!chapter) return;
-                                            console.log(chapter);
                                             return (
                                               <li
                                                 key={`Course${currentCourse.id}Chapter${chapter.id}`}
@@ -1259,7 +1418,187 @@ export default component$(
                                                       />
                                                     </span>
                                                   )}
-                                                  <button
+                                                  <div class="relative inline-block text-left">
+                                                    <div>
+                                                      <button
+                                                        type="button"
+                                                        class="flex items-center rounded-full focus:outline-none "
+                                                        id="menu-button"
+                                                        aria-expanded="true"
+                                                        aria-haspopup="true"
+                                                        onClick$={() => {
+                                                          if (
+                                                            courses[currentCourse.id].openedChaptersActions ===
+                                                            chapter.id
+                                                          )
+                                                            courses[currentCourse.id].openedChaptersActions = null;
+                                                          else
+                                                            courses[currentCourse.id].openedChaptersActions =
+                                                              chapter.id;
+                                                        }}
+                                                      >
+                                                        <span class="sr-only">Open options</span>
+                                                        <svg
+                                                          class="h-5 w-5"
+                                                          viewBox="0 0 20 20"
+                                                          fill="currentColor"
+                                                          aria-hidden="true"
+                                                        >
+                                                          <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                                                        </svg>
+                                                      </button>
+                                                    </div>
+                                                    {courses[currentCourse.id].openedChaptersActions === chapter.id && (
+                                                      <div
+                                                        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+                                                        role="menu"
+                                                        aria-orientation="vertical"
+                                                        aria-labelledby="menu-button"
+                                                        tabIndex={-1}
+                                                      >
+                                                        <div
+                                                          class="flex flex-col py-1 [&>button]:text-left"
+                                                          role="none"
+                                                        >
+                                                          <button
+                                                            class="block px-4 py-2 text-sm "
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-0"
+                                                            onClick$={() =>
+                                                              handleEditChapter(chapter.id, currentCourse.id)
+                                                            }
+                                                          >
+                                                            Edit Content
+                                                          </button>
+                                                          <button
+                                                            class="block px-4 py-2 text-sm "
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-1"
+                                                            onClick$={() => {
+                                                              if (
+                                                                courses[currentCourse.id].is_locked &&
+                                                                user.userId !== courses[currentCourse.id].author &&
+                                                                user.role !== 'admin'
+                                                              )
+                                                                return alert(
+                                                                  'Course is locked! You cannot edit a chapter.'
+                                                                );
+                                                              showEditChapter.value = true;
+                                                              showEditChapterId.value = chapter.id;
+                                                              showEditCourseId.value = currentCourse.id;
+                                                            }}
+                                                          >
+                                                            Edit Settings
+                                                          </button>
+                                                          <button
+                                                            class="block px-4 py-2 text-sm "
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-2"
+                                                            onClick$={() => {
+                                                              if (
+                                                                courses[currentCourse.id].is_locked &&
+                                                                user.userId !== courses[currentCourse.id].author &&
+                                                                user.role !== 'admin'
+                                                              )
+                                                                return alert(
+                                                                  'The Course is locked! You cannot move a chapter.'
+                                                                );
+                                                              handleMoveContentUp(
+                                                                chapter.id,
+                                                                currentCourse.id,
+                                                                courses[currentCourse.id].chapter_order
+                                                              );
+                                                            }}
+                                                          >
+                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                              .movingUp ? (
+                                                              <span>
+                                                                <LoadingSVG />
+                                                              </span>
+                                                            ) : (
+                                                              <span>Move Up</span>
+                                                            )}
+                                                          </button>
+                                                          <button
+                                                            class="block px-4 py-2 text-sm "
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-3"
+                                                            onClick$={() => {
+                                                              if (
+                                                                courses[currentCourse.id].is_locked &&
+                                                                user.userId !== courses[currentCourse.id].author &&
+                                                                user.role !== 'admin'
+                                                              )
+                                                                return alert(
+                                                                  'The Course is locked! You cannot move a chapter.'
+                                                                );
+                                                              handleMoveContentDown(
+                                                                chapter.id,
+                                                                currentCourse.id,
+                                                                courses[currentCourse.id].chapter_order
+                                                              );
+                                                            }}
+                                                          >
+                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                              .movingDown ? (
+                                                              <span>
+                                                                <LoadingSVG />
+                                                              </span>
+                                                            ) : (
+                                                              <span>Move Down</span>
+                                                            )}
+                                                          </button>
+                                                          <button
+                                                            class="block px-4 py-2 text-sm "
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-4"
+                                                            onClick$={() =>
+                                                              handleLockUnlockChapter(
+                                                                chapter.id,
+                                                                currentCourse.id,
+                                                                user.userId
+                                                              )
+                                                            }
+                                                          >
+                                                            {chapter.is_locked && <span>Unlock Chapter</span>}
+                                                            {!chapter.is_locked && <span>Lock Chapter</span>}
+                                                          </button>
+                                                          <button
+                                                            class="block px-4 py-2 text-sm text-tomato"
+                                                            role="menuitem"
+                                                            tabIndex={-1}
+                                                            id="menu-item-5"
+                                                            onClick$={() => {
+                                                              if (
+                                                                courses[currentCourse.id].is_locked &&
+                                                                user.userId !== courses[currentCourse.id].author &&
+                                                                user.role !== 'admin'
+                                                              )
+                                                                return alert(
+                                                                  'The Course is locked! You cannot delete a chapter.'
+                                                                );
+                                                              handleDeleteContent(chapter.id, currentCourse.id);
+                                                            }}
+                                                          >
+                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                              .isDeleting ? (
+                                                              <span>
+                                                                <LoadingSVG />
+                                                              </span>
+                                                            ) : (
+                                                              <span>Delete Chapter</span>
+                                                            )}
+                                                          </button>
+                                                        </div>
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                  {/* <button
                                                     onClick$={() => handleEditChapter(chapter.id, currentCourse.id)}
                                                     class="md:p-1"
                                                   >
@@ -1321,7 +1660,7 @@ export default component$(
                                                     ) : (
                                                       <FaTrashSolid />
                                                     )}
-                                                  </button>
+                                                  </button> */}
                                                 </div>
                                               </li>
                                             );
