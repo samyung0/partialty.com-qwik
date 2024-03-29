@@ -34,138 +34,11 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     }
 
     if (node.code) {
-      string = `<code style="${style}">${string}</code>`;
+      string = `<code style="color:inherit">${string}</code>`;
     }
 
     if (node.italic) {
       string = `<em style="${style}">${string}</em>`;
-    }
-
-    if (node.underline) {
-      let str = '';
-      const uuid = 'a' + uuidv4();
-      if (node.animate) {
-        str += `
-       <style>
-      @keyframes ${uuid} {
-        0% {
-          width: 100%;	
-        }
-        100% {
-          width: 0%;
-        }
-      }
-      @keyframes ${uuid}2 {
-        0% {
-          width: 0%;	
-        }
-        100% {
-          width: 100%;
-        }
-      }
-      #${uuid}lower {
-        position: absolute;
-          top:100%;
-          left:0;
-          height:4px;
-          width:100%;
-          display:block;
-          background:${node.underline};
-          z-index: 0;
-      }
-      ${
-        node.underlineDarkMode
-          ? `.dark #${uuid}lower {
-        background: ${node.underlineDarkMode} !important;
-      }`
-          : ''
-      }
-    #${uuid}upper {
-        position: absolute;
-          display: block;
-          top:100%;
-          right:0;
-          height: 4px;
-          width: 100%;
-          background: inherit;
-          z-index: 1;
-          ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
-      }
-       </style>
-       `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-           ${string}
-           <span id="${uuid}lower"></span>
-           <span ${
-             node.sync &&
-             `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
-           } id="${uuid}upper"></span>
-         </span>`;
-      } else if (node.sync) {
-        str += `
-       <style>
-      #${uuid}lower {
-        position: absolute;
-          top:100%;
-          left:0;
-          height:4px;
-          width:100%;
-          display:block;
-          background:${node.underline};
-          z-index: 0;
-      }
-      ${
-        node.underlineDarkMode
-          ? `.dark #${uuid}lower {
-        background: ${node.underlineDarkMode}
-      }`
-          : ''
-      }
-    #${uuid}upper {
-        position: absolute;
-          display: block;
-          top:100%;
-          right:0;
-          height:4px;
-          width: 100%;
-          background: inherit;
-          z-index: 1;
-      }
-       </style>
-       `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-           ${string}
-           <span id="${uuid}lower"></span>
-           <span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>
-         </span>`;
-      } else {
-        str += `
-       <style>
-      #${uuid}lower {
-        position: absolute;
-          top:100%;
-          left:0;
-          height:4px;
-          width:100%;
-          display:block;
-          background:${node.underline};
-          z-index: 0;
-      }
-      ${
-        node.underlineDarkMode
-          ? `.dark #${uuid}lower {
-        background: ${node.underlineDarkMode}
-      }`
-          : ''
-      }
-       </style>
-       `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-           ${string}
-           <span id="${uuid}lower"></span>
-         </span>`;
-      }
-      string = str;
     }
 
     if (node.strikethrough) {
@@ -178,150 +51,6 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
 
     if (node.subscript) {
       string = `<sub style="${style}">${string}</sub>`;
-    }
-
-    if (node.background) {
-      let str = '';
-      const uuid = 'a' + uuidv4();
-      if (node.animate) {
-        str += `
-       <style>
-      @keyframes ${uuid} {
-        0% {
-          width: calc(100% + 8px);	
-        }
-        100% {
-          width: 0%;
-        }
-      }
-      @keyframes ${uuid}2 {
-        0% {
-          width: 0%;	
-        }
-        100% {
-          width: calc(100% + 8px);
-        }
-      }
-      #${uuid}lower {
-        position: absolute;
-        top:-2px;
-        height:calc(100% + 4px);
-        left:-4px;
-        width:calc(100% + 8px);
-        display:block;
-        z-index: 0;
-        fill:${node.background};
-      }
-      ${
-        node.backgroundDarkMode
-          ? `.dark #${uuid}lower {
-        fill: ${node.backgroundDarkMode} !important;
-      }`
-          : ''
-      }
-      #${uuid}upper {
-      position: absolute;
-      display: block;
-      top:-2px;
-      right:-4px;
-      height: calc(100% + 4px);
-      width: calc(100% + 8px);
-      background: inherit;
-      z-index: 1;
-        ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
-      }
-       </style>
-       `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;">
-          <span style="position:relative;background:transparent;color:inherit;z-index:2;white-space:nowrap;">${string}</span>
-          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
-          <span ${
-            node.sync &&
-            `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
-          } id="${uuid}upper"></span>
-         </span>
-         </span>`;
-      } else if (node.sync) {
-        str += `
-        <style>
-      #${uuid}lower {
-        position: absolute;
-        top:-2px;
-        height:calc(100% + 4px);
-        left:-4px;
-        width:calc(100% + 8px);
-        display:block;
-        z-index: 0;
-        fill:${node.background};
-      }
-      ${
-        node.backgroundDarkMode
-          ? `.dark #${uuid}lower {
-        fill: ${node.backgroundDarkMode}
-      }`
-          : ''
-      }
-      #${uuid}upper {
-      position: absolute;
-      display: block;
-      top:-2px;
-      right:-4px;
-      height: calc(100% + 4px);
-      width: calc(100% + 8px);
-      background: inherit;
-      z-index: 1;
-      }
-       </style>
-       `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
-          <span style="position:relative;background:transparent;color:inherit;z-index:2">${string}</span>
-          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
-          <span
-            data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "calc(100% + 8px)"}'
-          id="${uuid}upper"></span>
-         </span>
-         </span>
-        `;
-      } else {
-        str += `
-        <style>
-       #${uuid}lower {
-         position: absolute;
-         top:-2px;
-         height:calc(100% + 4px);
-         left:-4px;
-         width:calc(100% + 8px);
-         display:block;
-         z-index: 0;
-         fill:${node.background};
-       }
-       ${
-         node.backgroundDarkMode
-           ? `.dark #${uuid}lower {
-        fill: ${node.backgroundDarkMode}
-      }`
-           : ''
-       }
-        </style>
-        `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
-          <span style="background:transparent;color:inherit;position:relative;z-index:2">${string}</span>
-          <span id="${uuid}lower">${combinedHighlightSVGString}</span>
-          </span>
-          </span>`;
-      }
-      string = str;
-    }
-
-    if (node.color) {
-      const uuid = 'a' + uuidv4();
-      string = `<style>${
-        node.colorDarkMode
-          ? `.dark #${uuid} {
-        color: ${node.colorDarkMode} !important;
-      }`
-          : ''
-      }</style><span id="${uuid}" style="background:inherit;color: ${node.color};">${string}</span>`;
     }
 
     if (node.fontSize) {
@@ -346,6 +75,274 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
   switch (node.type) {
     case 'paragraph':
       return `<p style="${style}">${children}</p>`;
+    case 'markerUnderline': {
+      let str = '';
+      const uuid = 'a' + uuidv4();
+      if (node.animate) {
+        str += `
+         <style>
+        @keyframes ${uuid} {
+          0% {
+            width: 100%;	
+          }
+          100% {
+            width: 0%;
+          }
+        }
+        @keyframes ${uuid}2 {
+          0% {
+            width: 0%;	
+          }
+          100% {
+            width: 100%;
+          }
+        }
+        #${uuid}lower {
+          position: absolute;
+            top:100%;
+            left:0;
+            height:4px;
+            width:100%;
+            display:block;
+            background:${node.underline};
+            z-index: 0;
+        }
+        ${
+          node.underlineDarkMode
+            ? `.dark #${uuid}lower {
+          background: ${node.underlineDarkMode} !important;
+        }`
+            : ''
+        }
+      #${uuid}upper {
+          position: absolute;
+            display: block;
+            top:100%;
+            right:0;
+            height: 4px;
+            width: 100%;
+            background: inherit;
+            z-index: 1;
+            ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
+        }
+         </style>
+         `;
+        str += `<span style="position:relative;background:inherit;color:inherit;">
+             ${children}
+             <span id="${uuid}lower"></span>
+             <span ${
+               node.sync &&
+               `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+             } id="${uuid}upper"></span>
+           </span>`;
+      } else if (node.sync) {
+        str += `
+         <style>
+        #${uuid}lower {
+          position: absolute;
+            top:100%;
+            left:0;
+            height:4px;
+            width:100%;
+            display:block;
+            background:${node.underline};
+            z-index: 0;
+        }
+        ${
+          node.underlineDarkMode
+            ? `.dark #${uuid}lower {
+          background: ${node.underlineDarkMode}
+        }`
+            : ''
+        }
+      #${uuid}upper {
+          position: absolute;
+            display: block;
+            top:100%;
+            right:0;
+            height:4px;
+            width: 100%;
+            background: inherit;
+            z-index: 1;
+        }
+         </style>
+         `;
+        str += `<span style="position:relative;background:inherit;color:inherit;">
+             ${children}
+             <span id="${uuid}lower"></span>
+             <span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>
+           </span>`;
+      } else {
+        str += `
+         <style>
+        #${uuid}lower {
+          position: absolute;
+            top:100%;
+            left:0;
+            height:4px;
+            width:100%;
+            display:block;
+            background:${node.underline};
+            z-index: 0;
+        }
+        ${
+          node.underlineDarkMode
+            ? `.dark #${uuid}lower {
+          background: ${node.underlineDarkMode}
+        }`
+            : ''
+        }
+         </style>
+         `;
+        str += `<span style="position:relative;background:inherit;color:inherit;">
+             ${children}
+             <span id="${uuid}lower"></span>
+           </span>`;
+      }
+      return str;
+    }
+    case 'markerBackground': {
+      let str = '';
+      const uuid = 'a' + uuidv4();
+      if (node.animate) {
+        str += `
+         <style>
+        @keyframes ${uuid} {
+          0% {
+            width: calc(100% + 8px);	
+          }
+          100% {
+            width: 0%;
+          }
+        }
+        @keyframes ${uuid}2 {
+          0% {
+            width: 0%;	
+          }
+          100% {
+            width: calc(100% + 8px);
+          }
+        }
+        #${uuid}lower {
+          position: absolute;
+          top:-2px;
+          height:calc(100% + 4px);
+          left:-4px;
+          width:calc(100% + 8px);
+          display:block;
+          z-index: 0;
+          fill:${node.background};
+        }
+        ${
+          node.backgroundDarkMode
+            ? `.dark #${uuid}lower {
+          fill: ${node.backgroundDarkMode} !important;
+        }`
+            : ''
+        }
+        #${uuid}upper {
+        position: absolute;
+        display: block;
+        top:-2px;
+        right:-4px;
+        height: calc(100% + 4px);
+        width: calc(100% + 8px);
+        background: inherit;
+        z-index: 1;
+          ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
+        }
+         </style>
+         `;
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;">
+            <span style="position:relative;background:transparent;color:inherit;z-index:2;white-space:nowrap;">${children}</span>
+            <span id="${uuid}lower">${combinedHighlightSVGString}</span>
+            <span ${
+              node.sync &&
+              `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+            } id="${uuid}upper"></span>
+           </span>
+           </span>`;
+      } else if (node.sync) {
+        str += `
+          <style>
+        #${uuid}lower {
+          position: absolute;
+          top:-2px;
+          height:calc(100% + 4px);
+          left:-4px;
+          width:calc(100% + 8px);
+          display:block;
+          z-index: 0;
+          fill:${node.background};
+        }
+        ${
+          node.backgroundDarkMode
+            ? `.dark #${uuid}lower {
+          fill: ${node.backgroundDarkMode}
+        }`
+            : ''
+        }
+        #${uuid}upper {
+        position: absolute;
+        display: block;
+        top:-2px;
+        right:-4px;
+        height: calc(100% + 4px);
+        width: calc(100% + 8px);
+        background: inherit;
+        z-index: 1;
+        }
+         </style>
+         `;
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center">
+            <span style="position:relative;background:transparent;color:inherit;z-index:2">${children}</span>
+            <span id="${uuid}lower">${combinedHighlightSVGString}</span>
+            <span
+              data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "calc(100% + 8px)"}'
+            id="${uuid}upper"></span>
+           </span>
+           </span>
+          `;
+      } else {
+        str += `
+          <style>
+         #${uuid}lower {
+           position: absolute;
+           top:-2px;
+           height:calc(100% + 4px);
+           left:-4px;
+           width:calc(100% + 8px);
+           display:block;
+           z-index: 0;
+           fill:${node.background};
+         }
+         ${
+           node.backgroundDarkMode
+             ? `.dark #${uuid}lower {
+          fill: ${node.backgroundDarkMode}
+        }`
+             : ''
+         }
+          </style>
+          `;
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;">
+            <span style="background:transparent;color:inherit;position:relative;z-index:2">${children}</span>
+            <span id="${uuid}lower">${combinedHighlightSVGString}</span>
+            </span>
+            </span>`;
+      }
+      return str;
+    }
+    case 'markerColor': {
+      const uuid = 'a' + uuidv4();
+      return `<style>${
+        node.colorDarkMode
+          ? `.dark #${uuid} {
+          color: ${node.colorDarkMode} !important;
+        }`
+          : ''
+      }</style><span id="${uuid}" style="background:inherit;color: ${node.color};">${children}</span>`;
+    }
     case 'line-break':
       return `<hr />`;
     case 'block-quote':
@@ -425,23 +422,23 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                 </blockquote>`;
 
     case 'heading-one':
-      return `<h1 style="${style}">
+      return `<h1 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
           ${children}
         </h1>`;
     case 'heading-two':
-      return `<h2 style="${style}">
+      return `<h2 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
           ${children}
         </h2>`;
     case 'heading-three':
-      return `<h3 style="${style}">
+      return `<h3 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
           ${children}
         </h3>`;
     case 'heading-four':
-      return `<h4 style="${style}">
+      return `<h4 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
           ${children}
         </h4>`;
     case 'list-item':
-      return `<li style="${style}">
+      return `<li style="${style}"">
           ${children}
         </li>`;
     case 'list-item-text':
@@ -553,6 +550,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case 'link': {
       return `<a target="_blank" href=${node.url} style="
       ${style}
+      word-break: break-all;
       ">${children}</a>`;
     }
     case 'image': {
@@ -567,27 +565,23 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         justify-content: center;
         gap: 0.5rem
       ">
-      <div style="
-      ${height ? `height: ${height}px;` : ''}
-      ${width ? `width: ${width}px;` : ''}
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      ">
-      <img src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" 
-      width="400" height="400"
+      <style>
+      @media (max-width: 768px){
+        .imageContainer {
+          max-height: 50dvh !important;
+        }
+      }
+      </style>
+      <img class="imageContainer" src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" 
+      height="${height ? height : 400}"
+      width="${width ? width : 400}"
       style="
       max-height: 100%;
-      max-width: 95dvw;
-      flex: 1 1 auto;
+      max-width: 100%;
       object-fit: contain;
-      "/>
-      </div><figcaption style="
+      "/><figcaption style="
             width: 100%;
-            padding: 0.25rem;
             text-align: center;
-            font-size: 0.875rem;
-            line-height: 1.25rem;
             white-space: pre-line;">${escapeHtml(caption)}</figcaption>
       </figure>
     </div>`;

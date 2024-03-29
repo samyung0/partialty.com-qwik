@@ -1,10 +1,11 @@
 /** @jsxImportSource react */
 import { ArrowDown, ArrowUp, RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { Editor, Range } from 'slate';
+import { Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
 import ColorChooser from '~/components/_ContentEditor/ColorChooser';
-import type { CustomMarkFormat } from '~/components/_ContentEditor/types';
+import { isBlockActive } from '~/components/_ContentEditor/blockFn';
+import type { CustomMarkFormat, InlineMarkerBackground } from '~/components/_ContentEditor/types';
 
 export const MarkButton = ({
   format,
@@ -37,21 +38,21 @@ export const MarkButton = ({
 };
 
 export const BackgroundMarkButton = ({
-  format,
   children,
   audioTimeStamp,
 }: {
-  format: CustomMarkFormat;
   children: React.ReactNode;
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
-  const mark = Editor.marks(editor) || {};
+  const node = Editor.above(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground',
+  });
   return (
     <div
       title={'Background'}
       className={
-        (isMarkActive(editor, format)
+        (isBlockActive(editor, 'markerBackground', 'type')
           ? `border-b-2 border-black dark:border-light-mint `
           : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
         ' relative cursor-pointer [&:hover>div]:block'
@@ -61,45 +62,112 @@ export const BackgroundMarkButton = ({
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
         <ColorChooser
-          mark={mark}
+          node={node ? node[0] : {}}
           getTime={() => audioTimeStamp.current}
           setSync={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
-            Editor.addMark(editor, 'sync', true);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerBackground', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).sync)
+              Transforms.setNodes(
+                editor,
+                {
+                  sync: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  sync: true,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
           }}
           setTimeStamp={(timestamp: number) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, 'timeStamp', timestamp);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerBackground', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).timeStamp)
+              Transforms.setNodes(
+                editor,
+                {
+                  timeStamp: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  timeStamp: timestamp,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
           }}
           setAnimate={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
-            Editor.addMark(editor, 'animate', true);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerBackground', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).animate)
+              Transforms.setNodes(
+                editor,
+                {
+                  animate: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  animate: true,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
           }}
           setColor={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark[format] && currentMark[format] === color)
-              return Editor.removeMark(editor, format);
-            Editor.addMark(editor, format, color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerBackground', 'type')) {
+              const attr = {
+                type: 'markerBackground',
+                children: [],
+                background: color,
+              };
+              Transforms.wrapNodes(editor, attr as any, { split: true });
+            } else {
+              Transforms.setNodes(
+                editor,
+                {
+                  background: color,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+              );
+            }
           }}
           setColorDarkMode={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['backgroundDarkMode'] && currentMark['backgroundDarkMode'] === color)
-              return Editor.removeMark(editor, 'backgroundDarkMode');
-            Editor.addMark(editor, 'backgroundDarkMode', color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerBackground', 'type')) return;
+
+            Transforms.setNodes(
+              editor,
+              {
+                backgroundDarkMode: color,
+              },
+              { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+            );
           }}
           removeColor={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.removeMark(editor, format);
-            Editor.removeMark(editor, 'backgroundDarkMode');
-            Editor.removeMark(editor, 'timeStamp');
-            Editor.removeMark(editor, 'sync');
-            Editor.removeMark(editor, 'animate');
+            if (!editor.selection) return;
+            Transforms.unwrapNodes(editor, {
+              match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground',
+            });
+            // Editor.removeMark(editor, format);
+            // Editor.removeMark(editor, 'backgroundDarkMode');
+            // Editor.removeMark(editor, 'timeStamp');
+            // Editor.removeMark(editor, 'sync');
+            // Editor.removeMark(editor, 'animate');
           }}
         />
       </div>
@@ -108,21 +176,21 @@ export const BackgroundMarkButton = ({
 };
 
 export const UnderlineMarkButton = ({
-  format,
   children,
   audioTimeStamp,
 }: {
-  format: CustomMarkFormat;
   children: React.ReactNode;
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
-  const mark = Editor.marks(editor) || {};
+  const node = Editor.above(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline',
+  });
   return (
     <div
       title={'Underline'}
       className={
-        (isMarkActive(editor, format)
+        (isBlockActive(editor, 'markerUnderline', 'type')
           ? `border-b-2 border-black dark:border-light-mint `
           : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
         ' relative cursor-pointer [&:hover>div]:block'
@@ -132,45 +200,112 @@ export const UnderlineMarkButton = ({
       {children}
       <div className="absolute left-[50%] top-[100%] z-50 hidden w-[300px] -translate-x-[50%] pt-2">
         <ColorChooser
-          mark={mark}
+          node={node ? node[0] : {}}
           getTime={() => audioTimeStamp.current}
           setSync={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
-            Editor.addMark(editor, 'sync', true);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerUnderline', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).sync)
+              Transforms.setNodes(
+                editor,
+                {
+                  sync: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  sync: true,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
           }}
           setTimeStamp={(timestamp: number) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, 'timeStamp', timestamp);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerUnderline', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).timeStamp)
+              Transforms.setNodes(
+                editor,
+                {
+                  timeStamp: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  timeStamp: timestamp,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
           }}
           setAnimate={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
-            Editor.addMark(editor, 'animate', true);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerUnderline', 'type')) return;
+            if (!node) return;
+            if ((node[0] as InlineMarkerBackground).animate)
+              Transforms.setNodes(
+                editor,
+                {
+                  animate: undefined,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
+            else
+              Transforms.setNodes(
+                editor,
+                {
+                  animate: true,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
           }}
           setColor={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark[format] && currentMark[format] === color)
-              return Editor.removeMark(editor, format);
-            Editor.addMark(editor, format, color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerUnderline', 'type')) {
+              const attr = {
+                type: 'markerUnderline',
+                children: [],
+                underline: color,
+              };
+              Transforms.wrapNodes(editor, attr as any, { split: true });
+            } else {
+              Transforms.setNodes(
+                editor,
+                {
+                  underline: color,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+              );
+            }
           }}
           setColorDarkMode={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['underlineDarkMode'] && currentMark['underlineDarkMode'] === color)
-              return Editor.removeMark(editor, 'underlineDarkMode');
-            Editor.addMark(editor, 'underlineDarkMode', color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerUnderline', 'type')) return;
+
+            Transforms.setNodes(
+              editor,
+              {
+                underlineDarkMode: color,
+              },
+              { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+            );
           }}
           removeColor={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.removeMark(editor, format);
-            Editor.removeMark(editor, 'underlineDarkMode');
-            Editor.removeMark(editor, 'timeStamp');
-            Editor.removeMark(editor, 'sync');
-            Editor.removeMark(editor, 'animate');
+            if (!editor.selection) return;
+            Transforms.unwrapNodes(editor, {
+              match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline',
+            });
+            // Editor.removeMark(editor, format);
+            // Editor.removeMark(editor, 'backgroundDarkMode');
+            // Editor.removeMark(editor, 'timeStamp');
+            // Editor.removeMark(editor, 'sync');
+            // Editor.removeMark(editor, 'animate');
           }}
         />
       </div>
@@ -179,21 +314,21 @@ export const UnderlineMarkButton = ({
 };
 
 export const ColorMarkButton = ({
-  format,
   children,
   audioTimeStamp,
 }: {
-  format: CustomMarkFormat;
   children: React.ReactNode;
   audioTimeStamp: React.MutableRefObject<number>;
 }) => {
   const editor = useSlate();
-  const mark = Editor.marks(editor) || {};
+  const node = Editor.above(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerColor',
+  });
   return (
     <div
       title={'Color'}
       className={
-        (isMarkActive(editor, format)
+        (isBlockActive(editor, 'markerColor', 'type')
           ? `border-b-2 border-black dark:border-light-mint `
           : 'border-b-2 border-light-mint dark:border-primary-dark-gray ') +
         ' relative cursor-pointer [&:hover>div]:block'
@@ -205,45 +340,52 @@ export const ColorMarkButton = ({
         <ColorChooser
           canSync={false}
           canAnimate={false}
-          mark={mark}
+          node={node ? node[0] : {}}
           getTime={() => audioTimeStamp.current}
-          setSync={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['sync']) return Editor.removeMark(editor, 'sync');
-            Editor.addMark(editor, 'sync', true);
-          }}
-          setTimeStamp={(timestamp: number) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.addMark(editor, 'timeStamp', timestamp);
-          }}
-          setAnimate={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['animate']) return Editor.removeMark(editor, 'animate');
-            Editor.addMark(editor, 'animate', true);
-          }}
+          setSync={() => {}}
+          setAnimate={() => {}}
+          setTimeStamp={() => {}}
           setColor={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark[format] && currentMark[format] === color)
-              return Editor.removeMark(editor, format);
-            Editor.addMark(editor, format, color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerColor', 'type')) {
+              const attr = {
+                type: 'markerColor',
+                children: [],
+                color: color,
+              };
+              Transforms.wrapNodes(editor, attr as any, { split: true });
+            } else {
+              Transforms.setNodes(
+                editor,
+                {
+                  color: color,
+                },
+                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerColor' }
+              );
+            }
           }}
           setColorDarkMode={(color: string) => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            const currentMark = Editor.marks(editor);
-            if (currentMark && currentMark['colorDarkMode'] && currentMark['colorDarkMode'] === color)
-              return Editor.removeMark(editor, 'colorDarkMode');
-            Editor.addMark(editor, 'colorDarkMode', color);
+            if (!editor.selection) return;
+            if (!isBlockActive(editor, 'markerColor', 'type')) return;
+
+            Transforms.setNodes(
+              editor,
+              {
+                colorDarkMode: color,
+              },
+              { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerColor' }
+            );
           }}
           removeColor={() => {
-            if (editor.selection && Range.isCollapsed(editor.selection)) return;
-            Editor.removeMark(editor, format);
-            Editor.removeMark(editor, 'colorDarkMode');
-            Editor.removeMark(editor, 'timeStamp');
-            Editor.removeMark(editor, 'sync');
-            Editor.removeMark(editor, 'animate');
+            if (!editor.selection) return;
+            Transforms.unwrapNodes(editor, {
+              match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerColor',
+            });
+            // Editor.removeMark(editor, format);
+            // Editor.removeMark(editor, 'underlineDarkMode');
+            // Editor.removeMark(editor, 'timeStamp');
+            // Editor.removeMark(editor, 'sync');
+            // Editor.removeMark(editor, 'animate');
           }}
         />
       </div>

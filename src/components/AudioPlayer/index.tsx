@@ -20,6 +20,7 @@ import LoadingSVG from '~/components/LoadingSVG';
 
 import { QwikMuxAudio } from '~/components/AudioPlayer/MuxPlayer';
 
+import { isServer } from '@builder.io/qwik/build';
 import isHotkey from 'is-hotkey';
 import { chapterContext } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
@@ -54,6 +55,7 @@ export default component$(
     audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
   }) => {
     const chapterActions = useContext(chapterContext);
+
     const player = useStore<PlayerAPI>({
       playing: false,
       muted: false,
@@ -152,6 +154,7 @@ export default component$(
         }
       }
     });
+
     useVisibleTask$(
       () => {
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
@@ -159,6 +162,12 @@ export default component$(
       },
       { strategy: 'document-ready' }
     );
+
+    useTask$(({ track }) => {
+      track(() => chapterActions.showAllHighlights);
+      if (isServer) return;
+      sync();
+    });
 
     return (
       <div class="relative z-[20] flex h-[10dvh] min-h-[90px] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">

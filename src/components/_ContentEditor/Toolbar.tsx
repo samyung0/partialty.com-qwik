@@ -62,13 +62,9 @@ const Toolbar = ({
         <MarkButton title={'Bold'} format="bold" children={<Bold size={20} />} />
         <MarkButton title={'Italic'} format="italic" children={<Italic size={20} />} />
         <MarkButton title={'Strikethrough'} format="strikethrough" children={<Strikethrough size={20} />} />
-        <UnderlineMarkButton audioTimeStamp={audioTimeStamp} format="underline" children={<Underline size={20} />} />
-        <BackgroundMarkButton
-          audioTimeStamp={audioTimeStamp}
-          format="background"
-          children={<PaintBucket size={20} />}
-        />
-        <ColorMarkButton audioTimeStamp={audioTimeStamp} format="color" children={<Baseline size={20} />} />
+        <UnderlineMarkButton audioTimeStamp={audioTimeStamp} children={<Underline size={20} />} />
+        <BackgroundMarkButton audioTimeStamp={audioTimeStamp} children={<PaintBucket size={20} />} />
+        <ColorMarkButton audioTimeStamp={audioTimeStamp} children={<Baseline size={20} />} />
         <TextMarkButton children={<Type size={20} />} />
         <MarkButton title={'Code'} format="code" children={<Code size={20} />} />
         <MarkButton title={'Superscript'} format="superscript" children={<Superscript size={20} />} />

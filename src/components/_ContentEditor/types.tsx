@@ -222,6 +222,54 @@ export type UrlLink = {
   children: (CustomText | CustomElement)[];
 };
 
+export type InlineMarkerUnderline = {
+  type: 'markerUnderline';
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+  underline?: string;
+  underlineDarkMode?: string;
+  sync?: true;
+  timeStamp?: number;
+  animate?: true;
+};
+
+export type InlineMarkerBackground = {
+  type: 'markerBackground';
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+  background?: string;
+  backgroundDarkMode?: string;
+  sync?: true;
+  timeStamp?: number;
+  animate?: true;
+};
+
+export type InlineMarkerColor = {
+  type: 'markerColor';
+  align?: Align;
+  url?: string;
+  caption?: string;
+  public_id?: string;
+  content?: string;
+  filename?: string;
+  language?: string;
+  children: (CustomText | CustomElement)[];
+  color?: string;
+  colorDarkMode?: string;
+};
+
 export type ImageElement = {
   type: 'image';
   align?: Align;
@@ -329,14 +377,6 @@ export type CustomText = {
   strikethrough?: true;
   superscript?: true;
   subscript?: true;
-  background?: string;
-  color?: string;
-  colorDarkMode?: string;
-  backgroundDarkMode?: string;
-  underlineDarkMode?: string;
-  timeStamp?: number;
-  sync?: true;
-  animate?: true;
   fontSize?: number;
   fontFamily?: string;
   fontSpacing?: number;
@@ -361,6 +401,9 @@ export type CustomElement =
   | NumberedList
   | VideoEmbed
   | UrlLink
+  | InlineMarkerUnderline
+  | InlineMarkerBackground
+  | InlineMarkerColor
   | ImageElement
   | QuizBlockElement
   | QuizOptionElement

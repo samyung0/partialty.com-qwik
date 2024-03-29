@@ -4,6 +4,11 @@ import type { RenderElementProps } from 'slate-react';
 import { EmbedElement } from '~/components/_ContentEditor/Embed';
 import { ImageBlock } from '~/components/_ContentEditor/Images';
 import { LinkElement } from '~/components/_ContentEditor/Link';
+import {
+  MarkerBackgroundElement,
+  MarkerColorElement,
+  MarkerUnderlineElement,
+} from '~/components/_ContentEditor/Marker';
 import { CodeBlock, CodeLine } from '~/components/_ContentEditor/codeBlock';
 import { QuizBlock, QuizOption } from '~/components/_ContentEditor/quiz';
 import { QuizCodeBlock, QuizCodeInput, QuizCodeParagraph } from '~/components/_ContentEditor/quizCode';
@@ -156,6 +161,12 @@ export const Element = ({ attributes, children, element }: RenderElementProps) =
       return <EmbedElement attributes={attributes} element={element} children={children} />;
     case 'link':
       return <LinkElement attributes={attributes} element={element} children={children} />;
+    case 'markerUnderline':
+      return <MarkerUnderlineElement attributes={attributes} element={element} children={children} />;
+    case 'markerBackground':
+      return <MarkerBackgroundElement attributes={attributes} element={element} children={children} />;
+    case 'markerColor':
+      return <MarkerColorElement attributes={attributes} element={element} children={children} />;
     case 'image':
       return <ImageBlock attributes={attributes} element={element} children={children} />;
     case 'codeBlock':

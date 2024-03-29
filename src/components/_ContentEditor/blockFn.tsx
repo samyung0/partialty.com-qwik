@@ -4,7 +4,7 @@ import { useSlate } from 'slate-react';
 import { v4 as uuidv4 } from 'uuid';
 import { toggleLinkAtSelection } from '~/components/_ContentEditor/Link';
 import { toCodeLines } from '~/components/_ContentEditor/codeBlock';
-import type { Align, BlockFormat, CustomElementType, List } from '~/components/_ContentEditor/types';
+import type { Align, BlockFormat, List } from '~/components/_ContentEditor/types';
 import { LIST_TYPES, TEXT_ALIGN_TYPES } from '~/components/_ContentEditor/types';
 
 export const BlockButton = ({
@@ -309,7 +309,7 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
     };
   } else {
     newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : (format as CustomElementType),
+      type: isActive ? 'paragraph' : isList ? 'list-item' : (format as any),
     };
   }
   Transforms.setNodes<SlateElement>(editor, newProperties);

@@ -3,35 +3,58 @@
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-export const PredefinedColorList = {
-  yellow: '#fcd34d',
-  'middle-yellow': '#FDE594',
-  'light-yellow': '#fef6db',
-  mint: '#6fdcbf',
-  'middle-mint': '#A9EAD9',
-  'light-mint': '#e2f8f2',
-  lilac: '#ae8fdb',
-  'middle-lilac': '#CFBCEA',
-  'light-lilac': '#efe9f8',
-  sea: '#72cada',
-  'middle-sea': '#ABDFE9',
-  'light-sea': '#e3f4f8',
-  sherbet: '#fef8b4',
-  'mddle-sherbet': '#FFFACB',
-  'light-sherbet': '#fffce1',
-  pink: '#f7b8c2',
-  'middle-pink': '#F7B8C2',
-  'light-pink': '#fdf1f3',
-  rose: '#dc849b',
-  'middle-rose': '#EAB5C3',
-  'light-rose': '#f8e6eb',
-  tomato: '#ff6347',
-  'middle-tomato': '#FFA291',
-  'light-tomato': '#ffe0da',
-  'bright-yellow': '#ffff43',
-  'primary-dark-gray': '#1f2937',
-  'background-light-gray': '#f7f7f7',
+const _PredefinedColorList = {
+  'bright-sun': {
+    '100': '#fef1c7',
+    '300': '#fcd34d',
+    '500': '#f5be0b',
+    '700': '#b48c09',
+    '900': '#785f0f',
+  },
+  bermuda: {
+    '100': '#d1f6ea',
+    '300': '#6fdcbf',
+    '500': '#25a78b',
+    '700': '#1a6b5c',
+    '900': '#194840',
+  },
+  'east-side': {
+    '100': '#f1edfa',
+    '300': '#d1c4ee',
+    '500': '#ae8fdb',
+    '700': '#7f4eb3',
+    '900': '#59377b',
+  },
+  viking: {
+    '100': '#d8f2f5',
+    '300': '#72cada',
+    '500': '#2c96ae',
+    '700': '#266378',
+    '900': '#244655',
+  },
+  pink: {
+    '100': '#fde6e9',
+    '300': '#f7b8c2',
+    '500': '#e54e6d',
+    '700': '#b02048',
+    '900': '#7e1d3e',
+  },
+  persimmon: {
+    '100': '#ffe4df',
+    '300': '#ffac9d',
+    '500': '#ff6347',
+    '700': '#c8290d',
+    '900': '#882614',
+  },
+  custom: {
+    'bright-yellow': '#ffff43',
+    'primary-dark-gray': '#1f2937',
+    'background-light-gray': '#f7f7f7',
+  },
 };
+const PredefinedColorList = Object.entries(_PredefinedColorList)
+  .map(([_, color]) => Object.entries(color).map(([_, color2]) => color2))
+  .flat();
 
 const ColorChooser = ({
   setColor,
@@ -40,12 +63,12 @@ const ColorChooser = ({
   setSync,
   setTimeStamp,
   setAnimate,
-  mark,
+  node,
   canSync = true,
   canAnimate = true,
   removeColor,
 }: {
-  mark: any;
+  node: any;
   setColor: (color: string) => any;
   setColorDarkMode: (color: string) => any;
   getTime: () => number;
@@ -56,21 +79,21 @@ const ColorChooser = ({
   canAnimate?: boolean;
   removeColor: () => void;
 }) => {
-  const [syncTime, setSyncTime] = useState(!!mark.sync);
-  const [timeStamp, setTimeStampState] = useState(mark.timeStamp || 0);
-  const [animate, setAnimateState] = useState(!!mark.animate);
+  const [syncTime, setSyncTime] = useState(!!node.sync);
+  const [timeStamp, setTimeStampState] = useState(node.timeStamp || 0);
+  const [animate, setAnimateState] = useState(!!node.animate);
   const ref = useRef<any>();
   const refSync = useRef<any>();
   const refAnimate = useRef<any>();
   useEffect(() => {
-    setSyncTime(!!mark.sync);
-    setTimeStampState(mark.timeStamp || 0);
-    setAnimateState(!!mark.animate);
-  }, [JSON.stringify(mark)]);
+    setSyncTime(!!node.sync);
+    setTimeStampState(node.timeStamp || 0);
+    setAnimateState(!!node.animate);
+  }, [JSON.stringify(node)]);
   return (
     <div className="flex max-h-[500px] cursor-context-menu flex-col overflow-auto rounded-md border-2 border-primary-dark-gray bg-white dark:border-disabled-dark dark:bg-primary-dark-gray">
       <p className="pl-6 pt-6 text-sm">Light Mode (must choose)</p>
-      <ul className="grid grid-cols-6 gap-3 p-6">
+      <ul className="grid grid-cols-5 gap-3 p-6">
         {Object.entries(PredefinedColorList).map((color) => (
           <li
             key={`ColorChooser${color[1]}`}
@@ -84,7 +107,7 @@ const ColorChooser = ({
         ))}
       </ul>
       <p className="pl-6 text-sm">Dark Mode</p>
-      <ul className="grid grid-cols-6 gap-3 p-6">
+      <ul className="grid grid-cols-5 gap-3 p-6">
         {Object.entries(PredefinedColorList).map((color) => (
           <li
             key={`ColorChooser${color[1]}`}

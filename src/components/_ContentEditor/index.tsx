@@ -42,6 +42,7 @@ import type { LuciaSession } from '~/types/LuciaSession';
 import type Mux from '~/types/Mux';
 import { getContentEditorHighlighter } from '~/utils/shikiji/OneDarkPro';
 
+import { withMarker } from '~/components/_ContentEditor/Marker';
 import SmallCircleNav from '~/components/_ContentEditor/SmallCircleNav';
 import './SmallCircleNav.css';
 
@@ -152,9 +153,7 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue ?? //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
-  //     codeInput: "",
-  //     isCode: true,
+  const normalizedInitialValue = initialValue ?? //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //     astLang: "js",
   //     formName: "test2",
   //     quizTitle: "Question 2",
@@ -272,7 +271,7 @@ const ContentEditorReact = ({
   const [editor] = useState(() =>
     withLists(schema)(
       withTrailingNewLine(
-        withQuizCode(withQuiz(withImages(withLink(withEmbeds(withReact(withHistory(createEditor())))))))
+        withQuizCode(withQuiz(withImages(withMarker(withLink(withEmbeds(withReact(withHistory(createEditor()))))))))
       )
     )
   );

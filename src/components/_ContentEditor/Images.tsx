@@ -187,15 +187,10 @@ export const ImageBlock = ({ attributes, children, element }: RenderElementProps
       <figure className="flex flex-col items-center justify-center gap-2" contentEditable={false}>
         <div
           style={{ height: `${height}px`, width: `${width}px` }}
-          className="flex items-center justify-center overflow-hidden [resize:both]"
+          className={'flex max-w-full items-center justify-center overflow-hidden [resize:both]'}
           ref={imageRef}
         >
-          <img
-            width={400}
-            height={400}
-            src={element.url}
-            className="max-h-full max-w-[95dvw] flex-auto object-contain"
-          />
+          <img width={400} height={400} src={element.url} className="max-h-full max-w-full flex-auto object-contain" />
         </div>
         <textarea
           ref={ref}

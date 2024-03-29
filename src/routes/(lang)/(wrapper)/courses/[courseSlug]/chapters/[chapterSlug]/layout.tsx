@@ -243,7 +243,7 @@ export default component$(() => {
                 <section class="mt-auto flex flex-col gap-3 pt-3">
                   <button
                     class="flex items-center"
-                    onClick$={() => {
+                    onClick$={(e, currentTarget) => {
                       setShowAllHighlights();
                     }}
                   >
@@ -456,6 +456,7 @@ export default component$(() => {
                         class="flex items-center"
                         onClick$={() => {
                           setShowAllHighlights();
+                          console.log('yo');
                         }}
                       >
                         <span class="inline-block w-[200px] text-left">Show all highlights</span>
