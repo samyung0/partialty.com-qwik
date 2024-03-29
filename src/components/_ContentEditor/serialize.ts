@@ -127,9 +127,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-             ${children}
-             <span id="${uuid}lower"></span>
+        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span>
              <span ${
                node.sync &&
                `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
@@ -167,9 +165,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-             ${children}
-             <span id="${uuid}lower"></span>
+        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span>
              <span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>
            </span>`;
       } else {
@@ -194,9 +190,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">
-             ${children}
-             <span id="${uuid}lower"></span>
+        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span>
            </span>`;
       }
       return str;
