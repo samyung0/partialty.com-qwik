@@ -256,7 +256,7 @@ export default component$(() => {
           </nav>
           {showSideNav.value && (
             <nav
-              class="fixed left-0 top-0 z-[9999] flex h-[100vh] w-[100vw] justify-start backdrop-blur-md lg:hidden"
+              class="fixed left-0 top-0 z-[9999] flex h-[100dvh] w-[100vw] justify-start backdrop-blur-md lg:hidden"
               onClick$={() => {
                 showSideNav.value = false;
               }}
