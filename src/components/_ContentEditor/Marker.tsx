@@ -18,7 +18,7 @@ export const withMarker = (editor: Editor) => {
 };
 
 export const MarkerUnderlineElement = ({ attributes, children, element }: RenderElementProps) => {
-  const style = { backgroundColor: 'inherit', color: 'inherit', whiteSpace: 'nowrap' };
+  const style = { backgroundColor: 'inherit', color: 'inherit' };
   const uuid = 'a' + v4();
   children = (
     <span>
@@ -85,7 +85,7 @@ export const MarkerBackgroundElement = ({ attributes, children, element }: Rende
 };
 
 export const MarkerColorElement = ({ attributes, children, element }: RenderElementProps) => {
-  const style = { backgroundColor: 'inherit', color: 'inherit', whiteSpace: 'nowrap' };
+  const style = { backgroundColor: 'inherit', color: 'inherit' };
   const uuid = 'a' + v4();
   children = (
     <span>

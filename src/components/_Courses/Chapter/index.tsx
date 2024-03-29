@@ -84,6 +84,7 @@ export default component$(() => {
   });
   return currentChapter ? (
     <QwikContent
+      isGuide={course.content_index.is_guide}
       lastEdited={currentChapter.updated_at}
       innerHTML={currentChapter.renderedHTML || undefined}
       audioTrack={audioTrack.value}

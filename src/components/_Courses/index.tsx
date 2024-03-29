@@ -289,7 +289,7 @@ export default component$(() => {
                 prefetch
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
               >
-                Start Course Now :D
+                Start {course.content_index.is_guide ? 'Guide' : 'Course'} Now :D
               </Link>
             )}
             {course.content_user_progress !== null && (
@@ -298,7 +298,7 @@ export default component$(() => {
                 prefetch
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
               >
-                Continue Course :D
+                Continue {course.content_index.is_guide ? 'Guide' : 'Course'} :D
               </Link>
             )}
             <div class="flex flex-col gap-3 p-3 px-0 pt-0 md:gap-4 md:p-4 md:pt-0">

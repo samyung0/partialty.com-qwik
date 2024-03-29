@@ -394,7 +394,7 @@ export const ColorMarkButton = ({
 };
 
 export const TextMarkButton = ({ children }: { children: React.ReactNode }) => {
-  const defaultSize = useRef(18);
+  const defaultSize = useRef(16);
   const defaultFamily = useRef('Varela_Round');
   const defaultSpacing = useRef(0);
   const editor = useSlate();

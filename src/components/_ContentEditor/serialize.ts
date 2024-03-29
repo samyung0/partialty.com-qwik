@@ -127,10 +127,10 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span><span ${
-               node.sync &&
-               `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
-             } id="${uuid}upper"></span></span>`;
+        str += `<span style="position:relative;background:inherit;color:inherit; white-space: nowrap;">${children}<span id="${uuid}lower"></span><span ${
+          node.sync &&
+          `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+        } id="${uuid}upper"></span></span>`;
       } else if (node.sync) {
         str += `
          <style>
@@ -163,30 +163,23 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span><span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>/span>`;
+        str += `<span style="position:relative;background:inherit;color:inherit;white-space: nowrap;">${children}<span id="${uuid}lower"></span><span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>/span>`;
       } else {
         str += `
          <style>
-        #${uuid}lower {
-          position: absolute;
-            top:100%;
-            left:0;
-            height:4px;
-            width:100%;
-            display:block;
-            background:${node.underline};
-            z-index: 0;
+        #${uuid} {
+          border-bottom: 4px solid ${node.underline};
         }
         ${
           node.underlineDarkMode
-            ? `.dark #${uuid}lower {
-          background: ${node.underlineDarkMode}
+            ? `.dark #${uuid} {
+              border-bottom: 4px solid ${node.underlineDarkMode};
         }`
             : ''
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;">${children}<span id="${uuid}lower"></span></span>`;
+        str += `<span id="${uuid}" style="position:relative;background:inherit;color:inherit;">${children}</span>`;
       }
       return str;
     }
@@ -243,9 +236,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
          </style>
          `;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;"><span style="position:relative;background:transparent;color:inherit;z-index:2;white-space:nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span><span ${
-              node.sync &&
-              `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
-            } id="${uuid}upper"></span></span></span>`;
+          node.sync &&
+          `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
+        } id="${uuid}upper"></span></span></span>`;
       } else if (node.sync) {
         str += `
           <style>
@@ -278,7 +271,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }
          </style>
          `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center"><span style="position:relative;background:transparent;color:inherit;z-index:2">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span><span
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;"><span style="position:relative;background:transparent;color:inherit;z-index:2;white-space: nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span><span
               data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "calc(100% + 8px)"}'
             id="${uuid}upper"></span></span></span>`;
       } else {
@@ -303,7 +296,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
          }
           </style>
           `;
-        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;"><span style="background:transparent;color:inherit;position:relative;z-index:2">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span></span></span>`;
+        str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space: nowrap;"><span style="background:transparent;color:inherit;position:relative;z-index:2;white-space: nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span></span></span>`;
       }
       return str;
     }

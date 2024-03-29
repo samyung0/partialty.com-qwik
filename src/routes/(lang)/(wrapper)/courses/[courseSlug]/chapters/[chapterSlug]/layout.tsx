@@ -211,8 +211,8 @@ export default component$(() => {
                           class={cn(
                             'relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ',
                             userProgress?.progress.includes(chapter.id) &&
-                              'text-mint-down after:block after:bg-mint dark:text-mint',
-                            isActive && 'text-deep-sea after:block after:bg-sea dark:text-sea'
+                              'text-dark-mint after:block after:bg-dark-mint dark:text-mint',
+                            isActive && 'text-deep-sea after:block after:bg-deep-sea dark:text-sea'
                           )}
                         >
                           <Link prefetch href={chapter.link || undefined}>
@@ -231,7 +231,7 @@ export default component$(() => {
                             </span>
                           </Link>
                           {userProgress?.progress.includes(chapter.id) && (
-                            <span class="text-[15px] text-mint-down dark:text-mint">
+                            <span class="text-[15px] text-dark-mint dark:text-mint">
                               <LuCheck />
                             </span>
                           )}
@@ -247,7 +247,7 @@ export default component$(() => {
                       setShowAllHighlights();
                     }}
                   >
-                    <span class="inline-block w-[200px] text-left">Show all highlights</span>
+                    <span class="inline-block w-[200px] text-left">Show audio highlights</span>
                     <Checkbox checked={chapterActions.showAllHighlights} />
                   </button>
                 </section>
@@ -421,9 +421,9 @@ export default component$(() => {
                               key={chapter.id}
                               class={cn(
                                 'relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ',
-                                isActive && 'text-deep-sea after:block after:bg-sea dark:text-sea',
+                                isActive && 'text-deep-sea after:block after:bg-deep-sea dark:text-sea',
                                 userProgress?.progress.includes(chapter.id) &&
-                                  'text-mint-down after:block after:bg-mint dark:text-mint'
+                                  'text-dark-mint after:block after:bg-dark-mint dark:text-mint'
                               )}
                             >
                               <Link prefetch href={chapter.link || undefined}>
@@ -442,7 +442,7 @@ export default component$(() => {
                                 </span>
                               </Link>
                               {userProgress?.progress.includes(chapter.id) && (
-                                <span class="text-[15px] text-mint-down dark:text-mint">
+                                <span class="text-[15px] text-dark-mint dark:text-mint">
                                   <LuCheck />
                                 </span>
                               )}
@@ -459,7 +459,7 @@ export default component$(() => {
                           console.log('yo');
                         }}
                       >
-                        <span class="inline-block w-[200px] text-left">Show all highlights</span>
+                        <span class="inline-block w-[200px] text-left">Show audio highlights</span>
                         <Checkbox checked={chapterActions.showAllHighlights} />
                       </button>
                     </section>

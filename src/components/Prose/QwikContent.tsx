@@ -20,6 +20,7 @@ export default component$(
     prevChapter,
     nextChapter,
     lastEdited,
+    isGuide
   }: {
     innerHTML: string | undefined;
     audioTrack:
@@ -37,6 +38,7 @@ export default component$(
     prevChapter?: string | undefined;
     nextChapter?: string | undefined;
     lastEdited: string;
+    isGuide: boolean
   }) => (
     <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
       <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
@@ -65,7 +67,7 @@ export default component$(
           </nav>
           {!nextChapter && (
             <p class="mx-auto w-[90%] max-w-[unset] items-center p-0 pb-6 text-center font-mosk text-sm font-bold tracking-wide md:w-[80%] md:text-base lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
-              🎉Congratulations. You have finished the course!
+              🎉Congratulations. You have finished the {isGuide ? "Guide" : "Course"}!
             </p>
           )}
         </div>
