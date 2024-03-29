@@ -3,6 +3,7 @@ import {
   $,
   component$,
   noSerialize,
+  useContext,
   useOnWindow,
   useSignal,
   useStore,
@@ -20,6 +21,7 @@ import LoadingSVG from '~/components/LoadingSVG';
 import { QwikMuxAudio } from '~/components/AudioPlayer/MuxPlayer';
 
 import isHotkey from 'is-hotkey';
+import { chapterContext } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
 interface PlayerState {
   playing: boolean;
@@ -51,6 +53,7 @@ export default component$(
   }: {
     audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
   }) => {
+    const chapterActions = useContext(chapterContext);
     const player = useStore<PlayerAPI>({
       playing: false,
       muted: false,
@@ -123,7 +126,7 @@ export default component$(
       if (!dataSync.value) return;
       for (let i = 0; i < dataSync.value.length; i++) {
         const timeStampToActivate = Number(dataSync.value[i].getAttribute('data-synctimestamp')) || 0;
-        if (player.displayCurrentTime >= timeStampToActivate) {
+        if (player.displayCurrentTime >= timeStampToActivate || chapterActions.showAllHighlights) {
           if (dataSync.value[i].getAttribute('data-syncactivated') === '1') continue;
           let enter: any = {};
           try {
@@ -152,7 +155,7 @@ export default component$(
     useVisibleTask$(
       () => {
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
-        // sync();
+        sync();
       },
       { strategy: 'document-ready' }
     );

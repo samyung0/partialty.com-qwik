@@ -74,9 +74,12 @@ export default component$(() => {
   const saveProress = $(async () => {
     if (!userProgress || !userNullable || !currentChapter) return;
     console.log('saving Progress');
-    const newProgress = userProgress.progress;
+    const newProgress = [...userProgress.progress];
     if (!userProgress.progress.includes(currentChapter.id)) newProgress.push(currentChapter.id);
-    const notFinished = course.content_index.chapter_order.filter((id) => !newProgress.includes(id)).length > 0;
+    const notFinished =
+      course.content_index.chapter_order
+        .filter((id) => !!chapters.find((chapter) => chapter.id === id))
+        .filter((id) => !newProgress.includes(id)).length > 0;
     await saveProgressServer([...newProgress], course.content_index.id, userNullable.userId, notFinished);
   });
   return currentChapter ? (

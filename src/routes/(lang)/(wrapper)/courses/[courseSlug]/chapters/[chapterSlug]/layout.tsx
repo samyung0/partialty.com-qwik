@@ -1,4 +1,14 @@
-import { $, Slot, component$, useContext, useSignal } from '@builder.io/qwik';
+import {
+  $,
+  Slot,
+  component$,
+  createContextId,
+  useContext,
+  useContextProvider,
+  useOnDocument,
+  useSignal,
+  useStore,
+} from '@builder.io/qwik';
 import { Link, removeClientDataCache, routeLoader$, server$, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { eq } from 'drizzle-orm';
 import SmallNav from '~/components/SmallNav';
@@ -27,6 +37,7 @@ import {
 import { v4 } from 'uuid';
 import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
+import Checkbox from '~/components/_Courses/Chapter/checkbox';
 import { themeContext } from '~/context/themeContext';
 import { cn } from '~/utils/cn';
 import type { ContentUserProgress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
@@ -97,6 +108,26 @@ const setThemeCookie = server$(function (theme: 'light' | 'dark') {
   });
 });
 
+const setShowAllHighlightsCookie = server$(function (value: boolean) {
+  this.cookie.set('showAllHighlights', value.toString(), {
+    path: '/',
+    maxAge: [7, 'days'],
+    httpOnly: false,
+    sameSite: 'lax',
+    secure: true,
+  });
+});
+
+const getShowAllHighlightsCookie = server$(function () {
+  return this.cookie.get('showAllHighlights')?.value;
+});
+
+interface ChapterActions {
+  showAllHighlights: boolean;
+}
+
+export const chapterContext = createContextId<ChapterActions>('chapterContext');
+
 export default component$(() => {
   const openSideNav = useSignal(false);
   const userNullable = useUserLoaderNullable().value;
@@ -114,14 +145,40 @@ export default component$(() => {
     removeClientDataCache();
     nav('/');
   });
+
+  const chapterActions = useStore<ChapterActions>({
+    showAllHighlights: false,
+  });
+
+  useContextProvider(chapterContext, chapterActions);
+
+  const setShowAllHighlights = $(() => {
+    const t = chapterActions.showAllHighlights;
+    setShowAllHighlightsCookie(!t).catch((e) => {
+      console.error(e);
+      chapterActions.showAllHighlights = t;
+    });
+    chapterActions.showAllHighlights = !t;
+  });
+
+  useOnDocument(
+    'qinit',
+    $(async () => {
+      const showAllHighlights = await getShowAllHighlightsCookie();
+      if (showAllHighlights === 'true') {
+        chapterActions.showAllHighlights = true;
+      }
+    })
+  );
+
   return (
     <>
       <section class="flex min-h-[100dvh] flex-col bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
         <div class="flex max-h-[100dvh] flex-1 flex-col lg:flex-row">
           <nav class="hidden max-h-[100dvh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
-            <div class="flex flex-col items-start gap-4 py-6">
+            <div class="flex h-full flex-col items-start gap-4 py-6">
               <SmallNav user={userNullable} />
-              <div class="flex flex-col gap-2 py-2 lg:gap-3 lg:py-4  ">
+              <div class="flex h-full w-full flex-col gap-2 py-2  lg:gap-3 lg:py-4">
                 <div class="flex flex-col">
                   <Link
                     href={'/catalog/'}
@@ -183,6 +240,17 @@ export default component$(() => {
                     })}
                   </ul>
                 )}
+                <section class="mt-auto flex flex-col gap-3 pt-3">
+                  <button
+                    class="flex items-center"
+                    onClick$={() => {
+                      setShowAllHighlights();
+                    }}
+                  >
+                    <span class="inline-block w-[200px] text-left">Show all highlights</span>
+                    <Checkbox checked={chapterActions.showAllHighlights} />
+                  </button>
+                </section>
               </div>
             </div>
           </nav>
@@ -205,7 +273,7 @@ export default component$(() => {
                 }
                 onClick$={(e) => e.stopPropagation()}
               >
-                <ul class="mx-auto flex w-[90%] flex-col gap-6 py-6">
+                <ul class="mx-auto flex h-full w-[90%] flex-col gap-6 py-6">
                   <li class="flex items-center gap-6">
                     <label class="flex cursor-pointer items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
                       <LuSun />
@@ -321,7 +389,7 @@ export default component$(() => {
                   <div class="flex w-[100%] justify-center">
                     <div class="h-[2px] w-[100%] bg-gray-300">&nbsp;</div>
                   </div>
-                  <li class="flex flex-col gap-1">
+                  <li class="flex h-full w-full flex-col gap-1">
                     <div class="flex flex-col">
                       <Link
                         href={'/catalog/'}
@@ -383,6 +451,17 @@ export default component$(() => {
                         })}
                       </ul>
                     )}
+                    <section class="mt-auto flex flex-col gap-3 pt-3">
+                      <button
+                        class="flex items-center"
+                        onClick$={() => {
+                          setShowAllHighlights();
+                        }}
+                      >
+                        <span class="inline-block w-[200px] text-left">Show all highlights</span>
+                        <Checkbox checked={chapterActions.showAllHighlights} />
+                      </button>
+                    </section>
                   </li>
                 </ul>
               </div>
