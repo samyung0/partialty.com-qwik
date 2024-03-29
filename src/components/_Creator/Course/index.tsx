@@ -23,6 +23,7 @@ import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 import verifyContentShareToken from '~/auth/verifyContentShareToken';
 import LoadingSVG from '~/components/LoadingSVG';
 import AddChapter from '~/components/_Creator/Course/AddChapter';
+import DropDownTransition from '~/components/_Creator/Course/DropDownTransition';
 import EditChapter from '~/components/_Creator/Course/EditChapter';
 import GetCode from '~/components/_Creator/Course/GetCode';
 import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
@@ -1057,116 +1058,97 @@ export default component$(
                                       </svg>
                                     </button>
                                   </div>
-                                  {courses[currentCourse.id].openedCourseActions && (
-                                    <div
-                                      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
-                                      role="menu"
-                                      aria-orientation="vertical"
-                                      aria-labelledby={'menu-button-course' + currentCourse.id}
-                                      tabIndex={-1}
-                                    >
-                                      <div class="flex flex-col py-1 [&>button]:text-left" role="none">
-                                        <a
-                                          target="_blank"
-                                          href={`/creator/edit-course/${currentCourse.id}/`}
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-0' + currentCourse.id}
-                                          onClick$={(e) => e.stopPropagation()}
-                                        >
-                                          Edit Settings
-                                        </a>
-                                        <a
-                                          target="_blank"
-                                          href={courses[currentCourse.id].link!}
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-1' + currentCourse.id}
-                                          onClick$={(e) => e.stopPropagation()}
-                                        >
-                                          View Course
-                                        </a>
-                                        <button
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-2' + currentCourse.id}
-                                          onClick$={(e) => {
-                                            e.stopPropagation();
-                                            handleLockUnlockCourse(currentCourse.id, user.userId);
-                                          }}
-                                        >
-                                          {courses[currentCourse.id].is_locked && <span>Unlock Course</span>}
-                                          {!courses[currentCourse.id].is_locked && <span>Lock Course</span>}
-                                        </button>
-                                        <button
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-3' + currentCourse.id}
-                                          onClick$={(e) => {
-                                            e.stopPropagation();
-                                            if (
-                                              courses[currentCourse.id].is_locked &&
-                                              user.userId !== courses[currentCourse.id].author &&
-                                              user.role !== 'admin'
-                                            )
-                                              return alert('The Course is locked! You cannot add a chapter!.');
+                                  <DropDownTransition
+                                    open={courses[currentCourse.id].openedCourseActions}
+                                    class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+                                    role="menu"
+                                    aria-orientation="vertical"
+                                    aria-labelledby={'menu-button-course' + currentCourse.id}
+                                    tabIndex={-1}
+                                  >
+                                    <div class="flex flex-col py-1 [&>button]:text-left" role="none">
+                                      <a
+                                        target="_blank"
+                                        href={`/creator/edit-course/${currentCourse.id}/`}
+                                        class="block px-4 py-2 text-sm "
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        id={'menu-item-0' + currentCourse.id}
+                                        onClick$={(e) => e.stopPropagation()}
+                                      >
+                                        Edit Settings
+                                      </a>
+                                      <a
+                                        target="_blank"
+                                        href={courses[currentCourse.id].link!}
+                                        class="block px-4 py-2 text-sm "
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        id={'menu-item-1' + currentCourse.id}
+                                        onClick$={(e) => e.stopPropagation()}
+                                      >
+                                        View Course
+                                      </a>
+                                      <button
+                                        class="block px-4 py-2 text-sm "
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        id={'menu-item-2' + currentCourse.id}
+                                        onClick$={(e) => {
+                                          e.stopPropagation();
+                                          handleLockUnlockCourse(currentCourse.id, user.userId);
+                                        }}
+                                      >
+                                        {courses[currentCourse.id].is_locked && <span>Unlock Course</span>}
+                                        {!courses[currentCourse.id].is_locked && <span>Lock Course</span>}
+                                      </button>
+                                      <button
+                                        class="block px-4 py-2 text-sm "
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        id={'menu-item-3' + currentCourse.id}
+                                        onClick$={(e) => {
+                                          e.stopPropagation();
+                                          if (
+                                            courses[currentCourse.id].is_locked &&
+                                            user.userId !== courses[currentCourse.id].author &&
+                                            user.role !== 'admin'
+                                          )
+                                            return alert('The Course is locked! You cannot add a chapter!.');
 
-                                            showAddChapter.value = true;
-                                            showAddCourseId.value = currentCourse.id;
-                                          }}
-                                        >
-                                          Add Chapter
-                                        </button>
-                                        {!courses[currentCourse.id].courseApproval.ready_for_approval &&
-                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
-                                            <button
-                                              class="block px-4 py-2 text-sm "
-                                              role="menuitem"
-                                              tabIndex={-1}
-                                              id={'menu-item-4' + currentCourse.id}
-                                              onClick$={(e) => {
-                                                e.stopPropagation();
-                                                handlePublish(currentCourse.id, user.userId);
-                                              }}
-                                            >
-                                              {courses[currentCourse.id].isPublishing && (
-                                                <span>
-                                                  <LoadingSVG />
-                                                </span>
-                                              )}
-                                              {!courses[currentCourse.id].isPublishing && <span>Publish Course</span>}
-                                            </button>
-                                          )}
-                                        {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
-                                            <button
-                                              class="block px-4 py-2 text-sm "
-                                              role="menuitem"
-                                              tabIndex={-1}
-                                              id={'menu-item-5' + currentCourse.id}
-                                              onClick$={(e) => {
-                                                e.stopPropagation();
-                                                handleUnpublish(currentCourse.id, user.userId);
-                                              }}
-                                            >
-                                              {courses[currentCourse.id].isPublishing && (
-                                                <span>
-                                                  <LoadingSVG />
-                                                </span>
-                                              )}
-                                              {!courses[currentCourse.id].isPublishing && <span>Cancel Publish</span>}
-                                            </button>
-                                          )}
-                                        {courses[currentCourse.id].courseApproval.status === 'approved' && (
+                                          showAddChapter.value = true;
+                                          showAddCourseId.value = currentCourse.id;
+                                        }}
+                                      >
+                                        Add Chapter
+                                      </button>
+                                      {!courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                        courses[currentCourse.id].courseApproval.status === 'pending' && (
                                           <button
                                             class="block px-4 py-2 text-sm "
                                             role="menuitem"
                                             tabIndex={-1}
-                                            id={'menu-item-6' + currentCourse.id}
+                                            id={'menu-item-4' + currentCourse.id}
+                                            onClick$={(e) => {
+                                              e.stopPropagation();
+                                              handlePublish(currentCourse.id, user.userId);
+                                            }}
+                                          >
+                                            {courses[currentCourse.id].isPublishing && (
+                                              <span>
+                                                <LoadingSVG />
+                                              </span>
+                                            )}
+                                            {!courses[currentCourse.id].isPublishing && <span>Publish Course</span>}
+                                          </button>
+                                        )}
+                                      {courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                        courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                          <button
+                                            class="block px-4 py-2 text-sm "
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            id={'menu-item-5' + currentCourse.id}
                                             onClick$={(e) => {
                                               e.stopPropagation();
                                               handleUnpublish(currentCourse.id, user.userId);
@@ -1177,31 +1159,49 @@ export default component$(
                                                 <LoadingSVG />
                                               </span>
                                             )}
-                                            {!courses[currentCourse.id].isPublishing && <span>Unpublish Course</span>}
+                                            {!courses[currentCourse.id].isPublishing && <span>Cancel Publish</span>}
                                           </button>
                                         )}
-                                        {courses[currentCourse.id].courseApproval.status === 'need_amendment' && (
-                                          <button
-                                            class="block px-4 py-2 text-sm "
-                                            role="menuitem"
-                                            tabIndex={-1}
-                                            id={'menu-item-7' + currentCourse.id}
-                                            onClick$={(e) => {
-                                              e.stopPropagation();
-                                              handleAmendment(currentCourse.id, user.userId);
-                                            }}
-                                          >
-                                            {courses[currentCourse.id].isPublishing && (
-                                              <span>
-                                                <LoadingSVG />
-                                              </span>
-                                            )}
-                                            {!courses[currentCourse.id].isPublishing && <span>Publish Again</span>}
-                                          </button>
-                                        )}
-                                      </div>
+                                      {courses[currentCourse.id].courseApproval.status === 'approved' && (
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-6' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            handleUnpublish(currentCourse.id, user.userId);
+                                          }}
+                                        >
+                                          {courses[currentCourse.id].isPublishing && (
+                                            <span>
+                                              <LoadingSVG />
+                                            </span>
+                                          )}
+                                          {!courses[currentCourse.id].isPublishing && <span>Unpublish Course</span>}
+                                        </button>
+                                      )}
+                                      {courses[currentCourse.id].courseApproval.status === 'need_amendment' && (
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-7' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            handleAmendment(currentCourse.id, user.userId);
+                                          }}
+                                        >
+                                          {courses[currentCourse.id].isPublishing && (
+                                            <span>
+                                              <LoadingSVG />
+                                            </span>
+                                          )}
+                                          {!courses[currentCourse.id].isPublishing && <span>Publish Again</span>}
+                                        </button>
+                                      )}
                                     </div>
-                                  )}
+                                  </DropDownTransition>
                                 </div>
                               </div>
                             </div>
@@ -1551,155 +1551,153 @@ export default component$(
                                                         </svg>
                                                       </button>
                                                     </div>
-                                                    {courses[currentCourse.id].openedChaptersActions === chapter.id && (
-                                                      <div
-                                                        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
-                                                        role="menu"
-                                                        aria-orientation="vertical"
-                                                        aria-labelledby={'menu-button-chapter' + chapter.id}
-                                                        tabIndex={-1}
-                                                      >
-                                                        <div
-                                                          class="flex flex-col py-1 [&>button]:text-left"
-                                                          role="none"
+                                                    <DropDownTransition
+                                                      open={
+                                                        courses[currentCourse.id].openedChaptersActions === chapter.id
+                                                      }
+                                                      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+                                                      role="menu"
+                                                      aria-orientation="vertical"
+                                                      aria-labelledby={'menu-button-chapter' + chapter.id}
+                                                      tabIndex={-1}
+                                                    >
+                                                      <div class="flex flex-col py-1 [&>button]:text-left" role="none">
+                                                        <button
+                                                          class="block px-4 py-2 text-sm "
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-0' + chapter.id}
+                                                          onClick$={() =>
+                                                            handleEditChapter(chapter.id, currentCourse.id)
+                                                          }
                                                         >
-                                                          <button
-                                                            class="block px-4 py-2 text-sm "
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-0' + chapter.id}
-                                                            onClick$={() =>
-                                                              handleEditChapter(chapter.id, currentCourse.id)
-                                                            }
-                                                          >
-                                                            Edit Content
-                                                          </button>
-                                                          <button
-                                                            class="block px-4 py-2 text-sm "
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-1' + chapter.id}
-                                                            onClick$={() => {
-                                                              if (
-                                                                courses[currentCourse.id].is_locked &&
-                                                                user.userId !== courses[currentCourse.id].author &&
-                                                                user.role !== 'admin'
-                                                              )
-                                                                return alert(
-                                                                  'Course is locked! You cannot edit a chapter.'
-                                                                );
-                                                              showEditChapter.value = true;
-                                                              showEditChapterId.value = chapter.id;
-                                                              showEditCourseId.value = currentCourse.id;
-                                                            }}
-                                                          >
-                                                            Edit Settings
-                                                          </button>
-                                                          <button
-                                                            class="block px-4 py-2 text-sm "
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-2' + chapter.id}
-                                                            onClick$={() => {
-                                                              if (
-                                                                courses[currentCourse.id].is_locked &&
-                                                                user.userId !== courses[currentCourse.id].author &&
-                                                                user.role !== 'admin'
-                                                              )
-                                                                return alert(
-                                                                  'The Course is locked! You cannot move a chapter.'
-                                                                );
-                                                              handleMoveContentUp(
-                                                                chapter.id,
-                                                                currentCourse.id,
-                                                                courses[currentCourse.id].chapter_order
+                                                          Edit Content
+                                                        </button>
+                                                        <button
+                                                          class="block px-4 py-2 text-sm "
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-1' + chapter.id}
+                                                          onClick$={() => {
+                                                            if (
+                                                              courses[currentCourse.id].is_locked &&
+                                                              user.userId !== courses[currentCourse.id].author &&
+                                                              user.role !== 'admin'
+                                                            )
+                                                              return alert(
+                                                                'Course is locked! You cannot edit a chapter.'
                                                               );
-                                                            }}
-                                                          >
-                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
-                                                              .movingUp ? (
-                                                              <span>
-                                                                <LoadingSVG />
-                                                              </span>
-                                                            ) : (
-                                                              <span>Move Up</span>
-                                                            )}
-                                                          </button>
-                                                          <button
-                                                            class="block px-4 py-2 text-sm "
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-3' + chapter.id}
-                                                            onClick$={() => {
-                                                              if (
-                                                                courses[currentCourse.id].is_locked &&
-                                                                user.userId !== courses[currentCourse.id].author &&
-                                                                user.role !== 'admin'
-                                                              )
-                                                                return alert(
-                                                                  'The Course is locked! You cannot move a chapter.'
-                                                                );
-                                                              handleMoveContentDown(
-                                                                chapter.id,
-                                                                currentCourse.id,
-                                                                courses[currentCourse.id].chapter_order
+                                                            showEditChapter.value = true;
+                                                            showEditChapterId.value = chapter.id;
+                                                            showEditCourseId.value = currentCourse.id;
+                                                          }}
+                                                        >
+                                                          Edit Settings
+                                                        </button>
+                                                        <button
+                                                          class="block px-4 py-2 text-sm "
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-2' + chapter.id}
+                                                          onClick$={() => {
+                                                            if (
+                                                              courses[currentCourse.id].is_locked &&
+                                                              user.userId !== courses[currentCourse.id].author &&
+                                                              user.role !== 'admin'
+                                                            )
+                                                              return alert(
+                                                                'The Course is locked! You cannot move a chapter.'
                                                               );
-                                                            }}
-                                                          >
-                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
-                                                              .movingDown ? (
-                                                              <span>
-                                                                <LoadingSVG />
-                                                              </span>
-                                                            ) : (
-                                                              <span>Move Down</span>
-                                                            )}
-                                                          </button>
-                                                          <button
-                                                            class="block px-4 py-2 text-sm "
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-4' + chapter.id}
-                                                            onClick$={() =>
-                                                              handleLockUnlockChapter(
-                                                                chapter.id,
-                                                                currentCourse.id,
-                                                                user.userId
-                                                              )
-                                                            }
-                                                          >
-                                                            {chapter.is_locked && <span>Unlock Chapter</span>}
-                                                            {!chapter.is_locked && <span>Lock Chapter</span>}
-                                                          </button>
-                                                          <button
-                                                            class="block px-4 py-2 text-sm text-tomato"
-                                                            role="menuitem"
-                                                            tabIndex={-1}
-                                                            id={'menu-item-5' + chapter.id}
-                                                            onClick$={() => {
-                                                              if (
-                                                                courses[currentCourse.id].is_locked &&
-                                                                user.userId !== courses[currentCourse.id].author &&
-                                                                user.role !== 'admin'
-                                                              )
-                                                                return alert(
-                                                                  'The Course is locked! You cannot delete a chapter.'
-                                                                );
-                                                              handleDeleteContent(chapter.id, currentCourse.id);
-                                                            }}
-                                                          >
-                                                            {courses[currentCourse.id].chaptersMap[chapter.id]
-                                                              .isDeleting ? (
-                                                              <span>
-                                                                <LoadingSVG />
-                                                              </span>
-                                                            ) : (
-                                                              <span>Delete Chapter</span>
-                                                            )}
-                                                          </button>
-                                                        </div>
+                                                            handleMoveContentUp(
+                                                              chapter.id,
+                                                              currentCourse.id,
+                                                              courses[currentCourse.id].chapter_order
+                                                            );
+                                                          }}
+                                                        >
+                                                          {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                            .movingUp ? (
+                                                            <span>
+                                                              <LoadingSVG />
+                                                            </span>
+                                                          ) : (
+                                                            <span>Move Up</span>
+                                                          )}
+                                                        </button>
+                                                        <button
+                                                          class="block px-4 py-2 text-sm "
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-3' + chapter.id}
+                                                          onClick$={() => {
+                                                            if (
+                                                              courses[currentCourse.id].is_locked &&
+                                                              user.userId !== courses[currentCourse.id].author &&
+                                                              user.role !== 'admin'
+                                                            )
+                                                              return alert(
+                                                                'The Course is locked! You cannot move a chapter.'
+                                                              );
+                                                            handleMoveContentDown(
+                                                              chapter.id,
+                                                              currentCourse.id,
+                                                              courses[currentCourse.id].chapter_order
+                                                            );
+                                                          }}
+                                                        >
+                                                          {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                            .movingDown ? (
+                                                            <span>
+                                                              <LoadingSVG />
+                                                            </span>
+                                                          ) : (
+                                                            <span>Move Down</span>
+                                                          )}
+                                                        </button>
+                                                        <button
+                                                          class="block px-4 py-2 text-sm "
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-4' + chapter.id}
+                                                          onClick$={() =>
+                                                            handleLockUnlockChapter(
+                                                              chapter.id,
+                                                              currentCourse.id,
+                                                              user.userId
+                                                            )
+                                                          }
+                                                        >
+                                                          {chapter.is_locked && <span>Unlock Chapter</span>}
+                                                          {!chapter.is_locked && <span>Lock Chapter</span>}
+                                                        </button>
+                                                        <button
+                                                          class="block px-4 py-2 text-sm text-tomato"
+                                                          role="menuitem"
+                                                          tabIndex={-1}
+                                                          id={'menu-item-5' + chapter.id}
+                                                          onClick$={() => {
+                                                            if (
+                                                              courses[currentCourse.id].is_locked &&
+                                                              user.userId !== courses[currentCourse.id].author &&
+                                                              user.role !== 'admin'
+                                                            )
+                                                              return alert(
+                                                                'The Course is locked! You cannot delete a chapter.'
+                                                              );
+                                                            handleDeleteContent(chapter.id, currentCourse.id);
+                                                          }}
+                                                        >
+                                                          {courses[currentCourse.id].chaptersMap[chapter.id]
+                                                            .isDeleting ? (
+                                                            <span>
+                                                              <LoadingSVG />
+                                                            </span>
+                                                          ) : (
+                                                            <span>Delete Chapter</span>
+                                                          )}
+                                                        </button>
                                                       </div>
-                                                    )}
+                                                    </DropDownTransition>
                                                   </div>
                                                 </div>
                                               </li>
