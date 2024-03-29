@@ -33,7 +33,7 @@
     "db:prod:migrate": "cd ./drizzle_turso && bun migrate.prod.ts",
     "db:prod:pull": "drizzle-kit introspect:sqlite --config drizzle_turso/drizzle.prod.config.ts",
     "deploy": "netlify deploy --build",
-    "dev": "concurrently -c \"auto\" --handle-input \"vite --mode ssr\" \"bun --hot bun/index.ts\" \"bunx astro dev --root ./astro_embed\"",
+    "dev": "concurrently -c \"auto\" --handle-input \"vite --mode ssr\" \"bun --hot bun/index.ts\"",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "dev:email": "email dev",
     "dev:server": "bun --watch bun/index.ts",
