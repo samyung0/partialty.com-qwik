@@ -387,21 +387,21 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                   </div>
                   ${children}
                 </blockquote>`;
-
+                // id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}
     case 'heading-one':
-      return `<h1 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
+      return `<h1 style="${style}">
           ${children}
         </h1>`;
     case 'heading-two':
-      return `<h2 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
+      return `<h2 style="${style}">
           ${children}
         </h2>`;
     case 'heading-three':
-      return `<h3 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
+      return `<h3 style="${style}">
           ${children}
         </h3>`;
     case 'heading-four':
-      return `<h4 style="${style}" id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}">
+      return `<h4 style="${style}">
           ${children}
         </h4>`;
     case 'list-item':
