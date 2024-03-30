@@ -190,10 +190,10 @@ export default component$(() => {
                     </span>
                   </Link>
                   {preview && <p class="font-mosk text-xs tracking-wide text-deep-sea lg:text-sm">Preview Mode</p>}
-                  {!preview && course.content_index.is_private && (
+                  {!preview && !course.content_index.is_private && (
                     <p class="font-mosk text-xs tracking-wide text-deep-sea ">Public</p>
                   )}
-                  {!preview && !course.content_index.is_private && (
+                  {!preview && course.content_index.is_private && (
                     <p class="dark:text-pink font-mosk text-xs tracking-wide text-tomato">Private</p>
                   )}
 
@@ -401,10 +401,10 @@ export default component$(() => {
                         </span>
                       </Link>
                       {preview && <p class="font-mosk text-xs tracking-wide text-deep-sea lg:text-sm">Preview Mode</p>}
-                      {!preview && course.content_index.is_private && (
+                      {!preview && !course.content_index.is_private && (
                         <p class="font-mosk text-xs tracking-wide text-deep-sea ">Public</p>
                       )}
-                      {!preview && !course.content_index.is_private && (
+                      {!preview && course.content_index.is_private && (
                         <p class="dark:text-pink font-mosk text-xs tracking-wide text-tomato">Private</p>
                       )}
 
