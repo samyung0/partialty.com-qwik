@@ -23,6 +23,10 @@ export const head: DocumentHead = ({ resolveValue }) => {
 
 export const onStaticGenerate: StaticGenerateHandler = async () => {
   return {
-    params: [],
+    params: [
+      {
+        courseSlug: 'setting-up-a-local-server',
+      },
+    ],
   };
 };

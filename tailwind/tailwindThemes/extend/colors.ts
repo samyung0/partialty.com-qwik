@@ -18,7 +18,7 @@ export default {
     'light-mint': '#e2f8f2',
     'mint-up': '#a5d4bb',
     'mint-down': '#55af96',
-    "dark-mint": "#25a78b",
+    'dark-mint': '#25a78b',
     lilac: '#ae8fdb',
     'middle-lilac': '#CFBCEA',
     'light-lilac': '#efe9f8',

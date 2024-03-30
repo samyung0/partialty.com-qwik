@@ -33,7 +33,7 @@ export default component$(
     const nav = useNavigate();
     return (
       <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
-        <div class="relative flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
+        <div class="relative flex max-h-[90dvh] w-full items-start justify-center overflow-auto rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px] ">
           <button
             class="absolute left-3 top-3 cursor-pointer text-[20px] text-primary-dark-gray dark:text-background-light-gray md:left-6 md:top-6 md:text-[25px]"
             onClick$={() => formSteps.value--}

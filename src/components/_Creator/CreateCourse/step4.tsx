@@ -245,6 +245,18 @@ export const AddTag = component$(
   }
 );
 
+function remove_duplicates_safe(arr: any[]) {
+  const seen: any = {};
+  const ret_arr: any = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (!(arr[i].id in seen)) {
+      ret_arr.push(arr[i]);
+      seen[arr[i].id] = true;
+    }
+  }
+  return ret_arr;
+}
+
 export default component$(
   ({
     courseData,
@@ -256,7 +268,10 @@ export default component$(
     createdTags: Tag[];
   }) => {
     const _tags = useTags().value.filter((_tag) => _tag.approved);
-    const tags = useStore(() => [..._tags, ...createdTags]);
+    const tags = useStore(() => {
+      const t = [..._tags, ...createdTags];
+      return remove_duplicates_safe(t) as Tag[];
+    });
     const loading = useSignal(false);
     const showAddTag = useSignal(false);
 

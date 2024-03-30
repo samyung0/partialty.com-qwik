@@ -16,7 +16,13 @@ const checkExistingCourse = server$(async function (slug: string) {
 });
 
 const schema = z.object({
-  name: z.string().trim().min(2, 'A name is required').max(70, 'Name is too long (max. 70 chars)'),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'A name is required')
+    .max(70, 'Name is too long (max. 70 chars)')
+    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
+    .regex(/^[a-za-z0-9]+[-a-zA-Z]*[a-za-z0-9]+$/, 'No special characters except hyphens are allowed'),
 });
 
 export default component$(

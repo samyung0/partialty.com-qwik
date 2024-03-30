@@ -25,7 +25,7 @@ export default extendConfig(baseConfig, () => {
             '/signup',
             '/login',
             // '/courses',
-            '/courses/*/chapters',
+            // '/courses/*/chapters',
             '/catalog',
             '/unauth',
             '/purchase',

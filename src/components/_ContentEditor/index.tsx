@@ -153,8 +153,7 @@ const ContentEditorReact = ({
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
 }) => {
-  const normalizedInitialValue = initialValue ?? //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
-  //     astLang: "js",
+  const normalizedInitialValue = initialValue ?? //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //     formName: "test2",
   //     quizTitle: "Question 2",
   //     removeTrailingSpaces: true,

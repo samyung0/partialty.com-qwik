@@ -12,6 +12,7 @@ import {
   LuLogOut,
   LuMoon,
   LuPencilLine,
+  LuShield,
   LuSun,
   LuUser2,
   LuX,
@@ -218,6 +219,16 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
                       </Link>
                     </li>
                   )}
+                  {login.user.role === 'admin' && (
+                    <li>
+                      <Link prefetch href="/admin/courseapproval/" class="flex items-center gap-4">
+                        <span class="whitespace-nowrap">Admin</span>
+                        <span class="text-[20px]">
+                          <LuShield />
+                        </span>
+                      </Link>
+                    </li>
+                  )}
                   <li>
                     <button onClick$={handleLogout} class="flex items-center gap-4">
                       <span>Logout</span>
@@ -374,6 +385,16 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
                             <LuPencilLine />
                           </span>
                           <span class="whitespace-nowrap">Creator</span>
+                        </Link>
+                      </li>
+                    )}
+                    {login.user.role === 'admin' && (
+                      <li>
+                        <Link prefetch href="/admin/courseapproval/" class="flex items-center gap-3">
+                          <span class="text-[25px]">
+                            <LuShield />
+                          </span>
+                          <span class="whitespace-nowrap">Admin</span>
                         </Link>
                       </li>
                     )}

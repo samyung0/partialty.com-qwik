@@ -333,7 +333,7 @@ export default component$(
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
             openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
-            openedCourseActions: !!courses[content_index.id]?.openedChaptersActions,
+            openedCourseActions: !!courses[content_index.id]?.openedCourseActions,
             lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
             lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
             lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
@@ -349,7 +349,7 @@ export default component$(
             courseApproval: course_approval,
             isPublishing: courses[content_index.id]?.isPublishing || false,
             openedChaptersActions: courses[content_index.id]?.openedChaptersActions,
-            openedCourseActions: !!courses[content_index.id]?.openedChaptersActions,
+            openedCourseActions: !!courses[content_index.id]?.openedCourseActions,
             lockUnlockContentIndexCallback: courses[content_index.id]?.lockUnlockContentIndexCallback,
             lockContentIndexTimeout: courses[content_index.id]?.lockContentIndexTimeout,
             lockContentIndexError: courses[content_index.id]?.lockContentIndexError,
@@ -604,6 +604,7 @@ export default component$(
         alert('Something went wrong! Please refresh the page and try again or contact support!');
       }
       courses[courseId].isPublishing = false;
+      nav();
     });
 
     const handleAmendment = $(async (courseId: string, userId: string) => {
@@ -621,6 +622,7 @@ export default component$(
         alert('Something went wrong! Please refresh the page and try again or contact support!');
       }
       courses[courseId].isPublishing = false;
+      nav();
     });
 
     const handleUnpublish = $(async (courseId: string, userId: string) => {
@@ -638,6 +640,7 @@ export default component$(
         alert('Something went wrong! Please refresh the page and try again or contact support!');
       }
       courses[courseId].isPublishing = false;
+      nav();
     });
 
     const handleLockUnlockChapter = $(async (chapterId: string, courseId: string, userId: string) => {
@@ -1087,7 +1090,7 @@ export default component$(
                                         id={'menu-item-1' + currentCourse.id}
                                         onClick$={(e) => e.stopPropagation()}
                                       >
-                                        View Course
+                                        View {courses[currentCourse.id].is_guide ? 'Guide' : 'Course'}
                                       </a>
                                       <button
                                         class="block px-4 py-2 text-sm "

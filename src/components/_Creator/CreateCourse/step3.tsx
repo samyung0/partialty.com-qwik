@@ -244,6 +244,18 @@ export const AddCategory = component$(
   }
 );
 
+function remove_duplicates_safe(arr: any[]) {
+  const seen: any = {};
+  const ret_arr: any = [];
+  for (let i = 0; i < arr.length; i++) {
+    if (!(arr[i].id in seen)) {
+      ret_arr.push(arr[i]);
+      seen[arr[i].id] = true;
+    }
+  }
+  return ret_arr;
+}
+
 export default component$(
   ({
     courseData,
@@ -261,7 +273,12 @@ export default component$(
     formSteps: Signal<number>;
   }) => {
     const _categories = useCategories().value.filter((cat) => cat.approved);
-    const categories = useStore(() => (createdCategory.value ? [..._categories, createdCategory.value] : _categories));
+    const categories = useStore(() => {
+      if (createdCategory.value) {
+        const t = [..._categories, createdCategory.value];
+        return remove_duplicates_safe(t) as ContentCategory[];
+      } else return _categories;
+    });
     const loading = useSignal(false);
     const showAddCategory = useSignal(false);
 

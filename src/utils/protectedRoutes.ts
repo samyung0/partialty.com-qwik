@@ -28,6 +28,11 @@ export const protectedRoutes: {
     redirectTo: '/unauth/',
   },
   {
+    path: '/admin',
+    authRolesPermitted: ['admin'],
+    redirectTo: '/unauth/',
+  },
+  {
     path: '/login',
     authRolesPermitted: [], // anything but authenticated
     redirectTo: '/members/dashboard/', // if logged in, redirect to dashboard
