@@ -293,8 +293,16 @@ export default component$(() => {
               courseDataError={courseDataError}
               formSteps={formSteps}
               createdCategory={createdCategory}
+              isEditing
+              isPublished={approval[0].status === 'approved'}
             />
-            <Step4 courseData={courseData} formSteps={formSteps} createdTags={createdTags} />
+            <Step4
+              courseData={courseData}
+              formSteps={formSteps}
+              createdTags={createdTags}
+              isEditing
+              isPublished={approval[0].status === 'approved'}
+            />
             <Step5 courseData={courseData} formSteps={formSteps} />
             <Step6 courseData={courseData} formSteps={formSteps} isEditing={true} />
             <Step7

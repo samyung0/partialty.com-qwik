@@ -387,7 +387,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                   </div>
                   ${children}
                 </blockquote>`;
-                // id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}
+    // id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}
     case 'heading-one':
       return `<h1 style="${style}">
           ${children}

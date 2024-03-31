@@ -54,13 +54,13 @@ const addTagSchema = z.object({
   slug: z
     .string()
     .min(2, 'A slug is required')
-    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
-    .regex(/^[a-za-z0-9]+[-a-za-z0-9]*[a-za-z0-9]+$/, 'No special characters except hyphens are allowed'),
+    .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
+    .regex(/^[a-zA-Z0-9]+[-a-zA-Z0-9]*[a-zA-Z0-9]+$/, 'No special characters except hyphens are allowed'),
   link: z
     .string()
     .min(1, 'A link is required')
     .regex(/^\//, 'The link needs to start with a slash')
-    .regex(/^\/[a-za-z0-9]+[-?=&/a-za-z0-9]*$/, 'No special characters except -?=& are allowed'),
+    .regex(/^\/[a-zA-Z0-9]+[-?=&/a-zA-Z0-9]*$/, 'No special characters except -?=& are allowed'),
 });
 
 export const AddTag = component$(
@@ -262,10 +262,14 @@ export default component$(
     courseData,
     formSteps,
     createdTags,
+    isEditing = false,
+    isPublished = false,
   }: {
     courseData: NewContentIndex;
     formSteps: Signal<number>;
     createdTags: Tag[];
+    isEditing?: boolean;
+    isPublished?: boolean;
   }) => {
     const _tags = useTags().value.filter((_tag) => _tag.approved);
     const tags = useStore(() => {
@@ -309,7 +313,10 @@ export default component$(
               <br />
               <div class="flex flex-col items-center justify-center space-y-6">
                 <button
-                  onClick$={() => (showAddTag.value = true)}
+                  onClick$={() => {
+                    if (isEditing && isPublished) return window.alert('Cannot create tags after publishing!');
+                    showAddTag.value = true;
+                  }}
                   class="w-[250px] rounded-md bg-primary-dark-gray px-4 py-2 text-[0.875rem] text-background-light-gray md:w-[300px] md:px-6 md:text-[1rem]"
                 >
                   Add New Tag

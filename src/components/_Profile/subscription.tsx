@@ -3,7 +3,6 @@ import { server$ } from '@builder.io/qwik-city';
 
 import { eq } from 'drizzle-orm';
 import bunApp from '~/_api/bun/util/edenTreaty';
-import CheckIcon from '~/assets/svg/fitbit-check-small.svg';
 import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
 import drizzleClient from '~/utils/drizzleClient';
 import { profiles } from '../../../drizzle_turso/schema/profiles';
@@ -51,7 +50,8 @@ export default component$(() => {
       <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Subscription</h1>
       <div class="mt-1 h-[2px] w-full bg-primary-dark-gray dark:bg-background-light-gray lg:mt-3"></div>
       <div class="mt-6 flex flex-col items-center lg:mt-12">
-        <div class="flex flex-col items-center gap-1 lg:gap-3">
+        <p>Under Construction! You can support us by donating!</p>
+        {/* <div class="flex flex-col items-center gap-1 lg:gap-3">
           <p class=" font-mosk text-2xl font-bold lg:text-4xl">
             Want to <span class="highlight-mint dark:highlight-mint-down">learn more</span>?
           </p>
@@ -124,7 +124,7 @@ export default component$(() => {
           {user.role === 'teacher' && (
             <p class="text-base dark:text-background-light-gray lg:text-sm">You have a teacher role!</p>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

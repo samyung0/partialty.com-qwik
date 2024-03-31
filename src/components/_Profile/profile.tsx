@@ -106,7 +106,7 @@ export default component$(() => {
           nav();
         }}
       >
-        <div class="flex flex-col items-start text-lg tracking-wide xl:flex-row">
+        <div class="flex flex-col items-start pb-24 text-lg tracking-wide xl:flex-row">
           <div class="flex flex-col items-start gap-2 pb-4 lg:pb-10 xl:hidden">
             <label class="font-mosk text-lg font-bold lg:text-xl">Customize Avatar</label>
             <Dragndrop

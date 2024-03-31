@@ -32,7 +32,7 @@ export const AudioPlayer = component$<AudioPlayerProps>(({ startPlay, elapsedTim
   });
 
   return (
-    <div class="border-1 flex min-h-[40px] w-full max-w-[300px]  items-center justify-center self-center rounded-xl border-2  border-black px-3 md:min-h-[50px] md:w-[80%] md:max-w-[unset] lg:w-[60%] lg:p-3">
+    <div class="border-1 flex min-h-[40px] w-full max-w-[300px]  items-center justify-center self-center rounded-xl border-2  border-black px-3 md:min-h-[50px] md:w-[80%] md:max-w-[unset] lg:w-[60%] 2xl:p-3">
       <button
         onClick$={() => {
           isPlaying.value = !isPlaying.value;

@@ -5,8 +5,6 @@ import type { LuciaSession } from '~/types/LuciaSession';
 
 import {
   LuAlignJustify,
-  LuFile,
-  LuFileTerminal,
   LuFileText,
   LuHome,
   LuLogOut,
@@ -170,7 +168,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
                   </span>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link prefetch href={'/catalog/?type=project'} class="flex items-center gap-4">
                   Projects
                   <span
@@ -195,7 +193,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
                     <LuFileTerminal />
                   </span>
                 </Link>
-              </li>
+              </li> */}
               {login.isLoggedIn && login.user && (
                 <>
                   <div class="flex w-[100%] justify-center">
@@ -285,7 +283,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
                 {NavCourses}
               </div> */}
           </li>
-          <li class="px-2 py-2">
+          {/* <li class="px-2 py-2">
             <Link prefetch href={'/catalog/?type=project'}>
               Projects
             </Link>
@@ -294,7 +292,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined; dis
             <Link prefetch href={'/'}>
               Playground
             </Link>
-          </li>
+          </li> */}
           {!props.disableTheme && (
             <li class="ml-auto">
               <label class="flex cursor-pointer items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">

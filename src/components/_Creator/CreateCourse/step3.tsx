@@ -55,13 +55,13 @@ const addCategorySchema = z.object({
   slug: z
     .string()
     .min(2, 'A slug is required')
-    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
-    .regex(/^[a-za-z0-9]+[-a-zA-Z]*[a-za-z0-9]+$/, 'No special characters except hyphens are allowed'),
+    .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
+    .regex(/^[a-zA-Z0-9]+[-a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except hyphens are allowed'),
   link: z
     .string()
     .min(1, 'A link is required')
     .regex(/^\//, 'The link needs to start with a slash')
-    .regex(/^\/[a-za-z0-9]+[-?=&/a-za-z0-9]*$/, 'No special characters except -?=& are allowed'),
+    .regex(/^\/[a-zA-Z0-9]+[-?=&/a-zA-Z0-9]*$/, 'No special characters except -?=& are allowed'),
 });
 
 export const AddCategory = component$(
@@ -262,6 +262,8 @@ export default component$(
     courseDataError,
     formSteps,
     createdCategory,
+    isEditing = false,
+    isPublished = false,
   }: {
     courseData: NewContentIndex;
     courseDataError: {
@@ -271,6 +273,8 @@ export default component$(
     };
     createdCategory: Signal<ContentCategory | undefined>;
     formSteps: Signal<number>;
+    isPublished?: boolean;
+    isEditing?: boolean;
   }) => {
     const _categories = useCategories().value.filter((cat) => cat.approved);
     const categories = useStore(() => {
@@ -323,7 +327,10 @@ export default component$(
               <div class="flex flex-col items-center justify-center space-y-6">
                 {!createdCategory.value && (
                   <button
-                    onClick$={() => (showAddCategory.value = true)}
+                    onClick$={() => {
+                      if (isEditing && isPublished) return window.alert('Cannot add new category after publishing!');
+                      showAddCategory.value = true;
+                    }}
                     class="w-[250px] rounded-md bg-primary-dark-gray px-4 py-2 text-[0.875rem] text-background-light-gray md:w-[300px] md:px-6 md:text-[1rem]"
                   >
                     Add New Category

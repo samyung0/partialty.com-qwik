@@ -24,8 +24,8 @@ export default component$(() => {
   });
   return (
     <nav class="absolute left-0 top-0 z-20 flex w-full p-6">
-      <div class="w-[50%] pr-[6vw]"></div>
-      <ul class="flex w-[50%] items-center gap-6 text-base font-bold tracking-wide">
+      <div class="w-[60%] pr-[6vw]"></div>
+      <ul class="flex w-[40%] items-center gap-6 text-base font-bold tracking-wide">
         <li class="px-2 py-2">
           <Link prefetch href={'/members/dashboard/'} class="flex gap-2">
             Home
@@ -51,7 +51,7 @@ export default component$(() => {
             {NavCourses}
           </div> */}
         </li>
-        <li class="px-2 py-2">
+        {/* <li class="px-2 py-2">
           <Link prefetch href={'/'}>
             Projects
           </Link>
@@ -60,7 +60,7 @@ export default component$(() => {
           <Link prefetch href={'/'}>
             Playground
           </Link>
-        </li>
+        </li> */}
         {login.isLoading ? (
           <span>
             <LoadingSVG />

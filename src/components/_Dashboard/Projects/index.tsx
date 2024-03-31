@@ -561,7 +561,7 @@ export default component$(() => {
           })}
           <button
             onClick$={() => (showAll.value = !showAll.value)}
-            class="md:text-[1rem self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
+            class="self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
           >
             {showAll.value ? <p>View Less</p> : <p>View All</p>}
           </button>

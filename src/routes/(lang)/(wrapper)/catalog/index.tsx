@@ -207,7 +207,7 @@ export default component$(() => {
                           Course
                         </button>
                       </li>
-                      <li class="block px-2 py-3">
+                      {/* <li class="block px-2 py-3">
                         <button
                           type="button"
                           onClick$={() => {
@@ -219,7 +219,7 @@ export default component$(() => {
                         >
                           Project
                         </button>
-                      </li>
+                      </li> */}
                       <li class="block px-2 py-3">
                         <button
                           type="button"
@@ -355,7 +355,7 @@ export default component$(() => {
 
             <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div class="flex items-baseline justify-between border-b border-gray-300 pb-6 pt-12">
-                <h1 class="font-mosk text-4xl font-bold tracking-wide">Catalog</h1>
+                <h1 class="font-mosk text-2xl font-bold tracking-wide lg:text-3xl">Catalog</h1>
 
                 <div class="flex items-center">
                   <div class="relative inline-block text-left">
@@ -525,7 +525,7 @@ export default component$(() => {
                           Course
                         </button>
                       </li>
-                      <li>
+                      {/* <li>
                         <button
                           type="button"
                           onClick$={() => {
@@ -536,7 +536,7 @@ export default component$(() => {
                         >
                           Project
                         </button>
-                      </li>
+                      </li> */}
                       <li>
                         <button
                           type="button"

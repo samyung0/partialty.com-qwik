@@ -105,12 +105,12 @@ export default component$(() => {
             <h1>
               <Link
                 href="/"
-                class="font-mosk text-[1.5rem] font-[900] leading-[3rem] xl:text-[2rem] xl:leading-[3.5rem]"
+                class="font-mosk text-[1.5rem] font-[900] leading-[3rem] 2xl:text-[2rem] 2xl:leading-[3.5rem]"
               >
                 Partialty.com
               </Link>
             </h1>
-            <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] xl:pb-8 xl:text-[2.5rem] xl:leading-[3.5rem] 2xl:pb-16 2xl:text-left">
+            <h2 class="max-w-[600px] pb-4 text-center font-mosk text-[1.5rem] font-[900] leading-[2rem] md:text-[2rem] md:leading-[3rem] 2xl:pb-8 2xl:text-left 2xl:text-[2.5rem] 2xl:leading-[3.5rem]">
               Learn{' '}
               <span class="relative inline-block p-1">
                 <span

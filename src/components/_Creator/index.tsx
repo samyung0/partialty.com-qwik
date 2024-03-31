@@ -102,6 +102,11 @@ export default component$(
                 courseIdToEditingUser={courseIdToEditingUser}
               />
             )}
+            {tabIndex.value === 1 && (
+              <div class="mx-auto flex w-full flex-col md:w-[90%] lg:w-[80%]">
+                <p>Under Construction!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

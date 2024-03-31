@@ -5,7 +5,6 @@ import { useLocation } from '@builder.io/qwik-city';
 import UnderConstruction from '~/assets/img/under_construction.png';
 import Footer from '~/components/Footer';
 import ContentAudio from '~/components/_Index/ContentAudio';
-import ContentInteractive from '~/components/_Index/ContentInteractive';
 import ContentVarieties from '~/components/_Index/ContentVarieties';
 import Hero from '~/components/_Index/Hero';
 import IndexNav from '~/components/_Index/Nav';
@@ -64,7 +63,7 @@ export default component$(() => {
       </div>
       <Hero />
       <ContentVarieties />
-      <ContentInteractive />
+      {/* <ContentInteractive /> */}
       <ContentAudio />
       <Footer />
     </main>

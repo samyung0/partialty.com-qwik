@@ -21,8 +21,6 @@ import {
   LuAlignJustify,
   LuArrowRight,
   LuCheck,
-  LuFile,
-  LuFileTerminal,
   LuFileText,
   LuGem,
   LuGoal,
@@ -30,6 +28,7 @@ import {
   LuLogOut,
   LuMoon,
   LuPencilLine,
+  LuShield,
   LuSun,
   LuUser2,
   LuX,
@@ -299,8 +298,8 @@ export default component$(() => {
                           <img
                             src={userNullable.avatar_url}
                             alt="Avatar"
-                            width={35}
-                            height={35}
+                            width={40}
+                            height={40}
                             class="rounded-full object-contain"
                             referrerPolicy="no-referrer"
                           />
@@ -339,7 +338,7 @@ export default component$(() => {
                       </span>
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link prefetch href={'/members/dashboard/'} class="flex items-center gap-4">
                       Projects
                       <span class={'text-[20px] text-primary-dark-gray dark:text-background-light-gray'}>
@@ -354,7 +353,7 @@ export default component$(() => {
                         <LuFileTerminal />
                       </span>
                     </Link>
-                  </li>
+                  </li> */}
                   {userNullable && (
                     <>
                       <div class="flex w-[100%] justify-center">
@@ -369,10 +368,26 @@ export default component$(() => {
                         </Link>
                       </li>
                       <li>
+                        <Link prefetch href="/admin/courseapproval/" class="flex items-center gap-4">
+                          <span class="whitespace-nowrap">Admin</span>
+                          <span class="text-[20px]">
+                            <LuShield />
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
                         <Link prefetch href="/creator/" class="flex items-center gap-4">
                           <span class="whitespace-nowrap">Creator</span>
                           <span class="text-[20px]">
                             <LuPencilLine />
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link prefetch href="/admin/courseapproval" class="flex items-center gap-4">
+                          <span class="whitespace-nowrap">Admin</span>
+                          <span class="text-[20px]">
+                            <LuShield />
                           </span>
                         </Link>
                       </li>

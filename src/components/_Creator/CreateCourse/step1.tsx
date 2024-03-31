@@ -21,8 +21,8 @@ const schema = z.object({
     .trim()
     .min(2, 'A name is required')
     .max(70, 'Name is too long (max. 70 chars)')
-    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
-    .regex(/^[a-za-z0-9]+[-a-zA-Z]*[a-za-z0-9]+$/, 'No special characters except hyphens are allowed'),
+    .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
+    .regex(/^[a-zA-Z0-9]+[- a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except space and hyphens are allowed'),
 });
 
 export default component$(

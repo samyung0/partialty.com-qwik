@@ -187,7 +187,7 @@ export default component$(() => {
             )}
             <div class="flex flex-col gap-1 md:gap-2">
               <h2 class="font-mosk text-base tracking-wide md:text-lg lg:text-xl">Course Description</h2>
-              <p class="text-sm md:text-base">
+              <p class="whitespace-pre-line text-sm md:text-base">
                 {course.content_index.description}
                 {/* Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, sit doloribus?
                 Dolores soluta voluptates suscipit quisquam aperiam aspernatur saepe doloribus nihil

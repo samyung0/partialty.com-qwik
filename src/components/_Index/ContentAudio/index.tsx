@@ -23,14 +23,14 @@ export default component$(() => {
     <section class="min-h-[100vh] bg-custom-pink py-8">
       <div class="flex min-h-[100vh]  flex-col items-center justify-center gap-12">
         <div class="flex  items-center justify-center">
-          <h1 class="p-2 text-center font-mosk text-2xl font-[900] md:text-3xl lg:text-[2rem] lg:leading-[3rem] xl:text-[2.5rem] xl:leading-[3.5rem]">
+          <h1 class="p-2 text-center font-mosk text-2xl font-[900] md:text-3xl lg:text-[2rem] lg:leading-[3rem] 2xl:text-[2.5rem] 2xl:leading-[3.5rem]">
             We have audio-guided courses which highlight content
             <br />
             according to the audio
           </h1>
         </div>
-        <div class=" relative flex  items-start">
-          <div class="relative max-w-[95vw] md:w-[500px] lg:w-[900px]">
+        <div class=" relative flex  items-start justify-center">
+          <div class="relative max-w-[95vw] md:w-[500px] lg:w-[900px] lg:max-w-[80%] 2xl:max-w-[100%]">
             {/* <img
               src={CursorIcon}
               width={20}
@@ -38,12 +38,12 @@ export default component$(() => {
               class={`absolute bottom-[125px] right-[200px] ${moveCursor.value && styles.cursor}`}
             /> */}
             <div class="flex h-full w-full flex-col items-center justify-center  rounded-lg border-2 border-black bg-background-light-gray py-5 md:py-7 lg:py-14">
-              <div class="gap relative flex   w-[90%] flex-col gap-3 md:gap-6  lg:h-[70%] lg:w-[80%] lg:gap-12">
+              <div class="gap relative flex   w-[90%] flex-col gap-3 md:gap-6  lg:h-[70%] lg:w-[80%] lg:gap-4 2xl:gap-12">
                 <p class="font bold text-lg font-bold md:text-xl lg:text-3xl">Welcome to React</p>
                 <div class="w-full">
                   <div
                     class={
-                      'text-sm leading-[1.5rem] md:text-lg lg:text-xl lg:leading-[2.5rem] lg:first-letter:tracking-wide'
+                      'text-sm leading-[1.5rem] md:text-lg lg:first-letter:tracking-wide xl:text-xl xl:leading-[2rem] 2xl:text-xl 2xl:leading-[2.5rem]'
                     }
                   >
                     <span key="row-1">
@@ -58,13 +58,14 @@ export default component$(() => {
                             instantTime.value[0].highlight && 'highlight-underline'
                           } absolute z-10 w-full whitespace-nowrap border-b-4 border-background-light-gray bg-background-light-gray`}
                         >
-                          interactive and
+                          interactive
                         </span>
                         <span class="relative whitespace-nowrap border-b-4 border-bright-yellow lg:border-b-8">
-                          interactive and
+                          interactive
                         </span>
                       </span>
                     </span>{' '}
+                    and{' '}
                     <span key="row-2">
                       <span class="relative whitespace-nowrap">
                         <span

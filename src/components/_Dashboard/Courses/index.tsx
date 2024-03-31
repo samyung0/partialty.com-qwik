@@ -16,8 +16,9 @@ export default component$(() => {
   // const fuseCourse = useSignal<any>();
   // const searchCourse = useSignal("");
   const showAll = useSignal(false);
+  const filteredCourses = useComputed$(() => data.filter((entry) => !entry.content_index.is_guide));
   const sortedCourses = useComputed$(() =>
-    data.toSorted(
+    filteredCourses.value.toSorted(
       (a, b) =>
         new Date(b.content_user_progress.started_date).getTime() -
         new Date(a.content_user_progress.started_date).getTime()
@@ -54,7 +55,7 @@ export default component$(() => {
     <article class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <div class="w-[100%] pb-1 lg:w-[85%] xl:w-[70%]">
         <div class="flex items-end justify-between">
-          <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-4xl">My Courses</h1>
+          <h1 class="pb-1 font-mosk text-2xl font-bold tracking-wide lg:text-3xl">My Courses</h1>
           {/* <div class="flex gap-2">
             <img src={SearchSVG} alt="Search" width={20} height={20} />
             <input
@@ -151,12 +152,14 @@ export default component$(() => {
               </li>
             );
           })}
-          <button
-            onClick$={() => (showAll.value = !showAll.value)}
-            class="md:text-[1rem self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
-          >
-            {showAll.value ? <p>View Less</p> : <p>View All</p>}
-          </button>
+          {sortedCourses.value.length > 3 && (
+            <button
+              onClick$={() => (showAll.value = !showAll.value)}
+              class="self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
+            >
+              {showAll.value ? <p>View Less</p> : <p>View All</p>}
+            </button>
+          )}
         </ul>
       </div>
     </article>

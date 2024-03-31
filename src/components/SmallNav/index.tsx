@@ -4,7 +4,7 @@ import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/q
 import type { LuciaSession } from '~/types/LuciaSession';
 
 import { IoCaretDown } from '@qwikest/icons/ionicons';
-import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuSun, LuUser2 } from '@qwikest/icons/lucide';
+import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuShield, LuSun, LuUser2 } from '@qwikest/icons/lucide';
 import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
 import { themeContext } from '~/context/themeContext';
@@ -57,8 +57,8 @@ export default component$(({ user }: { user?: LuciaSession['user'] | undefined }
                 <img
                   src={user.avatar_url}
                   alt="Avatar"
-                  width={30}
-                  height={30}
+                  width={40}
+                  height={40}
                   class="rounded-full object-contain"
                   referrerPolicy="no-referrer"
                 />
@@ -99,6 +99,14 @@ export default component$(({ user }: { user?: LuciaSession['user'] | undefined }
                         <LuPencilLine />
                       </span>
                       <span class="whitespace-nowrap">Creator</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link prefetch href="/admin/couseapproval/" class="flex items-center gap-3">
+                      <span class="text-[20px]">
+                        <LuShield />
+                      </span>
+                      <span class="whitespace-nowrap">Admin</span>
                     </Link>
                   </li>
                   <li>
