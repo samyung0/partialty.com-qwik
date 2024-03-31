@@ -1,7 +1,9 @@
-import { Slot, component$ } from '@builder.io/qwik';
-import { routeLoader$, type RequestHandler } from '@builder.io/qwik-city';
+import { $, Slot, component$, useContext, useOnDocument } from '@builder.io/qwik';
+import { routeLoader$, server$, type RequestHandler } from '@builder.io/qwik-city';
 import { and, eq } from 'drizzle-orm';
 import { auth, initLuciaIfNeeded } from '~/auth/lucia';
+import theme from '~/const/theme';
+import { themeContext } from '~/context/themeContext';
 import type { LuciaSession } from '~/types/LuciaSession';
 import drizzleClient, { initDrizzleIfNeeded } from '~/utils/drizzleClient';
 import { initTursoIfNeeded } from '~/utils/tursoClient';
@@ -74,16 +76,17 @@ export const useCourseLoader = routeLoader$(async (event) => {
     await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
       .select()
       .from(content_index)
-      .where(
-        and(
-          eq(content_index.slug, courseSlug),
-          eq(content_index.is_deleted, false),
-        )
-      )
+      .where(and(eq(content_index.slug, courseSlug), eq(content_index.is_deleted, false)))
       .limit(1)
       .innerJoin(course_approval, eq(course_approval.course_id, content_index.id))
       .innerJoin(profiles, eq(profiles.id, content_index.author))
-      .leftJoin(content_user_progress, and(eq(content_user_progress.index_id, _user?.userId || '-1')))
+      .leftJoin(
+        content_user_progress,
+        and(
+          eq(content_user_progress.index_id, content_index.id),
+          eq(content_user_progress.user_id, _user?.userId || '-1')
+        )
+      )
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, '/notfound/');
@@ -121,4 +124,19 @@ export const useCourseLoader = routeLoader$(async (event) => {
   return { course, preview: course.course_approval.status !== 'approved', chapters };
 });
 
-export default component$(() => <Slot />);
+export const getTheme = server$(function () {
+  return this.cookie.get('theme')?.value;
+});
+
+export default component$(() => {
+  const themeStore = useContext<{ value: (typeof theme)[number] }>(themeContext);
+  useOnDocument(
+    'qinit',
+    $(async () => {
+      if ((await getTheme()) === 'dark') {
+        themeStore.value = 'dark';
+      }
+    })
+  );
+  return <Slot />;
+});

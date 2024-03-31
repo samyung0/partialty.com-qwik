@@ -4,6 +4,7 @@ import type { DocumentHead } from '@builder.io/qwik-city';
 import CoursePage from '~/components/_Courses';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 
+
 export default component$(() => {
   return <CoursePage />;
 });
@@ -21,12 +22,12 @@ export const head: DocumentHead = ({ resolveValue }) => {
   };
 };
 
-// export const onStaticGenerate: StaticGenerateHandler = async () => {
-//   return {
-//     params: [
-//       {
-//         courseSlug: 'setting-up-a-local-server',
-//       },
-//     ],
-//   };
-// };
+export const onStaticGenerate: StaticGenerateHandler = async () => {
+  return {
+    params: [
+      {
+        courseSlug: 'setting-up-a-local-server',
+      },
+    ],
+  };
+};

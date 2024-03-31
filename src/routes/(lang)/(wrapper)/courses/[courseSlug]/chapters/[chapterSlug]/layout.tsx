@@ -8,6 +8,7 @@ import {
   useOnDocument,
   useSignal,
   useStore,
+  useVisibleTask$,
 } from '@builder.io/qwik';
 import { Link, removeClientDataCache, routeLoader$, server$, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { eq } from 'drizzle-orm';
@@ -121,6 +122,11 @@ const getShowAllHighlightsCookie = server$(function () {
   return this.cookie.get('showAllHighlights')?.value;
 });
 
+import LoadingSVG from '~/components/LoadingSVG';
+import getUser from '~/components/_Index/Nav/getUser';
+
+export { getUser };
+
 interface ChapterActions {
   showAllHighlights: boolean;
 }
@@ -170,13 +176,29 @@ export default component$(() => {
     })
   );
 
+  const login = useStore({
+    isLoading: userNullable === undefined,
+    isLoggedIn: userNullable !== undefined,
+    user: userNullable,
+  });
+
+  useVisibleTask$(async () => {
+    if (login.isLoggedIn) return;
+    const res = await getUser();
+    login.isLoading = false;
+    if (res) {
+      login.isLoggedIn = true;
+      login.user = res.user;
+    }
+  });
+
   return (
     <>
       <section class="flex min-h-[100dvh] flex-col bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
         <div class="flex max-h-[100dvh] flex-1 flex-col lg:flex-row">
           <nav class="hidden max-h-[100dvh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
             <div class="flex h-full flex-col items-start gap-4 py-6">
-              <SmallNav user={userNullable} />
+              <SmallNav login={login} />
               <div class="flex h-full w-full flex-col gap-2 py-2  lg:gap-3 lg:py-4">
                 <div class="flex flex-col">
                   <Link
@@ -292,18 +314,23 @@ export default component$(() => {
                       <div class="peer-checked:after:border-backgroundbg-background-light-gray peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-background-light-gray after:transition-all after:content-[''] peer-checked:bg-highlight-dark peer-checked:after:translate-x-full peer-focus:outline-none"></div>
                       <LuMoon />
                     </label>
-                    {userNullable ? (
+                    {login.isLoading && (
+                      <span class="ml-auto">
+                        <LoadingSVG />
+                      </span>
+                    )}
+                    {login.isLoggedIn && login.user ? (
                       <div class={' ml-auto flex -translate-x-[8px] gap-2 sm:translate-x-0'}>
                         <span class="relative">
                           <img
-                            src={userNullable.avatar_url}
+                            src={login.user.avatar_url}
                             alt="Avatar"
                             width={40}
                             height={40}
                             class="rounded-full object-contain"
                             referrerPolicy="no-referrer"
                           />
-                          {userNullable.role !== 'free' && (
+                          {login.user.role !== 'free' && (
                             <img
                               src={CrownPNG}
                               width={15}

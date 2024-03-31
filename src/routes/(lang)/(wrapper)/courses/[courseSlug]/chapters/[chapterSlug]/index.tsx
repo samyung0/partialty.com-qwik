@@ -21,13 +21,13 @@ export const head: DocumentHead = ({ resolveValue }) => {
   };
 };
 
-// export const onStaticGenerate: StaticGenerateHandler = async () => {
-//   return {
-//     params: [
-//       {
-//         courseSlug: 'setting-up-a-local-server',
-//         chapterSlug: 'setting-up-a-local-server',
-//       },
-//     ],
-//   };
-// };
+export const onStaticGenerate: StaticGenerateHandler = async () => {
+  return {
+    params: [
+      {
+        courseSlug: 'setting-up-a-local-server',
+        chapterSlug: 'setting-up-a-local-server',
+      },
+    ],
+  };
+};
