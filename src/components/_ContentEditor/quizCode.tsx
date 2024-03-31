@@ -109,9 +109,9 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
   }, [ref.current]);
   return (
     <div {...attributes} className="mb-[1.25rem] mt-[1.25rem] bg-inherit text-inherit">
-      <h3 className="mb-3 mt-0 bg-inherit text-inherit" contentEditable={false}>
+      {/* <h3 className="mb-3 mt-0 bg-inherit text-inherit" contentEditable={false}>
         {(element as QuizCodeBlockElement).quizTitle}
-      </h3>
+      </h3> */}
       <form
         data-ans={JSON.stringify((element as QuizCodeBlockElement).ans)}
         data-formname={(element as QuizCodeBlockElement).formName}
@@ -171,21 +171,29 @@ export const QuizCodeBlock = ({ attributes, children, element }: RenderElementPr
             </div>
           )}
         </div>
-        <button
-          contentEditable={false}
-          className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark"
-        >
-          Check
-        </button>
-        <div
-          contentEditable={false}
-          className="formCorrect hidden rounded-lg bg-mint-down px-6 py-2 text-light-mint shadow-lg"
-        >
-          Correct
-        </div>
-        <div contentEditable={false} className="formWrong hidden">
-          <div className="inline-block rounded-lg bg-tomato px-6 py-2 text-light-tomato shadow-lg">Wrong</div>
-          <p className="m-0 pt-1 text-sm text-tomato"></p>
+        <div contentEditable={false} className="flex items-center gap-3">
+          <button
+            contentEditable={false}
+            className="formCheck rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark"
+          >
+            Check
+          </button>
+          <div
+            contentEditable={false}
+            className="formCorrect hidden rounded-lg bg-mint-down px-6 py-2 text-light-mint shadow-lg"
+          >
+            Correct
+          </div>
+          <div contentEditable={false} className="formWrong hidden">
+            <div className="inline-block rounded-lg bg-tomato px-6 py-2 text-light-tomato shadow-lg">Wrong</div>
+            <p className="m-0 pt-1 text-sm text-tomato"></p>
+          </div>
+          <button
+            contentEditable={false}
+            className="formShow rounded-lg bg-primary-dark-gray px-6 py-2 text-background-light-gray shadow-lg dark:bg-highlight-dark"
+          >
+            Show Ans
+          </button>
         </div>
       </form>
     </div>
@@ -287,7 +295,7 @@ export const CenterQuizCodeBlockSettings = ({
           <button onClick={() => setShowQuizCodeBlockSettings(false)} className="absolute right-8 top-8 p-2">
             <X size={20} />
           </button>
-          <div>
+          {/* <div>
             <label htmlFor="QuizCodeTitle" className="cursor-pointer">
               Quiz Title
             </label>
@@ -304,7 +312,7 @@ export const CenterQuizCodeBlockSettings = ({
               />
             </div>
           </div>
-          <br />
+          <br /> */}
           <div className="flex items-center gap-3">
             <label htmlFor="QuizCodeAns" className="cursor-pointer">
               Is code template
@@ -360,10 +368,10 @@ export const CenterQuizCodeBlockSettings = ({
                   isCode,
                   ans: {
                     type: quizAst ? 'ast' : 'matchInput',
-                    ast:
-                      astInputCode !== '' && Object.prototype.hasOwnProperty.call(astParse, astGenerateLanguage)
-                        ? JSON.stringify(astParse[astGenerateLanguage](astInputCode))
-                        : '{}',
+                    ast: ast,
+                    // astInputCode !== '' && Object.prototype.hasOwnProperty.call(astParse, astGenerateLanguage)
+                    //   ? JSON.stringify(astParse[astGenerateLanguage](astInputCode))
+                    //   : '{}',
                     matchInput: quizMatchInput,
                   },
                   astLang: astGenerateLanguage,
@@ -449,6 +457,7 @@ export const CenterQuizCodeBlockSettings = ({
 
                         try {
                           await navigator.clipboard.writeText((copyText as HTMLTextAreaElement).value);
+                          window.alert('Copied code');
                         } catch (err) {
                           alert('Failed to copy: ' + (err as any).toString());
                         }

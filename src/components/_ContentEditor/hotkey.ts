@@ -67,7 +67,8 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
 
   if (isHotkey('tab', event)) {
     const isCodeBlock = isBlockActive(editor, 'codeBlock', 'type');
-    if (isCodeBlock) {
+    const isQuizCodeBlock = isBlockActive(editor, 'quizCodeBlock', 'type');
+    if (isCodeBlock || isQuizCodeBlock) {
       event.preventDefault();
       Editor.insertText(editor, '  ');
     }

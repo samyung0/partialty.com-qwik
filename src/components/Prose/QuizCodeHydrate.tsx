@@ -7,7 +7,7 @@ import astParse from '~/components/_ContentEditor/astParse';
 
 const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (isCorrect: boolean) => any }) => {
   useEffect(() => {
-    (Array.from(document.getElementsByClassName('quizCodeBlock')) as HTMLFormElement[]).forEach((form) =>
+    (Array.from(document.getElementsByClassName('quizCodeBlock')) as HTMLFormElement[]).forEach((form) => {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         const val = Object.fromEntries(new FormData(form).entries());
@@ -49,9 +49,9 @@ const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB
         const wrong = form.getElementsByClassName('formWrong')[0] as HTMLElement | undefined;
         if (!check || !correct || !wrong) return;
         check.style.display = 'none';
-        if (correctAns) correct.style.display = 'block';
+        if (correctAns) correct.style.display = 'inline-block';
         else {
-          wrong.style.display = 'block';
+          wrong.style.display = 'inline-block';
           const correctAns = form
             .querySelector(`input[value="${ans}"]`)
             ?.parentElement?.getElementsByClassName('optionText')[0];
@@ -65,8 +65,14 @@ const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB
         if (isPreview) return;
 
         saveToDB(correctAns);
-      })
-    );
+      });
+      const showAnsButton = form.getElementsByClassName('formShow')[0] as HTMLButtonElement;
+      const showAnsContainer = form.getElementsByClassName('answerContainer')[0] as HTMLParagraphElement;
+      showAnsButton.addEventListener('click', () => {
+        showAnsContainer.innerText = decodeURIComponent(form.getAttribute('data-codeans') || '');
+        showAnsContainer.style.display = 'block';
+      });
+    });
   }, []);
   return <></>;
 };

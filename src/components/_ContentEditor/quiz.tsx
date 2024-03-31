@@ -28,9 +28,6 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
 export const QuizBlock = ({ attributes, children, element }: RenderElementProps) => {
   return (
     <div {...attributes} className="mb-[1.25rem] mt-[1.25rem] bg-inherit tracking-wide text-inherit">
-      <h3 className="mb-3 mt-0 bg-inherit text-inherit" contentEditable={false}>
-        {(element as QuizBlockElement).quizTitle}
-      </h3>
       <form
         data-ans={(element as QuizBlockElement).ans}
         data-formname={(element as QuizBlockElement).formName}
@@ -105,7 +102,7 @@ export const CenterQuizBlockSettings = ({
         <button onClick={() => setShowQuizBlockSettings(false)} className="absolute right-8 top-8 p-2">
           <X size={20} />
         </button>
-        <div>
+        {/* <div>
           <label htmlFor="QuizTitle" className="cursor-pointer text-lg">
             Quiz Title
           </label>
@@ -122,7 +119,7 @@ export const CenterQuizBlockSettings = ({
             />
           </div>
         </div>
-        <br />
+        <br /> */}
         <div>
           <label htmlFor="QuizAnswer" className="cursor-pointer text-lg">
             Quiz Answer

@@ -580,12 +580,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       margin-bottom: 1.25em;
       background-color: inherit;
     color: inherit;
-      ">
-      <h3 style="margin-bottom: 0.75rem; margin-top: 0px; background-color: inherit;
-      color: inherit;">
-        ${node.quizTitle}
-      </h3>
-      <form
+      "><form
         data-ans="${node.ans}"
         data-formname="${node.formName}"
         style="
@@ -595,6 +590,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         gap: 0.75rem;
         background-color: inherit;
     color: inherit;
+    overflow: auto;
+        padding-bottom: 8px;
         "
         class="quizBlock"
       >
@@ -675,6 +672,11 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       class="quizOptionButton"
     >
       <input hidden style="display: none;" type="radio" name="${name}" value="${optionValue}" />
+      <style>
+      .dark .quizOptionContainer {
+        background-color: #2f3e52 !important;
+      }
+      </style>
       <div
         style="
         display: flex;
@@ -685,6 +687,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         border-radius: 9999px;
         background-color: rgb(31 41 55);
         "
+        class="quizOptionContainer"
       >
         <div style="height: 0.75rem;width: 0.75rem;border-radius: 9999px;background-color: rgb(247 247 247);" class="quizOption"></div>
       </div>
@@ -697,26 +700,19 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       const combinedText = node.combinedText;
       const astLang = node.astLang;
       const isCode = node.isCode;
+      const codeAns = encodeURIComponent(node.codeInput);
       return `<div style="
     margin-bottom: 1.25rem;
     margin-top: 1.25rem;
     background-color: inherit;
     color: inherit;
-    ">
-      <h3 style="
-      margin-bottom: 0.75rem
-      margin-top: 0;
-      background-color: inherit;
-      color: inherit;
-      ">
-        ${node.quizTitle}
-      </h3>
-      <form
+    "><form
         data-ans="${encodeURIComponent(JSON.stringify(node.ans))}"
         data-formname="${formName}"
         data-combinedtext="${combinedText}"
         data-astlang="${astLang}"
-        data-isCode="${isCode ? '1' : '0'}"
+        data-iscode="${isCode ? '1' : '0'}"
+        data-codeans="${codeAns}"
         class="quizCodeBlock"
         style="
         display: flex;
@@ -725,6 +721,8 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         gap: 0.75rem;
         background-color: inherit;
         color: inherit;
+        overflow: auto;
+        padding-bottom: 8px;
         "
       >
         <div
@@ -773,10 +771,15 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             </div>`
         }</div>
         <style>
-        .dark .formCheck {
+        .dark .formCheck, .dark .formShow {
           background-color: #2f3e52 !important;
         }
         </style>
+        <div class="
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        ">
         <button
         style="
         border-radius: 0.5rem;
@@ -830,6 +833,32 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           color: rgb(255 99 71);
           "></p>
         </div>
+        <button
+        style="
+        border-radius: 0.5rem;
+        background-color: rgb(31 41 55);
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: rgb(247 247 247);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        "
+        class="formShow"
+        type="button"
+        >
+          Show Ans
+        </button>
+        <p style="
+          margin: 0;
+          padding-top: 0.25rem;
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          color: rgb(255 99 71);
+          display: none;
+          white-space: break-spaces;
+          " class="answerContainer"></p>
+        </div>
       </form>
     </div>`;
     }
@@ -839,6 +868,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       background-color: inherit;
       color: inherit;
       margin-bottom:8px;
+      white-space: break-spaces;
       ">${children}</div>`;
     }
     case 'quizCodeInput': {
