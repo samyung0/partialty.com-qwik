@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import type { DocumentHead } from '@builder.io/qwik-city';
+import type { DocumentHead, StaticGenerateHandler } from '@builder.io/qwik-city';
 
 import ChapterPage from '~/components/_Courses/Chapter';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
