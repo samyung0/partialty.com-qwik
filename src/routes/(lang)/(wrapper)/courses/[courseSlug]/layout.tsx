@@ -16,15 +16,15 @@ import { profiles } from '../../../../../../drizzle_turso/schema/profiles';
 import { tag } from '../../../../../../drizzle_turso/schema/tag';
 
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
-  cacheControl({
-    maxAge: 0,
-    sMaxAge: 0,
-    noStore: true,
-    noCache: true,
-  });
+  // cacheControl({
+  //   maxAge: 0,
+  //   sMaxAge: 0,
+  //   noStore: true,
+  //   noCache: true,
+  // });
   initTursoIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
   initDrizzleIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
-  initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
+  // initLuciaIfNeeded(env, import.meta.env.VITE_USE_PROD_DB === '1');
 };
 
 export const useUserLoaderNullable = routeLoader$(async (event) => {
