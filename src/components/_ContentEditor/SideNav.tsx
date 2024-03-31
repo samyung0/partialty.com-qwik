@@ -283,7 +283,13 @@ export default component$(
         >
           {contentWS.value ? (
             <div class="flex flex-col items-start gap-4 py-6">
-              <SmallNav user={user} />
+              <SmallNav
+                login={{
+                  isLoading: false,
+                  isLoggedIn: true,
+                  user: user,
+                }}
+              />
               <ul class="flex flex-col gap-6 pt-2 md:pt-4">
                 {displayCourses.value.map((currentCourse, index) => {
                   const displayChapters = courses[currentCourse.id].chapter_order.filter((chapter) => {
