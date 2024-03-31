@@ -74,14 +74,17 @@ export const useCourseLoader = routeLoader$(async (event) => {
     await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
       .select()
       .from(content_index)
-      .where(and(eq(content_index.slug, courseSlug), eq(content_index.is_deleted, false)))
+      .where(
+        and(
+          eq(content_index.slug, courseSlug),
+          eq(content_index.is_deleted, false),
+          eq(content_user_progress.user_id, _user?.userId || '-1')
+        )
+      )
       .limit(1)
       .innerJoin(course_approval, eq(course_approval.course_id, content_index.id))
       .innerJoin(profiles, eq(profiles.id, content_index.author))
-      .leftJoin(
-        content_user_progress,
-        and(eq(content_user_progress.index_id, content_index.id), eq(profiles.id, content_user_progress.user_id))
-      )
+      .leftJoin(content_user_progress, and(eq(content_user_progress.index_id, content_index.id)))
   )[0];
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!course) throw event.redirect(302, '/notfound/');
