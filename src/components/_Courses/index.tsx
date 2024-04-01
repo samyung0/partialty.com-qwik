@@ -162,6 +162,7 @@ export default component$(() => {
       const d = new FormData();
       d.append('courseId', course.content_index.id);
       const fav = await fetch('/api/courses/getCookie/', {
+        credentials: 'include',
         method: 'POST',
         body: d,
         // headers: {

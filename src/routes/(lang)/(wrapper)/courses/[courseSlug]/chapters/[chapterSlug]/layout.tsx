@@ -172,7 +172,7 @@ const setThemeCookieFn = $(async (themeValue: any) => {
     //   'Content-Type': 'application/json',
     // },
   }).then((x) => x.json());
-})
+});
 
 export default component$(() => {
   const openSideNav = useSignal(false);
@@ -225,7 +225,9 @@ export default component$(() => {
 
   useVisibleTask$(async () => {
     if (login.isLoggedIn) return;
-    const res = await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
+    const res = await fetch('/api/courses/chapters/getUser/', {
+      credentials: 'include',
+    }).then((x) => x.json());
     login.isLoading = false;
     if (res) {
       login.isLoggedIn = true;
@@ -239,10 +241,7 @@ export default component$(() => {
         <div class="flex max-h-[100dvh] flex-1 flex-col lg:flex-row">
           <nav class="hidden max-h-[100dvh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
             <div class="flex h-full flex-col items-start gap-4 py-6">
-              <SmallNav
-                login={login}
-                setThemeCookieFn={setThemeCookieFn}
-              />
+              <SmallNav login={login} setThemeCookieFn={setThemeCookieFn} />
               <div class="flex h-full w-full flex-col gap-2 py-2  lg:gap-3 lg:py-4">
                 <div class="flex flex-col">
                   <Link
