@@ -1,9 +1,6 @@
 import { $, component$, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import QwikContent from '~/components/Prose/QwikContent';
-import {
-  useCurrentChapter,
-  useDBLoader,
-} from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
+import { useCurrentChapter } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
 import {
   useCategoryLoader,
@@ -56,12 +53,13 @@ const fetchAudioServer = $(async (audioId: string) => {
 //     .returning();
 // });
 
-const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean) => {
+const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean, prevProgress: boolean) => {
   const d = new FormData();
   d.append('_progress', JSON.stringify(progress));
   d.append('courseId', courseId);
   d.append('userId', userId);
   d.append('_notFinished', JSON.stringify(notFinished));
+  d.append('_prevProgress', JSON.stringify(prevProgress));
   return await fetch('/api/courses/chapters/saveProgress/', {
     method: 'POST',
     body: d,
@@ -90,7 +88,7 @@ export default component$(() => {
   const tags = useTagLoader().value;
   const categories = useCategoryLoader().value;
   const { currentChapter } = useCurrentChapter().value;
-  const userProgress = useDBLoader().value;
+  const userProgress = course.content_user_progress;
   const audioTrack = useSignal<{
     id: string;
     duration: number;
@@ -130,15 +128,21 @@ export default component$(() => {
     await saveToDBQuiz(isCorrect, login.user!.userId, course.content_index.id, currentChapter.id);
   });
   const saveProress = $(async () => {
-    if (!userProgress || !login.isLoggedIn || !currentChapter) return;
+    if (!login.isLoggedIn || !currentChapter) return;
     console.log('saving Progress');
-    const newProgress = [...userProgress.progress];
-    if (!userProgress.progress.includes(currentChapter.id)) newProgress.push(currentChapter.id);
+    const newProgress = [...(userProgress?.progress || [])];
+    if (!(userProgress?.progress || []).includes(currentChapter.id)) newProgress.push(currentChapter.id);
     const notFinished =
       course.content_index.chapter_order
         .filter((id) => !!chapters.find((chapter) => chapter.id === id))
         .filter((id) => !newProgress.includes(id)).length > 0;
-    await saveProgressServer([...newProgress], course.content_index.id, login.user!.userId, notFinished);
+    await saveProgressServer(
+      [...newProgress],
+      course.content_index.id,
+      login.user!.userId,
+      notFinished,
+      userProgress !== null
+    );
   });
   return currentChapter ? (
     <QwikContent

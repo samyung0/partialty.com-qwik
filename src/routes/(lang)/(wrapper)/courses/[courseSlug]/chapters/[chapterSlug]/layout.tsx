@@ -77,26 +77,26 @@ export const useCurrentChapter = routeLoader$(async (event) => {
   return ret;
 });
 
-export const useDBLoader = routeLoader$(async (event) => {
-  const _user = await event.resolveValue(useUserLoaderNullable);
-  const { course, chapters } = await event.resolveValue(useCourseLoader);
-  const { subscriptionNeeded, loaded, currentChapter } = await event.resolveValue(useCurrentChapter);
-  if (!loaded || !currentChapter || !_user) return;
-  let newUserProgress: ContentUserProgress | null = course.content_user_progress;
-  if (!course.content_user_progress)
-    newUserProgress = (
-      await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
-        .insert(content_user_progress)
-        .values({
-          id: v4(),
-          user_id: _user.userId,
-          index_id: course.content_index.id,
-          progress: [],
-        })
-        .returning()
-    )[0];
-  return newUserProgress;
-});
+// export const useDBLoader = routeLoader$(async (event) => {
+//   const _user = await event.resolveValue(useUserLoaderNullable);
+//   const { course, chapters } = await event.resolveValue(useCourseLoader);
+//   const { subscriptionNeeded, loaded, currentChapter } = await event.resolveValue(useCurrentChapter);
+//   if (!loaded || !currentChapter || !_user) return;
+//   let newUserProgress: ContentUserProgress | null = course.content_user_progress;
+//   if (!course.content_user_progress)
+//     newUserProgress = (
+//       await drizzleClient(event.env, import.meta.env.VITE_USE_PROD_DB === '1')
+//         .insert(content_user_progress)
+//         .values({
+//           id: v4(),
+//           user_id: _user.userId,
+//           index_id: course.content_index.id,
+//           progress: [],
+//         })
+//         .returning()
+//     )[0];
+//   return newUserProgress;
+// });
 
 // const setThemeCookie = server$(function (theme: 'light' | 'dark') {
 //   this.cookie.set('theme', theme, {
@@ -182,7 +182,7 @@ export default component$(() => {
   const { course, preview, chapters } = useCourseLoader().value;
   const { currentChapter, loaded, subscriptionNeeded } = useCurrentChapter().value;
   const chapterSlug = useLocation().params.chapterSlug;
-  const userProgress = useDBLoader().value;
+  const userProgress = course.content_user_progress;
 
   const nav = useNavigate();
   const theme = useContext(themeContext);
