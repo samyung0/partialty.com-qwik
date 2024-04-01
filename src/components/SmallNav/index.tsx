@@ -1,4 +1,4 @@
-import { $, component$, useContext } from '@builder.io/qwik';
+import { $, component$, QRL, useContext } from '@builder.io/qwik';
 import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
 
 import type { LuciaSession } from '~/types/LuciaSession';
@@ -9,6 +9,7 @@ import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
 import LoadingSVG from '~/components/LoadingSVG';
 import { themeContext } from '~/context/themeContext';
+import theme from '~/const/theme';
 
 const setThemeCookie = server$(function (theme: 'light' | 'dark') {
   this.cookie.set('theme', theme, {
@@ -21,7 +22,13 @@ const setThemeCookie = server$(function (theme: 'light' | 'dark') {
 });
 
 export default component$(
-  ({ login }: { login: { user?: LuciaSession['user'] | undefined; isLoading: boolean; isLoggedIn: boolean } }) => {
+  ({
+    login,
+    setThemeCookieFn,
+  }: {
+    login: { user?: LuciaSession['user'] | undefined; isLoading: boolean; isLoggedIn: boolean };
+    setThemeCookieFn?: QRL<(themeValue: (typeof theme)[number]) => any>;
+  }) => {
     const nav = useNavigate();
     const theme = useContext(themeContext);
     const handleLogout = $(async () => {
@@ -42,7 +49,8 @@ export default component$(
                   } else {
                     theme.value = 'light';
                   }
-                  setThemeCookie(theme.value);
+                  if (setThemeCookieFn) setThemeCookieFn(theme.value);
+                  else setThemeCookie(theme.value);
                 }}
                 checked={theme.value === 'dark'}
                 type="checkbox"

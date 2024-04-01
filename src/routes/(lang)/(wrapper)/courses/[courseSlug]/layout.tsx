@@ -124,8 +124,12 @@ export const useCourseLoader = routeLoader$(async (event) => {
   return { course, preview: course.course_approval.status !== 'approved', chapters };
 });
 
-export const getTheme = server$(function () {
-  return this.cookie.get('theme')?.value;
+// export const getTheme = server$(function () {
+//   return this.cookie.get('theme')?.value;
+// });
+
+const getTheme = $(async () => {
+  return await fetch('/api/courses/chapters/getThemeCookie/').then((x) => x.json());
 });
 
 export default component$(() => {

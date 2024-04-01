@@ -116,6 +116,20 @@ const removeFavouriteCookie = $(async (courseId: string) => {
 //   return this.cookie.get('favourite' + courseId) !== null;
 // });
 
+const getUserFn = $(async () => {
+  await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
+})
+
+const setThemeCookieFn = $(async (themeValue: any) => {
+  return await fetch('/api/courses/chapters/setThemeCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ theme: themeValue }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+})
+
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
   const { course, preview, chapters } = useCourseLoader().value;
@@ -138,7 +152,6 @@ export default component$(() => {
           'Content-Type': 'application/json',
         },
       }).then((x) => x.json());
-      console.log(fav);
       isFavourite.value = fav;
     })
   );
@@ -183,7 +196,11 @@ export default component$(() => {
 
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
-      <Nav user={userNullable} />
+      <Nav
+        user={userNullable}
+        getUserFn={getUserFn}
+        setThemeCookieFn={setThemeCookieFn}
+      />
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <Link
           href={'/catalog/'}

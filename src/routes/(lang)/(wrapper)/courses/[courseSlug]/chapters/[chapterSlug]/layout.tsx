@@ -158,6 +158,16 @@ interface ChapterActions {
 
 export const chapterContext = createContextId<ChapterActions>('chapterContext');
 
+const setThemeCookieFn = $(async (themeValue: any) => {
+  return await fetch('/api/courses/chapters/setThemeCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ theme: themeValue }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+})
+
 export default component$(() => {
   const openSideNav = useSignal(false);
   const userNullable = useUserLoaderNullable().value;
@@ -223,7 +233,10 @@ export default component$(() => {
         <div class="flex max-h-[100dvh] flex-1 flex-col lg:flex-row">
           <nav class="hidden max-h-[100dvh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
             <div class="flex h-full flex-col items-start gap-4 py-6">
-              <SmallNav login={login} />
+              <SmallNav
+                login={login}
+                setThemeCookieFn={setThemeCookieFn}
+              />
               <div class="flex h-full w-full flex-col gap-2 py-2  lg:gap-3 lg:py-4">
                 <div class="flex flex-col">
                   <Link
