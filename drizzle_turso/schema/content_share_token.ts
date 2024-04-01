@@ -10,5 +10,5 @@ export const content_share_token = sqliteTable('content_share_token', {
   expires: blob('expires', { mode: 'bigint' }),
 });
 
-export type ContentUserProgress = InferSelectModel<typeof content_share_token>;
-export type NewContentUserProgress = InferInsertModel<typeof content_share_token>;
+export type ContentShareToken = InferSelectModel<typeof content_share_token>;
+export type NewContentShareToken = InferInsertModel<typeof content_share_token>;
