@@ -17,6 +17,7 @@ export default component$(({ saveProress }: { saveProress: QRL<() => any> }) => 
     <div
       document:onScroll$={() => {
         console.log('yo');
+        console.log(elementIsVisibleInViewport(ref.value), hasSaved.value);
         if (elementIsVisibleInViewport(ref.value) && !hasSaved.value) {
           hasSaved.value = true;
           saveProress();
