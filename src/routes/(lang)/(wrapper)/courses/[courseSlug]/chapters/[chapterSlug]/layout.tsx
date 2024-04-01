@@ -35,7 +35,6 @@ import {
   LuX,
 } from '@qwikest/icons/lucide';
 import CrownPNG from '~/assets/img/crown.png';
-import { logout } from '~/auth/logout';
 import Checkbox from '~/components/_Courses/Chapter/checkbox';
 import { themeContext } from '~/context/themeContext';
 import { cn } from '~/utils/cn';
@@ -184,6 +183,12 @@ const getProgressFn = $((courseId: string, userId: string) => {
   }).then((x) => x.json());
 });
 
+const logout = $(() => {
+  return fetch('/api/courses/logout/', {
+    method: 'POST',
+  });
+});
+
 export default component$(() => {
   const openSideNav = useSignal(false);
   const userNullable = useUserLoaderNullable().value;
@@ -197,7 +202,9 @@ export default component$(() => {
 
   const showSideNav = useSignal(false);
   const handleLogout = $(async () => {
-    await logout();
+    await fetch('/api/courses/logout/', {
+      method: 'POST',
+    });
     removeClientDataCache();
     nav('/');
   });
@@ -269,7 +276,7 @@ export default component$(() => {
         <div class="flex max-h-[100dvh] flex-1 flex-col lg:flex-row">
           <nav class="hidden max-h-[100dvh] min-h-full w-[20%] min-w-[300px] max-w-[500px] overflow-auto bg-pale-yellow/50 pl-6 pr-6 dark:bg-disabled-dark lg:block lg:w-[30%] 2xl:pl-[10%]">
             <div class="flex h-full flex-col items-start gap-4 py-6">
-              <SmallNav login={login} setThemeCookieFn={setThemeCookieFn} />
+              <SmallNav login={login} setThemeCookieFn={setThemeCookieFn} logoutFn={logout}/>
               <div class="flex h-full w-full flex-col gap-2 py-2  lg:gap-3 lg:py-4">
                 <div class="flex flex-col">
                   <Link

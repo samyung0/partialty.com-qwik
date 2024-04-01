@@ -1,4 +1,4 @@
-import { $, component$, PropFunction, QRL, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, PropFunction, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
 
 import type { LuciaSession } from '~/types/LuciaSession';
@@ -42,12 +42,14 @@ export default component$(
     disableTheme?: true;
     getUserFn?: PropFunction<() => any>;
     setThemeCookieFn?: PropFunction<(themeValue: any) => any>;
+    logoutFn?: PropFunction<() => any>;
   }) => {
     const nav = useNavigate();
     const theme = useContext(themeContext);
     const showSideNav = useSignal(false);
     const handleLogout = $(async () => {
-      await logout();
+      if (props.logoutFn) await props.logoutFn();
+      else await logout();
       removeClientDataCache();
       nav('/');
     });
@@ -152,7 +154,11 @@ export default component$(
                   )}
                 </li>
                 <li>
-                  <Link prefetch href={'/members/dashboard/'} class="flex items-center gap-4">
+                  <Link
+                    prefetch
+                    href={login.isLoggedIn ? '/members/dashboard/' : '/login/'}
+                    class="flex items-center gap-4"
+                  >
                     Home
                     <span
                       class={
@@ -264,7 +270,7 @@ export default component$(
           </div>
           <ul class="mx-auto hidden max-w-7xl items-center gap-6 px-4 py-6 text-base font-bold tracking-wide sm:px-6 lg:flex lg:px-8">
             <li class="px-2 py-2">
-              <Link prefetch href={'/members/dashboard/'} class="flex gap-2">
+              <Link prefetch href={login.isLoggedIn ? '/members/dashboard/' : '/login/'} class="flex gap-2">
                 Home
                 <span
                   class={
@@ -377,7 +383,11 @@ export default component$(
                   >
                     <ul class="flex flex-col p-2 [&>li]:p-2">
                       <li>
-                        <Link prefetch href="/members/dashboard/" class="flex items-center gap-3">
+                        <Link
+                          prefetch
+                          href={login.isLoggedIn ? '/members/dashboard/' : '/login/'}
+                          class="flex items-center gap-3"
+                        >
                           <span class="text-[25px]">
                             <LuHome />
                           </span>

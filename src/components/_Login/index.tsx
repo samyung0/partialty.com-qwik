@@ -136,7 +136,7 @@ export default component$(() => {
                 alt="Login With Google"
                 width={55}
                 height={55}
-                class="h-[40px] w-[40px] md:h-[55px] md:w-[55px]"
+                class="h-[45px] w-[45px] md:h-[55px] md:w-[55px]"
               />
             </Link>
             <Link class="p-4 pt-0" aria-label="Login With Github" href="/login/github/">

@@ -8,8 +8,8 @@ import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuShield, LuSun, LuUser2 } from
 import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
 import LoadingSVG from '~/components/LoadingSVG';
-import { themeContext } from '~/context/themeContext';
 import theme from '~/const/theme';
+import { themeContext } from '~/context/themeContext';
 
 const setThemeCookie = server$(function (theme: 'light' | 'dark') {
   this.cookie.set('theme', theme, {
@@ -25,14 +25,17 @@ export default component$(
   ({
     login,
     setThemeCookieFn,
+    logoutFn,
   }: {
     login: { user?: LuciaSession['user'] | undefined; isLoading: boolean; isLoggedIn: boolean };
     setThemeCookieFn?: QRL<(themeValue: (typeof theme)[number]) => any>;
+    logoutFn?: QRL<() => any>;
   }) => {
     const nav = useNavigate();
     const theme = useContext(themeContext);
     const handleLogout = $(async () => {
-      await logout();
+      if (logoutFn) logoutFn();
+      else await logout();
       removeClientDataCache();
       nav('/');
     });

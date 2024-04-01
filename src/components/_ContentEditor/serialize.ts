@@ -674,7 +674,10 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       <input hidden style="display: none;" type="radio" name="${name}" value="${optionValue}" />
       <style>
       .dark .quizOptionContainer {
-        background-color: #2f3e52 !important;
+        background-color: rgb(247 247 247) !important;
+      }
+      .dark .quizOption {
+        background-color: rgb(31 41 55) !important;
       }
       </style>
       <div

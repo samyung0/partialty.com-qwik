@@ -27,7 +27,7 @@ export default component$(() => {
       <div class="w-[60%] pr-[6vw]"></div>
       <ul class="flex w-[40%] items-center gap-6 text-base font-bold tracking-wide">
         <li class="px-2 py-2">
-          <Link prefetch href={'/members/dashboard/'} class="flex gap-2">
+          <Link prefetch href={login.isLoggedIn ? '/members/dashboard/' : "/login/"} class="flex gap-2">
             Home
             <span class="text-[20px] text-primary-dark-gray">
               <LuHome />

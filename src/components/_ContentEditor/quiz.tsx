@@ -16,9 +16,9 @@ export const QuizOption = ({ attributes, children, element }: RenderElementProps
       <input hidden className="hidden" type="radio" name={name} value={optionValue} />
       <div
         contentEditable={false}
-        className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-dark-gray"
+        className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-dark-gray dark:bg-background-light-gray"
       >
-        <div className="quizOption h-3 w-3 rounded-full bg-background-light-gray"></div>
+        <div className="quizOption h-3 w-3 rounded-full bg-background-light-gray dark:bg-primary-dark-gray"></div>
       </div>
       <span className="optionText">{children}</span>
     </div>
