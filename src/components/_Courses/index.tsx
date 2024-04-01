@@ -50,7 +50,7 @@ const getFavourite = $(async (userId: string) => {
 const setFavouriteDB = $(async (userId: string, courseId: string) => {
   const d = new FormData();
   d.append('courseId', courseId);
-  d.append('userId', userId)
+  d.append('userId', userId);
   return await fetch('/api/courses/setFavouriteDB/', {
     method: 'POST',
     body: d,
@@ -74,7 +74,7 @@ const setFavouriteDB = $(async (userId: string, courseId: string) => {
 const removeFavouriteDB = $(async (userId: string, courseId: string) => {
   const d = new FormData();
   d.append('courseId', courseId);
-  d.append('userId', userId)
+  d.append('userId', userId);
   return await fetch('/api/courses/removeFavouriteDB/', {
     method: 'POST',
     body: d,
@@ -388,7 +388,7 @@ export default component$(() => {
             )}
             <div class="flex flex-col gap-3 p-3 px-0 pt-0 md:gap-4 md:p-4 md:pt-0">
               <button
-                onClick$={toggleFavourite}
+                onClick$={() => toggleFavourite()}
                 class="flex items-center justify-center text-sm tracking-wide underline decoration-wavy underline-offset-4 md:text-base lg:underline-offset-[6px]"
               >
                 <span class="flex items-center gap-3">
