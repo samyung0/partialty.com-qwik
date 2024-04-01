@@ -9,5 +9,5 @@ export const onGet: RequestHandler = async (req) => {
   initLuciaIfNeeded(req.env, import.meta.env.VITE_USE_PROD_DB === '1');
   const authRequest = auth(req.env, import.meta.env.VITE_USE_PROD_DB === '1').handleRequest(req);
   const session = await authRequest.validate();
-  return session;
+  req.json(200, session);
 };
