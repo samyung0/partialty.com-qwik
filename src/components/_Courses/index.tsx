@@ -210,7 +210,6 @@ export default component$(() => {
           return;
         }
         const res = await getUserFn();
-        console.log('dsadas');
         login.isLoading = false;
         if (res) {
           login.isLoggedIn = true;
