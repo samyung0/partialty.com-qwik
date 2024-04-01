@@ -1,4 +1,4 @@
-import { $, component$, useComputed$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import QwikContent from '~/components/Prose/QwikContent';
 import {
   useCurrentChapter,
@@ -71,6 +71,10 @@ const saveProgressServer = $(async (progress: string[], courseId: string, userId
   }).then((x) => x.json());
 });
 
+const getUserFn = $(async () => {
+  return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
+});
+
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
   const { course, preview, chapters } = useCourseLoader().value;
@@ -93,6 +97,22 @@ export default component$(() => {
     filename: string;
     playback_ids: { id: string }[];
   }>();
+  const login = useStore({
+    isLoading: userNullable === undefined,
+    isLoggedIn: userNullable !== undefined,
+    user: userNullable,
+  });
+
+  useVisibleTask$(async () => {
+    if (login.isLoggedIn) return;
+    const res = await getUserFn();
+    login.isLoading = false;
+    if (res) {
+      login.isLoggedIn = true;
+      login.user = res.user;
+    }
+  });
+
   useVisibleTask$(async ({ track }) => {
     track(() => currentChapter);
     if (!currentChapter || !currentChapter.audio_track_asset_id) return (audioTrack.value = undefined);
@@ -105,12 +125,12 @@ export default component$(() => {
     };
   });
   const saveToDB = $(async (isCorrect: boolean) => {
-    if (!userNullable || !currentChapter) return;
+    if (!login.isLoggedIn || !currentChapter) return;
     console.log('Saving Answer');
-    await saveToDBQuiz(isCorrect, userNullable.userId, course.content_index.id, currentChapter.id);
+    await saveToDBQuiz(isCorrect, login.user!.userId, course.content_index.id, currentChapter.id);
   });
   const saveProress = $(async () => {
-    if (!userProgress || !userNullable || !currentChapter) return;
+    if (!userProgress || !login.isLoggedIn || !currentChapter) return;
     console.log('saving Progress');
     const newProgress = [...userProgress.progress];
     if (!userProgress.progress.includes(currentChapter.id)) newProgress.push(currentChapter.id);
@@ -118,7 +138,7 @@ export default component$(() => {
       course.content_index.chapter_order
         .filter((id) => !!chapters.find((chapter) => chapter.id === id))
         .filter((id) => !newProgress.includes(id)).length > 0;
-    await saveProgressServer([...newProgress], course.content_index.id, userNullable.userId, notFinished);
+    await saveProgressServer([...newProgress], course.content_index.id, login.user!.userId, notFinished);
   });
   return currentChapter ? (
     <QwikContent
