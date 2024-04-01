@@ -1,5 +1,5 @@
 import type { QRL } from '@builder.io/qwik';
-import { $, component$, useOnDocument, useSignal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
 
 const elementIsVisibleInViewport = (el: any, partiallyVisible = false) => {
   const { top, left, bottom, right } = el.getBoundingClientRect();
@@ -13,17 +13,18 @@ const elementIsVisibleInViewport = (el: any, partiallyVisible = false) => {
 export default component$(({ saveProress }: { saveProress: QRL<() => any> }) => {
   const ref = useSignal<HTMLDivElement>();
   const hasSaved = useSignal(false);
-  useOnDocument(
-    'scroll',
-    $(() => {
-      if (elementIsVisibleInViewport(ref.value) && !hasSaved.value) {
-        hasSaved.value = true;
-        saveProress();
-      }
-    })
-  );
   return (
-    <div class="h-0" ref={ref}>
+    <div
+      document:onScroll$={() => {
+        console.log('yo');
+        if (elementIsVisibleInViewport(ref.value) && !hasSaved.value) {
+          hasSaved.value = true;
+          saveProress();
+        }
+      }}
+      class="h-0"
+      ref={ref}
+    >
       &nbsp;
     </div>
   );

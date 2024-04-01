@@ -15,7 +15,6 @@ export const onPost: RequestHandler = async (req) => {
   if (!_progress || _notFinished === undefined || !courseId || !userId) throw req.json(400, 'Badly formatted request.');
   const progress = JSON.parse(_progress);
   const notFinished = JSON.parse(_notFinished);
-  console.log(progress, notFinished === false);
   const ret = await drizzleClient(req.env, import.meta.env.VITE_USE_PROD_DB === '1')
     .update(content_user_progress)
     .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
