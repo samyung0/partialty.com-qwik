@@ -26,12 +26,14 @@ import { listSupportedLang } from '../../../lang';
 // });
 
 const getFavourite = $(async (userId: string) => {
+  const d = new FormData();
+  d.append('userId', userId);
   return await fetch('/api/courses/getFavouriteDB/', {
     method: 'POST',
-    body: JSON.stringify({ userId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -46,12 +48,15 @@ const getFavourite = $(async (userId: string) => {
 // });
 
 const setFavouriteDB = $(async (userId: string, courseId: string) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
+  d.append('userId', userId)
   return await fetch('/api/courses/setFavouriteDB/', {
     method: 'POST',
-    body: JSON.stringify({ courseId, userId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -67,12 +72,15 @@ const setFavouriteDB = $(async (userId: string, courseId: string) => {
 // });
 
 const removeFavouriteDB = $(async (userId: string, courseId: string) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
+  d.append('userId', userId)
   return await fetch('/api/courses/removeFavouriteDB/', {
     method: 'POST',
-    body: JSON.stringify({ courseId, userId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -87,12 +95,14 @@ const removeFavouriteDB = $(async (userId: string, courseId: string) => {
 // });
 
 const setFavouriteCookie = $(async (courseId: string) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
   return await fetch('/api/courses/setCookie/', {
     method: 'POST',
-    body: JSON.stringify({ courseId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -103,12 +113,14 @@ const setFavouriteCookie = $(async (courseId: string) => {
 // });
 
 const removeFavouriteCookie = $(async (courseId: string) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
   return await fetch('/api/courses/removeCookie/', {
     method: 'POST',
-    body: JSON.stringify({ courseId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -118,17 +130,19 @@ const removeFavouriteCookie = $(async (courseId: string) => {
 
 const getUserFn = $(async () => {
   await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
-})
+});
 
 const setThemeCookieFn = $(async (themeValue: any) => {
+  const d = new FormData();
+  d.append('theme', themeValue);
   return await fetch('/api/courses/chapters/setThemeCookie/', {
     method: 'POST',
-    body: JSON.stringify({ theme: themeValue }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
-})
+});
 
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
@@ -145,12 +159,14 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(async () => {
+      const d = new FormData();
+      d.append('courseId', course.content_index.id);
       const fav = await fetch('/api/courses/getCookie/', {
         method: 'POST',
-        body: JSON.stringify({ courseId: course.content_index.id }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: d,
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
       }).then((x) => x.json());
       isFavourite.value = fav;
     })
@@ -196,11 +212,7 @@ export default component$(() => {
 
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
-      <Nav
-        user={userNullable}
-        getUserFn={getUserFn}
-        setThemeCookieFn={setThemeCookieFn}
-      />
+      <Nav user={userNullable} getUserFn={getUserFn} setThemeCookieFn={setThemeCookieFn} />
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <Link
           href={'/catalog/'}

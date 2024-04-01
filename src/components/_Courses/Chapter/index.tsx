@@ -17,22 +17,29 @@ import {
 // export { fetchAudioServer };
 
 const saveToDBQuiz = $(async (isCorrect: boolean, userId: string, courseId: string, chapterId: string) => {
+  const d = new FormData();
+  d.append('_isCorrect', JSON.stringify(isCorrect));
+  d.append('userId', userId);
+  d.append('courseId', courseId);
+  d.append('chapterId', chapterId);
   return await fetch('/api/courses/chapters/saveToDBQuiz/', {
     method: 'POST',
-    body: JSON.stringify({ isCorrect, userId, courseId, chapterId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
 const fetchAudioServer = $(async (audioId: string) => {
+  const d = new FormData();
+  d.append('audioId', audioId);
   return await fetch('/api/courses/chapters/fetchAudio/', {
     method: 'POST',
-    body: JSON.stringify({ audioId }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -50,12 +57,18 @@ const fetchAudioServer = $(async (audioId: string) => {
 // });
 
 const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean) => {
+  const d = new FormData();
+  console.log(progress);
+  d.append('_progress', JSON.stringify(progress));
+  d.append('courseId', courseId);
+  d.append('userId', userId);
+  d.append('_notFinished', JSON.stringify(notFinished));
   return await fetch('/api/courses/chapters/saveProgress/', {
     method: 'POST',
-    body: JSON.stringify({ progress, courseId, userId, notFinished }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 

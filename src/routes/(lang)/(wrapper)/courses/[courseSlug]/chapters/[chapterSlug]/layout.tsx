@@ -109,12 +109,14 @@ export const useDBLoader = routeLoader$(async (event) => {
 // });
 
 const setThemeCookie = $(async (themeValue: (typeof theme)[number]) => {
+  const d = new FormData();
+  d.append('theme', themeValue);
   return await fetch('/api/courses/chapters/setThemeCookie/', {
     method: 'POST',
-    body: JSON.stringify({ theme: themeValue }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -129,12 +131,14 @@ const setThemeCookie = $(async (themeValue: (typeof theme)[number]) => {
 // });
 
 const setShowAllHighlightsCookie = $(async (value: boolean) => {
+  const d = new FormData();
+  d.append('value', value.toString());
   return await fetch('/api/courses/chapters/setShowAllHighlightsCookie/', {
     method: 'POST',
-    body: JSON.stringify({ value: value.toString() }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 });
 
@@ -159,12 +163,14 @@ interface ChapterActions {
 export const chapterContext = createContextId<ChapterActions>('chapterContext');
 
 const setThemeCookieFn = $(async (themeValue: any) => {
+  const d = new FormData();
+  d.append('theme', themeValue);
   return await fetch('/api/courses/chapters/setThemeCookie/', {
     method: 'POST',
-    body: JSON.stringify({ theme: themeValue }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
   }).then((x) => x.json());
 })
 

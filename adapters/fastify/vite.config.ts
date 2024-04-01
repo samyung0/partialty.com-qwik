@@ -29,7 +29,8 @@ export default extendConfig(baseConfig, () => {
             '/catalog',
             '/unauth',
             '/purchase',
-            "/api"
+            '/api',
+            '/admin'
           ],
           origin: 'https://www.partialty.com',
           sitemapOutFile: 'sitemap-ssg.xml',
