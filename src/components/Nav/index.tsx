@@ -29,7 +29,7 @@ export { getUser };
 const setThemeCookie = server$(function (theme: 'light' | 'dark') {
   this.cookie.set('theme', theme, {
     path: '/',
-    maxAge: [7, 'days'],
+    maxAge: [480, 'weeks'],
     httpOnly: false,
     sameSite: 'lax',
     secure: true,
