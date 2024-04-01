@@ -55,13 +55,12 @@ const fetchAudioServer = $(async (audioId: string) => {
 // });
 
 const saveProgressServer = $(
-  async (progress: string[], courseId: string, userId: string, notFinished: boolean, prevProgress: boolean) => {
+  async (courseId: string, userId: string, chapterId: string, filteredChapter: string[]) => {
     const d = new FormData();
-    d.append('_progress', JSON.stringify(progress));
     d.append('courseId', courseId);
     d.append('userId', userId);
-    d.append('_notFinished', JSON.stringify(notFinished));
-    d.append('_prevProgress', JSON.stringify(prevProgress));
+    d.append('chapterId', chapterId);
+    d.append('_filteredChapter', JSON.stringify(filteredChapter))
     return await fetch('/api/courses/chapters/saveProgress/', {
       method: 'POST',
       body: d,
@@ -91,7 +90,6 @@ export default component$(() => {
   const tags = useTagLoader().value;
   const categories = useCategoryLoader().value;
   const { currentChapter } = useCurrentChapter().value;
-  const userProgress = course.content_user_progress;
   const audioTrack = useSignal<{
     id: string;
     duration: number;
@@ -146,19 +144,18 @@ export default component$(() => {
     }
     console.log('saving Progress');
     if (!login.isLoggedIn) return;
-    const newProgress = [...(userProgress?.progress || [])];
-    if (!(userProgress?.progress || []).includes(currentChapter.id)) newProgress.push(currentChapter.id);
+    // const newProgress = [...(userProgress?.progress || [])];
+    // if (!(userProgress?.progress || []).includes(currentChapter.id)) newProgress.push(currentChapter.id);
 
-    const notFinished =
-      course.content_index.chapter_order
-        .filter((id) => !!chapters.find((chapter) => chapter.id === id))
-        .filter((id) => !newProgress.includes(id)).length > 0;
+    // const notFinished =
+    //   course.content_index.chapter_order
+    //     .filter((id) => !!chapters.find((chapter) => chapter.id === id))
+    //     .filter((id) => !newProgress.includes(id)).length > 0;
     await saveProgressServer(
-      [...newProgress],
       course.content_index.id,
       login.user!.userId,
-      notFinished,
-      userProgress !== null
+      currentChapter.id,
+      course.content_index.chapter_order.filter((id) => !!chapters.find((chapter) => chapter.id === id))
     );
   });
   return currentChapter ? (

@@ -66,101 +66,106 @@ export default component$(() => {
             />
           </div> */}
         </div>
-        <ul class="flex flex-col gap-2 py-2">
-          {displayCourses.value.map((data) => {
-            const currentCourse = data.content_index;
-            const currentChapters = data.content_index.chapter_order
-              .map((id) => chapters.find((chapter) => chapter.id === id)!)
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              .filter((x) => x !== undefined);
-            const completedChapters = data.content_user_progress.progress;
-            return (
-              <li
-                class={
-                  'flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3'
-                }
-                key={`currentCourses${currentCourse.slug}`}
-              >
-                <div
-                  onClick$={() => {
-                    courseObj[currentCourse.id].opened = !courseObj[currentCourse.id].opened;
-                  }}
-                  class="flex cursor-pointer items-center justify-between"
+        {displayCourses.value.length === 0 && <p class="py-4 text-sm lg:text-base">No courses completed Yet! 🥹</p>}
+        {displayCourses.value.length > 0 && (
+          <ul class="flex flex-col gap-2 py-2">
+            {displayCourses.value.map((data) => {
+              const currentCourse = data.content_index;
+              const currentChapters = data.content_index.chapter_order
+                .map((id) => chapters.find((chapter) => chapter.id === id)!)
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                .filter((x) => x !== undefined);
+              const completedChapters = data.content_user_progress.progress;
+              return (
+                <li
+                  class={
+                    'flex flex-col rounded-xl border-2 border-primary-dark-gray bg-background-light-gray px-4 py-2 dark:bg-highlight-dark dark:text-background-light-gray md:px-6 md:py-3'
+                  }
+                  key={`currentCourses${currentCourse.slug}`}
                 >
-                  <div class="flex flex-col gap-1">
-                    <h2 class="text-base md:text-lg md:tracking-wide">{currentCourse.name}</h2>
-                    <div class="mb-1 block h-1.5  w-[100px] rounded-full bg-light-lilac md:hidden">
-                      <div
-                        class={`h-1.5 rounded-full bg-lilac`}
-                        style={{
-                          width: `${Math.round((completedChapters.length / currentChapters.length) * 100)}%`,
-                        }}
-                      ></div>
+                  <div
+                    onClick$={() => {
+                      courseObj[currentCourse.id].opened = !courseObj[currentCourse.id].opened;
+                    }}
+                    class="flex cursor-pointer items-center justify-between"
+                  >
+                    <div class="flex flex-col gap-1">
+                      <h2 class="text-base md:text-lg md:tracking-wide">{currentCourse.name}</h2>
+                      <div class="mb-1 block h-1.5  w-[100px] rounded-full bg-light-lilac md:hidden">
+                        <div
+                          class={`h-1.5 rounded-full bg-lilac`}
+                          style={{
+                            width: `${Math.round((completedChapters.length / currentChapters.length) * 100)}%`,
+                          }}
+                        ></div>
+                      </div>
+                      <p class="flex items-center gap-1">
+                        <span class="-mt-1 flex items-center text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
+                          <IoReaderOutline />
+                        </span>
+                        <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
+                          {completedChapters.length} / {currentChapters.length} chapter
+                          {currentChapters.length > 1 ? 's' : ''} completed
+                        </span>
+                      </p>
                     </div>
-                    <p class="flex items-center gap-1">
-                      <span class="-mt-1 flex items-center text-[12px] text-primary-dark-gray dark:text-background-light-gray md:text-[15px]">
-                        <IoReaderOutline />
-                      </span>
-                      <span class="text-[0.75rem] md:text-[1rem] md:tracking-wide">
-                        {completedChapters.length} / {currentChapters.length} chapter
-                        {currentChapters.length > 1 ? 's' : ''} completed
-                      </span>
-                    </p>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="hidden h-1.5 w-[100px] rounded-full  bg-light-lilac md:block">
-                      <div
-                        class={`h-1.5 rounded-full bg-lilac`}
-                        style={{
-                          width: `${Math.round((completedChapters.length / chapters.length) * 100)}%`,
-                        }}
-                      ></div>
+                    <div class="flex items-center gap-2">
+                      <div class="hidden h-1.5 w-[100px] rounded-full  bg-light-lilac md:block">
+                        <div
+                          class={`h-1.5 rounded-full bg-lilac`}
+                          style={{
+                            width: `${Math.round((completedChapters.length / chapters.length) * 100)}%`,
+                          }}
+                        ></div>
+                      </div>
+                      <button class="p-2">
+                        <span
+                          style={{
+                            transform: courseObj[currentCourse.id].opened ? 'rotateZ(180deg)' : '',
+                          }}
+                          class={'inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray'}
+                        >
+                          <IoCaretDown />
+                        </span>
+                      </button>
                     </div>
-                    <button class="p-2">
-                      <span
-                        style={{
-                          transform: courseObj[currentCourse.id].opened ? 'rotateZ(180deg)' : '',
-                        }}
-                        class={'inline-block text-[15px] text-primary-dark-gray dark:text-background-light-gray'}
-                      >
-                        <IoCaretDown />
-                      </span>
-                    </button>
                   </div>
-                </div>
-                {courseObj[currentCourse.id].opened ? (
-                  <ul class="flex flex-col gap-4 py-4">
-                    {currentChapters.map((chapter) => (
-                      <li
-                        key={`Course${currentCourse.slug}Chapter${chapter.id}`}
-                        class="flex items-center justify-between"
-                      >
-                        <h2 class="border-b-2 border-primary-dark-gray text-[0.875rem] dark:border-background-light-gray md:text-[1rem]">
-                          <Link href={chapter.link || undefined}>{chapter.name}</Link>
-                        </h2>
-                        {completedChapters.indexOf(chapter.id) !== -1 ? (
-                          <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">Completed</p>
-                        ) : (
-                          <p class="border-b-2 border-custom-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
-                            Not Completed
-                          </p>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            );
-          })}
-          {sortedCourses.value.length > 3 && (
-            <button
-              onClick$={() => (showAll.value = !showAll.value)}
-              class="self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
-            >
-              {showAll.value ? <p>View Less</p> : <p>View All</p>}
-            </button>
-          )}
-        </ul>
+                  {courseObj[currentCourse.id].opened ? (
+                    <ul class="flex flex-col gap-4 py-4">
+                      {currentChapters.map((chapter) => (
+                        <li
+                          key={`Course${currentCourse.slug}Chapter${chapter.id}`}
+                          class="flex items-center justify-between"
+                        >
+                          <h2 class="border-b-2 border-primary-dark-gray text-[0.875rem] dark:border-background-light-gray md:text-[1rem]">
+                            <Link href={chapter.link || undefined}>{chapter.name}</Link>
+                          </h2>
+                          {completedChapters.indexOf(chapter.id) !== -1 ? (
+                            <p class="border-b-2 border-mint text-[0.875rem]  md:border-b-4 md:text-[1rem]">
+                              Completed
+                            </p>
+                          ) : (
+                            <p class="border-b-2 border-custom-pink text-[0.875rem]  md:border-b-4 md:text-[1rem]">
+                              Not Completed
+                            </p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+            {sortedCourses.value.length > 3 && (
+              <button
+                onClick$={() => (showAll.value = !showAll.value)}
+                class="self-start p-0 text-[0.875rem] font-bold tracking-wide md:p-2"
+              >
+                {showAll.value ? <p>View Less</p> : <p>View All</p>}
+              </button>
+            )}
+          </ul>
+        )}
       </div>
     </article>
   );

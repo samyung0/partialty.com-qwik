@@ -12,25 +12,32 @@ export const onPost: RequestHandler = async (req) => {
     noStore: true,
     noCache: true,
   });
-  const { _progress, _notFinished, courseId, userId, _prevProgress } = (await req.parseBody()) as any;
-  if (!_progress || _notFinished === undefined || !courseId || !userId || !_prevProgress)
-    throw req.json(400, 'Badly formatted request.');
-  const progress = JSON.parse(_progress);
-  const notFinished = JSON.parse(_notFinished);
-  const prevProgress = JSON.parse(_prevProgress);
+  const { courseId, userId, chapterId, _filteredChapter } = (await req.parseBody()) as any;
+  if (!courseId || !userId || !chapterId || !_filteredChapter) throw req.json(400, 'Badly formatted request.');
+  const filteredChapter = JSON.parse(_filteredChapter);
+  const db = drizzleClient(req.env, import.meta.env.VITE_USE_PROD_DB === '1');
+  const _prevProgress = await db
+    .select()
+    .from(content_user_progress)
+    .where(and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId)));
+  const prevProgress = _prevProgress.length > 0;
+  const newProgress = [...(prevProgress ? _prevProgress[0].progress : [])];
+  if (!(prevProgress ? _prevProgress[0].progress : []).includes(chapterId)) newProgress.push(chapterId);
+
+  const notFinished = filteredChapter.filter((id: string) => !newProgress.includes(id)).length > 0;
   const ret = prevProgress
-    ? await drizzleClient(req.env, import.meta.env.VITE_USE_PROD_DB === '1')
+    ? await db
         .update(content_user_progress)
-        .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
+        .set({ progress: newProgress, finished_date: notFinished ? null : getSQLTimeStamp() })
         .where(and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId)))
         .returning()
-    : await drizzleClient(req.env, import.meta.env.VITE_USE_PROD_DB === '1')
+    : await db
         .insert(content_user_progress)
         .values({
           id: v4(),
           user_id: userId,
           index_id: courseId,
-          progress,
+          progress: newProgress,
           finished_date: notFinished ? null : getSQLTimeStamp(),
         })
         .returning();

@@ -12,8 +12,10 @@ import {
   useTagLoader,
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
-import { listSupportedLang } from '../../../lang';
 import readCookie from '~/utils/readCookie';
+import { ContentUserProgress } from '../../../drizzle_turso/schema/content_user_progress';
+import { listSupportedLang } from '../../../lang';
+import LoadingSVG from '../LoadingSVG';
 
 // const getFavourite = server$(async function (id: string) {
 //   return (
@@ -145,6 +147,16 @@ const setThemeCookieFn = $(async (themeValue: any) => {
   }).then((x) => x.json());
 });
 
+const getProgressFn = $((courseId: string, userId: string) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
+  d.append('userId', userId);
+  return fetch('/api/courses/chapters/getProgress', {
+    method: 'POST',
+    body: d,
+  }).then((x) => x.json());
+});
+
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
   const { course, preview, chapters } = useCourseLoader().value;
@@ -163,6 +175,9 @@ export default component$(() => {
     user: userNullable,
   });
 
+  const content_user_progress = useSignal<ContentUserProgress>();
+  const hasLoadedContentUserProgress = useSignal(false);
+
   useOnDocument(
     'qinit',
     $(async () => {
@@ -180,21 +195,60 @@ export default component$(() => {
       // }).then((x) => x.json());
       isFavourite.value = !!fav;
 
-      if (login.isLoggedIn) return;
-      const res = await getUserFn();
-      login.isLoading = false;
-      if (res) {
-        login.isLoggedIn = true;
-        login.user = res.user;
-
-        const favourite = await getFavourite(login.user!.userId);
-        if (favourite.includes(course.content_index.id)) {
-          isFavourite.value = true;
-          setFavouriteCookie(course.content_index.id);
-        } else {
-          isFavourite.value = false;
-          removeFavouriteCookie(course.content_index.id);
+      try {
+        if (login.isLoggedIn) {
+          getProgressFn(course.content_index.id, login.user!.userId)
+            .then((r) => {
+              content_user_progress.value = r[0];
+            })
+            .catch((e) => {
+              console.error(e);
+            })
+            .finally(() => {
+              hasLoadedContentUserProgress.value = true;
+            });
+          return;
         }
+        const res = await getUserFn();
+        console.log('dsadas');
+        login.isLoading = false;
+        if (res) {
+          login.isLoggedIn = true;
+          login.user = res.user;
+
+          // const d = new FormData();
+          // d.append('courseId', course.content_index.id);
+          // d.append('userId', login.user!.userId);
+          // fetch('/api/courses/chapters/getProgress', {
+          //   method: 'POST',
+          //   body: d,
+          // })
+          //   .then((x) => x.json())
+          getProgressFn(course.content_index.id, login.user!.userId)
+            .then((r) => {
+              content_user_progress.value = r[0];
+            })
+            .catch((e) => {
+              console.error(e);
+            })
+            .finally(() => {
+              hasLoadedContentUserProgress.value = true;
+            });
+
+          const favourite = await getFavourite(login.user!.userId);
+          if (favourite.includes(course.content_index.id)) {
+            isFavourite.value = true;
+            setFavouriteCookie(course.content_index.id);
+          } else {
+            isFavourite.value = false;
+            removeFavouriteCookie(course.content_index.id);
+          }
+        } else {
+          hasLoadedContentUserProgress.value = true;
+        }
+      } catch (e) {
+        console.error(e);
+        hasLoadedContentUserProgress.value = true;
       }
     })
   );
@@ -229,13 +283,16 @@ export default component$(() => {
   //   }
   // });
 
-  const nextCourseLink = course.content_user_progress
-    ? chapters.find(
-        (chapter) =>
-          chapter.id ===
-          filteredChapterOrder.value.filter((id) => !course.content_user_progress!.progress.includes(id))[0]
-      )?.link || chapters.find((chapter) => chapter.id === filteredChapterOrder.value[0])!.link!
-    : '';
+  const nextCourseLink = useComputed$(
+    () =>
+      (content_user_progress.value &&
+        chapters.find(
+          (chapter) =>
+            chapter.id ===
+            filteredChapterOrder.value.filter((id) => !content_user_progress.value!.progress.includes(id))[0]
+        )?.link) ||
+      chapters.find((chapter) => chapter.id === filteredChapterOrder.value[0])!.link!
+  );
 
   return (
     <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
@@ -394,23 +451,26 @@ export default component$(() => {
                 </ul>
               </div>
             </div>
-            {!course.content_user_progress && (
-              <Link
+            {!hasLoadedContentUserProgress.value && (
+              <div class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base">
+                <LoadingSVG />
+              </div>
+            )}
+            {hasLoadedContentUserProgress.value && !content_user_progress.value && (
+              <a
                 href={chapters.find((chapter) => filteredChapterOrder.value[0] === chapter.id)?.link || undefined}
-                prefetch
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
               >
                 Start {course.content_index.is_guide ? 'Guide' : 'Course'} Now :D
-              </Link>
+              </a>
             )}
-            {course.content_user_progress !== null && (
-              <Link
-                href={nextCourseLink}
-                prefetch
+            {hasLoadedContentUserProgress.value && content_user_progress.value && (
+              <a
+                href={nextCourseLink.value || undefined}
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
               >
                 Continue {course.content_index.is_guide ? 'Guide' : 'Course'} :D
-              </Link>
+              </a>
             )}
             <div class="flex flex-col gap-3 p-3 px-0 pt-0 md:gap-4 md:p-4 md:pt-0">
               <button
