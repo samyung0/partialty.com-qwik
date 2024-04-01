@@ -4,7 +4,6 @@ import type { DocumentHead, StaticGenerateHandler } from '@builder.io/qwik-city'
 import CoursePage from '~/components/_Courses';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 
-
 export default component$(() => {
   return <CoursePage />;
 });

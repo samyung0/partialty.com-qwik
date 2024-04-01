@@ -3,64 +3,81 @@ import { Link } from '@builder.io/qwik-city';
 
 export default component$(() => {
   return (
-    <footer class=" bg-primary-dark-gray text-background-light-gray dark:bg-disabled-dark">
-      <div class="flex w-full flex-col items-center justify-center py-20 pt-40 xl:flex-row xl:items-start">
-        <div class="pb-8 text-center xl:w-[50%]">
-          <p class="text-[2rem] font-bold tracking-widest">Partialty.com</p>
-        </div>
-        <div class="xl:w-[50%]">
-          <ul class="grid gap-8 px-8 md:flex  md:gap-12">
-            <li class="text-base md:text-lg">
-              <ul class="flex flex-col gap-3">
-                <li class="tracking-tight text-gray-400">Resources</li>
-                <li>
-                  <Link href="/">Courses</Link>
-                </li>
-                <li>
-                  <Link href="/">Projects</Link>
-                </li>
-                <li>
-                  <Link href="/">Guides</Link>
-                </li>
-                <li>
-                  <Link href="/">Pricing</Link>
-                </li>
-                <li></li>
-              </ul>
-            </li>
-            <li class="text-base md:text-lg">
-              <ul class="flex flex-col gap-3">
-                <li class="tracking-tight text-gray-400">Help and Support</li>
-                <li>
-                  <Link href="/">Contact Us</Link>
-                </li>
-                <li>
-                  <Link href="/">Make Suggestions</Link>
-                </li>
-                <li>
-                  <Link href="/">Work with Us</Link>
-                </li>
-              </ul>
-            </li>
-            <li class="text-base md:text-lg">
-              <ul class="flex flex-col gap-3">
-                <li class="tracking-tight text-gray-400">Legal</li>
-                <li>
-                  <Link href="/">License (EULA)</Link>
-                </li>
-                <li>
-                  <Link href="/">Privacy Policy</Link>
-                </li>
-                <li>
-                  <Link href="/">Terms and Condition</Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
+    <footer class="bg-gray-900" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" class="sr-only">
+        Footer
+      </h2>
+      <div class="mx-auto max-w-7xl px-6 py-16 sm:py-24 lg:px-8 lg:py-32">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+          <p class="font-mosk text-2xl tracking-wider text-white">Partialty.com</p>
+          <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 class="text-sm font-semibold leading-6 text-white">Resources</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <Link href="/catalog/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Courses
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/catalog/?type=guide" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Guides
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/about/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      About
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-10 md:mt-0">
+                <h3 class="text-sm font-semibold leading-6 text-white">Support</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Contact Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Make Suggestions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Contribute
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      License
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Privacy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Terms
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="mx-auto h-[2px] w-[80%] bg-gray-600"></div>
-      <p class="py-10 text-center">© 2024 Partialty</p>
     </footer>
   );
 });

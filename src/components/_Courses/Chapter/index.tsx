@@ -12,26 +12,51 @@ import {
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 
-import { server$ } from '@builder.io/qwik-city';
-import { and, eq } from 'drizzle-orm';
-import { fetchAudioServer } from '~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor';
-import drizzleClient from '~/utils/drizzleClient';
-import getSQLTimeStamp from '~/utils/getSQLTimeStamp';
-import saveToDBQuiz from '~/utils/quiz/saveToDBQuiz';
-import { content_user_progress } from '../../../../drizzle_turso/schema/content_user_progress';
-export { fetchAudioServer };
+// import { fetchAudioServer } from '~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor';
+// import saveToDBQuiz from '~/utils/quiz/saveToDBQuiz';
+// export { fetchAudioServer };
 
-const saveProgressServer = server$(async function (
-  progress: string[],
-  courseId: string,
-  userId: string,
-  notFinished: boolean
-) {
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-    .update(content_user_progress)
-    .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
-    .where(and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId)))
-    .returning();
+const saveToDBQuiz = $(async (isCorrect: boolean, userId: string, courseId: string, chapterId: string) => {
+  return await fetch('/api/courses/chapters/saveToDBQuiz/', {
+    method: 'POST',
+    body: JSON.stringify({ isCorrect, userId, courseId, chapterId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+});
+
+const fetchAudioServer = $(async (audioId: string) => {
+  return await fetch('/api/courses/chapters/fetchAudio/', {
+    method: 'POST',
+    body: JSON.stringify({ audioId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
+});
+
+// const saveProgressServer = server$(async function (
+//   progress: string[],
+//   courseId: string,
+//   userId: string,
+//   notFinished: boolean
+// ) {
+//   return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+//     .update(content_user_progress)
+//     .set({ progress, finished_date: notFinished ? null : getSQLTimeStamp() })
+//     .where(and(eq(content_user_progress.index_id, courseId), eq(content_user_progress.user_id, userId)))
+//     .returning();
+// });
+
+const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean) => {
+  return await fetch('/api/courses/chapters/saveProgress/', {
+    method: 'POST',
+    body: JSON.stringify({ progress, courseId, userId, notFinished }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
 export default component$(() => {
@@ -69,6 +94,7 @@ export default component$(() => {
   });
   const saveToDB = $(async (isCorrect: boolean) => {
     if (!userNullable || !currentChapter) return;
+    console.log('Saving Answer');
     await saveToDBQuiz(isCorrect, userNullable.userId, course.content_index.id, currentChapter.id);
   });
   const saveProress = $(async () => {

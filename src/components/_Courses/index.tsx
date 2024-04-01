@@ -1,8 +1,7 @@
 import { $, component$, useComputed$, useOnDocument, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { Link, server$, useNavigate } from '@builder.io/qwik-city';
+import { Link, useNavigate } from '@builder.io/qwik-city';
 import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
 import { LuArrowRight, LuGem, LuGoal } from '@qwikest/icons/lucide';
-import { eq } from 'drizzle-orm';
 import Footer from '~/components/Footer';
 import HeartSVG from '~/components/HeartSVG';
 import Nav from '~/components/Nav';
@@ -13,61 +12,109 @@ import {
   useTagLoader,
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
-import drizzleClient from '~/utils/drizzleClient';
-import { profiles } from '../../../drizzle_turso/schema/profiles';
 import { listSupportedLang } from '../../../lang';
 
-const getFavourite = server$(async function (id: string) {
-  return (
-    (
-      await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-        .select({ favourite_courses: profiles.favourite_courses })
-        .from(profiles)
-        .where(eq(profiles.id, id))
-    )[0]?.favourite_courses || []
-  );
+// const getFavourite = server$(async function (id: string) {
+//   return (
+//     (
+//       await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+//         .select({ favourite_courses: profiles.favourite_courses })
+//         .from(profiles)
+//         .where(eq(profiles.id, id))
+//     )[0]?.favourite_courses || []
+//   );
+// });
+
+const getFavourite = $(async (userId: string) => {
+  return await fetch('/api/courses/getFavouriteDB/', {
+    method: 'POST',
+    body: JSON.stringify({ userId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const setFavouriteDB = server$(async function (userId: string, courseId: string) {
-  const favourite_courses = await getFavourite(userId);
-  favourite_courses.push(courseId);
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-    .update(profiles)
-    .set({ favourite_courses })
-    .where(eq(profiles.id, userId))
-    .returning();
+// const setFavouriteDB = server$(async function (userId: string, courseId: string) {
+//   const favourite_courses = await getFavourite(userId);
+//   favourite_courses.push(courseId);
+//   return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+//     .update(profiles)
+//     .set({ favourite_courses })
+//     .where(eq(profiles.id, userId))
+//     .returning();
+// });
+
+const setFavouriteDB = $(async (userId: string, courseId: string) => {
+  return await fetch('/api/courses/setFavouriteDB/', {
+    method: 'POST',
+    body: JSON.stringify({ courseId, userId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const removeFavouriteDB = server$(async function (userId: string, courseId: string) {
-  const favourite_courses = await getFavourite(userId);
-  const index = favourite_courses.indexOf(courseId);
-  if (index >= 0) favourite_courses.splice(index, 1);
-  return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
-    .update(profiles)
-    .set({ favourite_courses })
-    .where(eq(profiles.id, userId))
-    .returning();
+// const removeFavouriteDB = server$(async function (userId: string, courseId: string) {
+//   const favourite_courses = await getFavourite(userId);
+//   const index = favourite_courses.indexOf(courseId);
+//   if (index >= 0) favourite_courses.splice(index, 1);
+//   return await drizzleClient(this.env, import.meta.env.VITE_USE_PROD_DB === '1')
+//     .update(profiles)
+//     .set({ favourite_courses })
+//     .where(eq(profiles.id, userId))
+//     .returning();
+// });
+
+const removeFavouriteDB = $(async (userId: string, courseId: string) => {
+  return await fetch('/api/courses/removeFavouriteDB/', {
+    method: 'POST',
+    body: JSON.stringify({ courseId, userId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const setFavouriteCookie = server$(function (courseId: string) {
-  this.cookie.set('favourite' + courseId, 1, {
-    path: '/',
-    maxAge: [12, 'weeks'],
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: true,
-  });
+// const setFavouriteCookie = server$(function (courseId: string) {
+//   this.cookie.set('favourite' + courseId, 1, {
+//     path: '/',
+//     maxAge: [12, 'weeks'],
+//     httpOnly: true,
+//     sameSite: 'lax',
+//     secure: true,
+//   });
+// });
+
+const setFavouriteCookie = $(async (courseId: string) => {
+  return await fetch('/api/courses/setCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ courseId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const removeFavouriteCookie = server$(function (courseId: string) {
-  this.cookie.delete('favourite' + courseId, {
-    path: '/',
-  });
+// const removeFavouriteCookie = server$(function (courseId: string) {
+//   this.cookie.delete('favourite' + courseId, {
+//     path: '/',
+//   });
+// });
+
+const removeFavouriteCookie = $(async (courseId: string) => {
+  return await fetch('/api/courses/removeCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ courseId }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const getCookie = server$(function (courseId: string) {
-  return this.cookie.get('favourite' + courseId) !== null;
-});
+// const getCookie = server$(function (courseId: string) {
+//   return this.cookie.get('favourite' + courseId) !== null;
+// });
 
 export default component$(() => {
   const userNullable = useUserLoaderNullable().value;
@@ -84,7 +131,15 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(async () => {
-      isFavourite.value = await getCookie(course.content_index.id);
+      const fav = await fetch('/api/courses/getCookie/', {
+        method: 'POST',
+        body: JSON.stringify({ courseId: course.content_index.id }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((x) => x.json());
+      console.log(fav);
+      isFavourite.value = fav;
     })
   );
 

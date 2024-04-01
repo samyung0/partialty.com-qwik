@@ -10,7 +10,7 @@ import {
   useStore,
   useVisibleTask$,
 } from '@builder.io/qwik';
-import { Link, removeClientDataCache, routeLoader$, server$, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { Link, removeClientDataCache, routeLoader$, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { eq } from 'drizzle-orm';
 import SmallNav from '~/components/SmallNav';
 import { useCourseLoader, useUserLoaderNullable } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
@@ -98,34 +98,59 @@ export const useDBLoader = routeLoader$(async (event) => {
   return newUserProgress;
 });
 
-const setThemeCookie = server$(function (theme: 'light' | 'dark') {
-  this.cookie.set('theme', theme, {
-    path: '/',
-    maxAge: [7, 'days'],
-    httpOnly: false,
-    sameSite: 'lax',
-    secure: true,
-  });
+// const setThemeCookie = server$(function (theme: 'light' | 'dark') {
+//   this.cookie.set('theme', theme, {
+//     path: '/',
+//     maxAge: [7, 'days'],
+//     httpOnly: false,
+//     sameSite: 'lax',
+//     secure: true,
+//   });
+// });
+
+const setThemeCookie = $(async (themeValue: (typeof theme)[number]) => {
+  return await fetch('/api/courses/chapters/setThemeCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ theme: themeValue }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const setShowAllHighlightsCookie = server$(function (value: boolean) {
-  this.cookie.set('showAllHighlights', value.toString(), {
-    path: '/',
-    maxAge: [7, 'days'],
-    httpOnly: false,
-    sameSite: 'lax',
-    secure: true,
-  });
+// const setShowAllHighlightsCookie = server$(function (value: boolean) {
+//   this.cookie.set('showAllHighlights', value.toString(), {
+//     path: '/',
+//     maxAge: [7, 'days'],
+//     httpOnly: false,
+//     sameSite: 'lax',
+//     secure: true,
+//   });
+// });
+
+const setShowAllHighlightsCookie = $(async (value: boolean) => {
+  return await fetch('/api/courses/chapters/setShowAllHighlightsCookie/', {
+    method: 'POST',
+    body: JSON.stringify({ value: value.toString() }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json());
 });
 
-const getShowAllHighlightsCookie = server$(function () {
-  return this.cookie.get('showAllHighlights')?.value;
+// const getShowAudioHighlightsCookie = server$(function () {
+//   return this.cookie.get('showAllHighlights')?.value;
+// });
+
+const getShowAudioHighlightsCookie = $(async () => {
+  return await fetch('/api/courses/chapters/getShowAudioHighlightsCookie/').then((x) => x.json());
 });
 
 import LoadingSVG from '~/components/LoadingSVG';
-import getUser from '~/components/_Index/Nav/getUser';
+// import getUser from '~/components/_Index/Nav/getUser';
+import type theme from '~/const/theme';
 
-export { getUser };
+// export { getUser };
 
 interface ChapterActions {
   showAllHighlights: boolean;
@@ -169,7 +194,7 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(async () => {
-      const showAllHighlights = await getShowAllHighlightsCookie();
+      const showAllHighlights = await getShowAudioHighlightsCookie();
       if (showAllHighlights === 'true') {
         chapterActions.showAllHighlights = true;
       }
@@ -184,7 +209,7 @@ export default component$(() => {
 
   useVisibleTask$(async () => {
     if (login.isLoggedIn) return;
-    const res = await getUser();
+    const res = await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
     login.isLoading = false;
     if (res) {
       login.isLoggedIn = true;

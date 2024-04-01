@@ -1,8 +1,8 @@
 import { $, Slot, component$, useContext, useOnDocument } from '@builder.io/qwik';
 import { routeLoader$, server$, type RequestHandler } from '@builder.io/qwik-city';
 import { and, eq } from 'drizzle-orm';
-import { auth, initLuciaIfNeeded } from '~/auth/lucia';
-import theme from '~/const/theme';
+import { auth } from '~/auth/lucia';
+import type theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
 import type { LuciaSession } from '~/types/LuciaSession';
 import drizzleClient, { initDrizzleIfNeeded } from '~/utils/drizzleClient';
