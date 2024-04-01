@@ -1,4 +1,4 @@
-import { $, component$, useComputed$, useOnDocument, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useComputed$, useOnDocument, useSignal, useStore } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
 import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
 import { LuArrowRight, LuGem, LuGoal } from '@qwikest/icons/lucide';
@@ -129,7 +129,7 @@ const removeFavouriteCookie = $(async (courseId: string) => {
 // });
 
 const getUserFn = $(async () => {
-  await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
+  return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
 });
 
 const setThemeCookieFn = $(async (themeValue: any) => {
@@ -156,6 +156,12 @@ export default component$(() => {
   const isFavourite = useSignal(false);
   const nav = useNavigate();
 
+  const login = useStore({
+    isLoading: userNullable === undefined,
+    isLoggedIn: userNullable !== undefined,
+    user: userNullable,
+  });
+
   useOnDocument(
     'qinit',
     $(async () => {
@@ -170,20 +176,37 @@ export default component$(() => {
         // },
       }).then((x) => x.json());
       isFavourite.value = fav;
+
+      if (login.isLoggedIn) return;
+      const res = await getUserFn();
+      login.isLoading = false;
+      if (res) {
+        login.isLoggedIn = true;
+        login.user = res.user;
+
+        const favourite = await getFavourite(login.user!.userId);
+        if (favourite.includes(course.content_index.id)) {
+          isFavourite.value = true;
+          setFavouriteCookie(course.content_index.id);
+        } else {
+          isFavourite.value = false;
+          removeFavouriteCookie(course.content_index.id);
+        }
+      }
     })
   );
 
   const toggleFavourite = $(() => {
-    if (!userNullable) return nav('/login/');
+    if (!login.isLoggedIn) return nav('/login/');
     isFavourite.value = !isFavourite.value;
     if (isFavourite.value) {
-      setFavouriteDB(userNullable.userId, course.content_index.id).catch(() => {
+      setFavouriteDB(login.user!.userId, course.content_index.id).catch(() => {
         isFavourite.value = false;
         removeFavouriteCookie(course.content_index.id);
       });
       setFavouriteCookie(course.content_index.id);
     } else {
-      removeFavouriteDB(userNullable.userId, course.content_index.id).catch(() => {
+      removeFavouriteDB(login.user!.userId, course.content_index.id).catch(() => {
         isFavourite.value = true;
         setFavouriteCookie(course.content_index.id);
       });
@@ -191,17 +214,17 @@ export default component$(() => {
     }
   });
 
-  useVisibleTask$(async () => {
-    if (!userNullable) return;
-    const favourite = await getFavourite(userNullable.userId);
-    if (favourite.includes(course.content_index.id)) {
-      isFavourite.value = true;
-      setFavouriteCookie(course.content_index.id);
-    } else {
-      isFavourite.value = false;
-      removeFavouriteCookie(course.content_index.id);
-    }
-  });
+  // useVisibleTask$(async () => {
+  //   if (!userNullable) return;
+  //   const favourite = await getFavourite(userNullable.userId);
+  //   if (favourite.includes(course.content_index.id)) {
+  //     isFavourite.value = true;
+  //     setFavouriteCookie(course.content_index.id);
+  //   } else {
+  //     isFavourite.value = false;
+  //     removeFavouriteCookie(course.content_index.id);
+  //   }
+  // });
 
   const nextCourseLink = course.content_user_progress
     ? chapters.find(
