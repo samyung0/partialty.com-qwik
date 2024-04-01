@@ -217,12 +217,12 @@ export default component$(() => {
       chapterActions.showAllHighlights = t;
     });
     chapterActions.showAllHighlights = !t;
-    cookieProgress.value = JSON.parse(readCookie('progress', document.cookie) || '[]') as string[];
   });
 
   useOnDocument(
     'qinit',
     $(async () => {
+      cookieProgress.value = JSON.parse(readCookie('progress', document.cookie) || '[]') as string[];
       const showAllHighlights = await getShowAudioHighlightsCookie();
       if (showAllHighlights === 'true') {
         chapterActions.showAllHighlights = true;
