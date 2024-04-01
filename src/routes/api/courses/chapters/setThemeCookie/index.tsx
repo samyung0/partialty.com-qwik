@@ -12,7 +12,7 @@ export const onPost: RequestHandler = async (req) => {
   req.cookie.set('theme', theme, {
     path: '/',
     maxAge: [480, 'weeks'],
-    httpOnly: true,
+    httpOnly: false,
     sameSite: 'lax',
     secure: true,
   });

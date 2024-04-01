@@ -12,7 +12,7 @@ export const onPost: RequestHandler = async (req) => {
   req.cookie.set('favourite' + courseId, 1, {
     path: '/',
     maxAge: [480, 'weeks'],
-    httpOnly: true,
+    httpOnly: false,
     sameSite: 'lax',
     secure: true,
   });
