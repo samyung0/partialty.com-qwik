@@ -133,7 +133,7 @@ const setThemeCookie = $(async (themeValue: (typeof theme)[number]) => {
 const setShowAllHighlightsCookie = $(async (value: boolean) => {
   const d = new FormData();
   d.append('value', value.toString());
-  return await fetch('/api/courses/chapters/setShowAllHighlightsCookie/', {
+  return await fetch('/api/courses/chapters/setShowAudioHighlightsCookie/', {
     method: 'POST',
     body: d,
     // headers: {

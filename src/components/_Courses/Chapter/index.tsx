@@ -58,7 +58,6 @@ const fetchAudioServer = $(async (audioId: string) => {
 
 const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean) => {
   const d = new FormData();
-  console.log(progress);
   d.append('_progress', JSON.stringify(progress));
   d.append('courseId', courseId);
   d.append('userId', userId);

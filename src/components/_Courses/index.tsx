@@ -167,7 +167,7 @@ export default component$(() => {
     'qinit',
     $(async () => {
       const fav = readCookie('favourite' + course.content_index.id, document.cookie);
-      console.log(fav);
+      // console.log(fav);
       // const d = new FormData();
       // d.append('courseId', course.content_index.id);
       // const fav = await fetch('/api/courses/getCookie/', {
