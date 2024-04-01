@@ -8,6 +8,7 @@ import {
   useTagLoader,
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
+import readCookie from '~/utils/readCookie';
 
 // import { fetchAudioServer } from '~/routes/(lang)/(wrapper)/(authRoutes)/contenteditor';
 // import saveToDBQuiz from '~/utils/quiz/saveToDBQuiz';
@@ -53,21 +54,23 @@ const fetchAudioServer = $(async (audioId: string) => {
 //     .returning();
 // });
 
-const saveProgressServer = $(async (progress: string[], courseId: string, userId: string, notFinished: boolean, prevProgress: boolean) => {
-  const d = new FormData();
-  d.append('_progress', JSON.stringify(progress));
-  d.append('courseId', courseId);
-  d.append('userId', userId);
-  d.append('_notFinished', JSON.stringify(notFinished));
-  d.append('_prevProgress', JSON.stringify(prevProgress));
-  return await fetch('/api/courses/chapters/saveProgress/', {
-    method: 'POST',
-    body: d,
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
-  }).then((x) => x.json());
-});
+const saveProgressServer = $(
+  async (progress: string[], courseId: string, userId: string, notFinished: boolean, prevProgress: boolean) => {
+    const d = new FormData();
+    d.append('_progress', JSON.stringify(progress));
+    d.append('courseId', courseId);
+    d.append('userId', userId);
+    d.append('_notFinished', JSON.stringify(notFinished));
+    d.append('_prevProgress', JSON.stringify(prevProgress));
+    return await fetch('/api/courses/chapters/saveProgress/', {
+      method: 'POST',
+      body: d,
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
+    }).then((x) => x.json());
+  }
+);
 
 const getUserFn = $(async () => {
   return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
@@ -128,10 +131,24 @@ export default component$(() => {
     await saveToDBQuiz(isCorrect, login.user!.userId, course.content_index.id, currentChapter.id);
   });
   const saveProress = $(async () => {
-    if (!login.isLoggedIn || !currentChapter) return;
+    if (!currentChapter) return;
+    try {
+      const cookieProgress = [...(JSON.parse(readCookie('progress', document.cookie) || '[]') as string[])];
+      if (!cookieProgress.includes(currentChapter.id)) cookieProgress.push(currentChapter.id);
+      const d = new FormData();
+      d.append('_progress', JSON.stringify(cookieProgress));
+      fetch('/api/courses/chapters/setProgressCookie', {
+        method: 'POST',
+        body: d,
+      });
+    } catch (e) {
+      console.error(e);
+    }
     console.log('saving Progress');
+    if (!login.isLoggedIn) return;
     const newProgress = [...(userProgress?.progress || [])];
     if (!(userProgress?.progress || []).includes(currentChapter.id)) newProgress.push(currentChapter.id);
+
     const notFinished =
       course.content_index.chapter_order
         .filter((id) => !!chapters.find((chapter) => chapter.id === id))

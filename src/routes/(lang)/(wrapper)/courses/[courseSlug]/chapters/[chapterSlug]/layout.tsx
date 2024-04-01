@@ -34,14 +34,11 @@ import {
   LuUser2,
   LuX,
 } from '@qwikest/icons/lucide';
-import { v4 } from 'uuid';
 import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
 import Checkbox from '~/components/_Courses/Chapter/checkbox';
 import { themeContext } from '~/context/themeContext';
 import { cn } from '~/utils/cn';
-import type { ContentUserProgress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
-import { content_user_progress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
 
 export const useCurrentChapter = routeLoader$(async (event) => {
   const _user = await event.resolveValue(useUserLoaderNullable);
@@ -183,6 +180,7 @@ export default component$(() => {
   const { currentChapter, loaded, subscriptionNeeded } = useCurrentChapter().value;
   const chapterSlug = useLocation().params.chapterSlug;
   const userProgress = course.content_user_progress;
+  const cookieProgress = useSignal<string[]>([]);
 
   const nav = useNavigate();
   const theme = useContext(themeContext);
@@ -207,6 +205,7 @@ export default component$(() => {
       chapterActions.showAllHighlights = t;
     });
     chapterActions.showAllHighlights = !t;
+    cookieProgress.value = JSON.parse(readCookie('progress', document.cookie) || "[]") as string[];
   });
 
   useOnDocument(
@@ -276,7 +275,8 @@ export default component$(() => {
                           key={chapter.id}
                           class={cn(
                             'relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ',
-                            userProgress?.progress.includes(chapter.id) &&
+                            (userProgress?.progress.includes(chapter.id) ||
+                              cookieProgress.value.includes(chapter.id)) &&
                               'text-dark-mint after:block after:bg-dark-mint dark:text-mint',
                             isActive && 'text-deep-sea after:block after:bg-deep-sea dark:text-sea'
                           )}
@@ -296,7 +296,8 @@ export default component$(() => {
                               )}
                             </span>
                           </Link>
-                          {userProgress?.progress.includes(chapter.id) && (
+                          {(userProgress?.progress.includes(chapter.id) ||
+                            cookieProgress.value.includes(chapter.id)) && (
                             <span class="text-[15px] text-dark-mint dark:text-mint">
                               <LuCheck />
                             </span>
@@ -509,7 +510,8 @@ export default component$(() => {
                               class={cn(
                                 'relative flex items-center gap-3 pl-6 after:absolute after:left-[-4px] after:top-[50%] after:z-10 after:hidden after:size-[8px] after:translate-y-[-4px] after:rounded-full after:bg-middle-yellow hover:after:block lg:after:left-[-5px] lg:after:size-[10px] lg:after:translate-y-[-5px] ',
                                 isActive && 'text-deep-sea after:block after:bg-deep-sea dark:text-sea',
-                                userProgress?.progress.includes(chapter.id) &&
+                                (userProgress?.progress.includes(chapter.id) ||
+                                  cookieProgress.value.includes(chapter.id)) &&
                                   'text-dark-mint after:block after:bg-dark-mint dark:text-mint'
                               )}
                             >
@@ -528,7 +530,8 @@ export default component$(() => {
                                   )}
                                 </span>
                               </Link>
-                              {userProgress?.progress.includes(chapter.id) && (
+                              {(userProgress?.progress.includes(chapter.id) ||
+                                cookieProgress.value.includes(chapter.id)) && (
                                 <span class="text-[15px] text-dark-mint dark:text-mint">
                                   <LuCheck />
                                 </span>

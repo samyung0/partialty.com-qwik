@@ -428,7 +428,7 @@ export default component$(
               <li
                 class={
                   (props.disableTheme ? 'ml-auto ' : '') +
-                  ' rounded-lg bg-primary-dark-gray px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md'
+                  ' rounded-lg bg-disabled-dark px-4 py-2 font-normal tracking-normal text-background-light-gray shadow-md'
                 }
               >
                 <Link prefetch href={'/login'} class="whitespace-nowrap">
