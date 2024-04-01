@@ -7,5 +7,5 @@ export const onGet: RequestHandler = async (req) => {
     noStore: true,
     noCache: true,
   });
-  req.json(200, req.cookie.get('showAllHighlights')?.value);
+  req.json(200, req.cookie.get('showAllHighlights')?.value || null);
 };

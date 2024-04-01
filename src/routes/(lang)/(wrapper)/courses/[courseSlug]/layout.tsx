@@ -129,7 +129,9 @@ export const useCourseLoader = routeLoader$(async (event) => {
 // });
 
 const getTheme = $(async () => {
-  return await fetch('/api/courses/chapters/getThemeCookie/').then((x) => x.json());
+  return await fetch('/api/courses/chapters/getThemeCookie/', {
+    credentials: 'include',
+  }).then((x) => x.json());
 });
 
 export default component$(() => {
