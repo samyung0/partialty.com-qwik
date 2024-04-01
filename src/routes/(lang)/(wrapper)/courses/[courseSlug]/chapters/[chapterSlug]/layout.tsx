@@ -147,12 +147,14 @@ const setShowAllHighlightsCookie = $(async (value: boolean) => {
 // });
 
 const getShowAudioHighlightsCookie = $(async () => {
-  return await fetch('/api/courses/chapters/getShowAudioHighlightsCookie/').then((x) => x.json());
+  return readCookie('showAllHighlights', document.cookie);
+  // return await fetch('/api/courses/chapters/getShowAudioHighlightsCookie/').then((x) => x.json());
 });
 
 import LoadingSVG from '~/components/LoadingSVG';
 // import getUser from '~/components/_Index/Nav/getUser';
 import type theme from '~/const/theme';
+import readCookie from '~/utils/readCookie';
 
 // export { getUser };
 

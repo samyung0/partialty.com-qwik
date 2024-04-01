@@ -13,6 +13,7 @@ import {
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 import { listSupportedLang } from '../../../lang';
+import readCookie from '~/utils/readCookie';
 
 // const getFavourite = server$(async function (id: string) {
 //   return (
@@ -165,17 +166,19 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(async () => {
-      const d = new FormData();
-      d.append('courseId', course.content_index.id);
-      const fav = await fetch('/api/courses/getCookie/', {
-        credentials: 'include',
-        method: 'POST',
-        body: d,
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
-      }).then((x) => x.json());
-      isFavourite.value = fav;
+      const fav = readCookie('favourite' + course.content_index.id, document.cookie);
+      console.log(fav);
+      // const d = new FormData();
+      // d.append('courseId', course.content_index.id);
+      // const fav = await fetch('/api/courses/getCookie/', {
+      //   credentials: 'include',
+      //   method: 'POST',
+      //   body: d,
+      //   // headers: {
+      //   //   'Content-Type': 'application/json',
+      //   // },
+      // }).then((x) => x.json());
+      isFavourite.value = !!fav;
 
       if (login.isLoggedIn) return;
       const res = await getUserFn();

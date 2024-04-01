@@ -14,6 +14,7 @@ import { content_user_progress } from '../../../../../../drizzle_turso/schema/co
 import { course_approval } from '../../../../../../drizzle_turso/schema/course_approval';
 import { profiles } from '../../../../../../drizzle_turso/schema/profiles';
 import { tag } from '../../../../../../drizzle_turso/schema/tag';
+import readCookie from '~/utils/readCookie';
 
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   // cacheControl({
@@ -129,9 +130,10 @@ export const useCourseLoader = routeLoader$(async (event) => {
 // });
 
 const getTheme = $(async () => {
-  return await fetch('/api/courses/chapters/getThemeCookie/', {
-    credentials: 'include',
-  }).then((x) => x.json());
+  return readCookie('theme', document.cookie);
+  // return await fetch('/api/courses/chapters/getThemeCookie/', {
+  //   credentials: 'include',
+  // }).then((x) => x.json());
 });
 
 export default component$(() => {

@@ -313,7 +313,8 @@ export default component$(
                       } else {
                         theme.value = 'light';
                       }
-                      setThemeCookie(theme.value);
+                      if (props.setThemeCookieFn) props.setThemeCookieFn(theme.value);
+                      else setThemeCookie(theme.value);
                     }}
                     checked={theme.value === 'dark'}
                     type="checkbox"

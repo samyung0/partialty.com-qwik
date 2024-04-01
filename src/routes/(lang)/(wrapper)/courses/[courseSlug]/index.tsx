@@ -1,8 +1,17 @@
 import { component$ } from '@builder.io/qwik';
-import type { DocumentHead, StaticGenerateHandler } from '@builder.io/qwik-city';
+import type { DocumentHead, RequestHandler, StaticGenerateHandler } from '@builder.io/qwik-city';
 
 import CoursePage from '~/components/_Courses';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
+
+export const onGet: RequestHandler = async ({ cacheControl }) => {
+  cacheControl({
+    public: true,
+    maxAge: 5,
+    sMaxAge: 10,
+    staleWhileRevalidate: 60 * 60 * 24 * 7,
+  });
+};
 
 export default component$(() => {
   return <CoursePage />;
