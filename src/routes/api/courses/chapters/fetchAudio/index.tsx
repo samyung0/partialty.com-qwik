@@ -4,6 +4,12 @@ import drizzleClient from '~/utils/drizzleClient';
 import { mux_assets } from '../../../../../../drizzle_turso/schema/mux_assets';
 
 export const onPost: RequestHandler = async (req) => {
+  req.cacheControl({
+    maxAge: 0,
+    sMaxAge: 0,
+    noStore: true,
+    noCache: true,
+  });
   const { audioId } = (await req.parseBody()) as any;
   if (!audioId) throw req.json(400, 'Badly formatted request.');
   const audio = (await fetch('https://api.mux.com/video/v1/assets/' + audioId, {

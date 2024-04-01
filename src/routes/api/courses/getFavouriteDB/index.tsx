@@ -4,6 +4,12 @@ import drizzleClient from '~/utils/drizzleClient';
 import { profiles } from '../../../../../drizzle_turso/schema/profiles';
 
 export const onPost: RequestHandler = async (req) => {
+  req.cacheControl({
+    maxAge: 0,
+    sMaxAge: 0,
+    noStore: true,
+    noCache: true,
+  });
   const { userId } = (await req.parseBody()) as any;
   if (!userId) throw req.json(400, 'User ID');
   const favourite_courses =

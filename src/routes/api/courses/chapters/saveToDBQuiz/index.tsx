@@ -4,6 +4,12 @@ import drizzleClient from '~/utils/drizzleClient';
 import { content_user_quiz } from '../../../../../../drizzle_turso/schema/content_user_quiz';
 
 export const onPost: RequestHandler = async (req) => {
+  req.cacheControl({
+    maxAge: 0,
+    sMaxAge: 0,
+    noStore: true,
+    noCache: true,
+  });
   const { _isCorrect, userId, courseId, chapterId } = (await req.parseBody()) as any;
   if (_isCorrect === undefined || !userId || !courseId || !userId) throw req.json(400, 'Badly formatted request.');
   const isCorrect = JSON.parse(_isCorrect)
