@@ -15,7 +15,6 @@ import {
 import readCookie from '~/utils/readCookie';
 import { ContentUserProgress } from '../../../drizzle_turso/schema/content_user_progress';
 import { listSupportedLang } from '../../../lang';
-import LoadingSVG from '../LoadingSVG';
 
 // const getFavourite = server$(async function (id: string) {
 //   return (
@@ -461,7 +460,7 @@ export default component$(() => {
                 <LoadingSVG />
               </div>
             )} */}
-            {!hasLoadedContentUserProgress.value || !content_user_progress.value && (
+            {(!hasLoadedContentUserProgress.value || !content_user_progress.value) && (
               <a
                 href={chapters.find((chapter) => filteredChapterOrder.value[0] === chapter.id)?.link || undefined}
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
