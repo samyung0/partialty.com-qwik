@@ -134,8 +134,8 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(async () => {
-      if ((await getTheme()) === 'dark') {
-        themeStore.value = 'dark';
+      if ((await getTheme()) === 'light') {
+        themeStore.value = 'light';
       }
     })
   );

@@ -27,8 +27,9 @@ export default component$(() => {
         <script
           dangerouslySetInnerHTML={`
           const dark = document.getElementById("darkThemeDiv");
-          if (window.matchMedia('(prefers-color-scheme: dark)').matches && dark.classList.contains("default")) {
-            dark.classList.add("dark");
+          if (window.matchMedia('(prefers-color-scheme: light)').matches && dark.classList.contains("dark")) {
+            dark.classList.remove("dark");
+            dark.classList.add("light");
           }
         `}
         ></script>

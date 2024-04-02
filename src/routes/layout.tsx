@@ -7,7 +7,7 @@ import { themeContext } from '~/context/themeContext';
 
 export const useTheme = routeLoader$((event) => {
   const userTheme = event.cookie.get('theme')?.value as (typeof theme)[number] | undefined;
-  return userTheme ?? 'default';
+  return userTheme ?? 'dark';
 });
 
 export default component$(() => {
@@ -18,8 +18,8 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(() => {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches && themeStore.value === 'default') {
-        themeStore.value = 'dark';
+      if (window.matchMedia('(prefers-color-scheme: light)').matches && themeStore.value === 'dark') {
+        themeStore.value = 'light';
       }
     })
   );
