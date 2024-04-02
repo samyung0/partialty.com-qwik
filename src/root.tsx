@@ -21,6 +21,17 @@ export default component$(() => {
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
         <ServiceWorkerRegister />
+        <script
+          dangerouslySetInnerHTML={`
+        window.addEventListener("load", () => {
+          const dark = document.getElementById("darkThemeDiv");
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches && dark.classList.contains("default")) {
+            console.log("not set"); 
+            dark.classList.add("dark");
+          }
+        })
+        `}
+        ></script>
       </head>
       <body>
         <RouterOutlet layout={layoutStore.value} />
