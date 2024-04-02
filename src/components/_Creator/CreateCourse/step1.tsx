@@ -21,8 +21,8 @@ const schema = z.object({
     .trim()
     .min(2, 'A name is required')
     .max(70, 'Name is too long (max. 70 chars)')
-    .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
-    .regex(/^[a-zA-Z0-9]+[- a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except space and hyphens are allowed'),
+    // .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
+    // .regex(/^[a-zA-Z0-9]+[- a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except space and hyphens are allowed'),
 });
 
 export default component$(
@@ -66,8 +66,9 @@ export default component$(
                     autoComplete="name"
                     value={courseData.name}
                     onInput$={(_, el) => {
-                      courseData.name = el.value;
-                      courseData.slug = el.value.toLowerCase().replace(/ /g, '-');
+                      courseData.name = el.value.trim();
+                      courseData.slug = el.value.trim().replace(/\W+(?!$)/g, '-').toLowerCase();
+                      courseData.slug = courseData.slug.trim().replace(/\W$/, '').toLowerCase();
                       if (ref.value) ref.value.scrollLeft += 99999;
                     }}
                     required

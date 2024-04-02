@@ -127,8 +127,9 @@ export default component$(
                   autoComplete="name"
                   value={formData.name}
                   onInput$={(_, el) => {
-                    formData.name = el.value;
-                    formData.slug = el.value.toLowerCase().replace(/ /g, '-');
+                    formData.name = el.value.trim();
+                    formData.slug = el.value.trim().replace(/\W+(?!$)/g, '-').toLowerCase();
+                    formData.slug = formData.slug.replace(/\W$/, '').toLowerCase();
                     formData.link = `/courses/${courseSlug.value}/chapters/${formData.slug}/`;
                     if (ref.value) ref.value.scrollLeft += 99999;
                     if (ref2.value) ref2.value.scrollLeft += 99999;

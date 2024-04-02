@@ -173,17 +173,18 @@ export const checkExistingChapterLink = server$(async function (link: string) {
 });
 
 export const addCategorySchema = z.object({
-  name: z.string().min(1, 'A name is required').max(35, 'Name is too long (max. 35 chars)'),
+  name: z.string().trim().min(2, 'A name is required').max(35, 'Name is too long (max. 35 chars)'),
   slug: z
     .string()
+    .trim()
     .min(2, 'A slug is required')
-    .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
-    .regex(/^[a-za-z0-9]+[-a-za-z0-9]*[a-za-z0-9]+$/, 'No special characters except hyphens are allowed'),
+    // .regex(/^[a-za-z0-9]+.*[a-za-z0-9]+$/, 'The slug must start and end with characters!')
+    .regex(/^[-_a-z0-9]+$/, 'No special characters except hyphens and underscores are allowed'),
   link: z
     .string()
-    .min(1, 'A link is required')
+    .min(2, 'A link is required')
     .regex(/^\//, 'The link needs to start with a slash')
-    .regex(/^\/[a-za-z0-9]+[-/a-za-z0-9]*$/, 'No special characters except -/ are allowed'),
+    .regex(/^\/[-_a-z0-9]+$/, 'No special characters except hyphens and underscores are allowed'),
 });
 
 export const publishCourse = server$(async function (courseId: string) {
