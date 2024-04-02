@@ -15,9 +15,6 @@ export default component$(() => {
   const themeStore = useStore({ value: theme });
   useContextProvider(themeContext, themeStore);
 
-  // there will be a flicker which is not good, instead we push user to set the theme value in cookie which has no flickers
-  // edit: there is no more flicker with qinit listener
-
   useOnDocument(
     'qinit',
     $(() => {
