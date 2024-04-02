@@ -456,12 +456,12 @@ export default component$(() => {
                 </ul>
               </div>
             </div>
-            {!hasLoadedContentUserProgress.value && (
+            {/* {!hasLoadedContentUserProgress.value && (
               <div class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base">
                 <LoadingSVG />
               </div>
-            )}
-            {hasLoadedContentUserProgress.value && !content_user_progress.value && (
+            )} */}
+            {!hasLoadedContentUserProgress.value || !content_user_progress.value && (
               <a
                 href={chapters.find((chapter) => filteredChapterOrder.value[0] === chapter.id)?.link || undefined}
                 class="rounded-lg bg-primary-dark-gray p-2 text-center text-sm tracking-wide text-background-light-gray dark:bg-disabled-dark md:p-3 md:text-base"
