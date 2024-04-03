@@ -107,7 +107,7 @@ export default component$(
                           if (props.setThemeCookieFn) props.setThemeCookieFn(theme.value);
                           else setThemeCookie(theme.value);
                         }}
-                        checked={theme.value === 'dark'}
+                        checked={theme.value.includes('dark')}
                         type="checkbox"
                         class="peer sr-only"
                       ></input>
@@ -322,7 +322,7 @@ export default component$(
                       if (props.setThemeCookieFn) props.setThemeCookieFn(theme.value);
                       else setThemeCookie(theme.value);
                     }}
-                    checked={theme.value === 'dark'}
+                    checked={theme.value.includes('dark')}
                     type="checkbox"
                     class="peer sr-only"
                   ></input>

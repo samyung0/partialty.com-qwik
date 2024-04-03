@@ -387,7 +387,7 @@ export default component$(() => {
                           }
                           setThemeCookie(theme.value);
                         }}
-                        checked={theme.value === 'dark'}
+                        checked={theme.value.includes('dark')}
                         type="checkbox"
                         class="peer sr-only"
                       ></input>

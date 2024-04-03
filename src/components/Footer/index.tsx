@@ -25,29 +25,24 @@ export default component$(() => {
                       Guides
                     </Link>
                   </li>
-                  <li>
-                    <Link href="/about/" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      About
-                    </Link>
-                  </li>
                 </ul>
               </div>
               <div class="mt-10 md:mt-0">
-                <h3 class="text-sm font-semibold leading-6 text-white">Support</h3>
+                <h3 class="text-sm font-semibold leading-6 text-white">Common</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      Contact Us
+                    <Link href="/about/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      About Me
                     </Link>
                   </li>
                   <li>
                     <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      Make Suggestions
+                      Q&A
                     </Link>
                   </li>
                   <li>
                     <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      Contribute
+                      Donate
                     </Link>
                   </li>
                 </ul>
@@ -70,6 +65,26 @@ export default component$(() => {
                   <li>
                     <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Terms
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-10 md:mt-0">
+                <h3 class="text-sm font-semibold leading-6 text-white">Support</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Contact Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Make Suggestions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Contribute
                     </Link>
                   </li>
                 </ul>

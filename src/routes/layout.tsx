@@ -7,7 +7,7 @@ import { themeContext } from '~/context/themeContext';
 
 export const useTheme = routeLoader$((event) => {
   const userTheme = event.cookie.get('theme')?.value as (typeof theme)[number] | undefined;
-  return userTheme ?? 'dark';
+  return userTheme ?? 'dark darkDefault';
 });
 
 export default component$(() => {
@@ -18,7 +18,7 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(() => {
-      if (window.matchMedia('(prefers-color-scheme: light)').matches && themeStore.value === 'dark') {
+      if (window.matchMedia('(prefers-color-scheme: light)').matches && themeStore.value.includes('darkDefault')) {
         themeStore.value = 'light';
       }
     })
@@ -28,7 +28,7 @@ export default component$(() => {
     <>
       <QwikCityNprogress
         options={{
-          color: themeStore.value === 'dark' ? '#72cada' : '#72cada',
+          color: themeStore.value.includes('dark') ? '#72cada' : '#72cada',
         }}
       />
       <div id="darkThemeDiv" class={themeStore.value}>
