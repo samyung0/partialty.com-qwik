@@ -96,7 +96,7 @@ export default component$(() => {
     filename: string;
     playback_ids: { id: string }[];
   }>();
-  const loadingAutioTrack = useSignal(currentChapter && !!currentChapter.audio_track_asset_id);
+  const loadingAutioTrack = useSignal(!!currentChapter && !!currentChapter.audio_track_asset_id);
   const login = useStore({
     isLoading: userNullable === undefined,
     isLoggedIn: userNullable !== undefined,
@@ -115,7 +115,7 @@ export default component$(() => {
 
   useVisibleTask$(async ({ track }) => {
     track(() => currentChapter);
-    loadingAutioTrack.value = currentChapter && !!currentChapter.audio_track_asset_id;
+    loadingAutioTrack.value = !!currentChapter && !!currentChapter.audio_track_asset_id;
     if (!currentChapter || !currentChapter.audio_track_asset_id) return (audioTrack.value = undefined);
     const res = await fetchAudioServer(currentChapter.audio_track_asset_id);
     audioTrack.value = {
