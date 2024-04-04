@@ -106,11 +106,6 @@ body {
   line-height: inherit;
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #676767 #dfe9eb;
-}
-
 *,
 *::before,
 *::after {

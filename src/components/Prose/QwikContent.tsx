@@ -1,6 +1,6 @@
-import type { QRL } from '@builder.io/qwik';
+import type { QRL, Signal } from '@builder.io/qwik';
 import { component$ } from '@builder.io/qwik';
-import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 import moment from 'moment';
 import AudioPlayer from '~/components/AudioPlayer';
 import ProgressTracker from '~/components/Prose/ProgressTracker';
@@ -21,6 +21,7 @@ export default component$(
     nextChapter,
     lastEdited,
     isGuide,
+    loadingAutioTrack,
   }: {
     innerHTML: string | undefined;
     audioTrack:
@@ -31,6 +32,7 @@ export default component$(
           playback_ids: { id: string }[];
         }
       | undefined;
+    loadingAutioTrack: Signal<boolean>;
     hasAudioTrack: boolean;
     saveToDBQuiz: (isCorrect: boolean) => any;
     isPreview: boolean;
@@ -77,7 +79,7 @@ export default component$(
           </div>
         </main>
         {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
-        {audioTrack && (
+        {(loadingAutioTrack.value || audioTrack) && (
           <div class="mt-auto">
             <AudioPlayer audioTrack={audioTrack} />
           </div>

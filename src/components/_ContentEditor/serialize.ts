@@ -79,8 +79,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       let str = '';
       const uuid = 'a' + uuidv4();
       if (node.animate) {
-        str += `
-         <style>
+        str += `<style>
         @keyframes ${uuid} {
           0% {
             width: 100%;	
@@ -125,15 +124,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             z-index: 1;
             ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
         }
-         </style>
-         `;
+         </style>`;
         str += `<span style="position:relative;background:inherit;color:inherit; white-space: nowrap;">${children}<span id="${uuid}lower"></span><span ${
           node.sync &&
           `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
         } id="${uuid}upper"></span></span>`;
       } else if (node.sync) {
-        str += `
-         <style>
+        str += `<style>
         #${uuid}lower {
           position: absolute;
             top:100%;
@@ -161,12 +158,10 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             background: inherit;
             z-index: 1;
         }
-         </style>
-         `;
+         </style>`;
         str += `<span style="position:relative;background:inherit;color:inherit;white-space: nowrap;">${children}<span id="${uuid}lower"></span><span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>/span>`;
       } else {
-        str += `
-         <style>
+        str += `<style>
         #${uuid} {
           border-bottom: 4px solid ${node.underline};
         }
@@ -177,8 +172,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }`
             : ''
         }
-         </style>
-         `;
+         </style>`;
         str += `<span id="${uuid}" style="position:relative;background:inherit;color:inherit;">${children}</span>`;
       }
       return str;
@@ -187,8 +181,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       let str = '';
       const uuid = 'a' + uuidv4();
       if (node.animate) {
-        str += `
-         <style>
+        str += `<style>
         @keyframes ${uuid} {
           0% {
             width: calc(100% + 8px);	
@@ -233,15 +226,13 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         z-index: 1;
           ${!node.sync && `animation: ${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both 1s;`}
         }
-         </style>
-         `;
+         </style>`;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;"><span style="position:relative;background:transparent;color:inherit;z-index:2;white-space:nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span><span ${
           node.sync &&
           `data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"animation": "${uuid} 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}' data-syncleave='{"animation": "${uuid}2 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both"}'`
         } id="${uuid}upper"></span></span></span>`;
       } else if (node.sync) {
-        str += `
-          <style>
+        str += `<style>
         #${uuid}lower {
           position: absolute;
           top:-2px;
@@ -269,14 +260,12 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         background: inherit;
         z-index: 1;
         }
-         </style>
-         `;
+         </style>`;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space:nowrap;"><span style="position:relative;background:transparent;color:inherit;z-index:2;white-space: nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span><span
               data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "calc(100% + 8px)"}'
             id="${uuid}upper"></span></span></span>`;
       } else {
-        str += `
-          <style>
+        str += `<style>
          #${uuid}lower {
            position: absolute;
            top:-2px;
@@ -294,8 +283,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         }`
              : ''
          }
-          </style>
-          `;
+          </style>`;
         str += `<span style="position:relative;background:inherit;color:inherit;padding: 0 4px 0 4px;display:inline-flex;justify-content:center;white-space: nowrap;"><span style="background:transparent;color:inherit;position:relative;z-index:2;white-space: nowrap;">${children}</span><span id="${uuid}lower">${combinedHighlightSVGString}</span></span></span>`;
       }
       return str;
@@ -313,9 +301,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case 'line-break':
       return `<hr />`;
     case 'block-quote':
-      return `<blockquote style="${style}">
-          ${children}
-        </blockquote>`;
+      return `<blockquote style="${style}">${children}</blockquote>`;
     case 'infoBlock':
       return `<style>.dark .infoBlock {
         border-color: rgb(96 165 250) !important;
@@ -336,9 +322,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         >
           <div style="padding-bottom: 1em;">
           <svg class="infoBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(29 78 216)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-          </div>
-          ${children}
-        </blockquote>`;
+          </div>${children}</blockquote>`;
 
     case 'cautionBlock':
       return `<style>.dark .cautionBlock {
@@ -360,9 +344,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             >
               <div style="padding-bottom: 1em;">
               <svg class="cautionBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(133 77 14)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-              </div>
-              ${children}
-            </blockquote>`;
+              </div>${children}</blockquote>`;
 
     case 'warningBlock':
       return `<style>.dark .warningBlock {
@@ -384,42 +366,24 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                 >
                   <div style="padding-bottom: 1em;">
                   <svg class="warningBlockSVG" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(190 24 93)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-                  </div>
-                  ${children}
-                </blockquote>`;
+                  </div>${children}</blockquote>`;
     // id="${plainTextSerialize(node.children).toLowerCase().replace(/\s+/g, '-')}
     case 'heading-one':
-      return `<h1 style="${style}">
-          ${children}
-        </h1>`;
+      return `<h1 style="${style}">${children}</h1>`;
     case 'heading-two':
-      return `<h2 style="${style}">
-          ${children}
-        </h2>`;
+      return `<h2 style="${style}">${children}</h2>`;
     case 'heading-three':
-      return `<h3 style="${style}">
-          ${children}
-        </h3>`;
+      return `<h3 style="${style}">${children}</h3>`;
     case 'heading-four':
-      return `<h4 style="${style}">
-          ${children}
-        </h4>`;
+      return `<h4 style="${style}">${children}</h4>`;
     case 'list-item':
-      return `<li style="${style}"">
-          ${children}
-        </li>`;
+      return `<li style="${style}"">${children}</li>`;
     case 'list-item-text':
-      return `<span style="${style}">
-          ${children}
-        </span>`;
+      return `<span style="${style}">${children}/span>`;
     case 'numbered-list':
-      return `<ol style="${style} listStylePosition: inside;">
-          ${children}
-        </ol>`;
+      return `<ol style="${style} listStylePosition: inside;">${children}</ol>`;
     case 'bulleted-list':
-      return `<ul style="${style} listStylePosition: inside;">
-          ${children}
-        </ul>`;
+      return `<ul style="${style} listStylePosition: inside;">${children}</ul>`;
     case 'embed': {
       const height = node.embedHeight;
       const { url } = node;
@@ -467,8 +431,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       >
       <style>.dark .embedContainer{
         border-color: #141a23 !important; 
-      }</style>
-        <div class="embedContainer" style="
+      }</style><div class="embedContainer" style="
         width: 100%;
         
         object-fit: contain;
@@ -538,8 +501,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
           max-height: 50dvh !important;
         }
       }
-      </style>
-      <img class="imageContainer" src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" 
+      </style><img class="imageContainer" src="https://res.cloudinary.com/${CLOUDINARY_NAME}/image/upload/${node.public_id!}" 
       height="${height ? height : 400}"
       width="${width ? width : 400}"
       style="
@@ -600,8 +562,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         .dark .formCheck {
           background-color: #2f3e52 !important;
         }
-        </style>
-        <button
+        </style><button
           style="
           border-radius: 0.5rem;
           background-color: rgb(31 41 55);
@@ -679,8 +640,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
       .dark .quizOption {
         background-color: rgb(31 41 55) !important;
       }
-      </style>
-      <div
+      </style><div
         style="
         display: flex;
         height: 1rem;
@@ -762,8 +722,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
                 background-color: #1f2937 !important;
                 border-color: #2f3e52 !important;
               }
-              </style>
-              <div style="
+              </style><div style="
             margin: 0;
             width: 100%;
             overflow: auto;
@@ -777,8 +736,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         .dark .formCheck, .dark .formShow {
           background-color: #2f3e52 !important;
         }
-        </style>
-        <div class="
+        </style><div class="
         display: flex;
         align-items: center;
         gap: 0.75rem;

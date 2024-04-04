@@ -89,15 +89,15 @@ export const BackgroundMarkButton = ({
             if (!editor.selection) return;
             if (!isBlockActive(editor, 'markerBackground', 'type')) return;
             if (!node) return;
-            if ((node[0] as InlineMarkerBackground).timeStamp)
-              Transforms.setNodes(
-                editor,
-                {
-                  timeStamp: undefined,
-                },
-                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
-              );
-            else
+            // if ((node[0] as InlineMarkerBackground).timeStamp)
+            //   Transforms.setNodes(
+            //     editor,
+            //     {
+            //       timeStamp: undefined,
+            //     },
+            //     { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+            //   );
+            // else
               Transforms.setNodes(
                 editor,
                 {
@@ -227,15 +227,15 @@ export const UnderlineMarkButton = ({
             if (!editor.selection) return;
             if (!isBlockActive(editor, 'markerUnderline', 'type')) return;
             if (!node) return;
-            if ((node[0] as InlineMarkerBackground).timeStamp)
-              Transforms.setNodes(
-                editor,
-                {
-                  timeStamp: undefined,
-                },
-                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
-              );
-            else
+            // if ((node[0] as InlineMarkerBackground).timeStamp)
+            //   Transforms.setNodes(
+            //     editor,
+            //     {
+            //       timeStamp: undefined,
+            //     },
+            //     { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+            //   );
+            // else
               Transforms.setNodes(
                 editor,
                 {

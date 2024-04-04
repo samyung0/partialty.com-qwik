@@ -96,6 +96,7 @@ export default component$(() => {
     filename: string;
     playback_ids: { id: string }[];
   }>();
+  const loadingAutioTrack = useSignal(currentChapter && !!currentChapter.audio_track_asset_id);
   const login = useStore({
     isLoading: userNullable === undefined,
     isLoggedIn: userNullable !== undefined,
@@ -114,6 +115,7 @@ export default component$(() => {
 
   useVisibleTask$(async ({ track }) => {
     track(() => currentChapter);
+    loadingAutioTrack.value = currentChapter && !!currentChapter.audio_track_asset_id;
     if (!currentChapter || !currentChapter.audio_track_asset_id) return (audioTrack.value = undefined);
     const res = await fetchAudioServer(currentChapter.audio_track_asset_id);
     audioTrack.value = {
@@ -122,6 +124,7 @@ export default component$(() => {
       filename: res.filename,
       playback_ids: res.data.playback_ids,
     };
+    loadingAutioTrack.value = false;
   });
   const saveToDB = $(async (isCorrect: boolean) => {
     if (!login.isLoggedIn || !currentChapter) return;
@@ -160,6 +163,7 @@ export default component$(() => {
   });
   return currentChapter ? (
     <QwikContent
+    loadingAutioTrack={loadingAutioTrack}
       isGuide={course.content_index.is_guide}
       lastEdited={currentChapter.updated_at}
       innerHTML={currentChapter.renderedHTML || undefined}
