@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { NoSerialize, QRL, Signal } from '@builder.io/qwik';
 import {
   $,
   component$,
   noSerialize,
   useContext,
+  useOnDocument,
   useOnWindow,
   useSignal,
   useStore,
@@ -52,11 +54,11 @@ export default component$(
   ({
     audioTrack,
     innerHTML,
-    loadingAudioTrack
+    loadingAudioTrack,
   }: {
     audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
     innerHTML: string;
-    loadingAudioTrack: Signal<boolean>
+    loadingAudioTrack: Signal<boolean>;
   }) => {
     const chapterActions = useContext(chapterContext);
 
@@ -98,23 +100,26 @@ export default component$(
       }),
     });
 
-    useOnWindow(
-      'keydown',
-      $((e) => {
+    useVisibleTask$(({cleanup}) => {
+      const f = (e: any) => {
         if (isHotkey('space', e)) {
           e.preventDefault();
-          player.toggle(player);
+          return player.toggle(player);
         }
         if (isHotkey('left', e)) {
           e.preventDefault();
-          player.seekBy(player, -5);
+          return player.seekBy(player, -5);
         }
         if (isHotkey('right', e)) {
           e.preventDefault();
-          player.seekBy(player, 5);
+          return player.seekBy(player, 5);
         }
+      }
+      document.body.addEventListener("keydown", f);
+      cleanup(() => {
+        document.body.removeEventListener("keydown", f);
       })
-    );
+    })
 
     const wasPlayingRef = useSignal(false);
 
@@ -176,7 +181,7 @@ export default component$(
       if (isServer) return;
       setTimeout(() => {
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
-        if(loadingAudioTrack.value) return;
+        if (loadingAudioTrack.value) return;
         sync();
       }, 100);
     });
