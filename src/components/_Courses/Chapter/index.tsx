@@ -54,22 +54,20 @@ const fetchAudioServer = $(async (audioId: string) => {
 //     .returning();
 // });
 
-const saveProgressServer = $(
-  async (courseId: string, userId: string, chapterId: string, filteredChapter: string[]) => {
-    const d = new FormData();
-    d.append('courseId', courseId);
-    d.append('userId', userId);
-    d.append('chapterId', chapterId);
-    d.append('_filteredChapter', JSON.stringify(filteredChapter))
-    return await fetch('/api/courses/chapters/saveProgress/', {
-      method: 'POST',
-      body: d,
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-    }).then((x) => x.json());
-  }
-);
+const saveProgressServer = $(async (courseId: string, userId: string, chapterId: string, filteredChapter: string[]) => {
+  const d = new FormData();
+  d.append('courseId', courseId);
+  d.append('userId', userId);
+  d.append('chapterId', chapterId);
+  d.append('_filteredChapter', JSON.stringify(filteredChapter));
+  return await fetch('/api/courses/chapters/saveProgress/', {
+    method: 'POST',
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }).then((x) => x.json());
+});
 
 const getUserFn = $(async () => {
   return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
@@ -96,7 +94,7 @@ export default component$(() => {
     filename: string;
     playback_ids: { id: string }[];
   }>();
-  const loadingAutioTrack = useSignal(!!currentChapter && !!currentChapter.audio_track_asset_id);
+  const loadingAudioTrack = useSignal(!!currentChapter && !!currentChapter.audio_track_asset_id);
   const login = useStore({
     isLoading: userNullable === undefined,
     isLoggedIn: userNullable !== undefined,
@@ -115,7 +113,7 @@ export default component$(() => {
 
   useVisibleTask$(async ({ track }) => {
     track(() => currentChapter);
-    loadingAutioTrack.value = !!currentChapter && !!currentChapter.audio_track_asset_id;
+    loadingAudioTrack.value = !!currentChapter && !!currentChapter.audio_track_asset_id;
     if (!currentChapter || !currentChapter.audio_track_asset_id) return (audioTrack.value = undefined);
     const res = await fetchAudioServer(currentChapter.audio_track_asset_id);
     audioTrack.value = {
@@ -124,7 +122,7 @@ export default component$(() => {
       filename: res.filename,
       playback_ids: res.data.playback_ids,
     };
-    loadingAutioTrack.value = false;
+    loadingAudioTrack.value = false;
   });
   const saveToDB = $(async (isCorrect: boolean) => {
     if (!login.isLoggedIn || !currentChapter) return;
@@ -163,7 +161,7 @@ export default component$(() => {
   });
   return currentChapter ? (
     <QwikContent
-    loadingAutioTrack={loadingAutioTrack}
+      loadingAudioTrack={loadingAudioTrack}
       isGuide={course.content_index.is_guide}
       lastEdited={currentChapter.updated_at}
       innerHTML={currentChapter.renderedHTML || undefined}

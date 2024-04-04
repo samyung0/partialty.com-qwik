@@ -159,7 +159,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
             z-index: 1;
         }
          </style>`;
-        str += `<span style="position:relative;background:inherit;color:inherit;white-space: nowrap;">${children}<span id="${uuid}lower"></span><span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span>/span>`;
+        str += `<span style="position:relative;background:inherit;color:inherit;white-space: nowrap;">${children}<span id="${uuid}lower"></span><span data-sync="1" data-synctimestamp="${node.timeStamp}" data-syncenter='{"width": "0"}' data-syncleave='{"width": "100%"}' id="${uuid}upper"></span></span>`;
       } else {
         str += `<style>
         #${uuid} {
@@ -379,7 +379,7 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
     case 'list-item':
       return `<li style="${style}"">${children}</li>`;
     case 'list-item-text':
-      return `<span style="${style}">${children}/span>`;
+      return `<span style="${style}">${children}</span>`;
     case 'numbered-list':
       return `<ol style="${style} listStylePosition: inside;">${children}</ol>`;
     case 'bulleted-list':
