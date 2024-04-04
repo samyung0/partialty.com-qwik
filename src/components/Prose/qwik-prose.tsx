@@ -12,8 +12,8 @@ export default component$(({ innerHTML }: { innerHTML: string }) => {
     clearInterval(interval.value);
     interval.value = setInterval(() => {
       const dark = darkThemeDiv.className;
-      const shouldGoDark = dark === 'dark' && !isDark.value;
-      const shouldGoLight = dark !== 'dark' && isDark.value;
+      const shouldGoDark = dark.includes('dark') && !isDark.value;
+      const shouldGoLight = !dark.includes('dark') && isDark.value;
       const iframeEmbed = Array.from(document.getElementsByClassName('iframeEmbed'));
       iframeEmbed.forEach((iframe) => {
         const iframeSrc = iframe.getAttribute('src');
