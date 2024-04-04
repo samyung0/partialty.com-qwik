@@ -81,7 +81,7 @@ export default component$(
         {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
         {(loadingAutioTrack.value || audioTrack) && (
           <div class="mt-auto">
-            <AudioPlayer audioTrack={audioTrack} />
+            <AudioPlayer innerHTML={innerHTML || ''} audioTrack={audioTrack} />
           </div>
         )}
       </div>
