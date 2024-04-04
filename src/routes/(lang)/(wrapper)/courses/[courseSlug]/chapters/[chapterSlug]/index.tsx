@@ -3,6 +3,7 @@ import type { DocumentHead, RequestHandler, StaticGenerateHandler } from '@build
 
 import ChapterPage from '~/components/_Courses/Chapter';
 import { useCourseLoader } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
+import { chaptersParams } from '../../../../../../../../prerender';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   cacheControl({
@@ -32,11 +33,6 @@ export const head: DocumentHead = ({ resolveValue }) => {
 
 export const onStaticGenerate: StaticGenerateHandler = async () => {
   return {
-    params: [
-      {
-        courseSlug: 'setting-up-a-local-server',
-        chapterSlug: 'setting-up-a-local-server',
-      },
-    ],
+    params: chaptersParams,
   };
 };

@@ -37,6 +37,7 @@
     "vitest.config.integration.ts",
     "tests",
     "setup",
-    "adapters"
+    "adapters",
+    "prerender.ts"
   ]
 }
