@@ -45,11 +45,11 @@ export default component$(({ innerHTML }: { innerHTML: string }) => {
     prose-figcaption:mt-0 prose-figcaption:text-xs prose-figcaption:italic
     prose-strong:tracking-wider prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-xs  prose-pre:leading-5 prose-img:m-0 dark:bg-primary-dark-gray
     dark:text-background-light-gray
-     dark:prose-figcaption:text-gray-300 md:w-[80%] 2xl:max-w-[1200px] md:pt-12
-    lg:w-full
-     lg:px-12 lg:text-base lg:leading-7 lg:prose-figcaption:text-sm
-    lg:prose-pre:text-sm
-    lg:prose-pre:leading-6 2xl:mx-0 [&_code:not(pre_code)]:rounded-md
+     dark:prose-figcaption:text-gray-300 md:w-[80%] md:pt-12 lg:w-full
+    lg:px-12
+     lg:text-base lg:leading-7 lg:prose-figcaption:text-sm lg:prose-pre:text-sm lg:prose-pre:leading-6
+    2xl:mx-0
+    2xl:max-w-[1200px] 2xl:px-20 [&_code:not(pre_code)]:rounded-md
     [&_code:not(pre_code)]:bg-gray-300/70 [&_code:not(pre_code)]:p-[2px] [&_code:not(pre_code)]:text-[unset] [&_code:not(pre_code)]:before:content-none [&_code:not(pre_code)]:after:content-none dark:[&_code:not(pre_code)]:bg-gray-600/70"
       dangerouslySetInnerHTML={innerHTML}
     ></article>

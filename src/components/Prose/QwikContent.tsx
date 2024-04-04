@@ -56,10 +56,10 @@ export default component$(
             </div>
           )}
           <div class="flex flex-col gap-3">
-            <p class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-3 text-xs italic text-gray-500 dark:text-gray-300 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 lg:text-sm 2xl:mx-0 2xl:ml-[10%]">
+            <p class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-3 text-xs italic text-gray-500 dark:text-gray-300 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-12 lg:text-sm 2xl:mx-0 2xl:max-w-[1200px] 2xl:px-20">
               Last edited on {moment(lastEdited).format('DD/MM/YYYY').toString()}
             </p>
-            <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
+            <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:px-12 2xl:mx-0 2xl:max-w-[1200px]  2xl:px-20">
               {!!prevChapter && (
                 <Link href={prevChapter} class="mr-auto text-sm underline md:text-base">
                   Previous
@@ -72,7 +72,7 @@ export default component$(
               )}
             </nav>
             {!nextChapter && (
-              <p class="mx-auto w-[90%] max-w-[unset] items-center p-0 pb-6 text-center font-mosk text-sm font-bold tracking-wide md:w-[80%] md:text-base lg:w-full lg:max-w-[800px] lg:px-10 2xl:mx-0 2xl:ml-[10%]">
+              <p class="mx-auto w-[90%] max-w-[unset] items-center p-0 pb-6 text-center font-mosk text-sm font-bold tracking-wide md:w-[80%] md:text-base lg:w-full lg:px-12 2xl:mx-0 2xl:max-w-[1200px]  2xl:px-20">
                 🎉Congratulations. You have finished the {isGuide ? 'Guide' : 'Course'}!
               </p>
             )}
