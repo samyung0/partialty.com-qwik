@@ -1,6 +1,6 @@
 export const coursesParams = [
   {
-    courseSlug: 'setting-up-a-local-server',
+    courseSlug: 'how-da-hell-do-we-make-a-local-server',
   },
   {
     courseSlug: 'html-course',
@@ -9,7 +9,7 @@ export const coursesParams = [
 
 export const chaptersParams = [
   {
-    courseSlug: 'setting-up-a-local-server',
+    courseSlug: 'how-da-hell-do-we-make-a-local-server',
     chapterSlug: 'setting-up-a-local-server',
   },
   {
