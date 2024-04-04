@@ -1,4 +1,4 @@
-import type { NoSerialize, QRL } from '@builder.io/qwik';
+import type { NoSerialize, QRL, Signal } from '@builder.io/qwik';
 import {
   $,
   component$,
@@ -52,9 +52,11 @@ export default component$(
   ({
     audioTrack,
     innerHTML,
+    loadingAudioTrack
   }: {
     audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
     innerHTML: string;
+    loadingAudioTrack: Signal<boolean>
   }) => {
     const chapterActions = useContext(chapterContext);
 
@@ -163,6 +165,9 @@ export default component$(
       player.duration = audioTrack.duration;
       player.name = audioTrack.filename;
       player.playback_id = audioTrack.playback_ids[0].id;
+      player.playing = false;
+      player.currentTime = 0;
+      player.displayCurrentTime = 0;
       sync();
     });
 
@@ -171,6 +176,7 @@ export default component$(
       if (isServer) return;
       setTimeout(() => {
         dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
+        if(loadingAudioTrack.value) return;
         sync();
       }, 100);
     });
@@ -183,7 +189,7 @@ export default component$(
 
     return (
       <div class="relative z-[20] flex h-[10dvh] min-h-[90px] w-full items-center justify-center gap-6 bg-background-light-gray px-4 py-4 shadow shadow-slate-200/80 ring-1 ring-slate-900/5 backdrop-blur-sm dark:bg-primary-dark-gray md:px-6">
-        {audioTrack && (
+        {audioTrack && !loadingAudioTrack.value && (
           <>
             <div class="hidden md:block">
               <PlayButton player={player} />
@@ -247,7 +253,7 @@ export default component$(
             />
           </>
         )}
-        {!audioTrack && (
+        {(!audioTrack || loadingAudioTrack.value) && (
           <span>
             <LoadingSVG />
           </span>

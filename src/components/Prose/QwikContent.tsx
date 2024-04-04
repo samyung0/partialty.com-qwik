@@ -21,7 +21,7 @@ export default component$(
     nextChapter,
     lastEdited,
     isGuide,
-    loadingAutioTrack,
+    loadingAudioTrack,
   }: {
     innerHTML: string | undefined;
     audioTrack:
@@ -32,7 +32,7 @@ export default component$(
           playback_ids: { id: string }[];
         }
       | undefined;
-    loadingAutioTrack: Signal<boolean>;
+    loadingAudioTrack: Signal<boolean>;
     hasAudioTrack: boolean;
     saveToDBQuiz: (isCorrect: boolean) => any;
     isPreview: boolean;
@@ -79,9 +79,9 @@ export default component$(
           </div>
         </main>
         {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
-        {(loadingAutioTrack.value || audioTrack) && (
+        {(loadingAudioTrack.value || audioTrack) && (
           <div class="mt-auto">
-            <AudioPlayer innerHTML={innerHTML || ''} audioTrack={audioTrack} />
+            <AudioPlayer loadingAudioTrack={loadingAudioTrack} innerHTML={innerHTML || ''} audioTrack={audioTrack} />
           </div>
         )}
       </div>
