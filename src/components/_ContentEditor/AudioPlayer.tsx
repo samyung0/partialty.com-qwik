@@ -116,6 +116,7 @@ export const CenterAudioChooser = ({
         new_asset_settings: {
           playback_policy: ['public'],
           mp4_support: 'none',
+          encoding_tier: "baseline"
         },
       }),
     })
