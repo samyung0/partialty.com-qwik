@@ -45,6 +45,7 @@ import { getContentEditorHighlighter } from '~/utils/shikiji/OneDarkPro';
 import { withMarker } from '~/components/_ContentEditor/Marker';
 import SmallCircleNav from '~/components/_ContentEditor/SmallCircleNav';
 import './SmallCircleNav.css';
+import PlateEditor from './plate';
 
 declare module 'slate' {
   interface CustomTypes {
@@ -116,6 +117,7 @@ const ContentEditorReact = ({
   openSmallCircleNav,
   toggleSmallCircleNav,
   toggleSideNav,
+  userRole,
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -152,10 +154,9 @@ const ContentEditorReact = ({
   toggleSmallCircleNav: () => void;
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
+  userRole: string;
 }) => {
-  const normalizedInitialValue = initialValue ?? //     quizTitle: "Question 2", //     formName: "test2", //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
-  //     removeTrailingSpaces: true,
-  //     inputWidth: 400,
+  const normalizedInitialValue = initialValue ?? //     inputWidth: 400, //     removeTrailingSpaces: true, //     quizTitle: "Question 2", //     formName: "test2", //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //     inputCount: 1,
   //     children: [
   //       {
@@ -423,7 +424,7 @@ const ContentEditorReact = ({
 
   return (
     <>
-      {isEditing && (
+      {isEditing && userRole === 'admin' && (
         <>
           <Preview
             setIsPreviewing={setIsPreviewing}
@@ -560,6 +561,15 @@ const ContentEditorReact = ({
           )}
         </>
       )}
+      {isEditing && userRole !== 'admin' && (
+        <div
+          className={
+            'relative flex h-full w-[100vw] flex-col items-start overflow-auto dark:bg-primary-dark-gray  dark:text-background-light-gray xl:w-[80vw] '
+          }
+        >
+          <PlateEditor />
+        </div>
+      )}
       {!isEditing && (
         <div className="flex h-full w-[100vw] items-center justify-center dark:text-background-light-gray xl:w-[80vw]">
           <div className="flex max-w-[800px] flex-col gap-3 px-6 text-center md:gap-4 lg:gap-6">
@@ -667,4 +677,4 @@ const ContentEditorReact = ({
   );
 };
 
-export default qwikify$(ContentEditorReact, { eagerness: 'load' });
+export default qwikify$(ContentEditorReact);

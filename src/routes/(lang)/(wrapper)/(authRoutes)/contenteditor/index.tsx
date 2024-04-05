@@ -231,6 +231,8 @@ export default component$(() => {
       />
       {contentWS.value && (
         <ContentEditor
+          client:only
+          userRole={user.role}
           toggleSideNav={$(() => (openSideNav.value = !openSideNav.value))}
           openSmallCircleNav={openSmallCircleNav.value}
           toggleSmallCircleNav={$(() => (openSmallCircleNav.value = !openSmallCircleNav.value))}

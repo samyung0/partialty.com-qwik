@@ -16,13 +16,9 @@ const checkExistingCourse = server$(async function (slug: string) {
 });
 
 const schema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, 'A name is required')
-    .max(70, 'Name is too long (max. 70 chars)')
-    // .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
-    // .regex(/^[a-zA-Z0-9]+[- a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except space and hyphens are allowed'),
+  name: z.string().trim().min(2, 'A name is required').max(70, 'Name is too long (max. 70 chars)'),
+  // .regex(/^[a-zA-Z0-9]+.*[a-zA-Z0-9]+$/, 'The slug must start and end with characters!')
+  // .regex(/^[a-zA-Z0-9]+[- a-zA-Z]*[a-zA-Z0-9]+$/, 'No special characters except space and hyphens are allowed'),
 });
 
 export default component$(
@@ -47,7 +43,7 @@ export default component$(
     const ref = useSignal<HTMLInputElement>();
     return (
       <section class="flex h-[100vh] w-[95vw] items-center justify-center bg-sherbet dark:bg-primary-dark-gray md:w-[80vw]">
-        <div class="flex w-full items-center justify-center rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
+        <div class="flex max-h-[90dvh] w-full items-center justify-start overflow-auto rounded-lg border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[80%] lg:w-[60%] lg:min-w-[400px] lg:max-w-[700px]">
           <div>
             <h1 class="px-4 pb-3 text-center font-mosk text-[1.5rem] font-bold tracking-wider md:pb-6 md:text-[2rem] lg:text-[2.5rem]">
               What is your course called
@@ -67,7 +63,10 @@ export default component$(
                     value={courseData.name}
                     onInput$={(_, el) => {
                       courseData.name = el.value.trim();
-                      courseData.slug = el.value.trim().replace(/\W+(?!$)/g, '-').toLowerCase();
+                      courseData.slug = el.value
+                        .trim()
+                        .replace(/\W+(?!$)/g, '-')
+                        .toLowerCase();
                       courseData.slug = courseData.slug.trim().replace(/\W$/, '').toLowerCase();
                       if (ref.value) ref.value.scrollLeft += 99999;
                     }}

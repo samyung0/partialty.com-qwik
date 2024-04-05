@@ -267,8 +267,8 @@ export default component$(
     return (
       <nav
         class={
-          'absolute left-0 top-0 z-[200] hidden h-full max-h-[100vh] w-[100vw] items-center justify-start text-primary-dark-gray backdrop-blur-sm dark:text-background-light-gray xl:relative xl:flex xl:w-[20vw] ' +
-          (openSideNav.value ? ' !block' : '')
+          'relative left-0 top-0 hidden h-full max-h-[100vh] w-[100vw] items-center justify-start text-primary-dark-gray backdrop-blur-sm dark:text-background-light-gray xl:relative xl:flex xl:w-[20vw] ' +
+          (openSideNav.value ? ' absolute !block z-[999]' : '')
         }
         onClick$={() => {
           openSideNav.value = false;

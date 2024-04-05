@@ -25,6 +25,7 @@ import type { ResultSet } from '@libsql/client/.';
 import type { ExtractTablesWithRelations } from 'drizzle-orm';
 import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
 import getSQLTimeStamp from '~/utils/getSQLTimeStamp';
+import { content } from '../../../../drizzle_turso/schema/content';
 import type schemaExport from '../../../../drizzle_turso/schemaExport';
 
 type Tx = SQLiteTransaction<'async', ResultSet, typeof schemaExport, ExtractTablesWithRelations<typeof schemaExport>>;
@@ -95,6 +96,18 @@ const removeCategoryContentIndex = server$(async (tx: Tx, contentIndexId: string
     .update(content_category)
     .set({ content_index_id: content_index_id })
     .where(eq(content_category.id, categoryId));
+});
+
+const updateChapterLink = server$(async (tx: Tx, slug: string, chapter_order: string[]) => {
+  const appendLink = `/courses/${slug}`;
+  for (const i of chapter_order) {
+    const link = (await tx.select({ link: content.link }).from(content).where(eq(content.id, i)))[0]?.link;
+    if (!link || !link.startsWith('/courses')) continue;
+    await tx
+      .update(content)
+      .set({ link: appendLink + link.slice(link.indexOf('/chapters')) })
+      .where(eq(content.id, i));
+  }
 });
 
 const handleCourseUpdate = server$(async function (
@@ -174,6 +187,7 @@ const handleCourseUpdate = server$(async function (
         await addTagContentIndex(tx, course.id, course.tags![i]);
       }
     }
+    await updateChapterLink(tx, course.slug, course.chapter_order);
     return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
   });
 });
