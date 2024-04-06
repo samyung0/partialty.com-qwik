@@ -195,6 +195,7 @@ export default component$(() => {
     difficulty: 'easy',
     short_description: '',
     is_guide: false,
+    use_plate: user.role !== "admin"
   });
   const courseApproval = useStore<NewCourseApproval>({
     id: uuidv4(),

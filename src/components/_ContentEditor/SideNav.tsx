@@ -41,6 +41,7 @@ export default component$(
     chapterName,
     timeStamp,
     openSideNav,
+    usePlate
   }: {
     contentWS: Signal<NoSerialize<WebSocket>>;
     contentEditorValue: Signal<any>;
@@ -54,6 +55,7 @@ export default component$(
     chapterName: Signal<string>;
     timeStamp: Signal<string>;
     openSideNav: Signal<boolean>;
+    usePlate: Signal<boolean>
   }) => {
     const initialCourseId = useLocation().url.searchParams.get('courseId');
     const initialChapterId = useLocation().url.searchParams.get('chapterId');
@@ -224,6 +226,7 @@ export default component$(
           const val = (await getChapterSingle(initialChapterId))[0];
           contentEditorValue.value = val.content_slate ? JSON.parse(val.content_slate) : undefined;
           renderedHTML.value = val.renderedHTML || undefined;
+          usePlate.value = !!courses[initialCourseId].use_plate;
           chapterId.value = initialChapterId;
           courseId.value = initialCourseId;
           if (val.audio_track_asset_id) audioAssetId.value = val.audio_track_asset_id;
@@ -338,6 +341,7 @@ export default component$(
                                   ? JSON.parse(val.content_slate)
                                   : undefined;
                                 renderedHTML.value = val.renderedHTML || undefined;
+                                usePlate.value = !!courses[currentCourse.id].use_plate;
                                 chapterId.value = chapter.id;
                                 courseId.value = currentCourse.id;
                                 if (chapter.audio_track_asset_id) audioAssetId.value = chapter.audio_track_asset_id;
@@ -480,6 +484,7 @@ export default component$(
                                                 ? JSON.parse(val.content_slate)
                                                 : undefined;
                                               renderedHTML.value = val.renderedHTML || undefined;
+                                              usePlate.value = !!courses[currentCourse.id].use_plate;
                                               chapterId.value = chapter.id;
                                               courseId.value = currentCourse.id;
                                               audioAssetId.value = chapter.audio_track_asset_id || undefined;

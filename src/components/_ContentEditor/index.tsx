@@ -117,7 +117,7 @@ const ContentEditorReact = ({
   openSmallCircleNav,
   toggleSmallCircleNav,
   toggleSideNav,
-  userRole,
+  usePlate,
 }: {
   isPreviewing: boolean;
   setIsPreviewing: (t: boolean) => any;
@@ -154,7 +154,7 @@ const ContentEditorReact = ({
   toggleSmallCircleNav: () => void;
   openSmallCircleNav: boolean;
   toggleSideNav: () => void;
-  userRole: string;
+  usePlate: boolean;
 }) => {
   const normalizedInitialValue = initialValue ?? //     inputWidth: 400, //     removeTrailingSpaces: true, //     quizTitle: "Question 2", //     formName: "test2", //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //     inputCount: 1,
@@ -424,7 +424,7 @@ const ContentEditorReact = ({
 
   return (
     <>
-      {isEditing && userRole === 'admin' && (
+      {isEditing && !usePlate && (
         <>
           <Preview
             setIsPreviewing={setIsPreviewing}
@@ -561,7 +561,7 @@ const ContentEditorReact = ({
           )}
         </>
       )}
-      {isEditing && userRole !== 'admin' && (
+      {isEditing && usePlate && (
         <div
           className={
             'relative flex h-full w-[100vw] flex-col items-start overflow-auto dark:bg-primary-dark-gray  dark:text-background-light-gray xl:w-[80vw] '

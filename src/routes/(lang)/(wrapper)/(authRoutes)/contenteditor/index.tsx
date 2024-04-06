@@ -201,6 +201,7 @@ export default component$(() => {
   const chapterName = useSignal('');
   const openSmallCircleNav = useSignal(false);
   const openSideNav = useSignal(false);
+  const usePlate = useSignal(false);
 
   const fetchAudio = $(async (id: string) => await fetchAudioServer(id));
 
@@ -228,11 +229,12 @@ export default component$(() => {
         chapterName={chapterName}
         timeStamp={wsTimeStamp}
         openSideNav={openSideNav}
+        usePlate={usePlate}
       />
       {contentWS.value && (
         <ContentEditor
           client:only
-          userRole={user.role}
+          usePlate={usePlate.value}
           toggleSideNav={$(() => (openSideNav.value = !openSideNav.value))}
           openSmallCircleNav={openSmallCircleNav.value}
           toggleSmallCircleNav={$(() => (openSmallCircleNav.value = !openSmallCircleNav.value))}

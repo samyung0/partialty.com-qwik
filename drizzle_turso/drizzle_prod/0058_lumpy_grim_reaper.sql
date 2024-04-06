@@ -1,0 +1,1 @@
+ALTER TABLE content_index ADD `use_plate` integer;

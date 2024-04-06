@@ -30,6 +30,7 @@ export const content_index = sqliteTable('content_index', {
   is_deleted: integer('is_deleted', { mode: 'boolean' }).notNull().default(false),
   difficulty: text('difficulty', { enum: difficulty }).notNull().default('easy'),
   is_guide: integer('is_guide', { mode: 'boolean' }).notNull().default(false),
+  use_plate: integer('use_plate', { mode: 'boolean' }),
 });
 
 export const contentIndexRelations = relations(content_index, ({ one }) => ({
