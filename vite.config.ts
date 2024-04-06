@@ -1,8 +1,9 @@
 import { qwikCity } from '@builder.io/qwik-city/vite';
+import { qwikInsights } from '@builder.io/qwik-labs/vite';
 import { qwikReact } from '@builder.io/qwik-react/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { qwikSpeakInline } from 'qwik-speak/inline';
-import { defineConfig, type Connect } from 'vite';
+import { defineConfig, loadEnv, type Connect } from 'vite';
 import compileTime from 'vite-plugin-compile-time';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import lang from './lang';
@@ -19,6 +20,9 @@ export default defineConfig(() => {
   // process.env = { ...process.env, ...loadEnv(userConfig.mode, process.cwd()) };
   return {
     plugins: [
+      qwikInsights({
+        publicApiKey: loadEnv('', '.', '').PUBLIC_QWIK_INSIGHTS_KEY,
+      }),
       qwikCity({
         allowedParams: {
           lang: config.supportedLocales.map((locale) => locale.lang),

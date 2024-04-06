@@ -8,6 +8,8 @@ import { RouterHead } from './components/router-head/router-head';
 import { layoutContext } from '~/context/layoutContext';
 import '../tailwind/css/global.css';
 
+import { Insights } from '@builder.io/qwik-labs';
+
 export default component$(() => {
   const layoutStore = useStore({ value: 'default' });
   useContextProvider(layoutContext, layoutStore);
@@ -21,6 +23,9 @@ export default component$(() => {
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
         <ServiceWorkerRegister />
+        <Insights
+          publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY}
+        />
       </head>
       <body>
         <RouterOutlet layout={layoutStore.value} />
