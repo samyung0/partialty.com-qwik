@@ -1,6 +1,7 @@
 import { component$, useComputed$, useSignal } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
+import DropDownTransition from '~/components/_Creator/Course/DropDownTransition';
 import Footer from '~/components/Footer';
 import Nav from '~/components/Nav';
 import { useCategories, useCourseLoader, useTags } from '~/routes/(lang)/(wrapper)/catalog/layout';
@@ -383,21 +384,19 @@ export default component$(() => {
                         </svg>
                       </button>
                     </div>
-                    <div
-                      class={cn(
-                        'absolute right-0 z-10 mt-2 hidden w-[220px] origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 focus:outline-none dark:border-disabled-dark dark:bg-highlight-dark',
-                        showSort.value && 'block'
-                      )}
+                    <DropDownTransition
+                      open={showSort.value}
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="menu-button"
                       tabIndex={-1}
+                      class="absolute right-0 z-10 mt-2 w-[220px] origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 focus:outline-none dark:border-disabled-dark dark:bg-highlight-dark"
                     >
                       <div class="py-1" role="none">
                         <button
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'difficulty-increasing' && 'font-bold'
+                            urlStateManager.value.sort === 'difficulty-increasing' && 'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -418,7 +417,7 @@ export default component$(() => {
                           }}
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'difficulty-decreasing' && 'font-bold'
+                            urlStateManager.value.sort === 'difficulty-decreasing' && 'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -434,7 +433,7 @@ export default component$(() => {
                           }}
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'newest' && 'font-bold'
+                            urlStateManager.value.sort === 'newest' && 'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -450,7 +449,7 @@ export default component$(() => {
                           }}
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'oldest' && 'font-bold'
+                            urlStateManager.value.sort === 'oldest' && 'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -459,7 +458,84 @@ export default component$(() => {
                           Oldest
                         </button>
                       </div>
-                    </div>
+                    </DropDownTransition>
+                    {/* <div
+                      class={cn(
+                        'absolute right-0 z-10 mt-2 hidden w-[220px] origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray p-3 focus:outline-none dark:border-disabled-dark dark:bg-highlight-dark',
+                        showSort.value && 'block'
+                      )}
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="menu-button"
+                      tabIndex={-1}
+                    >
+                      <div class="py-1" role="none">
+                        <button
+                          class={cn(
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'difficulty-increasing' && 'text-tomato dark:text-custom-pink'
+                          )}
+                          role="menuitem"
+                          tabIndex={-1}
+                          id="menu-item-0"
+                          onClick$={() => {
+                            const url = new URL(loc.url);
+                            url.searchParams.set('sort', 'difficulty-increasing');
+                            nav(url.toString());
+                          }}
+                        >
+                          Difficulty Increasing
+                        </button>
+                        <button
+                          onClick$={() => {
+                            const url = new URL(loc.url);
+                            url.searchParams.set('sort', 'difficulty-decreasing');
+                            nav(url.toString());
+                          }}
+                          class={cn(
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'difficulty-decreasing' && 'text-tomato dark:text-custom-pink'
+                          )}
+                          role="menuitem"
+                          tabIndex={-1}
+                          id="menu-item-1"
+                        >
+                          Difficulty Decreasing
+                        </button>
+                        <button
+                          onClick$={() => {
+                            const url = new URL(loc.url);
+                            url.searchParams.set('sort', 'newest');
+                            nav(url.toString());
+                          }}
+                          class={cn(
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'newest' && 'text-tomato dark:text-custom-pink'
+                          )}
+                          role="menuitem"
+                          tabIndex={-1}
+                          id="menu-item-2"
+                        >
+                          Newest
+                        </button>
+                        <button
+                          onClick$={() => {
+                            const url = new URL(loc.url);
+                            url.searchParams.set('sort', 'oldest');
+                            nav(url.toString());
+                          }}
+                          class={cn(
+                            'block px-4 py-2 text-base',
+                            urlStateManager.value.sort === 'oldest' && 'text-tomato dark:text-custom-pink'
+                          )}
+                          role="menuitem"
+                          tabIndex={-1}
+                          id="menu-item-3"
+                        >
+                          Oldest
+                        </button>
+                      </div>
+                    </div> */}
                   </div>
 
                   {/* <button

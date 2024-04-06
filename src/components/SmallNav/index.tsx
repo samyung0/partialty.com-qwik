@@ -119,14 +119,16 @@ export default component$(
                         <span class="whitespace-nowrap">Creator</span>
                       </Link>
                     </li>
-                    <li>
-                      <Link prefetch href="/admin/couseapproval/" class="flex items-center gap-3">
-                        <span class="text-[20px]">
-                          <LuShield />
-                        </span>
-                        <span class="whitespace-nowrap">Admin</span>
-                      </Link>
-                    </li>
+                    {login.user.role === 'admin' && (
+                      <li>
+                        <Link prefetch href="/admin/couseapproval/" class="flex items-center gap-3">
+                          <span class="text-[20px]">
+                            <LuShield />
+                          </span>
+                          <span class="whitespace-nowrap">Admin</span>
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button onClick$={handleLogout} class="flex items-center gap-3">
                         <span class="text-[20px]">
@@ -141,8 +143,8 @@ export default component$(
             </li>
           )}
           {!login.isLoading && !login.isLoggedIn && (
-            <Link class="py-2 pl-6" href={'/login/'}>
-              Login | Signup
+            <Link class="py-2 px-6 dark:bg-primary-dark-gray underline underline-offset-4 dark:no-underline rounded-lg" href={'/login/'}>
+              Login
             </Link>
           )}
         </ul>

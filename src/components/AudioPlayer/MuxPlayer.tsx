@@ -38,4 +38,4 @@ export const MuxAudio = ({
   );
 };
 
-export const QwikMuxAudio = qwikify$(MuxAudio, { eagerness: 'load' });
+export const QwikMuxAudio = qwikify$(MuxAudio);

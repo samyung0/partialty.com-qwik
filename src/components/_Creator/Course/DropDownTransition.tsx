@@ -9,6 +9,8 @@ export default component$(
       timeout: 75,
     });
 
+    console.log(shouldMount.value);
+
     return (
       shouldMount.value && (
         <div

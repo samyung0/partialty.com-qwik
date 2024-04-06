@@ -82,7 +82,7 @@ export default component$(
         player.playing = !player.playing;
       }),
       seekBy: $((player: PlayerAPI, amount: number) => {
-        player.currentTime += amount;
+        player.currentTime = player.displayCurrentTime + amount;
         player.displayCurrentTime += amount;
       }),
       seek: $((player: PlayerAPI, time: number) => {
@@ -248,6 +248,7 @@ export default component$(
             </div>
 
             <QwikMuxAudio
+              client:load
               id={player.playback_id}
               paused={!player.playing}
               setTimeStamp={$((time: number) => (player.displayCurrentTime = time))}
