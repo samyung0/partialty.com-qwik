@@ -184,7 +184,7 @@ export const addCategorySchema = z.object({
     .string()
     .min(2, 'A link is required')
     .regex(/^\//, 'The link needs to start with a slash')
-    .regex(/^\/[-_a-z0-9]+$/, 'No special characters except hyphens and underscores are allowed'),
+    .regex(/^\/[-_a-z0-9/]+$/, 'No special characters except hyphens and underscores are allowed'),
 });
 
 export const publishCourse = server$(async function (courseId: string) {
