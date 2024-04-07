@@ -525,9 +525,9 @@ const serialize = async (node: any, initial: boolean = false): Promise<string> =
         const endoftag = highlighted.indexOf('>') + 1;
         highlighted =
           highlighted.slice(0, endoftag) +
-          `<div><p style="margin: 0px;">${escapeHtml(
+          `<div><p style="margin: 0px;font-style: italic;font-size:0.8rem;  color: rgb(156 163 175);">${escapeHtml(
             node.filename
-          )}</p><hr style="margin: 0.5rem;border-color: rgb(156 163 175);"/></div>` +
+          )}</p><hr style="margin: 0.5rem;border-color: rgb(75 85 99);"/></div>` +
           highlighted.slice(endoftag);
       }
       return `<div>
