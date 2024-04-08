@@ -438,7 +438,7 @@ export default component$(() => {
                     </Link>
                   </li>
                   <li>
-                    <Link prefetch href={'/members/dashboard/'} class="flex items-center gap-4">
+                    <Link prefetch href={'/catalog/'} class="flex items-center gap-4">
                       Courses
                       <span class={'text-[20px] text-primary-dark-gray dark:text-background-light-gray'}>
                         <LuFileText />

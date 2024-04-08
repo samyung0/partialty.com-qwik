@@ -41,7 +41,7 @@ export default component$(({ innerHTML }: { innerHTML: string }) => {
     <article
       // SHOULD add a background
       id="sectionProse"
-      class="prose mx-auto w-[90%] max-w-[unset] bg-background-light-gray px-0 pt-6 text-sm leading-6 prose-a:decoration-wavy prose-a:underline-offset-4 prose-blockquote:pr-[1em]
+      class="prose mx-auto w-[90%] max-w-[unset] bg-background-light-gray px-0 pt-6 text-sm leading-6 prose-a:underline prose-a:underline-offset-4 prose-blockquote:pr-[1em]
     prose-figcaption:mt-0 prose-figcaption:text-xs prose-figcaption:italic
     prose-strong:tracking-wider prose-pre:bg-code-editor-one-dark-pro prose-pre:font-cascadiaCode prose-pre:text-xs  prose-pre:leading-5 prose-img:m-0 dark:bg-primary-dark-gray
     dark:text-background-light-gray

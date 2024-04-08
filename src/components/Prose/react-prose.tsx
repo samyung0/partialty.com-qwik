@@ -52,7 +52,7 @@ const Prose = ({
       // SHOULD add a background
       id="sectionProse"
       className="prose mx-auto w-[90%] max-w-[unset] bg-background-light-gray px-4 py-6 text-sm
-    leading-6 prose-a:decoration-wavy
+    leading-6 prose-a:underline
     prose-a:underline-offset-4
     prose-blockquote:pr-[1em] prose-figcaption:mt-0 prose-figcaption:text-xs prose-figcaption:italic
     prose-strong:tracking-wider
@@ -66,8 +66,8 @@ const Prose = ({
   ) : (
     <section
       // SHOULD add a background
-      className="prose mx-auto h-[80vh] 
-  max-h-[80vh] w-full max-w-[unset] overflow-auto bg-background-light-gray px-4 py-6 text-sm leading-6 prose-a:decoration-wavy
+      className="prose mx-auto h-[80vh]
+  max-h-[80vh] w-full max-w-[unset] overflow-auto bg-background-light-gray px-4 py-6 text-sm leading-6 prose-a:underline
   prose-a:underline-offset-4 prose-blockquote:pr-[1em]
   prose-figcaption:mt-0
   prose-figcaption:text-xs prose-figcaption:italic prose-strong:tracking-wider prose-pre:bg-code-editor-one-dark-pro
