@@ -124,12 +124,12 @@ export default component$(() => {
     switch (urlStateManager.value.sort) {
       case 'difficulty-increasing':
         return display.value.toSorted(
-          (a, b) => difficultyMap.value[a.difficulty] || 0 - difficultyMap.value[b.difficulty] || 0
+          (a, b) => (difficultyMap.value[a.difficulty] || 0) - (difficultyMap.value[b.difficulty] || 0)
         );
       case 'difficulty-decreasing':
-        return display.value.toSorted(
-          (a, b) => difficultyMap.value[b.difficulty] || 0 - difficultyMap.value[a.difficulty] || 0
-        );
+        return display.value.toSorted((a, b) => {
+          return (difficultyMap.value[b.difficulty] || 0) - (difficultyMap.value[a.difficulty] || 0);
+        });
       case 'newest':
         return display.value.toSorted((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
@@ -396,7 +396,8 @@ export default component$(() => {
                         <button
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'difficulty-increasing' && 'text-tomato dark:text-custom-pink'
+                            urlStateManager.value.sort === 'difficulty-increasing' &&
+                              'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
@@ -417,7 +418,8 @@ export default component$(() => {
                           }}
                           class={cn(
                             'block px-4 py-2 text-base',
-                            urlStateManager.value.sort === 'difficulty-decreasing' && 'text-tomato dark:text-custom-pink'
+                            urlStateManager.value.sort === 'difficulty-decreasing' &&
+                              'text-tomato dark:text-custom-pink'
                           )}
                           role="menuitem"
                           tabIndex={-1}
