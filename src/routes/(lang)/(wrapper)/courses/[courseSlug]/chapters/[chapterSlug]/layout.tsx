@@ -1,5 +1,7 @@
 import {
   $,
+  QRL,
+  Signal,
   Slot,
   component$,
   createContextId,
@@ -189,6 +191,8 @@ const logout = $(() => {
   });
 });
 
+export const cookieContext = createContextId<Signal< QRL<(chapterId: string) => any>>>('cookie');
+
 export default component$(() => {
   const openSideNav = useSignal(false);
   const userNullable = useUserLoaderNullable().value;
@@ -242,6 +246,13 @@ export default component$(() => {
     isLoggedIn: userNullable !== undefined,
     user: userNullable,
   });
+
+  const appendProgressCookie = $((chapterId: string) => {
+    cookieProgress.value = [...cookieProgress.value, chapterId];
+  });
+
+  const cookieStore = useSignal(() => appendProgressCookie);
+  useContextProvider(cookieContext, cookieStore);
 
   useVisibleTask$(async () => {
     if (login.isLoggedIn) {
@@ -370,7 +381,7 @@ export default component$(() => {
               </button>
               <div
                 class={
-                  'w-[80%] overflow-auto border-r-2 border-primary-dark-gray dark:border-gray-300 bg-[rgb(249_247_240)] dark:bg-disabled-dark'
+                  'w-[80%] overflow-auto border-r-2 border-primary-dark-gray bg-[rgb(249_247_240)] dark:border-gray-300 dark:bg-disabled-dark'
                 }
                 onClick$={(e) => e.stopPropagation()}
               >
@@ -423,7 +434,11 @@ export default component$(() => {
                       </div>
                     ) : (
                       <span>
-                        <Link prefetch href={'/login/'} class="whitespace-nowrap py-2 px-6 underline underline-offset-4">
+                        <Link
+                          prefetch
+                          href={'/login/'}
+                          class="whitespace-nowrap px-6 py-2 underline underline-offset-4"
+                        >
                           Login
                         </Link>
                       </span>

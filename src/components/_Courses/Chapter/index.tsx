@@ -1,7 +1,7 @@
-import { $, component$, useComputed$, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, QRL, useComputed$, useContext, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
 import { isServer } from '@builder.io/qwik/build';
 import QwikContent from '~/components/Prose/QwikContent';
-import { useCurrentChapter } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
+import { cookieContext, useCurrentChapter } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
 import {
   useCategoryLoader,
@@ -75,6 +75,7 @@ const getUserFn = $(async () => {
 });
 
 export default component$(() => {
+  const cookieFn = useContext(cookieContext);
   const userNullable = useUserLoaderNullable().value;
   const { course, preview, chapters } = useCourseLoader().value;
   const filteredChapterOrder = useComputed$(() =>
@@ -144,6 +145,7 @@ export default component$(() => {
     } catch (e) {
       console.error(e);
     }
+    cookieFn.value(currentChapter.id);
     console.log('saving Progress');
     if (!login.isLoggedIn) return;
     // const newProgress = [...(userProgress?.progress || [])];
@@ -190,7 +192,7 @@ export default component$(() => {
 
   useTask$(({ track }) => {
     track(() => currentChapter);
-    if(isServer) return;
+    if (isServer) return;
     render.value = null;
     setTimeout(
       () =>
