@@ -1,4 +1,5 @@
-import { $, component$, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { isServer } from '@builder.io/qwik/build';
 import QwikContent from '~/components/Prose/QwikContent';
 import { useCurrentChapter } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
@@ -159,29 +160,68 @@ export default component$(() => {
       course.content_index.chapter_order.filter((id) => !!chapters.find((chapter) => chapter.id === id))
     );
   });
-  return currentChapter ? (
-    <QwikContent
-      loadingAudioTrack={loadingAudioTrack}
-      isGuide={course.content_index.is_guide}
-      lastEdited={currentChapter.updated_at}
-      innerHTML={currentChapter.renderedHTML || undefined}
-      audioTrack={audioTrack.value}
-      saveToDBQuiz={saveToDB}
-      isPreview={preview}
-      hasAudioTrack={!!currentChapter.audio_track_asset_id}
-      saveProress={saveProress}
-      prevChapter={
-        filteredChapters.value.find(
-          (chapter) =>
-            chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) - 1]
-        )?.link || undefined
-      }
-      nextChapter={
-        filteredChapters.value.find(
-          (chapter) =>
-            chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) + 1]
-        )?.link || undefined
-      }
-    />
-  ) : null;
+  const render = useSignal<any>(
+    currentChapter && (
+      <QwikContent
+        loadingAudioTrack={loadingAudioTrack}
+        isGuide={course.content_index.is_guide}
+        lastEdited={currentChapter.updated_at}
+        innerHTML={currentChapter.renderedHTML || undefined}
+        audioTrack={audioTrack.value}
+        saveToDBQuiz={saveToDB}
+        isPreview={preview}
+        hasAudioTrack={!!currentChapter.audio_track_asset_id}
+        saveProress={saveProress}
+        prevChapter={
+          filteredChapters.value.find(
+            (chapter) =>
+              chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) - 1]
+          )?.link || undefined
+        }
+        nextChapter={
+          filteredChapters.value.find(
+            (chapter) =>
+              chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) + 1]
+          )?.link || undefined
+        }
+      />
+    )
+  );
+
+  useTask$(({ track }) => {
+    track(() => currentChapter);
+    if(isServer) return;
+    render.value = null;
+    setTimeout(
+      () =>
+        (render.value = currentChapter && (
+          <QwikContent
+            loadingAudioTrack={loadingAudioTrack}
+            isGuide={course.content_index.is_guide}
+            lastEdited={currentChapter.updated_at}
+            innerHTML={currentChapter.renderedHTML || undefined}
+            audioTrack={audioTrack.value}
+            saveToDBQuiz={saveToDB}
+            isPreview={preview}
+            hasAudioTrack={!!currentChapter.audio_track_asset_id}
+            saveProress={saveProress}
+            prevChapter={
+              filteredChapters.value.find(
+                (chapter) =>
+                  chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) - 1]
+              )?.link || undefined
+            }
+            nextChapter={
+              filteredChapters.value.find(
+                (chapter) =>
+                  chapter.id === filteredChapterOrder.value[filteredChapterOrder.value.indexOf(currentChapter.id) + 1]
+              )?.link || undefined
+            }
+          />
+        )),
+      0
+    );
+  });
+
+  return render.value;
 });

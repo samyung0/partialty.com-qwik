@@ -550,8 +550,8 @@ const ContentEditorReact = ({
 
           {isPreviewing && (
             <div className={'flex h-full w-[100vw] flex-col overflow-hidden xl:w-[80vw]'}>
-              <QuizHydrate innerHTML={renderedHTML || ''} saveToDB={saveToDBQuiz} isPreview={true} />
-              <QuizCodeHydrate innerHTML={renderedHTML || ''} saveToDB={saveToDBQuiz} isPreview={true} />
+              <QuizHydrate saveToDB={saveToDBQuiz} isPreview={true} />
+              <QuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={true} />
               {/* <EmbedHydrate /> */}
               <div className="overflow-auto" style={{ height: audioTrack ? '90vh' : '100vh' }}>
                 <Prose chapter={chapterName} children={<></>} innerHTML={renderedHTML || ''} />

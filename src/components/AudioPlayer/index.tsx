@@ -53,11 +53,9 @@ export type PlayerAPI = PlayerState & PublicPlayerActions;
 export default component$(
   ({
     audioTrack,
-    innerHTML,
     loadingAudioTrack,
   }: {
     audioTrack: { id: string; duration: number; filename: string; playback_ids: { id: string }[] } | undefined;
-    innerHTML: string;
     loadingAudioTrack: Signal<boolean>;
   }) => {
     const chapterActions = useContext(chapterContext);
@@ -174,16 +172,6 @@ export default component$(
       player.currentTime = 0;
       player.displayCurrentTime = 0;
       sync();
-    });
-
-    useTask$(({ track }) => {
-      track(() => innerHTML);
-      if (isServer) return;
-      setTimeout(() => {
-        dataSync.value = noSerialize(document.querySelectorAll("#sectionProse [data-sync='1']"));
-        if (loadingAudioTrack.value) return;
-        sync();
-      }, 100);
     });
 
     useTask$(({ track }) => {

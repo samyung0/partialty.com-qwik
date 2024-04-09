@@ -1,5 +1,5 @@
 import type { QRL, Signal } from '@builder.io/qwik';
-import { component$ } from '@builder.io/qwik';
+import { component$, useTask$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import moment from 'moment';
 import AudioPlayer from '~/components/AudioPlayer';
@@ -45,8 +45,8 @@ export default component$(
     const loc = useLocation();
     return (
       <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
-        <QwikQuizHydrate client:load innerHTML={innerHTML || ''} isPreview={isPreview} saveToDB={saveToDBQuiz} />
-        <QwikQuizCodeHydrate client:load innerHTML={innerHTML || ''} saveToDB={saveToDBQuiz} isPreview={isPreview} />
+        <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
+        <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
         {/* <QwikEmbedHydrate /> */}
         <main class={cn('max-h-full flex-auto overflow-auto')}>
           <QwikProse innerHTML={innerHTML || ''} />
@@ -61,12 +61,12 @@ export default component$(
             </p>
             <nav class="mx-auto flex w-[90%] max-w-[unset] items-center p-0 pb-6 md:w-[80%] lg:w-full lg:px-12 2xl:mx-0 2xl:max-w-[1200px]  2xl:px-20">
               {!!prevChapter && (
-                <Link href={prevChapter} class="mr-auto text-sm underline md:text-base">
+                <Link prefetch href={prevChapter} class="mr-auto text-sm underline md:text-base">
                   Previous
                 </Link>
               )}
               {!!nextChapter && (
-                <Link href={nextChapter} class="ml-auto text-sm underline md:text-base">
+                <Link prefetch href={nextChapter} class="ml-auto text-sm underline md:text-base">
                   Next
                 </Link>
               )}
@@ -81,7 +81,7 @@ export default component$(
         {/* <QwikAudioTrack audioTrack={audioTrack} /> */}
         {(loadingAudioTrack.value || audioTrack) && (
           <div class="mt-auto">
-            <AudioPlayer loadingAudioTrack={loadingAudioTrack} innerHTML={innerHTML || ''} audioTrack={audioTrack} />
+            <AudioPlayer loadingAudioTrack={loadingAudioTrack} audioTrack={audioTrack} />
           </div>
         )}
       </div>

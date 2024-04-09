@@ -4,8 +4,7 @@ import { EMBED_URL } from '~/const';
 export default component$(({ innerHTML }: { innerHTML: string }) => {
   const interval = useSignal<any>();
   const isDark = useSignal<boolean>(false);
-  useVisibleTask$(({ cleanup, track }) => {
-    track(() => innerHTML);
+  useVisibleTask$(({ cleanup }) => {
     console.log('hydrate embed');
     const darkThemeDiv = document.getElementById('darkThemeDiv');
     if (!darkThemeDiv) return;
