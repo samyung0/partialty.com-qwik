@@ -1,11 +1,9 @@
 import type { QRL, Signal } from '@builder.io/qwik';
-import { component$, useTask$ } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import moment from 'moment';
 import AudioPlayer from '~/components/AudioPlayer';
 import ProgressTracker from '~/components/Prose/ProgressTracker';
-import { QwikQuizCodeHydrate } from '~/components/Prose/QuizCodeHydrate';
-import { QwikQuizHydrate } from '~/components/Prose/QuizHydrate';
 import QwikProse from '~/components/Prose/qwik-prose';
 import { cn } from '~/utils/cn';
 
@@ -34,7 +32,7 @@ export default component$(
       | undefined;
     loadingAudioTrack: Signal<boolean>;
     hasAudioTrack: boolean;
-    saveToDBQuiz: (isCorrect: boolean) => any;
+    saveToDBQuiz: QRL<(isCorrect: boolean) => any>;
     isPreview: boolean;
     saveProress: QRL<() => any>;
     prevChapter?: string | undefined;
@@ -45,11 +43,11 @@ export default component$(
     const loc = useLocation();
     return (
       <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
-        <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
-        <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
+        {/* <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} /> */}
+        {/* <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} /> */}
         {/* <QwikEmbedHydrate /> */}
         <main class={cn('max-h-full flex-auto overflow-auto')}>
-          <QwikProse innerHTML={innerHTML || ''} />
+          <QwikProse saveToDB={saveToDBQuiz} isPreview={isPreview} innerHTML={innerHTML || ''} />
           {!loc.isNavigating && (
             <div>
               <ProgressTracker saveProress={saveProress} />

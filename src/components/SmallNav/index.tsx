@@ -41,7 +41,7 @@ export default component$(
     });
     return (
       <nav class="dark:text-background-light-gray">
-        <ul class="flex items-center gap-6 text-base font-bold tracking-wide">
+        <ul class="flex items-center gap-6 text-base tracking-wide">
           <li>
             <label class="flex cursor-pointer items-center gap-2 text-[20px] text-primary-dark-gray dark:text-background-light-gray">
               <LuSun />
