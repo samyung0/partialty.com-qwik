@@ -3,7 +3,15 @@
 import { qwikify$ } from '@builder.io/qwik-react';
 import { useEffect } from 'react';
 
-const QuizHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (isCorrect: boolean) => any }) => {
+const QuizHydrate = ({
+  innerHTML,
+  isPreview,
+  saveToDB,
+}: {
+  innerHTML: string;
+  isPreview: boolean;
+  saveToDB: (isCorrect: boolean) => any;
+}) => {
   useEffect(() => {
     (Array.from(document.getElementsByClassName('quizOptionButton')) as HTMLElement[]).forEach((button) => {
       button.addEventListener('click', (e) => {
@@ -61,7 +69,7 @@ const QuizHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (i
         saveToDB(correctAns);
       })
     );
-  }, []);
+  }, [innerHTML]);
   return <></>;
 };
 

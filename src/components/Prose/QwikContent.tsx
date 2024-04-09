@@ -45,8 +45,8 @@ export default component$(
     const loc = useLocation();
     return (
       <div class="flex max-h-full flex-auto flex-col items-stretch justify-between overflow-hidden ">
-        <QwikQuizHydrate isPreview={isPreview} saveToDB={saveToDBQuiz} />
-        <QwikQuizCodeHydrate saveToDB={saveToDBQuiz} isPreview={isPreview} />
+        <QwikQuizHydrate client:load innerHTML={innerHTML || ''} isPreview={isPreview} saveToDB={saveToDBQuiz} />
+        <QwikQuizCodeHydrate client:load innerHTML={innerHTML || ''} saveToDB={saveToDBQuiz} isPreview={isPreview} />
         {/* <QwikEmbedHydrate /> */}
         <main class={cn('max-h-full flex-auto overflow-auto')}>
           <QwikProse innerHTML={innerHTML || ''} />

@@ -5,7 +5,15 @@ import { useEffect } from 'react';
 import astCompare from '~/components/_ContentEditor/astCompare';
 import astParse from '~/components/_ContentEditor/astParse';
 
-const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (isCorrect: boolean) => any }) => {
+const QuizCodeHydrate = ({
+  innerHTML,
+  isPreview,
+  saveToDB,
+}: {
+  innerHTML: string;
+  isPreview: boolean;
+  saveToDB: (isCorrect: boolean) => any;
+}) => {
   useEffect(() => {
     (Array.from(document.getElementsByClassName('quizCodeBlock')) as HTMLFormElement[]).forEach((form) => {
       form.addEventListener('submit', (e) => {
@@ -73,7 +81,7 @@ const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB
         showAnsContainer.style.display = 'block';
       });
     });
-  }, []);
+  }, [innerHTML]);
   return <></>;
 };
 
