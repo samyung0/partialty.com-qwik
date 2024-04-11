@@ -187,7 +187,7 @@ const handleCourseUpdate = server$(async function (
         await addTagContentIndex(tx, course.id, course.tags![i]);
       }
     }
-    await updateChapterLink(tx, course.slug, course.chapter_order);
+    updateChapterLink(tx, course.slug, course.chapter_order);
     return await updateCourse(tx, { ...course, updated_at: getSQLTimeStamp() });
   });
 });
