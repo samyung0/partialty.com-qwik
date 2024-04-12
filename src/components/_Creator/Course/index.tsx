@@ -173,7 +173,7 @@ export const checkExistingChapterLink = server$(async function (link: string) {
 });
 
 export const addCategorySchema = z.object({
-  name: z.string().trim().min(2, 'A name is required').max(35, 'Name is too long (max. 35 chars)'),
+  name: z.string().trim().min(2, 'A name is required').max(50, 'Name is too long (max. 50 chars)'),
   slug: z
     .string()
     .trim()
@@ -1062,97 +1062,117 @@ export default component$(
                                       </svg>
                                     </button>
                                   </div>
-                                  <DropDownTransition
-                                    open={courses[currentCourse.id].openedCourseActions}
-                                    class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
-                                    role="menu"
-                                    aria-orientation="vertical"
-                                    aria-labelledby={'menu-button-course' + currentCourse.id}
-                                    tabIndex={-1}
-                                  >
-                                    <div class="flex flex-col py-1 [&>button]:text-left" role="none">
-                                      <a
-                                        target="_blank"
-                                        href={`/creator/edit-course/${currentCourse.id}/`}
-                                        class="block px-4 py-2 text-sm "
-                                        role="menuitem"
-                                        tabIndex={-1}
-                                        id={'menu-item-0' + currentCourse.id}
-                                        onClick$={(e) => e.stopPropagation()}
-                                      >
-                                        Edit Settings
-                                      </a>
-                                      <a
-                                        target="_blank"
-                                        href={courses[currentCourse.id].link!}
-                                        class="block px-4 py-2 text-sm "
-                                        role="menuitem"
-                                        tabIndex={-1}
-                                        id={'menu-item-1' + currentCourse.id}
-                                        onClick$={(e) => e.stopPropagation()}
-                                      >
-                                        View {courses[currentCourse.id].is_guide ? 'Guide' : 'Course'}
-                                      </a>
-                                      <button
-                                        class="block px-4 py-2 text-sm "
-                                        role="menuitem"
-                                        tabIndex={-1}
-                                        id={'menu-item-2' + currentCourse.id}
-                                        onClick$={(e) => {
-                                          e.stopPropagation();
-                                          handleLockUnlockCourse(currentCourse.id, user.userId);
-                                        }}
-                                      >
-                                        {courses[currentCourse.id].is_locked && <span>Unlock Course</span>}
-                                        {!courses[currentCourse.id].is_locked && <span>Lock Course</span>}
-                                      </button>
-                                      <button
-                                        class="block px-4 py-2 text-sm "
-                                        role="menuitem"
-                                        tabIndex={-1}
-                                        id={'menu-item-3' + currentCourse.id}
-                                        onClick$={(e) => {
-                                          e.stopPropagation();
-                                          if (
-                                            courses[currentCourse.id].is_locked &&
-                                            user.userId !== courses[currentCourse.id].author &&
-                                            user.role !== 'admin'
-                                          )
-                                            return alert('The Course is locked! You cannot add a chapter!.');
+                                  {courses[currentCourse.id].openedCourseActions && (
+                                    <DropDownTransition
+                                      open={courses[currentCourse.id].openedCourseActions}
+                                      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-lg border-2 border-primary-dark-gray bg-background-light-gray dark:bg-primary-dark-gray"
+                                      role="menu"
+                                      aria-orientation="vertical"
+                                      aria-labelledby={'menu-button-course' + currentCourse.id}
+                                      tabIndex={-1}
+                                    >
+                                      <div class="flex flex-col py-1 [&>button]:text-left" role="none">
+                                        <a
+                                          target="_blank"
+                                          href={`/creator/edit-course/${currentCourse.id}/`}
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-0' + currentCourse.id}
+                                          onClick$={(e) => e.stopPropagation()}
+                                        >
+                                          Edit Settings
+                                        </a>
+                                        <a
+                                          target="_blank"
+                                          href={courses[currentCourse.id].link!}
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-1' + currentCourse.id}
+                                          onClick$={(e) => e.stopPropagation()}
+                                        >
+                                          View {courses[currentCourse.id].is_guide ? 'Guide' : 'Course'}
+                                        </a>
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-2' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            handleLockUnlockCourse(currentCourse.id, user.userId);
+                                          }}
+                                        >
+                                          {courses[currentCourse.id].is_locked && <span>Unlock Course</span>}
+                                          {!courses[currentCourse.id].is_locked && <span>Lock Course</span>}
+                                        </button>
+                                        <button
+                                          class="block px-4 py-2 text-sm "
+                                          role="menuitem"
+                                          tabIndex={-1}
+                                          id={'menu-item-3' + currentCourse.id}
+                                          onClick$={(e) => {
+                                            e.stopPropagation();
+                                            if (
+                                              courses[currentCourse.id].is_locked &&
+                                              user.userId !== courses[currentCourse.id].author &&
+                                              user.role !== 'admin'
+                                            )
+                                              return alert('The Course is locked! You cannot add a chapter!.');
 
-                                          showAddChapter.value = true;
-                                          showAddCourseId.value = currentCourse.id;
-                                        }}
-                                      >
-                                        Add Chapter
-                                      </button>
-                                      {!courses[currentCourse.id].courseApproval.ready_for_approval &&
-                                        courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                            showAddChapter.value = true;
+                                            showAddCourseId.value = currentCourse.id;
+                                          }}
+                                        >
+                                          Add Chapter
+                                        </button>
+                                        {!courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                            <button
+                                              class="block px-4 py-2 text-sm "
+                                              role="menuitem"
+                                              tabIndex={-1}
+                                              id={'menu-item-4' + currentCourse.id}
+                                              onClick$={(e) => {
+                                                e.stopPropagation();
+                                                handlePublish(currentCourse.id, user.userId);
+                                              }}
+                                            >
+                                              {courses[currentCourse.id].isPublishing && (
+                                                <span>
+                                                  <LoadingSVG />
+                                                </span>
+                                              )}
+                                              {!courses[currentCourse.id].isPublishing && <span>Publish Course</span>}
+                                            </button>
+                                          )}
+                                        {courses[currentCourse.id].courseApproval.ready_for_approval &&
+                                          courses[currentCourse.id].courseApproval.status === 'pending' && (
+                                            <button
+                                              class="block px-4 py-2 text-sm "
+                                              role="menuitem"
+                                              tabIndex={-1}
+                                              id={'menu-item-5' + currentCourse.id}
+                                              onClick$={(e) => {
+                                                e.stopPropagation();
+                                                handleUnpublish(currentCourse.id, user.userId);
+                                              }}
+                                            >
+                                              {courses[currentCourse.id].isPublishing && (
+                                                <span>
+                                                  <LoadingSVG />
+                                                </span>
+                                              )}
+                                              {!courses[currentCourse.id].isPublishing && <span>Cancel Publish</span>}
+                                            </button>
+                                          )}
+                                        {courses[currentCourse.id].courseApproval.status === 'approved' && (
                                           <button
                                             class="block px-4 py-2 text-sm "
                                             role="menuitem"
                                             tabIndex={-1}
-                                            id={'menu-item-4' + currentCourse.id}
-                                            onClick$={(e) => {
-                                              e.stopPropagation();
-                                              handlePublish(currentCourse.id, user.userId);
-                                            }}
-                                          >
-                                            {courses[currentCourse.id].isPublishing && (
-                                              <span>
-                                                <LoadingSVG />
-                                              </span>
-                                            )}
-                                            {!courses[currentCourse.id].isPublishing && <span>Publish Course</span>}
-                                          </button>
-                                        )}
-                                      {courses[currentCourse.id].courseApproval.ready_for_approval &&
-                                        courses[currentCourse.id].courseApproval.status === 'pending' && (
-                                          <button
-                                            class="block px-4 py-2 text-sm "
-                                            role="menuitem"
-                                            tabIndex={-1}
-                                            id={'menu-item-5' + currentCourse.id}
+                                            id={'menu-item-6' + currentCourse.id}
                                             onClick$={(e) => {
                                               e.stopPropagation();
                                               handleUnpublish(currentCourse.id, user.userId);
@@ -1163,49 +1183,31 @@ export default component$(
                                                 <LoadingSVG />
                                               </span>
                                             )}
-                                            {!courses[currentCourse.id].isPublishing && <span>Cancel Publish</span>}
+                                            {!courses[currentCourse.id].isPublishing && <span>Unpublish Course</span>}
                                           </button>
                                         )}
-                                      {courses[currentCourse.id].courseApproval.status === 'approved' && (
-                                        <button
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-6' + currentCourse.id}
-                                          onClick$={(e) => {
-                                            e.stopPropagation();
-                                            handleUnpublish(currentCourse.id, user.userId);
-                                          }}
-                                        >
-                                          {courses[currentCourse.id].isPublishing && (
-                                            <span>
-                                              <LoadingSVG />
-                                            </span>
-                                          )}
-                                          {!courses[currentCourse.id].isPublishing && <span>Unpublish Course</span>}
-                                        </button>
-                                      )}
-                                      {courses[currentCourse.id].courseApproval.status === 'need_amendment' && (
-                                        <button
-                                          class="block px-4 py-2 text-sm "
-                                          role="menuitem"
-                                          tabIndex={-1}
-                                          id={'menu-item-7' + currentCourse.id}
-                                          onClick$={(e) => {
-                                            e.stopPropagation();
-                                            handleAmendment(currentCourse.id, user.userId);
-                                          }}
-                                        >
-                                          {courses[currentCourse.id].isPublishing && (
-                                            <span>
-                                              <LoadingSVG />
-                                            </span>
-                                          )}
-                                          {!courses[currentCourse.id].isPublishing && <span>Publish Again</span>}
-                                        </button>
-                                      )}
-                                    </div>
-                                  </DropDownTransition>
+                                        {courses[currentCourse.id].courseApproval.status === 'need_amendment' && (
+                                          <button
+                                            class="block px-4 py-2 text-sm "
+                                            role="menuitem"
+                                            tabIndex={-1}
+                                            id={'menu-item-7' + currentCourse.id}
+                                            onClick$={(e) => {
+                                              e.stopPropagation();
+                                              handleAmendment(currentCourse.id, user.userId);
+                                            }}
+                                          >
+                                            {courses[currentCourse.id].isPublishing && (
+                                              <span>
+                                                <LoadingSVG />
+                                              </span>
+                                            )}
+                                            {!courses[currentCourse.id].isPublishing && <span>Publish Again</span>}
+                                          </button>
+                                        )}
+                                      </div>
+                                    </DropDownTransition>
+                                  )}
                                 </div>
                               </div>
                             </div>
