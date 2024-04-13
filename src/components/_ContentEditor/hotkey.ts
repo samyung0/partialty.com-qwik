@@ -92,7 +92,8 @@ const onKeyDownFn = (editor: Editor, event: React.KeyboardEvent) => {
       isBlockActive(editor, 'infoBlock', 'type') ||
       isBlockActive(editor, 'cautionBlock', 'type') ||
       isBlockActive(editor, 'warningBlock', 'type') ||
-      isBlockActive(editor, 'quizOption', 'type');
+      isBlockActive(editor, 'quizOption', 'type') || 
+      isBlockActive(editor, 'paragraph', 'type')
     if (softBreak) {
       event.preventDefault();
       Editor.insertText(editor, '\n');
