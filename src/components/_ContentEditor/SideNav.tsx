@@ -545,7 +545,7 @@ export default component$(
                                               height="30"
                                               referrerPolicy="no-referrer"
                                               class={
-                                                'rounded-full object-contain' +
+                                                'max-w-[30px] rounded-full object-contain' +
                                                 (oldChapter.value === chapter.id
                                                   ? ' rounded-full border-2 border-tomato'
                                                   : '')
