@@ -57,3 +57,9 @@ package-lock.json
 .zed
 
 .idx
+
+# Sentry Config File
+.env.sentry-build-plugin
+
+# Sentry Config File
+.env.sentry-build-plugin

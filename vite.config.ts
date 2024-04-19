@@ -6,6 +6,7 @@ import { qwikSpeakInline } from 'qwik-speak/inline';
 import { defineConfig, loadEnv, type Connect } from 'vite';
 import compileTime from 'vite-plugin-compile-time';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import lang from './lang';
 import { config } from './src/speak-config';
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
@@ -50,7 +51,20 @@ export default defineConfig(() => {
       },
       compileTime(),
       qwikReact(),
+      sentryVitePlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN_JS,
+        org: "partialtycom",
+        project: "javascript",
+      }),
+      sentryVitePlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN_NODE,
+        org: "partialtycom",
+        project: "node",
+      }),
     ],
+    build: {
+      sourcemap: true
+    },
     // node_modules\@babel\types\lib\definitions\core.js
     define: { 'process.env.BABEL_TYPES_8_BREAKING': 'false' },
     dev: {

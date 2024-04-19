@@ -13,6 +13,9 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import FastifyQwik from './plugins/fastify-qwik';
 
+import Sentry from "@sentry/node";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
+
 declare global {
   interface QwikCityPlatform extends PlatformNode {}
 }
@@ -39,6 +42,32 @@ const start = async () => {
 
   // Handle Qwik City using a plugin
   await fastify.register(FastifyQwik, { distDir, buildDir });
+
+  Sentry.init({
+    dsn: "https://1d99971a337e113ddfdc6007a8f60428@o4507112021688320.ingest.us.sentry.io/4507112102756352",
+    integrations: [
+      nodeProfilingIntegration(),
+    ],
+    // Performance Monitoring
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set sampling rate for profiling - this is relative to tracesSampleRate
+    profilesSampleRate: 1.0,
+  });
+
+  const transaction = Sentry.startTransaction({
+    op: "test",
+    name: "My First Test Transaction",
+  });
+  
+  setTimeout(() => {
+    try {
+      throw new Error("error")
+    } catch (e) {
+      Sentry.captureException(e);
+    } finally {
+      transaction.finish();
+    }
+  }, 99);
 
   // Start the fastify server
   await fastify.listen({ port: PORT, host: HOST });

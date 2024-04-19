@@ -1,5 +1,6 @@
-import { component$, useContextProvider, useStore } from '@builder.io/qwik';
+import { $, component$, useContextProvider, useOnDocument, useStore } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
+import * as Sentry from '@sentry/browser';
 import { useQwikSpeak } from 'qwik-speak';
 import { config as _config } from '~/speak-config';
 import { translationFn } from '~/speak-function';
@@ -16,6 +17,23 @@ export default component$(() => {
 
   useQwikSpeak({ config: _config, translationFn });
 
+  useOnDocument(
+    'qinit',
+    $(() => {
+      Sentry.init({
+        dsn: 'https://b1f6cefb9529f993bf199ee1e8e80343@o4507112021688320.ingest.us.sentry.io/4507112031453184',
+        integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+        // Performance Monitoring
+        tracesSampleRate: 1.0, //  Capture 100% of the transactions
+        // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+        tracePropagationTargets: ['localhost', /^https:\/\/partialty\.com\/api/],
+        // Session Replay
+        replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+        replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+      });
+    })
+  );
+
   return (
     <QwikCityProvider>
       <head>
@@ -23,9 +41,7 @@ export default component$(() => {
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
         <ServiceWorkerRegister />
-        <Insights
-          publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY}
-        />
+        <Insights publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY} />
       </head>
       <body>
         <RouterOutlet layout={layoutStore.value} />
