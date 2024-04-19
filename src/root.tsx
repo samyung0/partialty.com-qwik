@@ -1,6 +1,7 @@
 import { $, component$, useContextProvider, useOnDocument, useStore } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
 import * as Sentry from '@sentry/browser';
+import posthog from 'posthog-js'
 import { useQwikSpeak } from 'qwik-speak';
 import { config as _config } from '~/speak-config';
 import { translationFn } from '~/speak-function';
@@ -31,6 +32,7 @@ export default component$(() => {
         replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
         replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
       });
+      posthog.init('phc_f9K7W6DZOPs3yTLZhNlKmOubc17qdUszPhxc2gQqpBv', { api_host: 'https://app.posthog.com' })
     })
   );
 

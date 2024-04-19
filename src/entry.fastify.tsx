@@ -52,24 +52,6 @@ const start = async () => {
     profilesSampleRate: 1.0,
   });
 
-  const transaction = Sentry.startTransaction({
-    op: 'test',
-    name: 'My First Test Transaction',
-  });
-
-  await new Promise((res, rej) =>
-    setTimeout(() => {
-      try {
-        throw new Error('error');
-      } catch (e) {
-        Sentry.captureException(e);
-      } finally {
-        transaction.finish();
-        res(0);
-      }
-    }, 99)
-  );
-
   // Start the fastify server
   await fastify.listen({ port: PORT, host: HOST });
 };
