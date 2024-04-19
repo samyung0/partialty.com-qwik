@@ -114,7 +114,7 @@ export default component$(() => {
                         <div
                           class={`h-1.5 rounded-full bg-lilac`}
                           style={{
-                            width: `${Math.round((completedChapters.length / chapters.length) * 100)}%`,
+                            width: `${Math.round((completedChapters.length / currentChapters.length) * 100)}%`,
                           }}
                         ></div>
                       </div>
