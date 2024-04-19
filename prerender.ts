@@ -6,6 +6,7 @@ export const coursesParams = [
     courseSlug: 'html-course',
   },
   { courseSlug: 'css-course' },
+  { courseSlug: 'css-applications' },
 ];
 
 export const chaptersParams = [
@@ -62,4 +63,10 @@ export const chaptersParams = [
   { courseSlug: 'css-course', chapterSlug: 'transitions-and-animations' },
   { courseSlug: 'css-course', chapterSlug: 'checkpoint-3' },
   { courseSlug: 'css-course', chapterSlug: 'other-resources' },
+  { courseSlug: 'css-applications', chapterSlug: 'using-custom-fonts' },
+  { courseSlug: 'css-applications', chapterSlug: 'hover-dropdown' },
+  { courseSlug: 'css-applications', chapterSlug: 'responsive-navbar' },
+  { courseSlug: 'css-applications', chapterSlug: 'sticky-navbar' },
+  { courseSlug: 'css-applications', chapterSlug: 'blog-card' },
+  { courseSlug: 'css-applications', chapterSlug: 'social-links' },
 ];
