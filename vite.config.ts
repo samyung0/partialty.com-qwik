@@ -52,14 +52,14 @@ export default defineConfig(() => {
       compileTime(),
       qwikReact(),
       sentryVitePlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN_JS,
+        authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_JS,
         org: "partialtycom",
-        project: "javascript",
+        project: "partialty-client",
       }),
       sentryVitePlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN_NODE,
+        authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_NODE,
         org: "partialtycom",
-        project: "node",
+        project: "partialty-serverentry",
       }),
     ],
     build: {
