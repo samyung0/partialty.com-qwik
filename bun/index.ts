@@ -43,20 +43,6 @@ const app = new Elysia()
       },
     })
   )
-  .use(
-    cron({
-      name: 'heartbeat2',
-      pattern: '* */15 * * * *', // avoid cold start in vercel for root
-      run() {
-        try {
-          // put the major sites here
-          endpoints.forEach((endpoint) => {
-            fetch(endpoint);
-          });
-        } catch (e) {}
-      },
-    })
-  )
   .use(compression())
   .use(helmet())
   .use(HealthRoute)
