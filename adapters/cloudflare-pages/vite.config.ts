@@ -11,11 +11,6 @@ export default extendConfig(baseConfig, () => {
       },
     },
     plugins: [cloudflarePagesAdapter({
-      ssg: {
-        include: ['/courses/*'],
-        origin: 'https://www.partialty.com',
-        sitemapOutFile: 'sitemap-ssg.xml',
-      },
     })],
   };
 });
