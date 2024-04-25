@@ -1,12 +1,12 @@
-FROM oven/bun AS build-env
+FROM node:18-bullseye-slim AS build-env
 
 COPY . /app
 WORKDIR /app
 
 # It is recommended that you only install production dependencies with
 # `npm i --omit=dev`. You may need to check which dependencies are missing
-RUN bun i
-RUN bun run build
+RUN npm i --legacy-peer-deps
+RUN npm run build
 
 
 # A light-weight image for running the app
