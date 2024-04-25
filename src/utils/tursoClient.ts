@@ -7,7 +7,7 @@ export const initTursoIfNeeded = (env: RequestEventBase['env'], prodInDev: boole
   if (!client) {
     if (prodInDev) {
       if (!env.get('TURSO_PROD_URL') || !env.get('TURSO_PROD_TOKEN')) {
-        console.error('TURSO ENV VARIABLE ERROR SERVER');
+        console.error('TURSO ENV VARIABLE ERROR SERVER PROD');
         return null;
       }
       client = createClient({
