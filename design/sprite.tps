@@ -173,11 +173,11 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">../public/2d_assets/Small Gray Square.png</key>
-            <key type="filename">../public/2d_assets/batch_gray-circle.png</key>
+            <key type="filename">../public/2d_assets/batch_gray_circle.png</key>
             <key type="filename">../public/2d_assets/batch_intellij.png</key>
             <key type="filename">../public/2d_assets/batch_nextjs.png</key>
             <key type="filename">../public/2d_assets/batch_sublime.png</key>
+            <key type="filename">../public/2d_assets/gray_square.png</key>
             <key type="filename">../public/2d_assets/small_js.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -279,7 +279,6 @@
                     <filename>../public/2d_assets/small_css.png</filename>
                     <filename>../public/2d_assets/small_html.png</filename>
                     <filename>../public/2d_assets/small_js.png</filename>
-                    <filename>../public/2d_assets/batch_gray-circle.png</filename>
                     <filename>../public/2d_assets/batch_intellij.png</filename>
                     <filename>../public/2d_assets/batch_neovim.png</filename>
                     <filename>../public/2d_assets/batch_nextjs.png</filename>
@@ -287,7 +286,8 @@
                     <filename>../public/2d_assets/batch_react.png</filename>
                     <filename>../public/2d_assets/batch_sublime.png</filename>
                     <filename>../public/2d_assets/batch_vscode.png</filename>
-                    <filename>../public/2d_assets/Small Gray Square.png</filename>
+                    <filename>../public/2d_assets/batch_gray_circle.png</filename>
+                    <filename>../public/2d_assets/gray_square.png</filename>
                 </array>
             </struct>
         </map>
