@@ -173,6 +173,86 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">../public/2d_assets/Small Gray Square.png</key>
+            <key type="filename">../public/2d_assets/batch_gray-circle.png</key>
+            <key type="filename">../public/2d_assets/batch_intellij.png</key>
+            <key type="filename">../public/2d_assets/batch_nextjs.png</key>
+            <key type="filename">../public/2d_assets/batch_sublime.png</key>
+            <key type="filename">../public/2d_assets/small_js.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,25,50,50</rect>
+                <key>scale9Paddings</key>
+                <rect>25,25,50,50</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../public/2d_assets/batch_neovim.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,30,50,61</rect>
+                <key>scale9Paddings</key>
+                <rect>25,30,50,61</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../public/2d_assets/batch_qwik.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,25,50,51</rect>
+                <key>scale9Paddings</key>
+                <rect>25,25,50,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../public/2d_assets/batch_react.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,22,50,43</rect>
+                <key>scale9Paddings</key>
+                <rect>25,22,50,43</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../public/2d_assets/batch_vscode.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,25,50,49</rect>
+                <key>scale9Paddings</key>
+                <rect>25,25,50,49</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../public/2d_assets/small_css.png</key>
             <key type="filename">../public/2d_assets/small_html.png</key>
             <struct type="IndividualSpriteSettings">
@@ -189,36 +269,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../public/2d_assets/small_js.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>25,25,50,50</rect>
-                <key>scale9Paddings</key>
-                <rect>25,25,50,50</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">../public/2d_assets/sprite.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>26,83,51,166</rect>
-                <key>scale9Paddings</key>
-                <rect>26,83,51,166</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
         </map>
         <key>fileLists</key>
         <map type="SpriteSheetMap">
@@ -226,7 +276,18 @@
             <struct type="SpriteSheet">
                 <key>files</key>
                 <array>
-                    <filename>../public/2d_assets</filename>
+                    <filename>../public/2d_assets/small_css.png</filename>
+                    <filename>../public/2d_assets/small_html.png</filename>
+                    <filename>../public/2d_assets/small_js.png</filename>
+                    <filename>../public/2d_assets/batch_gray-circle.png</filename>
+                    <filename>../public/2d_assets/batch_intellij.png</filename>
+                    <filename>../public/2d_assets/batch_neovim.png</filename>
+                    <filename>../public/2d_assets/batch_nextjs.png</filename>
+                    <filename>../public/2d_assets/batch_qwik.png</filename>
+                    <filename>../public/2d_assets/batch_react.png</filename>
+                    <filename>../public/2d_assets/batch_sublime.png</filename>
+                    <filename>../public/2d_assets/batch_vscode.png</filename>
+                    <filename>../public/2d_assets/Small Gray Square.png</filename>
                 </array>
             </struct>
         </map>

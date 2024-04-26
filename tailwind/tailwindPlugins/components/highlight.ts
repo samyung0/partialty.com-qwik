@@ -32,8 +32,20 @@ const component = (addComponents: AddComponents, theme: Theme) => {
       // margin: "-2px -6px",
       // padding: "2px  6px",
     },
+    '.highlight-dark-lilac': {
+      background: `no-repeat center url(/src/assets/svg/highlightSVG/dark-lilac.svg)`,
+      'background-size': '100% 100%',
+      margin: '-2px -6px',
+      padding: '2px  6px',
+    },
     '.highlight-lilac': {
       background: `no-repeat center url(/src/assets/svg/highlightSVG/lilac.svg)`,
+      'background-size': '100% 100%',
+      margin: '-2px -6px',
+      padding: '2px  6px',
+    },
+    '.highlight-light-lilac': {
+      background: `no-repeat center url(/src/assets/svg/highlightSVG/light-lilac.svg)`,
       'background-size': '100% 100%',
       margin: '-2px -6px',
       padding: '2px  6px',

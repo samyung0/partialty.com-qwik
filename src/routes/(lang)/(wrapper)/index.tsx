@@ -55,7 +55,7 @@ export default component$(() => {
       </div>
     </main>
   ) : (
-    <main class="relative min-h-[100vh] bg-background-light-gray">
+    <main class="relative min-h-[100vh] bg-background-light-gray dark:bg-primary-dark-gray text-primary-dark-gray dark:text-background-light-gray">
       <NewHero />
       {/* <div class="hidden 2xl:block">
         <IndexNav />

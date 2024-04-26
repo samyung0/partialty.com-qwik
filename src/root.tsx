@@ -21,6 +21,7 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(() => {
+      if(import.meta.env.MODE !== "development") return;
       Sentry.init({
         dsn: 'https://b1f6cefb9529f993bf199ee1e8e80343@o4507112021688320.ingest.us.sentry.io/4507112031453184',
         integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
@@ -41,6 +42,7 @@ export default component$(() => {
       <head>
         <meta charSet="utf-8" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <RouterHead />
         <ServiceWorkerRegister />
         <Insights publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY} />
@@ -56,6 +58,7 @@ export default component$(() => {
           }
         `}
         ></script>
+        <script src="https://cdn.jsdelivr.net/gh/LieutenantPeacock/SmoothScroll@1.2.0/src/smoothscroll.min.js" integrity="sha384-UdJHYJK9eDBy7vML0TvJGlCpvrJhCuOPGTc7tHbA+jHEgCgjWpPbmMvmd/2bzdXU" crossOrigin="anonymous"></script>
       </body>
     </QwikCityProvider>
   );
