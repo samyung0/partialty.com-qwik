@@ -4,10 +4,8 @@ import { useLocation } from '@builder.io/qwik-city';
 
 import UnderConstruction from '~/assets/img/under_construction.png';
 import Footer from '~/components/Footer';
-import ContentAudio from '~/components/_Index/ContentAudio';
-import ContentVarieties from '~/components/_Index/ContentVarieties';
-import Hero from '~/components/_Index/Hero';
-import IndexNav from '~/components/_Index/Nav';
+
+import NewHero from '~/components/_Index/NewHero';
 
 // REMOVE
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
@@ -58,13 +56,14 @@ export default component$(() => {
     </main>
   ) : (
     <main class="relative min-h-[100vh] bg-background-light-gray">
-      <div class="hidden 2xl:block">
+      <NewHero />
+      {/* <div class="hidden 2xl:block">
         <IndexNav />
-      </div>
-      <Hero />
-      <ContentVarieties />
+      </div> */}
+      {/* <Hero /> */}
+      {/* <ContentVarieties /> */}
       {/* <ContentInteractive /> */}
-      <ContentAudio />
+      {/* <ContentAudio /> */}
       <Footer />
     </main>
   );
