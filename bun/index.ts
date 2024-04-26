@@ -1,5 +1,5 @@
 import { cors } from '@elysiajs/cors';
-import { cron } from '@elysiajs/cron';
+import { cron  } from '@elysiajs/cron';
 import { Elysia } from 'elysia';
 import { compression } from 'elysia-compression';
 import { helmet } from 'elysia-helmet';
@@ -46,7 +46,7 @@ const app = new Elysia()
   .use(
     cron({
       name: 'heartbeat2',
-      pattern: '* */15 * * * *', // avoid cold start in vercel for root
+      pattern: '* * */4 * * *', // avoid cold start in vercel for root
       run() {
         try {
           // put the major sites here
