@@ -41,19 +41,19 @@ const logout = $(() => {
   });
 });
 
-export const sc = $((deltaY: number, scrollDir: Signal<number>, scroller: Signal<any>) => {
-  if (deltaY < 0) {
-    if (scrollDir.value > 0) (window as any).smoothScroll.stopAll();
-    scrollDir.value = -1;
-    if ((window as any).smoothScroll.scrolling()) return;
-    scroller.value.smoothScroll({ yPos: '-200' });
-  } else {
-    if (scrollDir.value < 0) (window as any).smoothScroll.stopAll();
-    scrollDir.value = 1;
-    if ((window as any).smoothScroll.scrolling()) return;
-    scroller.value.smoothScroll({ yPos: '+200' });
-  }
-});
+// export const sc = $((deltaY: number, scrollDir: Signal<number>, scroller: Signal<any>) => {
+//   if (deltaY < 0) {
+//     if (scrollDir.value > 0) (window as any).smoothScroll.stopAll();
+//     scrollDir.value = -1;
+//     if ((window as any).smoothScroll.scrolling()) return;
+//     scroller.value.smoothScroll({ yPos: '-200' });
+//   } else {
+//     if (scrollDir.value < 0) (window as any).smoothScroll.stopAll();
+//     scrollDir.value = 1;
+//     if ((window as any).smoothScroll.scrolling()) return;
+//     scroller.value.smoothScroll({ yPos: '+200' });
+//   }
+// });
 
 export default component$(() => {
   const parentEl = useSignal<HTMLDivElement>();
@@ -101,7 +101,7 @@ export default component$(() => {
     const randomize = (max: number) => {
       return Math.floor(Math.random() * max);
     };
-    scroller.value = noSerialize(new (window as any).smoothScroll({ duration: 100, allowAnimationOverlap: false }));
+    // scroller.value = noSerialize(new (window as any).smoothScroll({ duration: 100, allowAnimationOverlap: false }));
     let newGame: Phaser.Game;
     const phaserScript = document.createElement('script');
     phaserScript.setAttribute('src', '/phaser.min.js');
@@ -127,9 +127,9 @@ export default component$(() => {
         }
         create() {
           console.log('create');
-          this.input.on('wheel', (e: WheelEvent) => {
+          // this.input.on('wheel', (e: WheelEvent) => {
             // sc(e.deltaY, scrollDir, scroller);
-          });
+          // });
           const shapes = this.cache.json.get('shapes');
           this.matter.world.setBounds(0, 0, parentEl.value!.offsetWidth, parentEl.value!.offsetHeight);
           largeSprite.push(

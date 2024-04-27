@@ -100,7 +100,7 @@ export default component$(() => {
     setTimeout(() => {
       initialX.value = null;
       initialY.value = null;
-    }, 150);
+    }, 250);
   });
 
   const logic = $((deltaY: number) => {
@@ -185,13 +185,13 @@ export default component$(() => {
         <div
           ref={page2}
           class="absolute inset-0 top-[100dvh] min-h-[100dvh] overflow-auto"
-          onWheel$={(e: WheelEvent) => {
-            if ((window as any).smoothScroll.scrolling()) {
-              (window as any).smoothScroll.stopAll();
-            }
-          }}
+          // onWheel$={(e: WheelEvent) => {
+          //   if ((window as any).smoothScroll.scrolling()) {
+          //     (window as any).smoothScroll.stopAll();
+          //   }
+          // }}
         >
-          <FAQ client:load />
+          <FAQ logic={logic} client:load />
           <Creator />
           <Footer />
         </div>

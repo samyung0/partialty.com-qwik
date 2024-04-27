@@ -42,14 +42,22 @@ const faqs = [
   },
 ];
 
-const Faq = () => {
+const Faq = ({ logic }: { logic: (deltaY: number) => any }) => {
   return (
     <div className="relative overflow-x-hidden">
       <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
+        <button
+          className="absolute md:top-[7%] top-[5%] md:text-sm text-xs left-[50%] -translate-x-[50%] text-gray-600 underline dark:text-gray-300"
+          onClick={() => {
+            logic(-10);
+          }}
+        >
+          Top
+        </button>
         <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
           <div className="flex justify-center">
             <div className="relative inline-block overflow-visible">
-              <h2 className="inline text-center md:text-3xl text-2xl font-bold leading-10  font-mosk">
+              <h2 className="inline text-center font-mosk text-2xl font-bold leading-10  md:text-3xl">
                 Frequently asked questions
               </h2>
               {/* <div className="absolute right-[-50px] top-[50%] -translate-y-[50%]">
@@ -65,7 +73,7 @@ const Faq = () => {
                   <>
                     <dt>
                       <Disclosure.Button className="flex w-full items-start justify-between text-left">
-                        <span className="md:text-base text-sm font-semibold leading-7">{faq.question}</span>
+                        <span className="text-sm font-semibold leading-7 md:text-base">{faq.question}</span>
                         <span className="ml-6 flex h-7 items-center">
                           {open ? (
                             <MinusSmallIcon className="h-6 w-6" aria-hidden="true" />
@@ -76,7 +84,7 @@ const Faq = () => {
                       </Disclosure.Button>
                     </dt>
                     <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                      <p className="md:text-base text-sm leading-7 text-gray-500 dark:text-gray-400">{faq.answer}</p>
+                      <p className="text-sm leading-7 text-gray-500 dark:text-gray-400 md:text-base">{faq.answer}</p>
                     </Disclosure.Panel>
                   </>
                 )}
