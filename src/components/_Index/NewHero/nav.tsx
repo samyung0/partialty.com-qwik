@@ -67,10 +67,10 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
           </h2>
         </div>
         <div class="inline-flex items-center gap-8">
-          <a href="/members/dashboard/" class="cursor-none text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-background-light-gray transition-colors">
+          <a href="/members/dashboard/" class="cursor-none text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Home
           </a>
-          <a href="/catalog/" class="cursor-none text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-background-light-gray transition-colors">
+          <a href="/catalog/" class="cursor-none text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Courses
           </a>
         </div>
@@ -137,7 +137,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       'flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-disabled-dark dark:bg-highlight-dark dark:text-background-light-gray'
                     }
                   >
-                    <ul class="flex flex-col xl:p-2 xl:[&>li]:p-2 p-1 [&>li]:p-1">
+                    <ul class="flex flex-col lg:p-2 lg:[&>li]:p-2 p-1 [&>li]:p-1">
                       <li>
                         <Link
                           prefetch
