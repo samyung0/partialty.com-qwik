@@ -14,7 +14,7 @@ export default component$(() => {
           <div class="space-y-8">
             <img class="h-7 object-contain" src={PartialtySVG} alt="Partialty.com" height="28" width="28" />
             <p class="text-sm leading-6 text-gray-300">
-              Learn Web Dev in an interactive way through simple words and organized content.
+              Learn Web Dev in an interactive way through simple words and organized manner.
             </p>
             <div class="flex space-x-6">
               {/* <a href="#" class="text-gray-500 hover:text-gray-400">

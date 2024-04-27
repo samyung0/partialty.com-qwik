@@ -62,6 +62,9 @@ export default defineConfig(() => {
         project: 'partialty-serverentry',
       }),
     ],
+    build: {
+      sourcemap: true
+    },
     // node_modules\@babel\types\lib\definitions\core.js
     define: { 'process.env.BABEL_TYPES_8_BREAKING': 'false' },
     dev: {

@@ -395,7 +395,7 @@ export default component$(
                           href={login.isLoggedIn ? '/members/dashboard/' : '/login/'}
                           class="flex items-center gap-3"
                         >
-                          <span class="text-[25px]">
+                          <span class="text-[20px]">
                             <LuHome />
                           </span>
                           <span class="whitespace-nowrap  ">Home</span>
@@ -403,7 +403,7 @@ export default component$(
                       </li>
                       <li>
                         <Link prefetch href="/profile/" class="flex items-center gap-3">
-                          <span class="text-[25px]">
+                          <span class="text-[20px]">
                             <LuUser2 />
                           </span>
                           <span class="whitespace-nowrap">My Profile</span>
@@ -412,7 +412,7 @@ export default component$(
                       {login.user.role !== 'free' && (
                         <li>
                           <Link prefetch href="/creator/" class="flex items-center gap-3">
-                            <span class="text-[25px]">
+                            <span class="text-[20px]">
                               <LuPencilLine />
                             </span>
                             <span class="whitespace-nowrap">Creator</span>
@@ -422,7 +422,7 @@ export default component$(
                       {login.user.role === 'admin' && (
                         <li>
                           <Link prefetch href="/admin/courseapproval/" class="flex items-center gap-3">
-                            <span class="text-[25px]">
+                            <span class="text-[20px]">
                               <LuShield />
                             </span>
                             <span class="whitespace-nowrap">Admin</span>
@@ -431,7 +431,7 @@ export default component$(
                       )}
                       <li>
                         <button onClick$={handleLogout} class="flex items-center gap-3">
-                          <span class="text-[25px]">
+                          <span class="text-[20px]">
                             <LuLogOut />
                           </span>
                           <span>Logout</span>

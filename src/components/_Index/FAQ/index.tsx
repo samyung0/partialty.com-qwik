@@ -49,7 +49,7 @@ const Faq = () => {
         <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
           <div className="flex justify-center">
             <div className="relative inline-block overflow-visible">
-              <h2 className="inline text-center text-3xl font-bold leading-10 tracking-tight">
+              <h2 className="inline text-center md:text-3xl text-2xl font-bold leading-10  font-mosk">
                 Frequently asked questions
               </h2>
               {/* <div className="absolute right-[-50px] top-[50%] -translate-y-[50%]">
@@ -65,7 +65,7 @@ const Faq = () => {
                   <>
                     <dt>
                       <Disclosure.Button className="flex w-full items-start justify-between text-left">
-                        <span className="text-base font-semibold leading-7">{faq.question}</span>
+                        <span className="md:text-base text-sm font-semibold leading-7">{faq.question}</span>
                         <span className="ml-6 flex h-7 items-center">
                           {open ? (
                             <MinusSmallIcon className="h-6 w-6" aria-hidden="true" />
@@ -76,7 +76,7 @@ const Faq = () => {
                       </Disclosure.Button>
                     </dt>
                     <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                      <p className="text-base leading-7 text-gray-500 dark:text-gray-400">{faq.answer}</p>
+                      <p className="md:text-base text-sm leading-7 text-gray-500 dark:text-gray-400">{faq.answer}</p>
                     </Disclosure.Panel>
                   </>
                 )}

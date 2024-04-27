@@ -1,5 +1,5 @@
-import { $, component$, useContext, useOnDocument, useStore } from '@builder.io/qwik';
-import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
+import { $, component$, useContext, useOnDocument, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { Link, removeClientDataCache, useNavigate } from '@builder.io/qwik-city';
 import { IoCaretDown } from '@qwikest/icons/ionicons';
 import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuShield, LuSun, LuUser2 } from '@qwikest/icons/lucide';
 
@@ -9,17 +9,24 @@ import PartialtySVG from '~/assets/svg/partialty.svg';
 import LoadingSVG from '~/components/LoadingSVG';
 import type { LuciaSession } from '~/types/LuciaSession';
 
-import { logout } from '~/auth/logout';
+import theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
-import { getUser } from '../Nav';
 
-const setThemeCookie = server$(function (theme: 'light' | 'dark') {
-  this.cookie.set('theme', theme, {
-    path: '/',
-    maxAge: [480, 'weeks'],
-    httpOnly: false,
-    sameSite: 'lax',
-    secure: true,
+const setThemeCookie = $(async (themeValue: (typeof theme)[number]) => {
+  const d = new FormData();
+  d.append('theme', themeValue);
+  return await fetch('/api/courses/chapters/setThemeCookie/', {
+    method: 'POST',
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }).then((x) => x.json());
+});
+
+const logout = $(() => {
+  return fetch('/api/courses/logout/', {
+    method: 'POST',
   });
 });
 
@@ -37,17 +44,17 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
     nav('/');
   });
 
-  useOnDocument(
-    'qinit',
-    $(async () => {
-      const res = await getUser();
-      login.isLoading = false;
-      if (res) {
-        login.isLoggedIn = true;
-        login.user = res.user;
-      }
-    })
-  );
+  useVisibleTask$(async () => {
+    const res = await fetch('/api/courses/chapters/getUser/', {
+      credentials: 'include',
+    }).then((x) => x.json());
+    login.isLoading = false;
+    if (res) {
+      login.isLoggedIn = true;
+      login.user = res.user;
+    }
+  });
+
   return (
     <div class="relative z-[50] shadow shadow-slate-200/80 ring-1 ring-slate-900/5">
       <nav class="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-8">
@@ -60,14 +67,14 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
           </h2>
         </div>
         <div class="inline-flex items-center gap-8">
-          <a href="/members/dashboard/" class="cursor-none">
+          <a href="/members/dashboard/" class="cursor-none text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Home
           </a>
-          <a href="/catalog/" class="cursor-none">
+          <a href="/catalog/" class="cursor-none text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Courses
           </a>
         </div>
-        <div class="inline-flex w-[250px] items-center text-sm">
+        <div class="inline-flex w-[250px] items-center">
           <ul class="flex items-center gap-4">
             <li>
               <label class="flex cursor-none items-center gap-2 text-[18px] text-primary-dark-gray dark:text-background-light-gray">
@@ -124,13 +131,13 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                     <IoCaretDown />
                   </span>
                 </div>
-                <div class="absolute left-[0] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2 xl:left-[50%]">
+                <div class="absolute left-[0] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2 xl:left-[50%] font-bold">
                   <div
                     class={
                       'flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-disabled-dark dark:bg-highlight-dark dark:text-background-light-gray'
                     }
                   >
-                    <ul class="flex flex-col p-1 [&>li]:p-1">
+                    <ul class="flex flex-col xl:p-2 xl:[&>li]:p-2 p-1 [&>li]:p-1">
                       <li>
                         <Link
                           prefetch
@@ -187,7 +194,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
               <li>
                 <a
                   href={'/login/'}
-                  class="cursor-none whitespace-nowrap rounded-[2rem] bg-disabled-dark px-4 py-3 font-normal tracking-normal text-background-light-gray shadow-md"
+                  class="cursor-none whitespace-nowrap rounded-[2rem] bg-disabled-dark px-6 py-2 font-normal tracking-normal text-background-light-gray shadow-md"
                 >
                   Login
                 </a>

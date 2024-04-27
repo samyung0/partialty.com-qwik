@@ -1,4 +1,4 @@
-import { $, component$, useOnDocument, useSignal } from '@builder.io/qwik';
+import { $, component$, useOnDocument, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { LuTerminal } from '@qwikest/icons/lucide';
 
 import FireDark from '~/assets/img/fire-dark.png';
@@ -13,12 +13,9 @@ export default component$(() => {
   //   timeout: 0,
   //   transitionOnAppear: true,
   // });
-  useOnDocument(
-    'qinit',
-    $(() => {
-      stage.value = 'enterTo';
-    })
-  );
+  useVisibleTask$(() => {
+    stage.value = 'enterTo';
+  })
 
   return (
     <section

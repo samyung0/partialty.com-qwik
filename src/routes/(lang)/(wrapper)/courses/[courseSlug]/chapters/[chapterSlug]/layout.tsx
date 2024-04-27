@@ -6,7 +6,6 @@ import {
   createContextId,
   useContext,
   useContextProvider,
-  useOnDocument,
   useSignal,
   useStore,
   useVisibleTask$,
@@ -18,6 +17,8 @@ import { useCourseLoader, useUserLoaderNullable } from '~/routes/(lang)/(wrapper
 import drizzleClient from '~/utils/drizzleClient';
 import type { Content } from '../../../../../../../../drizzle_turso/schema/content';
 import { content } from '../../../../../../../../drizzle_turso/schema/content';
+
+import theme from '~/const/theme';
 
 import {
   LuAlignJustify,
@@ -150,7 +151,6 @@ const getShowAudioHighlightsCookie = $(async () => {
 
 import LoadingSVG from '~/components/LoadingSVG';
 // import getUser from '~/components/_Index/Nav/getUser';
-import type theme from '~/const/theme';
 import readCookie from '~/utils/readCookie';
 import type { ContentUserProgress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
 
@@ -229,16 +229,13 @@ export default component$(() => {
     chapterActions.showAllHighlights = !t;
   });
 
-  useOnDocument(
-    'qinit',
-    $(async () => {
-      cookieProgress.value = JSON.parse(readCookie('progress', document.cookie) || '[]') as string[];
-      const showAllHighlights = await getShowAudioHighlightsCookie();
-      if (showAllHighlights === 'true') {
-        chapterActions.showAllHighlights = true;
-      }
-    })
-  );
+  useVisibleTask$(async () => {
+    cookieProgress.value = JSON.parse(readCookie('progress', document.cookie) || '[]') as string[];
+    const showAllHighlights = await getShowAudioHighlightsCookie();
+    if (showAllHighlights === 'true') {
+      chapterActions.showAllHighlights = true;
+    }
+  });
 
   const login = useStore({
     isLoading: userNullable === undefined,

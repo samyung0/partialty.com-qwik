@@ -1,4 +1,4 @@
-import { $, component$, useComputed$, useOnDocument, useSignal, useStore } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
 import { IoReaderOutline, IoRocketOutline } from '@qwikest/icons/ionicons';
 import { LuArrowRight, LuGem, LuGoal } from '@qwikest/icons/lucide';
@@ -183,79 +183,76 @@ export default component$(() => {
   const content_user_progress = useSignal<ContentUserProgress>();
   const hasLoadedContentUserProgress = useSignal(false);
 
-  useOnDocument(
-    'qinit',
-    $(async () => {
-      const fav = readCookie('favourite' + course.content_index.id, document.cookie);
-      // console.log(fav);
-      // const d = new FormData();
-      // d.append('courseId', course.content_index.id);
-      // const fav = await fetch('/api/courses/getCookie/', {
-      //   credentials: 'include',
-      //   method: 'POST',
-      //   body: d,
-      //   // headers: {
-      //   //   'Content-Type': 'application/json',
-      //   // },
-      // }).then((x) => x.json());
-      isFavourite.value = !!fav;
+  useVisibleTask$(async () => {
+    const fav = readCookie('favourite' + course.content_index.id, document.cookie);
+    // console.log(fav);
+    // const d = new FormData();
+    // d.append('courseId', course.content_index.id);
+    // const fav = await fetch('/api/courses/getCookie/', {
+    //   credentials: 'include',
+    //   method: 'POST',
+    //   body: d,
+    //   // headers: {
+    //   //   'Content-Type': 'application/json',
+    //   // },
+    // }).then((x) => x.json());
+    isFavourite.value = !!fav;
 
-      try {
-        if (login.isLoggedIn) {
-          getProgressFn(course.content_index.id, login.user!.userId)
-            .then((r) => {
-              content_user_progress.value = r[0];
-            })
-            .catch((e) => {
-              console.error(e);
-            })
-            .finally(() => {
-              hasLoadedContentUserProgress.value = true;
-            });
-          return;
-        }
-        const res = await getUserFn();
-        login.isLoading = false;
-        if (res) {
-          login.isLoggedIn = true;
-          login.user = res.user;
+    try {
+      if (login.isLoggedIn) {
+        getProgressFn(course.content_index.id, login.user!.userId)
+          .then((r) => {
+            content_user_progress.value = r[0];
+          })
+          .catch((e) => {
+            console.error(e);
+          })
+          .finally(() => {
+            hasLoadedContentUserProgress.value = true;
+          });
+        return;
+      }
+      const res = await getUserFn();
+      login.isLoading = false;
+      if (res) {
+        login.isLoggedIn = true;
+        login.user = res.user;
 
-          // const d = new FormData();
-          // d.append('courseId', course.content_index.id);
-          // d.append('userId', login.user!.userId);
-          // fetch('/api/courses/chapters/getProgress', {
-          //   method: 'POST',
-          //   body: d,
-          // })
-          //   .then((x) => x.json())
-          getProgressFn(course.content_index.id, login.user!.userId)
-            .then((r) => {
-              content_user_progress.value = r[0];
-            })
-            .catch((e) => {
-              console.error(e);
-            })
-            .finally(() => {
-              hasLoadedContentUserProgress.value = true;
-            });
+        // const d = new FormData();
+        // d.append('courseId', course.content_index.id);
+        // d.append('userId', login.user!.userId);
+        // fetch('/api/courses/chapters/getProgress', {
+        //   method: 'POST',
+        //   body: d,
+        // })
+        //   .then((x) => x.json())
+        getProgressFn(course.content_index.id, login.user!.userId)
+          .then((r) => {
+            content_user_progress.value = r[0];
+          })
+          .catch((e) => {
+            console.error(e);
+          })
+          .finally(() => {
+            hasLoadedContentUserProgress.value = true;
+          });
 
-          const favourite = await getFavourite(login.user!.userId);
-          if (favourite.includes(course.content_index.id)) {
-            isFavourite.value = true;
-            setFavouriteCookie(course.content_index.id);
-          } else {
-            isFavourite.value = false;
-            removeFavouriteCookie(course.content_index.id);
-          }
+        const favourite = await getFavourite(login.user!.userId);
+        if (favourite.includes(course.content_index.id)) {
+          isFavourite.value = true;
+          setFavouriteCookie(course.content_index.id);
         } else {
-          hasLoadedContentUserProgress.value = true;
+          isFavourite.value = false;
+          removeFavouriteCookie(course.content_index.id);
         }
-      } catch (e) {
-        console.error(e);
+      } else {
         hasLoadedContentUserProgress.value = true;
       }
-    })
-  );
+    } catch (e) {
+      console.error(e);
+      hasLoadedContentUserProgress.value = true;
+    }
+  });
 
   const toggleFavourite = $(() => {
     if (!login.isLoggedIn) return nav('/login/');

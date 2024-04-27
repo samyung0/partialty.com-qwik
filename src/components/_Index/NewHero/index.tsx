@@ -19,6 +19,28 @@ import { cn } from '~/utils/cn';
 
 export { getUser };
 
+const getUserFn = $(async () => {
+  return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
+});
+
+const setThemeCookieFn = $(async (themeValue: any) => {
+  const d = new FormData();
+  d.append('theme', themeValue);
+  return await fetch('/api/courses/chapters/setThemeCookie/', {
+    method: 'POST',
+    body: d,
+    // headers: {
+    //   'Content-Type': 'application/json',
+    // },
+  }).then((x) => x.json());
+});
+
+const logout = $(() => {
+  return fetch('/api/courses/logout/', {
+    method: 'POST',
+  });
+});
+
 export const sc = $((deltaY: number, scrollDir: Signal<number>, scroller: Signal<any>) => {
   if (deltaY < 0) {
     if (scrollDir.value > 0) (window as any).smoothScroll.stopAll();
@@ -75,6 +97,7 @@ export default component$(() => {
   useVisibleTask$(({ track }) => {
     track(() => parentEl.value);
     if (!parentEl.value || game.value) return;
+    if (window.innerWidth < 768) return;
     const randomize = (max: number) => {
       return Math.floor(Math.random() * max);
     };
@@ -330,16 +353,29 @@ export default component$(() => {
   );
 
   return (
-    <div id="swup" class="relative h-[100dvh] w-full overflow-x-hidden">
+    <div
+      id="swup"
+      class="relative h-[100dvh] w-full overflow-x-hidden"
+      // onWheel$={(e: WheelEvent) => {
+      //   console.log("yo");
+      //   e.preventDefault();
+      //   if ((window as any).smoothScroll.scrolling()) return;
+      //   if (e.deltaY < 0) {
+      //     (window as any).smoothScroll({ yPos: 0, duration: 500, easing: 'easeOutSine' });
+      //   } else {
+      //     (window as any).smoothScroll({ yPos: window.innerHeight + 50, duration: 200, easing: 'linear' });
+      //   }
+      // }}
+    >
       <div class="absolute top-0 z-[100] block w-full lg:hidden">
-        <Nav2 />
+        <Nav2 getUserFn={getUserFn} setThemeCookieFn={setThemeCookieFn} logoutFn={logout} />
       </div>
-      <div class="h-full w-full">
+      <div class="h-full w-full overflow-hidden">
         <FollowerPointerCard client:visible className="relative h-full" title="Partialty.com">
           <button
             onClick$={blast}
             class={cn(
-              'swup-main absolute left-8 top-[15%] z-[50] flex cursor-none flex-col items-center justify-center lg:bottom-[15%] lg:left-24 lg:top-[unset]',
+              'swup-main absolute left-8 top-[15%] z-[50] hidden cursor-none flex-col items-center justify-center md:flex lg:bottom-[15%] lg:left-24 lg:top-[unset]',
               stage.value === 'enterFrom' && 'is-animating2',
               stage.value === 'enterTo' && 'is-animating2 appear'
             )}
@@ -362,16 +398,7 @@ export default component$(() => {
           </div>
         </FollowerPointerCard>
       </div>
-      <div
-        onWheel$={(e: WheelEvent) => {
-          e.preventDefault();
-          if (e.deltaY < 0) return;
-          if ((window as any).smoothScroll.scrolling()) return;
-          (window as any).smoothScroll({ yPos: window.innerHeight + 50, duration: 500, easing: 'easeOutSine' });
-        }}
-        ref={parentEl}
-        class="absolute top-0 z-10 h-full w-full bg-red-500 bg-transparent "
-      ></div>
+      <div ref={parentEl} class="absolute top-0 z-10 hidden h-full w-full bg-red-500 bg-transparent md:block "></div>
     </div>
   );
 });

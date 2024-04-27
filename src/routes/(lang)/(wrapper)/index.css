@@ -1,0 +1,15 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.swup-slide {
+  transition: transform .6s cubic-bezier(0.5, 0, 0.15, 1);
+}
+
+.swup-slide.from {
+  transform: translateY(0);
+}
+
+.swup-slide.to {
+  transform: translateY(-100dvh);
+}
