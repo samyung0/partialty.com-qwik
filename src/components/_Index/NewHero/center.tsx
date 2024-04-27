@@ -20,9 +20,9 @@ export default component$(() => {
   return (
     <section
       class={cn(
-        'swup-main flex w-[90dvw] flex-col items-center  justify-center gap-6  lg:w-[600px] lg:max-w-[600px]',
-        stage.value === 'enterFrom' && 'is-animating',
-        stage.value === 'enterTo' && 'is-animating to-left'
+        'root-main flex w-[90dvw] flex-col items-center  justify-center gap-6  lg:w-[600px] lg:max-w-[600px]',
+        // stage.value === 'enterFrom' && 'is-animating',
+        // stage.value === 'enterTo' && 'is-animating to-left'
       )}
     >
       <div class="text-lg">

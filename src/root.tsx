@@ -56,6 +56,11 @@ export default component$(() => {
             dark.classList.remove("dark");
             dark.classList.add("light");
           }
+
+          const rootTransitions = Array.from(document.getElementsByClassName('root-main'));
+          rootTransitions.forEach(x => {
+            x.classList.add('start')
+          })
         `}
         ></script>
         {/* <script
