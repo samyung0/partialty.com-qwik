@@ -1,6 +1,8 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead, RequestHandler } from '@builder.io/qwik-city';
 import { useLocation } from '@builder.io/qwik-city';
+
+// import ZingTouch from 'zingtouch';
 
 import Footer from '~/components/Footer';
 import FAQ from '~/components/_Index/FAQ';
@@ -21,14 +23,39 @@ export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   });
 };
 
+import readCookie from '~/utils/readCookie';
+
+import { useContext } from '@builder.io/qwik';
+import type theme from '~/const/theme';
+import { themeContext } from '~/context/themeContext';
+
+const getTheme = $(async () => {
+  return readCookie('theme', document.cookie);
+  // return await fetch('/api/courses/chapters/getThemeCookie/', {
+  //   credentials: 'include',
+  // }).then((x) => x.json());
+});
+
 export default component$(() => {
   const params = useLocation().url.searchParams;
   const stage = useSignal('enterFrom');
   const page = useSignal(0);
   const page2 = useSignal<HTMLDivElement>();
+  const container = useSignal<HTMLDivElement>();
+
+  const themeStore = useContext<{ value: (typeof theme)[number] }>(themeContext);
 
   useVisibleTask$(() => {
     if (params.get('errMessage')) alert(params.get('errMessage'));
+  });
+
+  useVisibleTask$(async () => {
+    const theme = await getTheme();
+    if (theme === 'light') {
+      themeStore.value = 'light';
+    } else if (theme === 'dark') {
+      themeStore.value = 'dark';
+    }
   });
 
   // useVisibleTask$(() => {
@@ -63,6 +90,80 @@ export default component$(() => {
   //     </div>
   //   </main>
   // ) : (
+  const initialX = useSignal<number | null>(null);
+  const initialY = useSignal<number | null>(null);
+
+  const startTouch = $((e: TouchEvent) => {
+    initialX.value = e.touches[0].clientX;
+    initialY.value = e.touches[0].clientY;
+
+    setTimeout(() => {
+      initialX.value = null;
+      initialY.value = null;
+    }, 150);
+  });
+
+  const logic = $((deltaY: number) => {
+    console.log(deltaY);
+    if (page.value === 0 && deltaY > 0) {
+      stage.value = 'enterTo';
+      page.value = 1;
+    } else if (page.value === 1 && page2.value && page2.value.scrollTop === 0 && deltaY < 0) {
+      stage.value = 'enterFrom';
+      page.value = 0;
+    }
+  });
+
+  const moveTouch = $((e: TouchEvent) => {
+    if (initialX.value === null) {
+      return;
+    }
+
+    if (initialY.value === null) {
+      return;
+    }
+
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+
+    const diffX = initialX.value - currentX;
+    const diffY = initialY.value - currentY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      // sliding horizontally
+      if (diffX > 50) {
+        // swiped left
+        console.log('swiped left');
+      } else {
+        // swiped right
+        console.log('swiped right');
+      }
+    } else {
+      // sliding vertically
+      if (diffY > 10 || diffY < -10) {
+        logic(diffY)
+      }
+    }
+
+    initialX.value = null;
+    initialY.value = null;
+
+    e.preventDefault();
+  });
+  // useVisibleTask$(({ track }) => {
+  //   track(() => container.value);
+  //   if (!container.value) return;
+
+  // const zt = new ZingTouch.Region(document.body);
+  // zt.bind(
+  //   container.value,
+  //   'swipe',
+  //   (e) => {
+  //     console.log(e);
+  //   },
+  //   false
+  // );
+  // });
   return (
     <main class="relative max-h-[100vh] overflow-hidden bg-background-light-gray text-primary-dark-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <div
@@ -71,15 +172,12 @@ export default component$(() => {
           stage.value === 'enterFrom' && 'from',
           stage.value === 'enterTo' && 'to'
         )}
-        onWheel$={(e: WheelEvent) => {
-          if (page.value === 0 && e.deltaY > 0) {
-            stage.value = 'enterTo';
-            page.value = 1;
-          } else if (page.value === 1 && page2.value && page2.value.scrollTop === 0 && e.deltaY < 0) {
-            stage.value = 'enterFrom';
-            page.value = 0;
-          }
+        ref={container}
+        onwheel$={(e: WheelEvent) => {
+          logic(e.deltaY);
         }}
+        ontouchstart$={startTouch}
+        onTouchMove$={moveTouch}
       >
         <div class="absolute inset-0 h-[100dvh] max-h-[100dvh] w-full overflow-hidden">
           <NewHero />

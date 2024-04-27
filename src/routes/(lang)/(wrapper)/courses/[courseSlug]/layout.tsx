@@ -1,4 +1,4 @@
-import { $, Slot, component$, useContext, useOnDocument } from '@builder.io/qwik';
+import { $, Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { routeLoader$, type RequestHandler } from '@builder.io/qwik-city';
 import { and, eq } from 'drizzle-orm';
 import { auth } from '~/auth/lucia';
@@ -130,16 +130,13 @@ const getTheme = $(async () => {
 
 export default component$(() => {
   const themeStore = useContext<{ value: (typeof theme)[number] }>(themeContext);
-  useOnDocument(
-    'qinit',
-    $(async () => {
-      const theme = await getTheme();
-      if (theme === 'light') {
-        themeStore.value = 'light';
-      } else if (theme === 'dark') {
-        themeStore.value = 'dark';
-      }
-    })
-  );
+  useVisibleTask$(async () => {
+    const theme = await getTheme();
+    if (theme === 'light') {
+      themeStore.value = 'light';
+    } else if (theme === 'dark') {
+      themeStore.value = 'dark';
+    }
+  });
   return <Slot />;
 });
