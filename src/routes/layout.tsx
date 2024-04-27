@@ -1,6 +1,7 @@
 import { $, Slot, component$, useContextProvider, useOnDocument, useStore } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { QwikCityNprogress } from '@quasarwork/qwik-city-nprogress';
+import Sonner from '~/components/Sonner';
 
 import type theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
@@ -33,6 +34,7 @@ export default component$(() => {
       />
       <div id="darkThemeDiv" class={themeStore.value}>
         <Slot />
+        <Sonner client:only theme={themeStore.value.includes('dark') ? 'dark' : 'light'} />
       </div>
     </>
   );

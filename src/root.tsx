@@ -49,6 +49,7 @@ export default component$(() => {
       </head>
       <body>
         <RouterOutlet layout={layoutStore.value} />
+
         <script
           dangerouslySetInnerHTML={`
           const dark = document.getElementById("darkThemeDiv");

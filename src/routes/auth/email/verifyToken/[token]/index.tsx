@@ -28,7 +28,7 @@ export default component$(() => {
       class={
         'flex h-[100vh] flex-col items-center justify-center ' +
         (verifyInfo.value.verified
-          ? 'bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray'
+          ? 'bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray'
           : 'bg-light-tomato')
       }
     >

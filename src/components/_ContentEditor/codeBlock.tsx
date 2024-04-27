@@ -229,14 +229,14 @@ export const HoveringCodeBlock = ({
             <button
               onClick={() => setShowCodeBlockSettings(true)}
               type="button"
-              className="rounded-s-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-s-lg border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               Settings
             </button>
             <button
               onClick={() => toggleCodeBlockAtSelection(editor)}
               type="button"
-              className="rounded-e-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
+              className="rounded-e-lg border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark "
             >
               <Trash strokeWidth={1.5} size={20} />
             </button>

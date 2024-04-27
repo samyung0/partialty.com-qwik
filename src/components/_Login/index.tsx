@@ -42,8 +42,8 @@ export default component$(() => {
     }
   });
   return (
-    <section class="flex h-[100vh] items-center justify-center bg-sherbet">
-      <div class="flex w-[95vw] items-center justify-center  rounded-lg  border-2 border-black bg-white py-16 md:w-[50vw] md:min-w-[500px] md:max-w-[600px]">
+    <section class="flex h-[100vh] items-center justify-center bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
+      <div class="flex w-[95vw] items-center justify-center  rounded-lg  border-2 border-black bg-white py-16 dark:bg-highlight-dark md:w-[50vw] md:min-w-[500px] md:max-w-[600px]">
         <div>
           <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold md:text-[2.5rem] md:tracking-wider">Login</h1>
           <br />
@@ -124,9 +124,9 @@ export default component$(() => {
           </form>
 
           <div class="relative mx-auto my-8 mb-4 flex items-center self-stretch md:my-10 md:mb-6">
-            <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+            <span class="inline-block h-[3px] flex-1 bg-black/10 dark:bg-gray-300"></span>
             <span class="px-4 tracking-wide">or</span>
-            <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+            <span class="inline-block h-[3px] flex-1 bg-black/10 dark:bg-gray-300"></span>
           </div>
 
           <div class="mx-auto flex w-[60%] items-center justify-evenly self-stretch md:w-full">

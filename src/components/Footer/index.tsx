@@ -86,17 +86,20 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Common</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="/about/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link
+                      href="https://blog.partialty.com/about"
+                      class="text-sm leading-6 text-gray-300 hover:text-white"
+                    >
                       About Me
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      Q&A
+                    <Link href="/#faq" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      FAQ
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/donate/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       Donate
                     </Link>
                   </li>
@@ -108,17 +111,17 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/license/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       License
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/privacy/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       Privacy
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/terms/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       Terms
                     </Link>
                   </li>
@@ -128,17 +131,17 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Support</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      Contact Us
+                    <Link href="/contact/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Contact Me
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/suggestions/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       Make Suggestions
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <Link href="/contribute/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
                       Contribute
                     </Link>
                   </li>

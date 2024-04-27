@@ -446,9 +446,9 @@ export default component$(
                 <Link
                   prefetch
                   href={'/login'}
-                  class="whitespace-nowrap rounded-lg bg-disabled-dark px-4 py-3 font-normal tracking-normal text-background-light-gray shadow-md"
+                  class="whitespace-nowrap rounded-2xl bg-disabled-dark px-6 py-3 font-normal tracking-normal text-background-light-gray shadow-md"
                 >
-                  Login | Signup
+                  Login
                 </Link>
               </li>
             )}

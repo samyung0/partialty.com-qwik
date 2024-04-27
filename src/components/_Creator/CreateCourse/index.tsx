@@ -285,7 +285,7 @@ export default component$(() => {
   );
 
   return (
-    <main class="flex h-[100vh] items-center justify-center overflow-hidden bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray">
+    <main class="flex h-[100vh] items-center justify-center overflow-hidden bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <div class="w-[95vw] overflow-hidden md:w-[80vw]">
         <div>
           <div

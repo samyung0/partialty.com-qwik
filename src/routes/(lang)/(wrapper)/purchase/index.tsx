@@ -12,7 +12,7 @@ export default component$(() => {
   return (
     <main
       class={
-        'flex h-[100vh] w-full flex-col items-center justify-center gap-4 bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray'
+        'flex h-[100vh] w-full flex-col items-center justify-center gap-4 bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray'
       }
     >
       {success === '1' ? (

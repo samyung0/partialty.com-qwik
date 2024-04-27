@@ -296,7 +296,7 @@ export default component$(() => {
   );
 
   return (
-    <section class="min-h-[100vh] bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
+    <section class="min-h-[100vh] bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav user={userNullable} getUserFn={getUserFn} setThemeCookieFn={setThemeCookieFn} logoutFn={logout} />
       <article class="mx-auto flex min-h-[100vh] w-[95%] max-w-[800px] flex-col gap-3 py-4 md:w-[80%] md:gap-6 lg:w-[70%]">
         <Link

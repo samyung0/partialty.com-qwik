@@ -314,14 +314,14 @@ export const HoveringLink = ({
         <div ref={ref} className="absolute z-[60] shadow-xl" role="group">
           {linkOpen ? (
             <div className="flex flex-col items-stretch rounded-md shadow-sm" role="group">
-              <div className="flex gap-4 border-l border-r border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark">
+              <div className="flex gap-4 border-l border-r border-t border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit dark:border-disabled-dark dark:bg-highlight-dark">
                 <Link2
                   className="invert-[0.8] dark:text-background-light-gray dark:invert-0"
                   strokeWidth={1.5}
                   size={20}
                 />
                 <input
-                  className="bg-light-yellow/50 outline-none dark:bg-highlight-dark"
+                  className="bg-background-light-gray/50 outline-none dark:bg-highlight-dark"
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -344,21 +344,21 @@ export const HoveringLink = ({
                     ReactEditor.deselect(editor);
                   }}
                   type="button"
-                  className="flex flex-1 justify-center border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                  className="flex flex-1 justify-center border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
                 >
                   <Check strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setUrl(initialUrl.current)}
                   type="button"
-                  className="flex flex-1 justify-center border-b border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                  className="flex flex-1 justify-center border-b border-t border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
                 >
                   <RotateCcw strokeWidth={2} size={15} />
                 </button>
                 <button
                   onClick={() => setLinkOpen(false)}
                   type="button"
-                  className="flex flex-1 justify-center border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                  className="flex flex-1 justify-center border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
                 >
                   <ArrowLeft strokeWidth={2} size={15} />
                 </button>
@@ -369,21 +369,21 @@ export const HoveringLink = ({
               <button
                 onClick={() => setLinkOpen(true)}
                 type="button"
-                className="rounded-s-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                className="rounded-s-lg border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
               >
                 Edit Link
               </button>
               <button
                 onClick={() => window.open(initialUrl.current)}
                 type="button"
-                className="border-b border-t border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                className="border-b border-t border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
               >
                 <ExternalLink strokeWidth={1.5} size={20} />
               </button>
               <button
                 onClick={() => toggleLinkAtSelection(editor)}
                 type="button"
-                className="rounded-e-lg border border-custom-yellow bg-light-yellow/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
+                className="rounded-e-lg border border-custom-yellow bg-background-light-gray/50 px-4 py-2 text-sm font-medium text-inherit hover:bg-custom-yellow dark:border-disabled-dark dark:bg-highlight-dark dark:hover:bg-disabled-dark"
               >
                 <Link2Off strokeWidth={1.5} size={20} />
               </button>

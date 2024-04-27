@@ -63,7 +63,7 @@ export default component$(() => {
     if (resetPassword.status === 200) (window as any).location = '/profile/';
   });
   return (
-    <section class="flex h-[100vh] items-center justify-center bg-sherbet dark:bg-primary-dark-gray dark:text-background-light-gray">
+    <section class="flex h-[100vh] items-center justify-center bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
       <div class="dark:border-trasparent flex w-[95vw] flex-col items-center justify-center gap-3 rounded-lg border-2 border-primary-dark-gray bg-background-light-gray py-10 dark:bg-black/20 md:w-[50vw] md:min-w-[400px] md:max-w-[700px] md:gap-6 md:py-16">
         <h1 class="pb-6 text-center font-mosk text-[2rem] font-bold tracking-wider md:text-[2.5rem]">Reset Password</h1>
         {!canResetPassword && (

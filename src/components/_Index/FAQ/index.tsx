@@ -38,7 +38,7 @@ const faqs = [
   {
     question: 'Can I donate to the creator?',
     answer:
-      "Aiya, I'm glad you ask. Right now, we don't have any subscriptions but you can donate through paypal or buymeacoffee. (I'm a broke uni student but I'm passionate, wink)",
+      "Aiya, I'm glad you ask. Right now, we don't have any subscriptions but you can donate through stripe or buymeacoffee. (I'm a broke uni student but I'm passionate, wink)",
   },
 ];
 
@@ -57,7 +57,7 @@ const Faq = ({ logic }: { logic: (deltaY: number) => any }) => {
         <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
           <div className="flex justify-center">
             <div className="relative inline-block overflow-visible">
-              <h2 className="inline text-center font-mosk text-2xl font-bold leading-10  md:text-3xl">
+              <h2 id="faq" className="inline text-center font-mosk text-2xl font-bold leading-10  md:text-3xl">
                 Frequently asked questions
               </h2>
               {/* <div className="absolute right-[-50px] top-[50%] -translate-y-[50%]">

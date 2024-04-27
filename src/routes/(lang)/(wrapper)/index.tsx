@@ -74,7 +74,7 @@ export default component$(() => {
   // import.meta.env.MODE === 'production' && !params.get('preview') ? (
   //   <main class="flex h-[100vh] items-center justify-center overflow-hidden">
   //     <img src={UnderConstruction} width={500} height={500} class="hidden h-full w-auto object-contain xl:block" />
-  //     <div class="flex h-full w-full items-center justify-center bg-light-yellow xl:hidden">
+  //     <div class="flex h-full w-full items-center justify-center bg-background-light-gray xl:hidden">
   //       <div class="flex flex-col items-center justify-center gap-8 text-center">
   //         <h1 class="font-mosk text-[3rem]">! Under Construction !</h1>
   //         <p class="max-w-[500px] text-lg tracking-wide">
@@ -104,7 +104,6 @@ export default component$(() => {
   });
 
   const logic = $((deltaY: number) => {
-    console.log(deltaY);
     if (page.value === 0 && deltaY > 0) {
       stage.value = 'enterTo';
       page.value = 1;

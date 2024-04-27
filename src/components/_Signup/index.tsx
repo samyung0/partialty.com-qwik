@@ -211,12 +211,12 @@ export default component$(
     });
 
     return (
-      <section class="flex h-[100vh] items-center justify-center bg-sherbet">
+      <section class="flex h-[100vh] items-center justify-center bg-light-yellow dark:bg-primary-dark-gray dark:text-background-light-gray">
         <div class="w-[95vw] overflow-hidden md:w-[50vw] md:min-w-[500px]  md:max-w-[600px] ">
           <div class="flex w-[190vw] items-center justify-start overflow-hidden md:w-[100vw] md:min-w-[1000px] md:max-w-[1200px]">
             <div
               class={
-                ' max-h-[95vh] w-[95vw] overflow-auto rounded-lg border-2 border-black bg-white transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] ' +
+                ' max-h-[95vh] w-[95vw] overflow-auto rounded-lg border-2 border-black bg-white dark:bg-highlight-dark transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] ' +
                 (isSetBio.value ? 'translate-x-[-101%]' : '')
               }
             >
@@ -326,9 +326,9 @@ export default component$(
                   </form>
 
                   <div class="relative mx-auto my-8 mb-4 flex items-center self-stretch md:my-10 md:mb-6">
-                    <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+                    <span class="inline-block h-[3px] flex-1 bg-black/10 dark:bg-gray-300"></span>
                     <span class="px-4 tracking-wide">or</span>
-                    <span class="inline-block h-[3px] flex-1 bg-black/10"></span>
+                    <span class="inline-block h-[3px] flex-1 bg-black/10 dark:bg-gray-300"></span>
                   </div>
 
                   <div class="mx-auto flex w-[60%] items-center justify-evenly self-stretch md:w-full">
@@ -366,7 +366,7 @@ export default component$(
             </div>
             <div
               class={
-                'flex w-[95vw] items-center justify-center rounded-lg border-2 border-black bg-white py-10 transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] md:py-16 ' +
+                'flex w-[95vw] items-center justify-center rounded-lg border-2 border-black bg-white dark:bg-highlight-dark py-10 transition-transform md:w-[50vw] md:min-w-[500px] md:max-w-[600px] md:py-16 ' +
                 (isSetBio.value ? 'translate-x-[-100%]' : '')
               }
             >
@@ -378,10 +378,10 @@ export default component$(
                 <form preventdefault:submit class="relative space-y-3 md:space-y-6">
                   <div class="absolute right-0 top-0 flex flex-col gap-2 p-2">
                     <button type="button" onClick$={restoreOriginalAvatar}>
-                      <img src={DeleteAvatar} alt="Delete" width={25} height={25} class="object-contain" />
+                      <img src={DeleteAvatar} alt="Delete" width={25} height={25} class="object-contain dark:invert" />
                     </button>
                     <button type="button" onClick$={randomizeDefaultAvatar}>
-                      <img src={RandomAvatar} alt="Randomize" width={25} height={25} class="object-contain" />
+                      <img src={RandomAvatar} alt="Randomize" width={25} height={25} class="object-contain dark:invert" />
                     </button>
                   </div>
                   <DragndropLarge
