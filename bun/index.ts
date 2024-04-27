@@ -1,5 +1,5 @@
 import { cors } from '@elysiajs/cors';
-import { cron  } from '@elysiajs/cron';
+import { cron } from '@elysiajs/cron';
 import { Elysia } from 'elysia';
 import { compression } from 'elysia-compression';
 import { helmet } from 'elysia-helmet';

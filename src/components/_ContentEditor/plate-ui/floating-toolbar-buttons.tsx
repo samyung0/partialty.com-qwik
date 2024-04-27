@@ -1,12 +1,5 @@
 /** @jsxImportSource react */
-import React from 'react';
-import {
-  MARK_BOLD,
-  MARK_CODE,
-  MARK_ITALIC,
-  MARK_STRIKETHROUGH,
-  MARK_UNDERLINE,
-} from '@udecode/plate-basic-marks';
+import { MARK_BOLD, MARK_CODE, MARK_ITALIC, MARK_STRIKETHROUGH, MARK_UNDERLINE } from '@udecode/plate-basic-marks';
 import { useEditorReadOnly } from '@udecode/plate-common';
 
 import { Icons } from './icons';
@@ -30,16 +23,10 @@ export function FloatingToolbarButtons() {
           <MarkToolbarButton nodeType={MARK_ITALIC} tooltip="Italic (⌘+I)">
             <Icons.italic />
           </MarkToolbarButton>
-          <MarkToolbarButton
-            nodeType={MARK_UNDERLINE}
-            tooltip="Underline (⌘+U)"
-          >
+          <MarkToolbarButton nodeType={MARK_UNDERLINE} tooltip="Underline (⌘+U)">
             <Icons.underline />
           </MarkToolbarButton>
-          <MarkToolbarButton
-            nodeType={MARK_STRIKETHROUGH}
-            tooltip="Strikethrough (⌘+⇧+M)"
-          >
+          <MarkToolbarButton nodeType={MARK_STRIKETHROUGH} tooltip="Strikethrough (⌘+⇧+M)">
             <Icons.strikethrough />
           </MarkToolbarButton>
           <MarkToolbarButton nodeType={MARK_CODE} tooltip="Code (⌘+E)">

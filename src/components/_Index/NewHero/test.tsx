@@ -1,14 +1,14 @@
-import { $, component$, useOnDocument, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 
-import p5 from "p5"
-import * as matter from 'matter-js'
+import * as matter from 'matter-js';
+import p5 from 'p5';
 
 export default component$(() => {
   const canvas = useSignal<HTMLDivElement>();
-  useVisibleTask$(({track}) => {
+  useVisibleTask$(({ track }) => {
     track(() => canvas.value);
-    if(!canvas.value) return;
-    console.log("init");
+    if (!canvas.value) return;
+    console.log('init');
     new p5((p) => {
       p.setup = () => {
         matter.Engine.create();
@@ -18,10 +18,12 @@ export default component$(() => {
       p.draw = () => {
         // p.background(220);
       };
-    }, canvas.value)
-  })
-  return <div class="h-screen w-full relative">
-    <main>Content</main>
-    <div ref={canvas} class="absolute top-0 w-full h-full"></div>
-  </div>
-})
+    }, canvas.value);
+  });
+  return (
+    <div class="relative h-screen w-full">
+      <main>Content</main>
+      <div ref={canvas} class="absolute top-0 h-full w-full"></div>
+    </div>
+  );
+});

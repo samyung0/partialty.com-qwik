@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 import merge from 'lodash.merge';
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 import tailwindPlugins from './tailwind/tailwindPlugins';
 import tailwindThemes from './tailwind/tailwindThemes/base';
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 export default {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './node_modules/flowbite/**/*.js'],
   ...merge(tailwindThemes, {
@@ -79,7 +79,7 @@ export default {
     // require("daisyui"),
     require('@tailwindcss/typography'),
     require('tailwindcss-animate'),
-    addVariablesForColors
+    addVariablesForColors,
     // Method 1: directly use the variant inline: theme-test:bg-red
     // however it does not work well with prettier plugin rn
     // it automatically puts the classnames with custom variants in front of everything else
@@ -97,12 +97,10 @@ export default {
 };
 
 function addVariablesForColors({ addBase, theme }) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
-  );
- 
+  let allColors = flattenColorPalette(theme('colors'));
+  let newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]));
+
   addBase({
-    ":root": newVars,
+    ':root': newVars,
   });
 }

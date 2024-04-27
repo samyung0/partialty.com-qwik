@@ -1,7 +1,6 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { cn, withRef } from '@udecode/cn';
-import { getHandler, PlateElement } from '@udecode/plate-common';
+import { PlateElement, getHandler } from '@udecode/plate-common';
 import { useFocused, useSelected } from 'slate-react';
 
 export const MentionInputElement = withRef<

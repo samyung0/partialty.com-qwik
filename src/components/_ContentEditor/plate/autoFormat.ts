@@ -1,5 +1,5 @@
-import { AutoformatPlugin } from '@udecode/plate-autoformat';
-import { PlatePlugin } from '@udecode/plate-common';
+import type { AutoformatPlugin } from '@udecode/plate-autoformat';
+import type { PlatePlugin } from '@udecode/plate-common';
 
 import {
   autoformatArrow,
@@ -10,7 +10,7 @@ import {
   autoformatSmartQuotes,
 } from '@udecode/plate-autoformat';
 
-import { AutoformatRule } from '@udecode/plate-autoformat';
+import type { AutoformatRule } from '@udecode/plate-autoformat';
 import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
 import { ELEMENT_CODE_BLOCK, insertEmptyCodeBlock } from '@udecode/plate-code-block';
 import { ELEMENT_DEFAULT, insertNodes, setNodes } from '@udecode/plate-common';
@@ -28,12 +28,13 @@ import {
 } from '@udecode/plate-basic-marks';
 import { MARK_HIGHLIGHT } from '@udecode/plate-highlight';
 
-import { MyAutoformatRule } from './types';
-import { AutoformatBlockRule } from '@udecode/plate-autoformat';
+import type { AutoformatBlockRule } from '@udecode/plate-autoformat';
 import { ELEMENT_CODE_LINE } from '@udecode/plate-code-block';
-import { PlateEditor, getParentNode, isElement, isType } from '@udecode/plate-common';
+import type { PlateEditor } from '@udecode/plate-common';
+import { getParentNode, isElement, isType } from '@udecode/plate-common';
 import { ListStyleType, toggleIndentList } from '@udecode/plate-indent-list';
 import { toggleList, unwrapList } from '@udecode/plate-list';
+import type { MyAutoformatRule } from './types';
 
 export const autoformatMarks: MyAutoformatRule[] = [
   {

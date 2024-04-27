@@ -2,14 +2,11 @@
 /** @jsxImportSource react */
 'use client';
 
-import React, { useEffect } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { cn, withRef } from '@udecode/cn';
+import type { ComboboxContentItemProps, ComboboxContentProps, ComboboxProps } from '@udecode/plate-combobox';
 import {
   comboboxActions,
-  ComboboxContentItemProps,
-  ComboboxContentProps,
-  ComboboxProps,
   useActiveComboboxStore,
   useComboboxContent,
   useComboboxContentState,
@@ -17,13 +14,9 @@ import {
   useComboboxItem,
   useComboboxSelectors,
 } from '@udecode/plate-combobox';
-import {
-  useEditorRef,
-  useEditorSelector,
-  useEventEditorSelectors,
-  usePlateSelectors,
-} from '@udecode/plate-common';
+import { useEditorRef, useEditorSelector, useEventEditorSelectors, usePlateSelectors } from '@udecode/plate-common';
 import { createVirtualRef } from '@udecode/plate-floating';
+import { useEffect } from 'react';
 
 export const ComboboxItem = withRef<'div', ComboboxContentItemProps>(
   ({ combobox, index, item, onRenderItem, className, ...rest }, ref) => {
@@ -45,13 +38,7 @@ export const ComboboxItem = withRef<'div', ComboboxContentItemProps>(
 );
 
 export function ComboboxContent(props: ComboboxContentProps) {
-  const {
-    component: Component,
-    items,
-    portalElement,
-    combobox,
-    onRenderItem,
-  } = props;
+  const { component: Component, items, portalElement, combobox, onRenderItem } = props;
 
   const editor = useEditorRef();
 
@@ -63,9 +50,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
 
   return (
     <Popover.Root open>
-      <Popover.PopoverAnchor
-        virtualRef={createVirtualRef(editor, targetRange ?? undefined)}
-      />
+      <Popover.PopoverAnchor virtualRef={createVirtualRef(editor, targetRange ?? undefined)} />
 
       <Popover.Portal container={portalElement}>
         <Popover.Content
@@ -73,21 +58,13 @@ export function ComboboxContent(props: ComboboxContentProps) {
           sideOffset={5}
           side="bottom"
           align="start"
-          className={cn(
-            'z-[500] m-0 max-h-[288px] w-[300px] overflow-scroll rounded-md bg-popover p-0 shadow-md'
-          )}
+          className={cn('z-[500] m-0 max-h-[288px] w-[300px] overflow-scroll rounded-md bg-popover p-0 shadow-md')}
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
           {Component ? Component({ store: activeComboboxStore }) : null}
 
           {filteredItems.map((item, index) => (
-            <ComboboxItem
-              key={item.key}
-              item={item}
-              combobox={combobox}
-              index={index}
-              onRenderItem={onRenderItem}
-            />
+            <ComboboxItem key={item.key} item={item} combobox={combobox} index={index} onRenderItem={onRenderItem} />
           ))}
         </Popover.Content>
       </Popover.Portal>
@@ -108,16 +85,12 @@ export function Combobox({
   ...props
 }: ComboboxProps) {
   const storeItems = useComboboxSelectors.items();
-  const disabled =
-    _disabled ?? (storeItems.length === 0 && !props.items?.length);
+  const disabled = _disabled ?? (storeItems.length === 0 && !props.items?.length);
 
-  const focusedEditorId = useEventEditorSelectors.focus?.();
+  const focusedEditorId = useEventEditorSelectors.focus();
   const combobox = useComboboxControls();
   const activeId = useComboboxSelectors.activeId();
-  const selectionDefined = useEditorSelector(
-    (editor) => !!editor.selection,
-    []
-  );
+  const selectionDefined = useEditorSelector((editor) => !!editor.selection, []);
   const editorId = usePlateSelectors().id();
 
   useEffect(() => {
@@ -131,24 +104,9 @@ export function Combobox({
       filter,
       sort,
     });
-  }, [
-    id,
-    trigger,
-    searchPattern,
-    controlled,
-    onSelectItem,
-    maxSuggestions,
-    filter,
-    sort,
-  ]);
+  }, [id, trigger, searchPattern, controlled, onSelectItem, maxSuggestions, filter, sort]);
 
-  if (
-    !combobox ||
-    !selectionDefined ||
-    focusedEditorId !== editorId ||
-    activeId !== id ||
-    disabled
-  ) {
+  if (!combobox || !selectionDefined || focusedEditorId !== editorId || activeId !== id || disabled) {
     return null;
   }
 

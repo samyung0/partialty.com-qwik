@@ -32,7 +32,13 @@ export default function PlateEditor() {
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor className="px-8 py-8 2xl:px-[96px] min-h-full" autoFocus focusRing={false} variant="ghost" size="md" />
+          <Editor
+            className="min-h-full px-8 py-8 2xl:px-[96px]"
+            autoFocus
+            focusRing={false}
+            variant="ghost"
+            size="md"
+          />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />

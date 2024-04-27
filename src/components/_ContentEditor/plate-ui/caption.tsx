@@ -1,9 +1,6 @@
 /** @jsxImportSource react */
 import { cn, withCn, withVariants } from '@udecode/cn';
-import {
-  Caption as CaptionPrimitive,
-  CaptionTextarea as CaptionTextareaPrimitive,
-} from '@udecode/plate-caption';
+import { Caption as CaptionPrimitive, CaptionTextarea as CaptionTextareaPrimitive } from '@udecode/plate-caption';
 import { cva } from 'class-variance-authority';
 
 const captionVariants = cva('max-w-full', {
@@ -19,9 +16,7 @@ const captionVariants = cva('max-w-full', {
   },
 });
 
-export const Caption = withVariants(CaptionPrimitive, captionVariants, [
-  'align',
-]);
+export const Caption = withVariants(CaptionPrimitive, captionVariants, ['align']);
 
 export const CaptionTextarea = withCn(
   CaptionTextareaPrimitive,

@@ -41,7 +41,7 @@ export default component$(
     chapterName,
     timeStamp,
     openSideNav,
-    usePlate
+    usePlate,
   }: {
     contentWS: Signal<NoSerialize<WebSocket>>;
     contentEditorValue: Signal<any>;
@@ -55,7 +55,7 @@ export default component$(
     chapterName: Signal<string>;
     timeStamp: Signal<string>;
     openSideNav: Signal<boolean>;
-    usePlate: Signal<boolean>
+    usePlate: Signal<boolean>;
   }) => {
     const initialCourseId = useLocation().url.searchParams.get('courseId');
     const initialChapterId = useLocation().url.searchParams.get('chapterId');
@@ -271,7 +271,7 @@ export default component$(
       <nav
         class={
           'relative left-0 top-0 hidden h-full max-h-[100vh] w-[100vw] items-center justify-start text-primary-dark-gray backdrop-blur-sm dark:text-background-light-gray xl:relative xl:flex xl:w-[20vw] ' +
-          (openSideNav.value ? ' absolute !block z-[999]' : '')
+          (openSideNav.value ? ' absolute z-[999] !block' : '')
         }
         onClick$={() => {
           openSideNav.value = false;

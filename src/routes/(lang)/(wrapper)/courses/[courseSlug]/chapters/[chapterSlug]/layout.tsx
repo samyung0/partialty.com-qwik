@@ -1,7 +1,6 @@
+import type { QRL, Signal } from '@builder.io/qwik';
 import {
   $,
-  QRL,
-  Signal,
   Slot,
   component$,
   createContextId,
@@ -153,7 +152,7 @@ import LoadingSVG from '~/components/LoadingSVG';
 // import getUser from '~/components/_Index/Nav/getUser';
 import type theme from '~/const/theme';
 import readCookie from '~/utils/readCookie';
-import { ContentUserProgress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
+import type { ContentUserProgress } from '../../../../../../../../drizzle_turso/schema/content_user_progress';
 
 // export { getUser };
 
@@ -191,7 +190,7 @@ const logout = $(() => {
   });
 });
 
-export const cookieContext = createContextId<Signal< QRL<(chapterId: string) => any>>>('cookie');
+export const cookieContext = createContextId<Signal<QRL<(chapterId: string) => any>>>('cookie');
 
 export default component$(() => {
   const openSideNav = useSignal(false);

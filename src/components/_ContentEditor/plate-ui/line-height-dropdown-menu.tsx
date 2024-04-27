@@ -1,10 +1,6 @@
 /** @jsxImportSource react */
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import {
-  useLineHeightDropdownMenu,
-  useLineHeightDropdownMenuState,
-} from '@udecode/plate-line-height';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { useLineHeightDropdownMenu, useLineHeightDropdownMenuState } from '@udecode/plate-line-height';
 
 import { Icons } from './icons';
 
@@ -26,26 +22,15 @@ export function LineHeightDropdownMenu({ ...props }: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton
-          pressed={openState.open}
-          tooltip="Line height"
-          isDropdown
-        >
+        <ToolbarButton pressed={openState.open} tooltip="Line height" isDropdown>
           <Icons.lineHeight />
         </ToolbarButton>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" className="min-w-0">
-        <DropdownMenuRadioGroup
-          className="flex flex-col gap-0.5"
-          {...radioGroupProps}
-        >
+        <DropdownMenuRadioGroup className="flex flex-col gap-0.5" {...radioGroupProps}>
           {state.values.map((_value) => (
-            <DropdownMenuRadioItem
-              key={_value}
-              value={_value}
-              className="min-w-[180px]"
-            >
+            <DropdownMenuRadioItem key={_value} value={_value} className="min-w-[180px]">
               {_value}
             </DropdownMenuRadioItem>
           ))}

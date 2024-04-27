@@ -1,20 +1,19 @@
 import { $, Slot, component$, useContext, useOnDocument } from '@builder.io/qwik';
-import { routeLoader$, server$, type RequestHandler } from '@builder.io/qwik-city';
+import { routeLoader$, type RequestHandler } from '@builder.io/qwik-city';
 import { and, eq } from 'drizzle-orm';
 import { auth } from '~/auth/lucia';
 import type theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
 import type { LuciaSession } from '~/types/LuciaSession';
 import drizzleClient, { initDrizzleIfNeeded } from '~/utils/drizzleClient';
+import readCookie from '~/utils/readCookie';
 import { initTursoIfNeeded } from '~/utils/tursoClient';
 import { content } from '../../../../../../drizzle_turso/schema/content';
 import { content_category } from '../../../../../../drizzle_turso/schema/content_category';
 import { content_index } from '../../../../../../drizzle_turso/schema/content_index';
-import { content_user_progress } from '../../../../../../drizzle_turso/schema/content_user_progress';
 import { course_approval } from '../../../../../../drizzle_turso/schema/course_approval';
 import { profiles } from '../../../../../../drizzle_turso/schema/profiles';
 import { tag } from '../../../../../../drizzle_turso/schema/tag';
-import readCookie from '~/utils/readCookie';
 
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
   // cacheControl({
@@ -137,8 +136,8 @@ export default component$(() => {
       const theme = await getTheme();
       if (theme === 'light') {
         themeStore.value = 'light';
-      }else if(theme === "dark") {
-        themeStore.value = "dark";
+      } else if (theme === 'dark') {
+        themeStore.value = 'dark';
       }
     })
   );

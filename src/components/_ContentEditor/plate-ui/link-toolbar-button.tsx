@@ -1,10 +1,6 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { withRef } from '@udecode/cn';
-import {
-  useLinkToolbarButton,
-  useLinkToolbarButtonState,
-} from '@udecode/plate-link';
+import { useLinkToolbarButton, useLinkToolbarButtonState } from '@udecode/plate-link';
 
 import { Icons } from './icons';
 

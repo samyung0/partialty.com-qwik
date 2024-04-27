@@ -19,5 +19,5 @@ export const onPost: RequestHandler = async (req) => {
 
   Auth.deleteDeadUserSessions(session.user.userId);
 
-  req.json(200, "OK")
+  req.json(200, 'OK');
 };

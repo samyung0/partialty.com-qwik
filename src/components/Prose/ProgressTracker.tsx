@@ -13,14 +13,14 @@ const elementIsVisibleInViewport = (el: any, partiallyVisible = false) => {
 export default component$(({ saveProress }: { saveProress: QRL<() => any> }) => {
   const ref = useSignal<HTMLDivElement>();
   const hasSaved = useSignal(false);
-  useVisibleTask$(({track}) => {
+  useVisibleTask$(({ track }) => {
     track(ref);
-    if(!ref.value) return;
+    if (!ref.value) return;
     if (elementIsVisibleInViewport(ref.value) && !hasSaved.value) {
       hasSaved.value = true;
       saveProress();
     }
-  })
+  });
   return (
     <div
       document:onScroll$={() => {

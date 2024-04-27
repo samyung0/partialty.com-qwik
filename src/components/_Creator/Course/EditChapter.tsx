@@ -112,7 +112,10 @@ export default component$(
                   value={formData.name}
                   onInput$={(_, el) => {
                     formData.name = el.value.trim();
-                    formData.slug = el.value.trim().replace(/\W+(?!$)/g, '-').toLowerCase();
+                    formData.slug = el.value
+                      .trim()
+                      .replace(/\W+(?!$)/g, '-')
+                      .toLowerCase();
                     formData.slug = formData.slug.replace(/\W$/, '').toLowerCase();
                     formData.link = `/courses/${courseSlug.value}/chapters/${formData.slug}/`;
                     if (ref.value) ref.value.scrollLeft += 99999;

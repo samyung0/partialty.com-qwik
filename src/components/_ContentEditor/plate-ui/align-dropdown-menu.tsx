@@ -1,12 +1,8 @@
 /** @jsxImportSource react */
 'use client';
 
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import {
-  useAlignDropdownMenu,
-  useAlignDropdownMenuState,
-} from '@udecode/plate-alignment';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { useAlignDropdownMenu, useAlignDropdownMenuState } from '@udecode/plate-alignment';
 
 import { Icons, iconVariants } from './icons';
 
@@ -44,9 +40,7 @@ export function AlignDropdownMenu({ children, ...props }: DropdownMenuProps) {
   const { radioGroupProps } = useAlignDropdownMenu(state);
 
   const openState = useOpenState();
-  const IconValue =
-    items.find((item) => item.value === radioGroupProps.value)?.icon ??
-    Icons.alignLeft;
+  const IconValue = items.find((item) => item.value === radioGroupProps.value)?.icon ?? Icons.alignLeft;
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
@@ -57,10 +51,7 @@ export function AlignDropdownMenu({ children, ...props }: DropdownMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" className="min-w-0">
-        <DropdownMenuRadioGroup
-          className="flex flex-col gap-0.5"
-          {...radioGroupProps}
-        >
+        <DropdownMenuRadioGroup className="flex flex-col gap-0.5" {...radioGroupProps}>
           {items.map(({ value: itemValue, icon: Icon }) => (
             <DropdownMenuRadioItem key={itemValue} value={itemValue} hideIcon>
               <Icon className={iconVariants({ variant: 'toolbar' })} />

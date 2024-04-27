@@ -156,7 +156,10 @@ export const AddCategory = component$(
                   value={formData.name}
                   onInput$={(_, el) => {
                     formData.name = el.value.trim();
-                    formData.slug = el.value.trim().replace(/\W+(?!$)/g, '-').toLowerCase();
+                    formData.slug = el.value
+                      .trim()
+                      .replace(/\W+(?!$)/g, '-')
+                      .toLowerCase();
                     formData.slug = formData.slug.replace(/\W$/, '').toLowerCase();
                     formData.link = `/catalog?category=${formData.slug}`;
                     if (ref.value) ref.value.scrollLeft += 99999;

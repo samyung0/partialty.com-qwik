@@ -1,7 +1,19 @@
-import { $, component$, QRL, useComputed$, useContext, useSignal, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import {
+  $,
+  component$,
+  useComputed$,
+  useContext,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from '@builder.io/qwik';
 import { isServer } from '@builder.io/qwik/build';
 import QwikContent from '~/components/Prose/QwikContent';
-import { cookieContext, useCurrentChapter } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
+import {
+  cookieContext,
+  useCurrentChapter,
+} from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/chapters/[chapterSlug]/layout';
 
 import {
   useCategoryLoader,

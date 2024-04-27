@@ -1,26 +1,21 @@
 /* eslint-disable qwik/no-react-props */
-import {
-  $,
-  NoSerialize,
-  Signal,
-  component$,
-  noSerialize,
-  useOnWindow,
-  useSignal,
-  useStore,
-  useVisibleTask$,
-} from '@builder.io/qwik';
+import type { NoSerialize, Signal } from '@builder.io/qwik';
+import { $, component$, noSerialize, useOnWindow, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 
 import Phaser from 'phaser';
 import { useDebouncer } from '~/utils/useDebouncer';
 
-import { LuciaSession } from '~/types/LuciaSession';
+import type { LuciaSession } from '~/types/LuciaSession';
 import Center from './center';
 import { FollowerPointerCard } from './following-pointer';
 import getUser from './getUser';
 import Nav from './nav';
 
+import Nav2 from '~/components/Nav';
+
 import BlastPNG from '~/assets/img/blast.png';
+
+import { cn } from '~/utils/cn';
 
 export { getUser };
 
@@ -43,6 +38,8 @@ export default component$(() => {
   const game = useSignal<NoSerialize<Phaser.Game> | null>(null);
   const scroller = useSignal<any>();
   const scrollDir = useSignal(0);
+
+  const stage = useSignal('enterFrom');
 
   const largeSprite = useStore<NoSerialize<Phaser.Physics.Matter.Sprite>[]>([]);
   const mediumSprite = useStore<NoSerialize<Phaser.Physics.Matter.Sprite>[]>([]);
@@ -73,7 +70,7 @@ export default component$(() => {
       sprite.setAngularVelocity(Math.min(0.35, Math.random()));
       sprite.setVelocity((Math.random() < 0.5 ? -1 : 1) * Math.random() * 50, Math.random() * 50);
     });
-  })
+  });
 
   useVisibleTask$(({ track }) => {
     track(() => parentEl.value);
@@ -86,6 +83,7 @@ export default component$(() => {
     const phaserScript = document.createElement('script');
     phaserScript.setAttribute('src', '/phaser.min.js');
     phaserScript.onload = () => {
+      stage.value = 'enterTo';
       class Scene1 extends Phaser.Scene {
         gameObject: any;
         dragX: any;
@@ -190,6 +188,15 @@ export default component$(() => {
                 .setInteractive()
             )
           );
+          mediumSprite.push(
+            noSerialize(
+              this.matter.add
+                .sprite(randomize(parentEl.value!.offsetWidth), 0, 'sheet', 'batch_neovim.png', {
+                  shape: shapes.batch_neovim,
+                })
+                .setInteractive()
+            )
+          );
           for (let i = 0; i < 10; i++) {
             smallSprite.push(
               noSerialize(
@@ -289,7 +296,7 @@ export default component$(() => {
     };
     document.body.append(phaserScript);
     return () => {
-      newGame?.destroy(true, true);
+      newGame.destroy(true, true);
     };
   });
 
@@ -323,18 +330,48 @@ export default component$(() => {
   );
 
   return (
-    <div class="relative h-[100dvh] w-full overflow-x-hidden">
-      <FollowerPointerCard client:load className="relative h-full w-full" title="Partialty.com">
-        <button onClick$={blast} class="absolute cursor-none z-[50] bottom-[15%] left-24 flex flex-col items-center justify-center">
-          <img src={BlastPNG} alt="Blast" width="40" height="40" class="size-[40px] object-contain hover:size-[50px] transition-all duration-500" />
-          <span class="text-[#CC5DE8] italic text-xs">Blast</span>
-        </button>
-        <Nav user={user.value} />
-        <div class="absolute left-[50%] top-[50%] z-[50] translate-x-[-50%] translate-y-[-50%]">
-          <Center />
-        </div>
-      </FollowerPointerCard>
-      <div ref={parentEl} class="absolute top-0 z-10 h-full w-full bg-red-500 bg-transparent "></div>
+    <div id="swup" class="relative h-[100dvh] w-full overflow-x-hidden">
+      <div class="absolute top-0 z-[100] block w-full lg:hidden">
+        <Nav2 />
+      </div>
+      <div class="h-full w-full">
+        <FollowerPointerCard client:visible className="relative h-full" title="Partialty.com">
+          <button
+            onClick$={blast}
+            class={cn(
+              'swup-main absolute left-8 top-[15%] z-[50] flex cursor-none flex-col items-center justify-center lg:bottom-[15%] lg:left-24 lg:top-[unset]',
+              stage.value === 'enterFrom' && 'is-animating2',
+              stage.value === 'enterTo' && 'is-animating2 appear'
+            )}
+          >
+            <img
+              src={BlastPNG}
+              alt="Blast"
+              width="40"
+              height="40"
+              class="size-[30px] object-contain transition-all duration-500 hover:size-[40px] lg:size-[40px] lg:hover:size-[50px]"
+            />
+            <span class="text-xs italic text-[#CC5DE8]">Blast</span>
+          </button>
+          <div class="hidden lg:block">
+            <Nav user={user.value} />
+          </div>
+
+          <div class="absolute left-[50%] top-[50%] z-[50] translate-x-[-50%] translate-y-[-50%]">
+            <Center />
+          </div>
+        </FollowerPointerCard>
+      </div>
+      <div
+        onWheel$={(e: WheelEvent) => {
+          e.preventDefault();
+          if (e.deltaY < 0) return;
+          if ((window as any).smoothScroll.scrolling()) return;
+          (window as any).smoothScroll({ yPos: window.innerHeight + 50, duration: 500, easing: 'easeOutSine' });
+        }}
+        ref={parentEl}
+        class="absolute top-0 z-10 h-full w-full bg-red-500 bg-transparent "
+      ></div>
     </div>
   );
 });

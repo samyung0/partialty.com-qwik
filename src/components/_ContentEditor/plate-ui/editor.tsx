@@ -1,8 +1,8 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { cn } from '@udecode/cn';
 import { PlateContent } from '@udecode/plate-common';
 import { cva } from 'class-variance-authority';
+import React from 'react';
 
 import type { PlateContentProps } from '@udecode/plate-common';
 import type { VariantProps } from 'class-variance-authority';
@@ -44,23 +44,10 @@ const editorVariants = cva(
   }
 );
 
-export type EditorProps = PlateContentProps &
-  VariantProps<typeof editorVariants>;
+export type EditorProps = PlateContentProps & VariantProps<typeof editorVariants>;
 
 const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
-  (
-    {
-      className,
-      disabled,
-      focused,
-      focusRing,
-      readOnly,
-      size,
-      variant,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, disabled, focused, focusRing, readOnly, size, variant, ...props }, ref) => {
     return (
       <div ref={ref} className="relative w-full flex-auto">
         <PlateContent
@@ -72,7 +59,7 @@ const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
               size,
               variant,
             }),
-            className,
+            className
           )}
           disableDefaultStyles
           readOnly={disabled ?? readOnly}

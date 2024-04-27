@@ -98,13 +98,13 @@ export const BackgroundMarkButton = ({
             //     { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
             //   );
             // else
-              Transforms.setNodes(
-                editor,
-                {
-                  timeStamp: timestamp,
-                },
-                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
-              );
+            Transforms.setNodes(
+              editor,
+              {
+                timeStamp: timestamp,
+              },
+              { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerBackground' }
+            );
           }}
           setAnimate={() => {
             if (!editor.selection) return;
@@ -236,13 +236,13 @@ export const UnderlineMarkButton = ({
             //     { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
             //   );
             // else
-              Transforms.setNodes(
-                editor,
-                {
-                  timeStamp: timestamp,
-                },
-                { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
-              );
+            Transforms.setNodes(
+              editor,
+              {
+                timeStamp: timestamp,
+              },
+              { match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'markerUnderline' }
+            );
           }}
           setAnimate={() => {
             if (!editor.selection) return;

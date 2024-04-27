@@ -1,272 +1,272 @@
 {
-	"textures": [
-		{
-			"image": "sprite.png",
-			"format": "RGBA8888",
-			"size": {
-				"w": 102,
-				"h": 1257
-			},
-			"scale": 1,
-			"frames": [
-				{
-					"filename": "batch_neovim.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 121
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 121
-					},
-					"frame": {
-						"x": 1,
-						"y": 1,
-						"w": 100,
-						"h": 121
-					}
-				},
-				{
-					"filename": "small_css.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 113
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 113
-					},
-					"frame": {
-						"x": 1,
-						"y": 124,
-						"w": 100,
-						"h": 113
-					}
-				},
-				{
-					"filename": "small_html.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 113
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 113
-					},
-					"frame": {
-						"x": 1,
-						"y": 239,
-						"w": 100,
-						"h": 113
-					}
-				},
-				{
-					"filename": "batch_qwik.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 101
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 101
-					},
-					"frame": {
-						"x": 1,
-						"y": 354,
-						"w": 100,
-						"h": 101
-					}
-				},
-				{
-					"filename": "batch_gray_circle.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 457,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "batch_intellij.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 559,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "batch_nextjs.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 661,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "batch_sublime.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 763,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "gray_square.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 865,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "small_js.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 100
-					},
-					"frame": {
-						"x": 1,
-						"y": 967,
-						"w": 100,
-						"h": 100
-					}
-				},
-				{
-					"filename": "batch_vscode.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 99
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 99
-					},
-					"frame": {
-						"x": 1,
-						"y": 1069,
-						"w": 100,
-						"h": 99
-					}
-				},
-				{
-					"filename": "batch_react.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 100,
-						"h": 86
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 100,
-						"h": 86
-					},
-					"frame": {
-						"x": 1,
-						"y": 1170,
-						"w": 100,
-						"h": 86
-					}
-				}
-			]
-		}
-	],
-	"meta": {
-		"app": "https://www.codeandweb.com/texturepacker",
-		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:41aea034e748767d1f1a21a9dbff09e7:5a642744f98a1478cd966238564e40c8:68d88b3cf7eafc9b5accfffdfb2fda91$"
-	}
+  "textures": [
+    {
+      "image": "sprite.png",
+      "format": "RGBA8888",
+      "size": {
+        "w": 102,
+        "h": 1257
+      },
+      "scale": 1,
+      "frames": [
+        {
+          "filename": "batch_neovim.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 121
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 121
+          },
+          "frame": {
+            "x": 1,
+            "y": 1,
+            "w": 100,
+            "h": 121
+          }
+        },
+        {
+          "filename": "small_css.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 113
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 113
+          },
+          "frame": {
+            "x": 1,
+            "y": 124,
+            "w": 100,
+            "h": 113
+          }
+        },
+        {
+          "filename": "small_html.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 113
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 113
+          },
+          "frame": {
+            "x": 1,
+            "y": 239,
+            "w": 100,
+            "h": 113
+          }
+        },
+        {
+          "filename": "batch_qwik.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 101
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 101
+          },
+          "frame": {
+            "x": 1,
+            "y": 354,
+            "w": 100,
+            "h": 101
+          }
+        },
+        {
+          "filename": "batch_gray_circle.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 457,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "batch_intellij.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 559,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "batch_nextjs.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 661,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "batch_sublime.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 763,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "gray_square.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 865,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "small_js.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 100
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "frame": {
+            "x": 1,
+            "y": 967,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "filename": "batch_vscode.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 99
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 99
+          },
+          "frame": {
+            "x": 1,
+            "y": 1069,
+            "w": 100,
+            "h": 99
+          }
+        },
+        {
+          "filename": "batch_react.png",
+          "rotated": false,
+          "trimmed": false,
+          "sourceSize": {
+            "w": 100,
+            "h": 86
+          },
+          "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 86
+          },
+          "frame": {
+            "x": 1,
+            "y": 1170,
+            "w": 100,
+            "h": 86
+          }
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "version": "3.0",
+    "smartupdate": "$TexturePacker:SmartUpdate:41aea034e748767d1f1a21a9dbff09e7:5a642744f98a1478cd966238564e40c8:68d88b3cf7eafc9b5accfffdfb2fda91$"
+  }
 }

@@ -1,11 +1,6 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { withRef } from '@udecode/cn';
-import {
-  ListStyleType,
-  useIndentListToolbarButton,
-  useIndentListToolbarButtonState,
-} from '@udecode/plate-indent-list';
+import { ListStyleType, useIndentListToolbarButton, useIndentListToolbarButtonState } from '@udecode/plate-indent-list';
 
 import { Icons } from './icons';
 
@@ -21,13 +16,7 @@ export const IndentListToolbarButton = withRef<
   const { props } = useIndentListToolbarButton(state);
 
   return (
-    <ToolbarButton
-      ref={ref}
-      tooltip={
-        nodeType === ListStyleType.Disc ? 'Bulleted List' : 'Numbered List'
-      }
-      {...props}
-    >
+    <ToolbarButton ref={ref} tooltip={nodeType === ListStyleType.Disc ? 'Bulleted List' : 'Numbered List'} {...props}>
       {nodeType === ListStyleType.Disc ? <Icons.ul /> : <Icons.ol />}
     </ToolbarButton>
   );

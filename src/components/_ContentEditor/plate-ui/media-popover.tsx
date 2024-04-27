@@ -1,16 +1,11 @@
 /** @jsxImportSource react */
-import React, { useEffect } from 'react';
+import { isSelectionExpanded, useEditorSelector, useElement, useRemoveNodeButton } from '@udecode/plate-common';
 import {
-  isSelectionExpanded,
-  useEditorSelector,
-  useElement,
-  useRemoveNodeButton,
-} from '@udecode/plate-common';
-import {
-  floatingMediaActions,
   FloatingMedia as FloatingMediaPrimitive,
+  floatingMediaActions,
   useFloatingMediaSelectors,
 } from '@udecode/plate-media';
+import React, { useEffect } from 'react';
 import { useReadOnly, useSelected } from 'slate-react';
 
 import { Icons } from './icons';
@@ -29,10 +24,7 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
 
-  const selectionCollapsed = useEditorSelector(
-    (editor) => !isSelectionExpanded(editor),
-    []
-  );
+  const selectionCollapsed = useEditorSelector((editor) => !isSelectionExpanded(editor), []);
   const isOpen = !readOnly && selected && selectionCollapsed;
   const isEditing = useFloatingMediaSelectors().isEditing();
 
@@ -51,10 +43,7 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
     <Popover open={isOpen} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
-      <PopoverContent
-        className="w-auto p-1"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <PopoverContent className="w-auto p-1" onOpenAutoFocus={(e) => e.preventDefault()}>
         {isEditing ? (
           <div className="flex w-[330px] flex-col">
             <div className="flex items-center">
@@ -73,9 +62,7 @@ export function MediaPopover({ pluginKey, children }: MediaPopoverProps) {
           </div>
         ) : (
           <div className="box-content flex h-9 items-center gap-1">
-            <FloatingMediaPrimitive.EditButton
-              className={buttonVariants({ variant: 'ghost', size: 'sm' })}
-            >
+            <FloatingMediaPrimitive.EditButton className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
               Edit link
             </FloatingMediaPrimitive.EditButton>
 

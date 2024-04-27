@@ -1,13 +1,12 @@
 /** @jsxImportSource react */
 'use client';
 
-import React from 'react';
 import { useColorsCustom, useColorsCustomState } from '@udecode/plate-font';
 
 import { buttonVariants } from '~/components/_ContentEditor/plate-ui/button';
 import { DropdownMenuItem } from '~/components/_ContentEditor/plate-ui/dropdown-menu';
 
-import { TColor } from './color-dropdown-menu';
+import type { TColor } from './color-dropdown-menu';
 import { ColorDropdownMenuItems } from './color-dropdown-menu-items';
 import { ColorInput } from './color-input';
 
@@ -19,13 +18,7 @@ type ColorsCustomProps = {
   updateColor: (color: string) => void;
 };
 
-export function ColorsCustom({
-  color,
-  colors,
-  customColors,
-  updateColor,
-  updateCustomColor,
-}: ColorsCustomProps) {
+export function ColorsCustom({ color, colors, customColors, updateColor, updateCustomColor }: ColorsCustomProps) {
   const state = useColorsCustomState({
     color,
     colors,
@@ -48,11 +41,7 @@ export function ColorsCustom({
         </DropdownMenuItem>
       </ColorInput>
 
-      <ColorDropdownMenuItems
-        color={color}
-        colors={state.computedColors}
-        updateColor={updateColor}
-      />
+      <ColorDropdownMenuItems color={color} colors={state.computedColors} updateColor={updateColor} />
     </div>
   );
 }

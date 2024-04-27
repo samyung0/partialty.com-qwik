@@ -1,5 +1,4 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { cva } from 'class-variance-authority';
 import {
   AlignCenter,
@@ -33,7 +32,6 @@ import {
   Link2Off,
   List,
   ListOrdered,
-  LucideProps,
   MessageSquare,
   MessageSquarePlus,
   Minus,
@@ -64,7 +62,7 @@ import {
   X,
 } from 'lucide-react';
 
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon, LucideProps } from 'lucide-react';
 
 export type Icon = LucideIcon;
 

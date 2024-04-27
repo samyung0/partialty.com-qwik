@@ -1,12 +1,6 @@
 /** @jsxImportSource react */
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import {
-  focusEditor,
-  useEditorReadOnly,
-  useEditorRef,
-  usePlateStore,
-} from '@udecode/plate-common';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { focusEditor, useEditorReadOnly, useEditorRef, usePlateStore } from '@udecode/plate-common';
 
 import { Icons } from './icons';
 
@@ -77,13 +71,9 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
             }
           }}
         >
-          <DropdownMenuRadioItem value="editing">
-            {item.editing}
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="editing">{item.editing}</DropdownMenuRadioItem>
 
-          <DropdownMenuRadioItem value="viewing">
-            {item.viewing}
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="viewing">{item.viewing}</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

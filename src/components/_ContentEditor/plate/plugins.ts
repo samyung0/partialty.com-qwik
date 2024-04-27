@@ -31,13 +31,13 @@ import {
   unwrapCodeBlock,
 } from '@udecode/plate-code-block';
 import { createComboboxPlugin } from '@udecode/plate-combobox';
+import type { RenderAfterEditable } from '@udecode/plate-common';
 import {
   createPlugins,
   isBlockAboveEmpty,
   isSelectionAtBlockStart,
   PlateElement,
   PlateLeaf,
-  RenderAfterEditable,
   someNode,
 } from '@udecode/plate-common';
 import { createDndPlugin } from '@udecode/plate-dnd';

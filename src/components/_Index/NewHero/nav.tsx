@@ -7,7 +7,7 @@ import CrownPNG from '~/assets/img/crown.png';
 
 import PartialtySVG from '~/assets/svg/partialty.svg';
 import LoadingSVG from '~/components/LoadingSVG';
-import { LuciaSession } from '~/types/LuciaSession';
+import type { LuciaSession } from '~/types/LuciaSession';
 
 import { logout } from '~/auth/logout';
 import { themeContext } from '~/context/themeContext';
@@ -53,11 +53,19 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
       <nav class="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-8">
         <div class="inline-flex w-[250px] items-center gap-2">
           <img src={PartialtySVG} width="15" height="15" alt="icon" />
-          <h2 class="font-mosk text-lg tracking-wide">Partialty.com</h2>
+          <h2 class="font-mosk text-lg tracking-wide">
+            <Link prefetch href="/">
+              Partialty.com
+            </Link>
+          </h2>
         </div>
         <div class="inline-flex items-center gap-8">
-          <a href="/members/dashboard/" class="cursor-none">Home</a>
-          <a href="/catalog/" class="cursor-none">Courses</a>
+          <a href="/members/dashboard/" class="cursor-none">
+            Home
+          </a>
+          <a href="/catalog/" class="cursor-none">
+            Courses
+          </a>
         </div>
         <div class="inline-flex w-[250px] items-center text-sm">
           <ul class="flex items-center gap-4">
@@ -94,7 +102,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       alt="Avatar"
                       width={40}
                       height={40}
-                      class="rounded-full object-contain max-w-[unset]"
+                      class="max-w-[unset] rounded-full object-contain"
                       referrerPolicy="no-referrer"
                     />
                     {login.user.role !== 'free' && (
@@ -116,7 +124,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                     <IoCaretDown />
                   </span>
                 </div>
-                <div class="absolute left-[0] xl:left-[50%] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2">
+                <div class="absolute left-[0] top-[100%] z-[50] hidden w-[180px] -translate-x-[50%] pt-2 xl:left-[50%]">
                   <div
                     class={
                       'flex-1 rounded-xl border-2 border-primary-dark-gray bg-background-light-gray text-primary-dark-gray dark:border-disabled-dark dark:bg-highlight-dark dark:text-background-light-gray'
@@ -127,7 +135,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                         <Link
                           prefetch
                           href={login.isLoggedIn ? '/members/dashboard/' : '/login/'}
-                          class="cursor-none flex items-center gap-3"
+                          class="flex cursor-none items-center gap-3"
                         >
                           <span class="text-[20px]">
                             <LuHome />
@@ -136,7 +144,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                         </Link>
                       </li>
                       <li>
-                        <Link prefetch href="/profile/" class="cursor-none flex items-center gap-3">
+                        <Link prefetch href="/profile/" class="flex cursor-none items-center gap-3">
                           <span class="text-[20px]">
                             <LuUser2 />
                           </span>
@@ -145,7 +153,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       </li>
                       {login.user.role !== 'free' && (
                         <li>
-                          <Link prefetch href="/creator/" class="cursor-none flex items-center gap-3">
+                          <Link prefetch href="/creator/" class="flex cursor-none items-center gap-3">
                             <span class="text-[20px]">
                               <LuPencilLine />
                             </span>
@@ -155,7 +163,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       )}
                       {login.user.role === 'admin' && (
                         <li>
-                          <Link prefetch href="/admin/courseapproval/" class="cursor-none flex items-center gap-3">
+                          <Link prefetch href="/admin/courseapproval/" class="flex cursor-none items-center gap-3">
                             <span class="text-[20px]">
                               <LuShield />
                             </span>

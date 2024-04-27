@@ -2,16 +2,12 @@
 'use client';
 
 /** @jsxImportSource react */
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
-import {
-  focusEditor,
-  insertEmptyElement,
-  useEditorRef,
-} from '@udecode/plate-common';
+import { focusEditor, insertEmptyElement, useEditorRef } from '@udecode/plate-common';
 import { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3 } from '@udecode/plate-heading';
 import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
+import React from 'react';
 
 import { Icons } from './icons';
 
@@ -140,82 +136,77 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="start"
-        className="flex max-h-[500px] min-w-0 flex-col gap-0.5 overflow-y-auto"
-      >
+      <DropdownMenuContent align="start" className="flex max-h-[500px] min-w-0 flex-col gap-0.5 overflow-y-auto">
         {items.map(({ items: nestedItems, label }, index) => (
           <React.Fragment key={label}>
             {index !== 0 && <DropdownMenuSeparator />}
 
             <DropdownMenuLabel>{label}</DropdownMenuLabel>
-            {nestedItems.map(
-              ({ value: type, label: itemLabel, icon: Icon }) => (
-                <DropdownMenuItem
-                  key={type}
-                  className="min-w-[180px]"
-                  onSelect={async () => {
-                    switch (type) {
-                      // case ELEMENT_CODE_BLOCK: {
-                      //   insertEmptyCodeBlock(editor);
-                      //
-                      //   break;
-                      // }
-                      // case ELEMENT_IMAGE: {
-                      //   await insertMedia(editor, { type: ELEMENT_IMAGE });
-                      //
-                      //   break;
-                      // }
-                      // case ELEMENT_MEDIA_EMBED: {
-                      //   await insertMedia(editor, {
-                      //     type: ELEMENT_MEDIA_EMBED,
-                      //   });
-                      //
-                      //   break;
-                      // }
-                      // case 'ul':
-                      // case 'ol': {
-                      //   insertEmptyElement(editor, ELEMENT_PARAGRAPH, {
-                      //     select: true,
-                      //     nextBlock: true,
-                      //   });
-                      //
-                      //   if (settingsStore.get.checkedId(KEY_LIST_STYLE_TYPE)) {
-                      //     toggleIndentList(editor, {
-                      //       listStyleType: type === 'ul' ? 'disc' : 'decimal',
-                      //     });
-                      //   } else if (settingsStore.get.checkedId('list')) {
-                      //     toggleList(editor, { type });
-                      //   }
-                      //
-                      //   break;
-                      // }
-                      // case ELEMENT_TABLE: {
-                      //   insertTable(editor);
-                      //
-                      //   break;
-                      // }
-                      // case ELEMENT_LINK: {
-                      //   triggerFloatingLink(editor, { focused: true });
-                      //
-                      //   break;
-                      // }
-                      default: {
-                        insertEmptyElement(editor, type, {
-                          select: true,
-                          nextBlock: true,
-                        });
-                      }
+            {nestedItems.map(({ value: type, label: itemLabel, icon: Icon }) => (
+              <DropdownMenuItem
+                key={type}
+                className="min-w-[180px]"
+                onSelect={async () => {
+                  switch (type) {
+                    // case ELEMENT_CODE_BLOCK: {
+                    //   insertEmptyCodeBlock(editor);
+                    //
+                    //   break;
+                    // }
+                    // case ELEMENT_IMAGE: {
+                    //   await insertMedia(editor, { type: ELEMENT_IMAGE });
+                    //
+                    //   break;
+                    // }
+                    // case ELEMENT_MEDIA_EMBED: {
+                    //   await insertMedia(editor, {
+                    //     type: ELEMENT_MEDIA_EMBED,
+                    //   });
+                    //
+                    //   break;
+                    // }
+                    // case 'ul':
+                    // case 'ol': {
+                    //   insertEmptyElement(editor, ELEMENT_PARAGRAPH, {
+                    //     select: true,
+                    //     nextBlock: true,
+                    //   });
+                    //
+                    //   if (settingsStore.get.checkedId(KEY_LIST_STYLE_TYPE)) {
+                    //     toggleIndentList(editor, {
+                    //       listStyleType: type === 'ul' ? 'disc' : 'decimal',
+                    //     });
+                    //   } else if (settingsStore.get.checkedId('list')) {
+                    //     toggleList(editor, { type });
+                    //   }
+                    //
+                    //   break;
+                    // }
+                    // case ELEMENT_TABLE: {
+                    //   insertTable(editor);
+                    //
+                    //   break;
+                    // }
+                    // case ELEMENT_LINK: {
+                    //   triggerFloatingLink(editor, { focused: true });
+                    //
+                    //   break;
+                    // }
+                    default: {
+                      insertEmptyElement(editor, type, {
+                        select: true,
+                        nextBlock: true,
+                      });
                     }
+                  }
 
-                    focusEditor(editor);
-                  }}
-                >
-                  <Icon className="mr-2 size-5" />
-                  {itemLabel}
-                </DropdownMenuItem>
-              )
-            )}
+                  focusEditor(editor);
+                }}
+              >
+                <Icon className="mr-2 size-5" />
+                {itemLabel}
+              </DropdownMenuItem>
+            ))}
           </React.Fragment>
         ))}
       </DropdownMenuContent>

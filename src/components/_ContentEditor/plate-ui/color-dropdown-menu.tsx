@@ -1,20 +1,12 @@
 /** @jsxImportSource react */
 'use client';
 
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import {
-  useColorDropdownMenu,
-  useColorDropdownMenuState,
-} from '@udecode/plate-font';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { useColorDropdownMenu, useColorDropdownMenuState } from '@udecode/plate-font';
 
 import { DEFAULT_COLORS, DEFAULT_CUSTOM_COLORS } from './color-constants';
 import { ColorPicker } from './color-picker';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from './dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
 
 export type TColor = {
@@ -28,11 +20,7 @@ type ColorDropdownMenuProps = {
   tooltip?: string;
 } & DropdownMenuProps;
 
-export function ColorDropdownMenu({
-  nodeType,
-  tooltip,
-  children,
-}: ColorDropdownMenuProps) {
+export function ColorDropdownMenu({ nodeType, tooltip, children }: ColorDropdownMenuProps) {
   const state = useColorDropdownMenuState({
     nodeType,
     colors: DEFAULT_COLORS,

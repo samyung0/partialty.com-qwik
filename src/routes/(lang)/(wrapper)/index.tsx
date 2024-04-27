@@ -4,8 +4,10 @@ import { useLocation } from '@builder.io/qwik-city';
 
 import UnderConstruction from '~/assets/img/under_construction.png';
 import Footer from '~/components/Footer';
+import FAQ from '~/components/_Index/FAQ';
 
 import NewHero from '~/components/_Index/NewHero';
+import Creator from '~/components/_Index/NewHero/Creator';
 
 // REMOVE
 export const onRequest: RequestHandler = ({ env, cacheControl }) => {
@@ -55,8 +57,18 @@ export default component$(() => {
       </div>
     </main>
   ) : (
-    <main class="relative min-h-[100vh] bg-background-light-gray dark:bg-primary-dark-gray text-primary-dark-gray dark:text-background-light-gray">
+    <main class="relative min-h-[100vh] bg-background-light-gray text-primary-dark-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <NewHero />
+      <div
+        onWheel$={(e: WheelEvent) => {
+          if ((window as any).smoothScroll.scrolling()) {
+            (window as any).smoothScroll.stopAll();
+          }
+        }}
+      >
+        <FAQ client:load />
+      </div>
+      <Creator />
       {/* <div class="hidden 2xl:block">
         <IndexNav />
       </div> */}

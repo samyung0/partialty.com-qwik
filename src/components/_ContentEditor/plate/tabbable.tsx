@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
-import React, { CSSProperties } from 'react';
-import { PlateElementProps } from '@udecode/plate-common';
+import type { PlateElementProps } from '@udecode/plate-common';
+import type { CSSProperties } from 'react';
 import { useFocused, useSelected } from 'slate-react';
 
 const boxStyle: CSSProperties = {
@@ -27,8 +27,7 @@ export function TabbableElement({ attributes, children }: PlateElementProps) {
     <div {...attributes} contentEditable={false}>
       <div style={selected && focused ? selectedBoxStyle : unselectedBoxStyle}>
         <p>This is a void element.</p>
-        <button type="button">Button 1</button>{' '}
-        <button type="button">Button 2</button>
+        <button type="button">Button 1</button> <button type="button">Button 2</button>
       </div>
       {children}
     </div>

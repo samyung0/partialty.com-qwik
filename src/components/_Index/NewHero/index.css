@@ -1,0 +1,23 @@
+.swup-main {
+  transition-property: opacity, transform;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.swup-main.is-animating {
+  opacity: 0;
+  transform: translateY(1em);
+}
+
+.swup-main.is-animating.to-left {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.swup-main.is-animating2 {
+  opacity: 0;
+}
+
+.swup-main.is-animating2.appear {
+  opacity: 1;
+}

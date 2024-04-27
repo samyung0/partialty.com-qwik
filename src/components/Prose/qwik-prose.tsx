@@ -1,4 +1,5 @@
-import { component$, QRL, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import type { QRL } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { EMBED_URL } from '~/const';
 
 import astCompare from '~/components/_ContentEditor/astCompare';

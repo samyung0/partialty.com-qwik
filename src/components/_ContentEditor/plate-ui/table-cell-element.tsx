@@ -1,5 +1,4 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { cn, withProps, withRef } from '@udecode/cn';
 import { PlateElement } from '@udecode/plate-common';
 import {
@@ -8,6 +7,7 @@ import {
   useTableCellElementResizableState,
   useTableCellElementState,
 } from '@udecode/plate-table';
+import React from 'react';
 
 import { ResizeHandle } from './resizable';
 
@@ -20,18 +20,8 @@ export const TableCellElement = withRef<
 >(({ children, className, style, hideBorder, isHeader, ...props }, ref) => {
   const { element } = props;
 
-  const {
-    colIndex,
-    rowIndex,
-    readOnly,
-    selected,
-    hovered,
-    hoveredLeft,
-    rowSize,
-    borders,
-    isSelectingCell,
-    colSpan,
-  } = useTableCellElementState();
+  const { colIndex, rowIndex, readOnly, selected, hovered, hoveredLeft, rowSize, borders, isSelectingCell, colSpan } =
+    useTableCellElementState();
   const { props: cellProps } = useTableCellElement({ element: props.element });
   const resizableState = useTableCellElementResizableState({
     colIndex,
@@ -39,8 +29,7 @@ export const TableCellElement = withRef<
     colSpan,
   });
 
-  const { rightProps, bottomProps, leftProps, hiddenLeft } =
-    useTableCellElementResizable(resizableState);
+  const { rightProps, bottomProps, leftProps, hiddenLeft } = useTableCellElementResizable(resizableState);
 
   const Cell = isHeader ? 'th' : 'td';
 
@@ -60,9 +49,8 @@ export const TableCellElement = withRef<
             "before:absolute before:box-border before:select-none before:content-['']",
             borders &&
               cn(
-                borders.bottom?.size &&
-                  `before:border-b before:border-b-border`,
-                borders.right?.size && `before:border-r before:border-r-border`,
+                borders.bottom.size && `before:border-b before:border-b-border`,
+                borders.right.size && `before:border-r before:border-r-border`,
                 borders.left?.size && `before:border-l before:border-l-border`,
                 borders.top?.size && `before:border-t before:border-t-border`
               )
@@ -96,36 +84,15 @@ export const TableCellElement = withRef<
           >
             {!readOnly && (
               <>
-                <ResizeHandle
-                  {...rightProps}
-                  className="-top-3 right-[-5px] w-[10px]"
-                />
-                <ResizeHandle
-                  {...bottomProps}
-                  className="bottom-[-5px] h-[10px]"
-                />
-                {!hiddenLeft && (
-                  <ResizeHandle
-                    {...leftProps}
-                    className="-top-3 left-[-5px] w-[10px]"
-                  />
-                )}
+                <ResizeHandle {...rightProps} className="-top-3 right-[-5px] w-[10px]" />
+                <ResizeHandle {...bottomProps} className="bottom-[-5px] h-[10px]" />
+                {!hiddenLeft && <ResizeHandle {...leftProps} className="-top-3 left-[-5px] w-[10px]" />}
 
                 {hovered && (
-                  <div
-                    className={cn(
-                      'absolute -top-3 z-30 h-[calc(100%_+_12px)] w-1 bg-ring',
-                      'right-[-1.5px]'
-                    )}
-                  />
+                  <div className={cn('absolute -top-3 z-30 h-[calc(100%_+_12px)] w-1 bg-ring', 'right-[-1.5px]')} />
                 )}
                 {hoveredLeft && (
-                  <div
-                    className={cn(
-                      'absolute -top-3 z-30 h-[calc(100%_+_12px)] w-1 bg-ring',
-                      'left-[-1.5px]'
-                    )}
-                  />
+                  <div className={cn('absolute -top-3 z-30 h-[calc(100%_+_12px)] w-1 bg-ring', 'left-[-1.5px]')} />
                 )}
               </>
             )}

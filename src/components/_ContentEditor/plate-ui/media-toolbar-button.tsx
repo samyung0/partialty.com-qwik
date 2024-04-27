@@ -1,11 +1,7 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { withRef } from '@udecode/cn';
-import {
-  ELEMENT_IMAGE,
-  ELEMENT_MEDIA_EMBED,
-  useMediaToolbarButton,
-} from '@udecode/plate-media';
+import type { ELEMENT_IMAGE, ELEMENT_MEDIA_EMBED } from '@udecode/plate-media';
+import { useMediaToolbarButton } from '@udecode/plate-media';
 
 import { Icons } from './icons';
 

@@ -5,8 +5,6 @@ import {
   component$,
   noSerialize,
   useContext,
-  useOnDocument,
-  useOnWindow,
   useSignal,
   useStore,
   useTask$,
@@ -98,7 +96,7 @@ export default component$(
       }),
     });
 
-    useVisibleTask$(({cleanup}) => {
+    useVisibleTask$(({ cleanup }) => {
       const f = (e: any) => {
         if (isHotkey('space', e)) {
           e.preventDefault();
@@ -112,12 +110,12 @@ export default component$(
           e.preventDefault();
           return player.seekBy(player, 5);
         }
-      }
-      document.body.addEventListener("keydown", f);
+      };
+      document.body.addEventListener('keydown', f);
       cleanup(() => {
-        document.body.removeEventListener("keydown", f);
-      })
-    })
+        document.body.removeEventListener('keydown', f);
+      });
+    });
 
     const wasPlayingRef = useSignal(false);
 

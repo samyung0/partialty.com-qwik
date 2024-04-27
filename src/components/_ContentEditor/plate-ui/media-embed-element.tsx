@@ -1,23 +1,13 @@
 /** @jsxImportSource react */
-import React from 'react';
 import { cn, withRef } from '@udecode/cn';
 import { PlateElement, withHOC } from '@udecode/plate-common';
-import {
-  ELEMENT_MEDIA_EMBED,
-  parseTwitterUrl,
-  parseVideoUrl,
-  useMediaState,
-} from '@udecode/plate-media';
+import { ELEMENT_MEDIA_EMBED, parseTwitterUrl, parseVideoUrl, useMediaState } from '@udecode/plate-media';
 import { ResizableProvider, useResizableStore } from '@udecode/plate-resizable';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 import { Caption, CaptionTextarea } from './caption';
 import { MediaPopover } from './media-popover';
-import {
-  mediaResizeHandleVariants,
-  Resizable,
-  ResizeHandle,
-} from './resizable';
+import { Resizable, ResizeHandle, mediaResizeHandleVariants } from './resizable';
 
 export const MediaEmbedElement = withHOC(
   ResizableProvider,
@@ -39,11 +29,7 @@ export const MediaEmbedElement = withHOC(
 
     return (
       <MediaPopover pluginKey={ELEMENT_MEDIA_EMBED}>
-        <PlateElement
-          ref={ref}
-          className={cn('relative py-2.5', className)}
-          {...props}
-        >
+        <PlateElement ref={ref} className={cn('relative py-2.5', className)} {...props}>
           <figure className="group relative m-0 w-full" contentEditable={false}>
             <Resizable
               align={align}

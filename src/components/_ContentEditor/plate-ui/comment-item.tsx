@@ -3,12 +3,7 @@
 'use client';
 
 /** @jsxImportSource react */
-import React from 'react';
-import {
-  CommentProvider,
-  useCommentById,
-  useCommentItemContentState,
-} from '@udecode/plate-comments';
+import { CommentProvider, useCommentById, useCommentItemContentState } from '@udecode/plate-comments';
 import { formatDistance } from 'date-fns';
 
 import { CommentAvatar } from './comment-avatar';
@@ -21,14 +16,7 @@ type PlateCommentProps = {
 };
 
 function CommentItemContent() {
-  const {
-    comment,
-    isMyComment,
-    isReplyComment,
-    user,
-    editingValue,
-    commentText,
-  } = useCommentItemContentState();
+  const { comment, isMyComment, isReplyComment, user, editingValue, commentText } = useCommentItemContentState();
 
   return (
     <div>
@@ -51,11 +39,7 @@ function CommentItemContent() {
       </div>
 
       <div className="mb-4 pl-7 pt-0.5">
-        {editingValue ? (
-          <CommentValue />
-        ) : (
-          <div className="whitespace-pre-wrap text-sm">{commentText}</div>
-        )}
+        {editingValue ? <CommentValue /> : <div className="whitespace-pre-wrap text-sm">{commentText}</div>}
       </div>
     </div>
   );

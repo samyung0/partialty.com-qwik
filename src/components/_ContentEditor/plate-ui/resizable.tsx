@@ -2,12 +2,8 @@
 'use client';
 
 /** @jsxImportSource react */
-import React from 'react';
 import { cn, withRef, withVariants } from '@udecode/cn';
-import {
-  Resizable as ResizablePrimitive,
-  ResizeHandle as ResizeHandlePrimitive,
-} from '@udecode/plate-resizable';
+import { Resizable as ResizablePrimitive, ResizeHandle as ResizeHandlePrimitive } from '@udecode/plate-resizable';
 import { cva } from 'class-variance-authority';
 
 export const mediaResizeHandleVariants = cva(
@@ -36,21 +32,11 @@ const resizeHandleVariants = cva(cn('absolute z-40'), {
   },
 });
 
-const ResizeHandleVariants = withVariants(
-  ResizeHandlePrimitive,
-  resizeHandleVariants,
-  ['direction']
-);
+const ResizeHandleVariants = withVariants(ResizeHandlePrimitive, resizeHandleVariants, ['direction']);
 
-export const ResizeHandle = withRef<typeof ResizeHandlePrimitive>(
-  (props, ref) => (
-    <ResizeHandleVariants
-      ref={ref}
-      direction={props.options?.direction}
-      {...props}
-    />
-  )
-);
+export const ResizeHandle = withRef<typeof ResizeHandlePrimitive>((props, ref) => (
+  <ResizeHandleVariants ref={ref} direction={props.options?.direction} {...props} />
+));
 
 const resizableVariants = cva('', {
   variants: {
@@ -62,6 +48,4 @@ const resizableVariants = cva('', {
   },
 });
 
-export const Resizable = withVariants(ResizablePrimitive, resizableVariants, [
-  'align',
-]);
+export const Resizable = withVariants(ResizablePrimitive, resizableVariants, ['align']);

@@ -13,7 +13,7 @@ import {
   useUserLoaderNullable,
 } from '~/routes/(lang)/(wrapper)/courses/[courseSlug]/layout';
 import readCookie from '~/utils/readCookie';
-import { ContentUserProgress } from '../../../drizzle_turso/schema/content_user_progress';
+import type { ContentUserProgress } from '../../../drizzle_turso/schema/content_user_progress';
 import { listSupportedLang } from '../../../lang';
 
 // const getFavourite = server$(async function (id: string) {

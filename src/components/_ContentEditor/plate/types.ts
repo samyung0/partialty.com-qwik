@@ -1,20 +1,12 @@
-import React from 'react';
-import { AutoformatRule } from '@udecode/plate-autoformat';
-import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
-import {
-  ELEMENT_CODE_BLOCK,
-  ELEMENT_CODE_LINE,
-} from '@udecode/plate-code-block';
-import { TCommentText } from '@udecode/plate-comments';
-import {
-  createPlateEditor,
+import type { AutoformatRule } from '@udecode/plate-autoformat';
+import type { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
+import type { ELEMENT_CODE_BLOCK, ELEMENT_CODE_LINE } from '@udecode/plate-code-block';
+import type { TCommentText } from '@udecode/plate-comments';
+import type {
   CreatePlateEditorOptions,
-  createPluginFactory,
-  createPlugins,
-  createTEditor,
+  DOMHandler,
   Decorate,
   DecorateEntry,
-  DOMHandler,
   EDescendant,
   EElement,
   EElementEntry,
@@ -24,7 +16,6 @@ import {
   ENodeEntry,
   EText,
   ETextEntry,
-  getTEditor,
   InjectComponent,
   InjectProps,
   KeyboardHandler,
@@ -44,50 +35,32 @@ import {
   TNodeEntry,
   TReactEditor,
   TText,
-  useEditorRef,
-  useEditorState,
   WithOverride,
 } from '@udecode/plate-common';
 import {
-  ELEMENT_EXCALIDRAW,
-  TExcalidrawElement,
-} from '@udecode/plate-excalidraw';
-import {
-  ELEMENT_H1,
-  ELEMENT_H2,
-  ELEMENT_H3,
-  ELEMENT_H4,
-  ELEMENT_H5,
-  ELEMENT_H6,
-} from '@udecode/plate-heading';
-import { ELEMENT_HR } from '@udecode/plate-horizontal-rule';
-import { ELEMENT_LINK, TLinkElement } from '@udecode/plate-link';
-import {
-  ELEMENT_LI,
-  ELEMENT_OL,
-  ELEMENT_TODO_LI,
-  ELEMENT_UL,
-  TTodoListItemElement,
-} from '@udecode/plate-list';
-import {
-  ELEMENT_IMAGE,
-  ELEMENT_MEDIA_EMBED,
-  TImageElement,
-  TMediaEmbedElement,
-} from '@udecode/plate-media';
-import {
+  createPlateEditor,
+  createPluginFactory,
+  createPlugins,
+  createTEditor,
+  getTEditor,
+  useEditorRef,
+  useEditorState,
+} from '@udecode/plate-common';
+import type { ELEMENT_EXCALIDRAW, TExcalidrawElement } from '@udecode/plate-excalidraw';
+import type { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4, ELEMENT_H5, ELEMENT_H6 } from '@udecode/plate-heading';
+import type { ELEMENT_HR } from '@udecode/plate-horizontal-rule';
+import type { ELEMENT_LINK, TLinkElement } from '@udecode/plate-link';
+import type { ELEMENT_LI, ELEMENT_OL, ELEMENT_TODO_LI, ELEMENT_UL, TTodoListItemElement } from '@udecode/plate-list';
+import type { ELEMENT_IMAGE, ELEMENT_MEDIA_EMBED, TImageElement, TMediaEmbedElement } from '@udecode/plate-media';
+import type {
   ELEMENT_MENTION,
   ELEMENT_MENTION_INPUT,
   TMentionElement,
   TMentionInputElement,
 } from '@udecode/plate-mention';
-import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
-import {
-  ELEMENT_TABLE,
-  ELEMENT_TD,
-  ELEMENT_TR,
-  TTableElement,
-} from '@udecode/plate-table';
+import type { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
+import type { ELEMENT_TABLE, ELEMENT_TD, ELEMENT_TR, TTableElement } from '@udecode/plate-table';
+import type React from 'react';
 
 /**
  * Text
@@ -135,10 +108,7 @@ export interface MyMentionElement extends TMentionElement {
   children: [EmptyText];
 }
 
-export type MyInlineElement =
-  | MyLinkElement
-  | MyMentionElement
-  | MyMentionInputElement;
+export type MyInlineElement = MyLinkElement | MyMentionElement | MyMentionInputElement;
 export type MyInlineDescendant = MyInlineElement | RichText;
 export type MyInlineChildren = MyInlineDescendant[];
 
@@ -164,10 +134,7 @@ export interface MyAlignProps {
   align?: React.CSSProperties['textAlign'];
 }
 
-export interface MyBlockElement
-  extends TElement,
-    MyIndentListProps,
-    MyLineHeightProps {
+export interface MyBlockElement extends TElement, MyIndentListProps, MyLineHeightProps {
   id?: PlateId;
 }
 
@@ -255,9 +222,7 @@ export interface MyListItemElement extends TElement, MyBlockElement {
   children: MyInlineChildren;
 }
 
-export interface MyTodoListElement
-  extends TTodoListItemElement,
-    MyBlockElement {
+export interface MyTodoListElement extends TTodoListItemElement, MyBlockElement {
   type: typeof ELEMENT_TODO_LI;
   children: MyInlineChildren;
 }
@@ -267,9 +232,7 @@ export interface MyImageElement extends TImageElement, MyBlockElement {
   children: [EmptyText];
 }
 
-export interface MyMediaEmbedElement
-  extends TMediaEmbedElement,
-    MyBlockElement {
+export interface MyMediaEmbedElement extends TMediaEmbedElement, MyBlockElement {
   type: typeof ELEMENT_MEDIA_EMBED;
   children: [EmptyText];
 }
@@ -279,9 +242,7 @@ export interface MyHrElement extends MyBlockElement {
   children: [EmptyText];
 }
 
-export interface MyExcalidrawElement
-  extends TExcalidrawElement,
-    MyBlockElement {
+export interface MyExcalidrawElement extends TExcalidrawElement, MyBlockElement {
   type: typeof ELEMENT_EXCALIDRAW;
   children: [EmptyText];
 }
@@ -338,34 +299,21 @@ export type MyDecorateEntry = DecorateEntry<MyValue>;
 export type MyDOMHandler<P = PluginOptions> = DOMHandler<P, MyValue, MyEditor>;
 export type MyInjectComponent = InjectComponent<MyValue>;
 export type MyInjectProps = InjectProps<MyValue>;
-export type MyKeyboardHandler<P = PluginOptions> = KeyboardHandler<
-  P,
-  MyValue,
-  MyEditor
->;
+export type MyKeyboardHandler<P = PluginOptions> = KeyboardHandler<P, MyValue, MyEditor>;
 export type MyOnChange<P = PluginOptions> = OnChange<P, MyValue, MyEditor>;
 export type MyOverrideByKey = OverrideByKey<MyValue, MyEditor>;
-export type MyPlatePlugin<P = PluginOptions> = PlatePlugin<
-  P,
-  MyValue,
-  MyEditor
->;
+export type MyPlatePlugin<P = PluginOptions> = PlatePlugin<P, MyValue, MyEditor>;
 export type MyPlatePluginInsertData = PlatePluginInsertData<MyValue>;
 export type MyPlatePluginProps = PlatePluginProps<MyValue>;
 export type MyPlateProps = PlateProps<MyValue, MyEditor>;
 export type MySerializeHtml = SerializeHtml<MyValue>;
-export type MyWithOverride<P = PluginOptions> = WithOverride<
-  P,
-  MyValue,
-  MyEditor
->;
+export type MyWithOverride<P = PluginOptions> = WithOverride<P, MyValue, MyEditor>;
 
 /**
  * Plate store, Slate context
  */
 
-export const getMyEditor = (editor: MyEditor) =>
-  getTEditor<MyValue, MyEditor>(editor);
+export const getMyEditor = (editor: MyEditor) => getTEditor<MyValue, MyEditor>(editor);
 export const useMyEditorRef = () => useEditorRef<MyValue, MyEditor>();
 export const useMyEditorState = () => useEditorState<MyValue, MyEditor>();
 
@@ -373,12 +321,10 @@ export const useMyEditorState = () => useEditorState<MyValue, MyEditor>();
  * Utils
  */
 export const createMyEditor = () => createTEditor() as MyEditor;
-export const createMyPlateEditor = (
-  options: CreatePlateEditorOptions<MyValue, MyEditor> = {}
-) => createPlateEditor<MyValue, MyEditor>(options);
-export const createMyPluginFactory = <P = PluginOptions>(
-  defaultPlugin: PlatePlugin<NoInfer<P>, MyValue, MyEditor>
-) => createPluginFactory(defaultPlugin);
+export const createMyPlateEditor = (options: CreatePlateEditorOptions<MyValue, MyEditor> = {}) =>
+  createPlateEditor<MyValue, MyEditor>(options);
+export const createMyPluginFactory = <P = PluginOptions>(defaultPlugin: PlatePlugin<NoInfer<P>, MyValue, MyEditor>) =>
+  createPluginFactory(defaultPlugin);
 export const createMyPlugins = (
   plugins: PlatePlugin[],
   options?: {

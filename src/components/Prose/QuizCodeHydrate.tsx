@@ -5,15 +5,9 @@ import { useEffect } from 'react';
 import astCompare from '~/components/_ContentEditor/astCompare';
 import astParse from '~/components/_ContentEditor/astParse';
 
-const QuizCodeHydrate = ({
-  isPreview,
-  saveToDB,
-}: {
-  isPreview: boolean;
-  saveToDB: (isCorrect: boolean) => any;
-}) => {
+const QuizCodeHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (isCorrect: boolean) => any }) => {
   useEffect(() => {
-    console.log("Hydrate Quiz Code");
+    console.log('Hydrate Quiz Code');
     (Array.from(document.getElementsByClassName('quizCodeBlock')) as HTMLFormElement[]).forEach((form) => {
       form.addEventListener('submit', (e) => {
         e.preventDefault();

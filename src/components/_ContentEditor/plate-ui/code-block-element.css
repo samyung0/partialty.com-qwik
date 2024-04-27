@@ -1,4 +1,3 @@
-
 /**
  * One Light theme for prism.js
  * Based on Atom's One Light theme: https://github.com/atom/atom/tree/master/packages/one-light-syntax
@@ -33,8 +32,7 @@
 .slate-code_block pre[class*='language-'] {
   background: hsl(230, 1%, 98%);
   color: hsl(230, 8%, 24%);
-  font-family: 'Fira Code', 'Fira Mono', Menlo, Consolas, 'DejaVu Sans Mono',
-    monospace;
+  font-family: 'Fira Code', 'Fira Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
   direction: ltr;
   text-align: left;
   white-space: pre;
@@ -168,10 +166,7 @@
   color: hsl(301, 63%, 40%);
 }
 
-.language-javascript
-  .token.template-string
-  > .token.interpolation
-  > .token.interpolation-punctuation.punctuation {
+.language-javascript .token.template-string > .token.interpolation > .token.interpolation-punctuation.punctuation {
   color: hsl(344, 84%, 43%);
 }
 
@@ -298,9 +293,7 @@ div.code-toolbar > .toolbar.toolbar > .toolbar-item > span:focus {
 
 /* Hovering over a linkable line number (in the gutter area) */
 /* Requires Line Numbers plugin as well */
-pre[id].linkable-line-numbers.linkable-line-numbers
-  span.line-numbers-rows
-  > span:hover:before {
+pre[id].linkable-line-numbers.linkable-line-numbers span.line-numbers-rows > span:hover:before {
   background-color: hsla(230, 8%, 24%, 0.05);
 }
 

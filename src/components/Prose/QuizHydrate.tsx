@@ -3,15 +3,9 @@
 import { qwikify$ } from '@builder.io/qwik-react';
 import { useEffect } from 'react';
 
-const QuizHydrate = ({
-  isPreview,
-  saveToDB,
-}: {
-  isPreview: boolean;
-  saveToDB: (isCorrect: boolean) => any;
-}) => {
+const QuizHydrate = ({ isPreview, saveToDB }: { isPreview: boolean; saveToDB: (isCorrect: boolean) => any }) => {
   useEffect(() => {
-    console.log("Hydrate Quiz");
+    console.log('Hydrate Quiz');
     (Array.from(document.getElementsByClassName('quizOptionButton')) as HTMLElement[]).forEach((button) => {
       button.addEventListener('click', (e) => {
         const name = button.getAttribute('data-formname');

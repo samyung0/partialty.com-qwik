@@ -1,4 +1,5 @@
-import { $, component$, QRL, useContext } from '@builder.io/qwik';
+import type { QRL } from '@builder.io/qwik';
+import { $, component$, useContext } from '@builder.io/qwik';
 import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
 
 import type { LuciaSession } from '~/types/LuciaSession';
@@ -8,7 +9,7 @@ import { LuHome, LuLogOut, LuMoon, LuPencilLine, LuShield, LuSun, LuUser2 } from
 import CrownPNG from '~/assets/img/crown.png';
 import { logout } from '~/auth/logout';
 import LoadingSVG from '~/components/LoadingSVG';
-import theme from '~/const/theme';
+import type theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
 
 const setThemeCookie = server$(function (theme: 'light' | 'dark') {
@@ -143,7 +144,10 @@ export default component$(
             </li>
           )}
           {!login.isLoading && !login.isLoggedIn && (
-            <Link class="py-2 px-6 dark:bg-primary-dark-gray underline underline-offset-4 dark:no-underline rounded-lg" href={'/login/'}>
+            <Link
+              class="rounded-lg px-6 py-2 underline underline-offset-4 dark:bg-primary-dark-gray dark:no-underline"
+              href={'/login/'}
+            >
               Login
             </Link>
           )}

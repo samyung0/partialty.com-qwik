@@ -3,13 +3,8 @@
 'use client';
 
 /** @jsxImportSource react */
-import React from 'react';
 import { cn } from '@udecode/cn';
-import {
-  CommentNewSubmitButton,
-  CommentNewTextarea,
-  useCommentsSelectors,
-} from '@udecode/plate-comments';
+import { CommentNewSubmitButton, CommentNewTextarea, useCommentsSelectors } from '@udecode/plate-comments';
 
 import { buttonVariants } from './button';
 import { CommentAvatar } from './comment-avatar';
@@ -25,9 +20,7 @@ export function CommentCreateForm() {
       <div className="flex grow flex-col items-end gap-2">
         <CommentNewTextarea className={inputVariants()} />
 
-        <CommentNewSubmitButton
-          className={cn(buttonVariants({ size: 'sm' }), 'w-[90px]')}
-        >
+        <CommentNewSubmitButton className={cn(buttonVariants({ size: 'sm' }), 'w-[90px]')}>
           Comment
         </CommentNewSubmitButton>
       </div>

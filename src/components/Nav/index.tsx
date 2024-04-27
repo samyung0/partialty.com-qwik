@@ -1,4 +1,5 @@
-import { $, component$, PropFunction, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import type { PropFunction } from '@builder.io/qwik';
+import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { Link, removeClientDataCache, server$, useNavigate } from '@builder.io/qwik-city';
 
 import type { LuciaSession } from '~/types/LuciaSession';
@@ -21,6 +22,7 @@ import { themeContext } from '~/context/themeContext';
 import { IoCaretDown } from '@qwikest/icons/ionicons';
 import CrownPNG from '~/assets/img/crown.png';
 
+import PartialtySVG from '~/assets/svg/partialty.svg';
 import getUser from '~/components/_Index/Nav/getUser';
 import LoadingSVG from '~/components/LoadingSVG';
 
@@ -258,9 +260,14 @@ export default component$(
         )}
         <nav class={!props.disableTheme ? 'dark:text-background-light-gray' : ''}>
           <div class=" mx-auto flex max-w-7xl items-center justify-between px-4 py-6 text-[25px] sm:px-6 lg:hidden lg:px-8">
-            <h1 class="font-mosk text-3xl font-bold tracking-wide">
-              <Link href="/members/dashboard/">Partialty.com</Link>
-            </h1>
+            <div class="inline-flex w-[250px] items-center gap-2">
+              <img src={PartialtySVG} width="15" height="15" alt="icon" />
+              <h2 class="font-mosk text-lg tracking-wide">
+                <Link href="/" prefetch>
+                  Partialty.com
+                </Link>
+              </h2>
+            </div>
             <button
               class={'p-2 text-primary-dark-gray' + (!props.disableTheme ? ' dark:text-background-light-gray' : '')}
               onClick$={() => (showSideNav.value = !showSideNav.value)}
@@ -435,13 +442,12 @@ export default component$(
                 </div>
               </li>
             ) : (
-              <li
-                class={
-                  (props.disableTheme ? 'ml-auto ' : '') +
-                  ''
-                }
-              >
-                <Link prefetch href={'/login'} class="whitespace-nowrap rounded-lg bg-disabled-dark px-4 py-3 font-normal tracking-normal text-background-light-gray shadow-md">
+              <li class={(props.disableTheme ? 'ml-auto ' : '') + ''}>
+                <Link
+                  prefetch
+                  href={'/login'}
+                  class="whitespace-nowrap rounded-lg bg-disabled-dark px-4 py-3 font-normal tracking-normal text-background-light-gray shadow-md"
+                >
                   Login | Signup
                 </Link>
               </li>

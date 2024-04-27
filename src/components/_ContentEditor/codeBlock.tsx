@@ -264,7 +264,7 @@ export const CodeBlock = ({ attributes, children, element }: RenderElementProps)
       <pre {...attributes} spellCheck={false}>
         {filename && (
           <div contentEditable={false}>
-            <p className="m-0 italic text-[0.8em] text-gray-400">{filename}</p>
+            <p className="m-0 text-[0.8em] italic text-gray-400">{filename}</p>
             <hr className="m-2  border-gray-600" />
           </div>
         )}

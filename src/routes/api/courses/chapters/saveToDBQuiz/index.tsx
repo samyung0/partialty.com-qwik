@@ -12,7 +12,7 @@ export const onPost: RequestHandler = async (req) => {
   });
   const { _isCorrect, userId, courseId, chapterId } = (await req.parseBody()) as any;
   if (_isCorrect === undefined || !userId || !courseId || !userId) throw req.json(400, 'Badly formatted request.');
-  const isCorrect = JSON.parse(_isCorrect)
+  const isCorrect = JSON.parse(_isCorrect);
   await drizzleClient(req.env, import.meta.env.VITE_USE_PROD_DB === '1').transaction(async (tx) => {
     const recordExists = await tx
       .select()

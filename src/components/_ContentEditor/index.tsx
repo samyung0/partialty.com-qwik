@@ -156,8 +156,7 @@ const ContentEditorReact = ({
   toggleSideNav: () => void;
   usePlate: boolean;
 }) => {
-  const normalizedInitialValue = initialValue ?? //     inputWidth: 400, //     removeTrailingSpaces: true, //     quizTitle: "Question 2", //     formName: "test2", //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
-  //     inputCount: 1,
+  const normalizedInitialValue = initialValue ?? //     inputCount: 1, //     inputWidth: 400, //     removeTrailingSpaces: true, //     quizTitle: "Question 2", //     formName: "test2", //     astLang: "js", //     isCode: true, //     codeInput: "", //     }, //       displayAst: "{}", //       ast: "{}", //       matchInput: { blablabla: "=" }, //       type: "ast", //     ans: { //     type: "quizCodeBlock", //   { // ?? [
   //     children: [
   //       {
   //         type: "quizCodeParagraph",

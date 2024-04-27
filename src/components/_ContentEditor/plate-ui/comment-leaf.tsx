@@ -3,19 +3,13 @@
 'use client';
 
 /** @jsxImportSource react */
-import React from 'react';
 import { cn } from '@udecode/cn';
-import {
-  TCommentText,
-  useCommentLeaf,
-  useCommentLeafState,
-} from '@udecode/plate-comments';
-import { PlateLeaf, PlateLeafProps, Value } from '@udecode/plate-common';
+import type { TCommentText } from '@udecode/plate-comments';
+import { useCommentLeaf, useCommentLeafState } from '@udecode/plate-comments';
+import type { PlateLeafProps, Value } from '@udecode/plate-common';
+import { PlateLeaf } from '@udecode/plate-common';
 
-export function CommentLeaf({
-  className,
-  ...props
-}: PlateLeafProps<Value, TCommentText>) {
+export function CommentLeaf({ className, ...props }: PlateLeafProps<Value, TCommentText>) {
   const { children, nodeProps, leaf } = props;
 
   const state = useCommentLeafState({ leaf });
@@ -34,11 +28,7 @@ export function CommentLeaf({
   return (
     <PlateLeaf
       {...props}
-      className={cn(
-        'border-b-2 border-b-primary/40',
-        state.isActive ? 'bg-primary/40' : 'bg-primary/20',
-        className
-      )}
+      className={cn('border-b-2 border-b-primary/40', state.isActive ? 'bg-primary/40' : 'bg-primary/20', className)}
       nodeProps={{
         ...rootProps,
         ...nodeProps,

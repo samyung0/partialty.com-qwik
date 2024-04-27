@@ -1,32 +1,21 @@
 /** @jsxImportSource react */
-import { FC } from 'react';
 import { ELEMENT_BLOCKQUOTE } from '@udecode/plate-block-quote';
 import { ELEMENT_CODE_BLOCK } from '@udecode/plate-code-block';
 import { createNodesWithHOC } from '@udecode/plate-common';
-import {
-  WithDraggableOptions,
-  withDraggable as withDraggablePrimitive,
-} from '@udecode/plate-dnd';
-import {
-  ELEMENT_H1,
-  ELEMENT_H2,
-  ELEMENT_H3,
-  ELEMENT_H4,
-  ELEMENT_H5,
-  ELEMENT_H6,
-} from '@udecode/plate-heading';
+import type { WithDraggableOptions } from '@udecode/plate-dnd';
+import { withDraggable as withDraggablePrimitive } from '@udecode/plate-dnd';
+import { ELEMENT_H1, ELEMENT_H2, ELEMENT_H3, ELEMENT_H4, ELEMENT_H5, ELEMENT_H6 } from '@udecode/plate-heading';
 import { ELEMENT_OL, ELEMENT_UL } from '@udecode/plate-list';
 import { ELEMENT_PARAGRAPH } from '@udecode/plate-paragraph';
+import type { FC } from 'react';
 
-import { Draggable, DraggableProps } from './draggable';
+import type { DraggableProps } from './draggable';
+import { Draggable } from './draggable';
 
 export const withDraggable = (
   Component: FC,
-  options?: WithDraggableOptions<
-    Partial<Omit<DraggableProps, 'editor' | 'element' | 'children'>>
-  >
-) =>
-  withDraggablePrimitive<DraggableProps>(Draggable, Component, options as any);
+  options?: WithDraggableOptions<Partial<Omit<DraggableProps, 'editor' | 'element' | 'children'>>>
+) => withDraggablePrimitive<DraggableProps>(Draggable, Component, options as any);
 
 export const withDraggablesPrimitive = createNodesWithHOC(withDraggable);
 

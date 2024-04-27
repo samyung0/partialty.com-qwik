@@ -1,18 +1,10 @@
 /** @jsxImportSource react */
 'use client';
 
-import * as React from 'react';
-import { useCallback, useState } from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import {
-  cn,
-  createPrimitiveElement,
-  withCn,
-  withProps,
-  withRef,
-  withVariants,
-} from '@udecode/cn';
+import { cn, createPrimitiveElement, withCn, withProps, withRef, withVariants } from '@udecode/cn';
 import { cva } from 'class-variance-authority';
+import { useCallback, useState } from 'react';
 
 import { Icons } from './icons';
 
@@ -56,9 +48,7 @@ const DropdownMenuContentVariants = withProps(DropdownMenuPrimitive.Content, {
   ),
 });
 
-export const DropdownMenuContent = withRef<
-  typeof DropdownMenuPrimitive.Content
->(({ ...props }, ref) => (
+export const DropdownMenuContent = withRef<typeof DropdownMenuPrimitive.Content>(({ ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuContentVariants ref={ref} {...props} />
   </DropdownMenuPrimitive.Portal>
@@ -78,32 +68,28 @@ const menuItemVariants = cva(
   }
 );
 
-export const DropdownMenuItem = withVariants(
-  DropdownMenuPrimitive.Item,
-  menuItemVariants,
-  ['inset']
-);
+export const DropdownMenuItem = withVariants(DropdownMenuPrimitive.Item, menuItemVariants, ['inset']);
 
-export const DropdownMenuCheckboxItem = withRef<
-  typeof DropdownMenuPrimitive.CheckboxItem
->(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.CheckboxItem
-    ref={ref}
-    className={cn(
-      'relative flex select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      'cursor-pointer',
-      className
-    )}
-    {...props}
-  >
-    <span className="absolute left-2 flex size-3.5 items-center justify-center">
-      <DropdownMenuPrimitive.ItemIndicator>
-        <Icons.check className="size-4" />
-      </DropdownMenuPrimitive.ItemIndicator>
-    </span>
-    {children}
-  </DropdownMenuPrimitive.CheckboxItem>
-));
+export const DropdownMenuCheckboxItem = withRef<typeof DropdownMenuPrimitive.CheckboxItem>(
+  ({ className, children, ...props }, ref) => (
+    <DropdownMenuPrimitive.CheckboxItem
+      ref={ref}
+      className={cn(
+        'relative flex select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'cursor-pointer',
+        className
+      )}
+      {...props}
+    >
+      <span className="absolute left-2 flex size-3.5 items-center justify-center">
+        <DropdownMenuPrimitive.ItemIndicator>
+          <Icons.check className="size-4" />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  )
+);
 
 export const DropdownMenuRadioItem = withRef<
   typeof DropdownMenuPrimitive.RadioItem,
@@ -131,27 +117,17 @@ export const DropdownMenuRadioItem = withRef<
   </DropdownMenuPrimitive.RadioItem>
 ));
 
-const dropdownMenuLabelVariants = cva(
-  cn('select-none px-2 py-1.5 text-sm font-semibold'),
-  {
-    variants: {
-      inset: {
-        true: 'pl-8',
-      },
+const dropdownMenuLabelVariants = cva(cn('select-none px-2 py-1.5 text-sm font-semibold'), {
+  variants: {
+    inset: {
+      true: 'pl-8',
     },
-  }
-);
+  },
+});
 
-export const DropdownMenuLabel = withVariants(
-  DropdownMenuPrimitive.Label,
-  dropdownMenuLabelVariants,
-  ['inset']
-);
+export const DropdownMenuLabel = withVariants(DropdownMenuPrimitive.Label, dropdownMenuLabelVariants, ['inset']);
 
-export const DropdownMenuSeparator = withCn(
-  DropdownMenuPrimitive.Separator,
-  '-mx-1 my-1 h-px bg-muted'
-);
+export const DropdownMenuSeparator = withCn(DropdownMenuPrimitive.Separator, '-mx-1 my-1 h-px bg-muted');
 
 export const DropdownMenuShortcut = withCn(
   createPrimitiveElement('span'),

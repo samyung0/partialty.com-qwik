@@ -1,7 +1,6 @@
 /** @jsxImportSource react */
 'use client';
 
-import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { cn, withRef } from '@udecode/cn';
 import { cva } from 'class-variance-authority';

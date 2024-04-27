@@ -2,11 +2,11 @@ import { qwikCity } from '@builder.io/qwik-city/vite';
 import { qwikInsights } from '@builder.io/qwik-labs/vite';
 import { qwikReact } from '@builder.io/qwik-react/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { qwikSpeakInline } from 'qwik-speak/inline';
 import { defineConfig, loadEnv, type Connect } from 'vite';
 import compileTime from 'vite-plugin-compile-time';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import lang from './lang';
 import { config } from './src/speak-config';
 const crossOriginIsolationMiddleware: Connect.NextHandleFunction = (req, response, next) => {
@@ -53,13 +53,13 @@ export default defineConfig(() => {
       qwikReact(),
       sentryVitePlugin({
         authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_JS,
-        org: "partialtycom",
-        project: "partialty-client",
+        org: 'partialtycom',
+        project: 'partialty-client',
       }),
       sentryVitePlugin({
         authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_NODE,
-        org: "partialtycom",
-        project: "partialty-serverentry",
+        org: 'partialtycom',
+        project: 'partialty-serverentry',
       }),
     ],
     // node_modules\@babel\types\lib\definitions\core.js

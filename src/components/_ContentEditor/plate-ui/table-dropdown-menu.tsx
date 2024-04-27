@@ -1,17 +1,11 @@
 /** @jsxImportSource react */
-import React from 'react';
-import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import { focusEditor, someNode, useEditorRef, useEditorSelector } from '@udecode/plate-common';
 import {
-  focusEditor,
-  someNode,
-  useEditorRef,
-  useEditorSelector,
-} from '@udecode/plate-common';
-import {
+  ELEMENT_TABLE,
   deleteColumn,
   deleteRow,
   deleteTable,
-  ELEMENT_TABLE,
   insertTable,
   insertTableColumn,
   insertTableRow,
@@ -32,10 +26,7 @@ import {
 import { ToolbarButton } from './toolbar';
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
-  const tableSelected = useEditorSelector(
-    (editor) => someNode(editor, { match: { type: ELEMENT_TABLE } }),
-    []
-  );
+  const tableSelected = useEditorSelector((editor) => someNode(editor, { match: { type: ELEMENT_TABLE } }), []);
 
   const editor = useEditorRef();
   const openState = useOpenState();
@@ -48,10 +39,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
         </ToolbarButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="start"
-        className="flex w-[180px] min-w-0 flex-col gap-0.5"
-      >
+      <DropdownMenuContent align="start" className="flex w-[180px] min-w-0 flex-col gap-0.5">
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Icons.table className={iconVariants({ variant: 'menuItem' })} />
