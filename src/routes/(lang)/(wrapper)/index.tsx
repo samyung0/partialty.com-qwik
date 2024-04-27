@@ -165,7 +165,7 @@ export default component$(() => {
   // );
   // });
   return (
-    <main class="relative max-h-[100vh] overflow-hidden bg-background-light-gray text-primary-dark-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
+    <main class="relative max-h-[100dvh] overflow-hidden bg-background-light-gray text-primary-dark-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <div
         class={cn(
           'swup-slide relative min-h-[200dvh] -translate-y-[100dvh]',
