@@ -1,5 +1,5 @@
 /* eslint-disable qwik/no-react-props */
-import type { NoSerialize, Signal } from '@builder.io/qwik';
+import type { NoSerialize } from '@builder.io/qwik';
 import { $, component$, noSerialize, useOnWindow, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 
 import Phaser from 'phaser';
@@ -128,7 +128,7 @@ export default component$(() => {
         create() {
           console.log('create');
           // this.input.on('wheel', (e: WheelEvent) => {
-            // sc(e.deltaY, scrollDir, scroller);
+          // sc(e.deltaY, scrollDir, scroller);
           // });
           const shapes = this.cache.json.get('shapes');
           this.matter.world.setBounds(0, 0, parentEl.value!.offsetWidth, parentEl.value!.offsetHeight);
@@ -370,6 +370,9 @@ export default component$(() => {
       <div class="absolute top-0 z-[100] block w-full lg:hidden">
         <Nav2 getUserFn={getUserFn} setThemeCookieFn={setThemeCookieFn} logoutFn={logout} />
       </div>
+      <div class="absolute top-0 w-full hidden lg:block">
+        <Nav user={user.value} />
+      </div>
       <div class="h-full w-full overflow-hidden">
         <FollowerPointerCard client:visible className="relative h-full" title="Partialty.com">
           <button
@@ -389,9 +392,6 @@ export default component$(() => {
             />
             <span class="text-xs italic text-[#CC5DE8]">Blast</span>
           </button>
-          <div class="hidden lg:block">
-            <Nav user={user.value} />
-          </div>
 
           <div class="absolute left-[50%] top-[50%] z-[50] translate-x-[-50%] translate-y-[-50%]">
             <Center />

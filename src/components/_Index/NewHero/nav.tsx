@@ -67,17 +67,17 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
           </h2>
         </div>
         <div class="inline-flex items-center gap-8">
-          <a href="/members/dashboard/" class="cursor-none text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
+          <a href="/members/dashboard/" class="text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Home
           </a>
-          <a href="/catalog/" class="cursor-none text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
+          <a href="/catalog/" class="text-gray-500 dark:text-gray-300 hover:text-black dark:hover:text-background-light-gray transition-colors">
             Courses
           </a>
         </div>
         <div class="inline-flex w-[250px] items-center">
           <ul class="flex items-center gap-4">
             <li>
-              <label class="flex cursor-none items-center gap-2 text-[18px] text-primary-dark-gray dark:text-background-light-gray">
+              <label class="flex items-center gap-2 text-[18px] text-primary-dark-gray dark:text-background-light-gray">
                 <LuSun />
                 <input
                   onChange$={(e, cTarget) => {
@@ -142,7 +142,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                         <Link
                           prefetch
                           href={login.isLoggedIn ? '/members/dashboard/' : '/login/'}
-                          class="flex cursor-none items-center gap-3"
+                          class="flex items-center gap-3"
                         >
                           <span class="text-[20px]">
                             <LuHome />
@@ -151,7 +151,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                         </Link>
                       </li>
                       <li>
-                        <Link prefetch href="/profile/" class="flex cursor-none items-center gap-3">
+                        <Link prefetch href="/profile/" class="flex items-center gap-3">
                           <span class="text-[20px]">
                             <LuUser2 />
                           </span>
@@ -160,7 +160,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       </li>
                       {login.user.role !== 'free' && (
                         <li>
-                          <Link prefetch href="/creator/" class="flex cursor-none items-center gap-3">
+                          <Link prefetch href="/creator/" class="flex items-center gap-3">
                             <span class="text-[20px]">
                               <LuPencilLine />
                             </span>
@@ -170,7 +170,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                       )}
                       {login.user.role === 'admin' && (
                         <li>
-                          <Link prefetch href="/admin/courseapproval/" class="flex cursor-none items-center gap-3">
+                          <Link prefetch href="/admin/courseapproval/" class="flex items-center gap-3">
                             <span class="text-[20px]">
                               <LuShield />
                             </span>
@@ -179,7 +179,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
                         </li>
                       )}
                       <li>
-                        <button onClick$={handleLogout} class="flex cursor-none items-center gap-3">
+                        <button onClick$={handleLogout} class="flex items-center gap-3">
                           <span class="text-[20px]">
                             <LuLogOut />
                           </span>
@@ -194,7 +194,7 @@ export default component$((props: { user?: LuciaSession['user'] | undefined }) =
               <li>
                 <a
                   href={'/login/'}
-                  class="cursor-none whitespace-nowrap rounded-[2rem] bg-disabled-dark px-6 py-2 font-normal tracking-normal text-background-light-gray shadow-md"
+                  class="whitespace-nowrap rounded-[2rem] bg-disabled-dark px-6 py-2 font-normal tracking-normal text-background-light-gray shadow-md"
                 >
                   Login
                 </a>

@@ -13,16 +13,6 @@ import Creator from '~/components/_Index/NewHero/Creator';
 import { cn } from '~/utils/cn';
 import './index.css';
 
-// REMOVE
-export const onRequest: RequestHandler = ({ env, cacheControl }) => {
-  cacheControl({
-    maxAge: 0,
-    sMaxAge: 0,
-    noStore: true,
-    noCache: true,
-  });
-};
-
 import readCookie from '~/utils/readCookie';
 
 import { useContext } from '@builder.io/qwik';
@@ -227,15 +217,15 @@ export const head: DocumentHead = {
     },
     {
       name: 'description',
-      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The most important part? They are free!`,
     },
     {
       name: 'og:description',
-      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The most important part? They are free!`,
     },
     {
       name: 'twitter:description',
-      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The most important part? They are free!`,
     },
   ],
   links: [
