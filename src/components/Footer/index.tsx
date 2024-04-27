@@ -1,5 +1,4 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
 
 import PartialtySVG from '~/assets/svg/partialty.svg';
 
@@ -71,14 +70,14 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Resources</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="/catalog/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/catalog/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Courses
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/catalog/?type=guide" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/catalog/?type=guide" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Guides
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -86,22 +85,22 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Common</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link
+                    <a
                       href="https://blog.partialty.com/about"
                       class="text-sm leading-6 text-gray-300 hover:text-white"
                     >
                       About Me
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/#faq" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/#faq" class="text-sm leading-6 text-gray-300 hover:text-white">
                       FAQ
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/donate/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/donate/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Donate
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -111,19 +110,19 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="/license/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/license/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       License
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/privacy/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/privacy/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Privacy
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/terms/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/terms/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Terms
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -131,19 +130,19 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Support</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <Link href="/contact/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/contact/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Contact Me
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/suggestions/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/suggestions/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Make Suggestions
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link href="/contribute/" prefetch class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/contribute/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Contribute
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>

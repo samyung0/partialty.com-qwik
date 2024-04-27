@@ -78,7 +78,7 @@ export default component$(() => {
   //       <div class="flex flex-col items-center justify-center gap-8 text-center">
   //         <h1 class="font-mosk text-[3rem]">! Under Construction !</h1>
   //         <p class="max-w-[500px] text-lg tracking-wide">
-  //           We are building an e-learning platform that teaches web development, such as React, Vue and Next JS. The
+  //           We are building an e-learning platform that teaches web development, such as React and Next JS. The
   //           biggest difference is that there will be audio tracks that explain everything. Want to know more? Send an
   //           email to{' '}
   //           <a href="mailto:yungchinpang999@gmail.com" class="underline decoration-wavy underline-offset-[6px]">
@@ -140,7 +140,7 @@ export default component$(() => {
     } else {
       // sliding vertically
       if (diffY > 10 || diffY < -10) {
-        logic(diffY)
+        logic(diffY);
       }
     }
 
@@ -210,8 +210,38 @@ export const head: DocumentHead = {
   title: 'Partialty',
   meta: [
     {
+      name: 'og:title',
+      content: 'Partialty',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Partialty',
+    },
+    {
+      name: "og:image",
+      content: "https://i.ibb.co/RjHKTwf/thumbnail.png",
+    },
+    {
+      name: "twitter:image",
+      content: "https://i.ibb.co/RjHKTwf/thumbnail.png"
+    },
+    {
       name: 'description',
-      content: `Partialty is an e-learning platform that teaches web development in simple words and includes frameworks such as React, Vue, Next JS and much more. The biggest difference that sets aside us and the other learning platform is the addition of audio that explains alongside the text.`,
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+    },
+    {
+      name: 'og:description',
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+    },
+    {
+      name: 'twitter:description',
+      content: `Partialty is an e-learning platform that teaches web development in the most simplest words possible and we mostly target beginners and intermediate developers. The courses are voice overed and there are beautiful highlights alongside. The courses are free!`,
+    },
+  ],
+  links: [
+    {
+      rel: 'canonical',
+      href: 'https://www.partialty.com',
     },
   ],
 };

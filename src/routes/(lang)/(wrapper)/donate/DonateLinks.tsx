@@ -1,6 +1,5 @@
 import { component$ } from '@builder.io/qwik';
 
-import { Link } from '@builder.io/qwik-city';
 import BuyMeCoffee from '~/assets/img/buy_me_a_coffee.png';
 // import OpenCollective from '~/assets/img/open_collective.png';
 import Stripe from '~/assets/img/stripe.webp';
@@ -10,13 +9,18 @@ export default component$(() => {
     <section class="mx-auto mt-16 grid max-w-xl sm:mt-20 lg:mt-24 lg:max-w-2xl">
       <ul role="list" class="divide-y dark:divide-gray-700">
         <li class="flex justify-between gap-x-6 py-5">
-          <Link href="https://buy.stripe.com/6oEdU9gz21Vd0co145" class="flex w-full items-center justify-center gap-4">
+          <a
+            target="_blank"
+            href="https://buy.stripe.com/6oEdU9gz21Vd0co145"
+            class="flex w-full items-center justify-center gap-4"
+          >
             <img src={Stripe} alt="Stripe" width="30" height="30" class="size-[30px] object-contain" />
             <span>Stripe</span>
-          </Link>
+          </a>
         </li>
         <li class="flex justify-between gap-x-6 py-5">
-          <Link
+          <a
+            target="_blank"
             href="https://buymeacoffee.com/partialty"
             class="flex w-full items-center justify-center gap-4"
           >
@@ -24,7 +28,7 @@ export default component$(() => {
               <img src={BuyMeCoffee} alt="Buy Me a Coffee" width="30" height="30" class="size-[30px] object-contain" />
             </span>
             <span>Buy Me a Coffee</span>
-          </Link>
+          </a>
         </li>
       </ul>
     </section>

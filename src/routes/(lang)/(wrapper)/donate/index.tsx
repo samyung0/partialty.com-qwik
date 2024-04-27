@@ -55,7 +55,7 @@ export default component$(() => {
               </div>
               <div class="flex flex-col">
                 <dt class="flex items-center gap-x-3 text-base font-semibold leading-7">
-                  <span class="size-[20px] text-sea">
+                  <span class="size-[20px] text-sea -translate-y-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
