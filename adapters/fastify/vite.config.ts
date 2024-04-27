@@ -13,11 +13,11 @@ export default extendConfig(baseConfig, () => {
     plugins: [
       nodeServerAdapter({
         name: 'fastify',
-        // ssg: {
-        //   include: ['/courses/*', '/', '/donate', '/contact', '/contribute'],
-        //   origin: 'https://www.partialty.com',
-        //   sitemapOutFile: 'sitemap-ssg.xml',
-        // },
+        ssg: {
+          include: ['/courses/*', '/', '/donate', '/contact', '/contribute'],
+          origin: 'https://www.partialty.com',
+          sitemapOutFile: 'sitemap-ssg.xml',
+        },
       }),
     ],
   };
