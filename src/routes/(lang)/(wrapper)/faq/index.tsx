@@ -6,7 +6,7 @@ import Footer from '~/components/Footer';
 
 export default component$(() => {
   return (
-    <main>
+    <main class="bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
       <Nav />
       <FAQ topButton={false} />
       <Footer />

@@ -56,11 +56,11 @@ export default defineConfig(() => {
         org: 'partialtycom',
         project: 'partialty-client',
       }),
-      sentryVitePlugin({
-        authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_NODE,
-        org: 'partialtycom',
-        project: 'partialty-serverentry',
-      }),
+      // sentryVitePlugin({
+      //   authToken: loadEnv('', '.', '').SENTRY_AUTH_TOKEN_NODE,
+      //   org: 'partialtycom',
+      //   project: 'partialty-serverentry',
+      // }),
     ],
     build: {
       sourcemap: true
