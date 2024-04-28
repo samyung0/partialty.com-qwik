@@ -14,7 +14,17 @@ export default extendConfig(baseConfig, () => {
       nodeServerAdapter({
         name: 'fastify',
         ssg: {
-          include: ['/courses/*', '/', '/donate', '/contact', '/contribute'],
+          include: [
+            '/courses/*',
+            '/',
+            '/donate',
+            '/contact',
+            '/contribute',
+            '/suggestion',
+            '/privacy',
+            '/terms',
+            '/cookie-policy',
+          ],
           origin: 'https://www.partialty.com',
           sitemapOutFile: 'sitemap-ssg.xml',
         },

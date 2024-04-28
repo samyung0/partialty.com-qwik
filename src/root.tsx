@@ -66,6 +66,10 @@ export default component$(() => {
           })
         `}
         ></script>
+        <script
+          type="text/javascript"
+          src="https://app.termly.io/resource-blocker/b36db0cb-105b-4e99-90b4-4da104fe507d?autoBlock=on"
+        ></script>
         {/* <script
           src="https://cdn.jsdelivr.net/gh/LieutenantPeacock/SmoothScroll@1.2.0/src/smoothscroll.min.js"
           integrity="sha384-UdJHYJK9eDBy7vML0TvJGlCpvrJhCuOPGTc7tHbA+jHEgCgjWpPbmMvmd/2bzdXU"

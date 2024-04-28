@@ -110,8 +110,8 @@ export default component$(() => {
                 <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
                 <ul role="list" class="mt-6 space-y-4">
                   <li>
-                    <a href="/license/" class="text-sm leading-6 text-gray-300 hover:text-white">
-                      License
+                    <a href="/cookie-policy/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                      Cookie Policy
                     </a>
                   </li>
                   <li>
