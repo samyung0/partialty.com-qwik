@@ -24,6 +24,7 @@ export default extendConfig(baseConfig, () => {
             '/privacy',
             '/terms',
             '/cookie-policy',
+            '/faq'
           ],
           origin: 'https://www.partialty.com',
           sitemapOutFile: 'sitemap-ssg.xml',

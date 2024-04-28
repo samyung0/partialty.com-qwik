@@ -42,22 +42,24 @@ const faqs = [
   },
 ];
 
-const Faq = ({ logic }: { logic: (deltaY: number) => any }) => {
+const Faq = ({ logic, topButton = true }: { logic?: (deltaY: number) => any; topButton?: boolean }) => {
   return (
     <div className="relative overflow-x-hidden">
       <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
-        <button
-          className="absolute md:top-[7%] top-[5%] md:text-sm text-xs left-[50%] -translate-x-[50%] text-gray-600 underline dark:text-gray-300"
-          onClick={() => {
-            logic(-10);
-          }}
-        >
-          Top
-        </button>
+        {topButton && (
+          <button
+            className="absolute left-[50%] top-[5%] -translate-x-[50%] text-xs text-gray-600 underline dark:text-gray-300 md:top-[7%] md:text-sm"
+            onClick={() => {
+              logic?.(-10);
+            }}
+          >
+            Top
+          </button>
+        )}
         <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
           <div className="flex justify-center">
             <div className="relative inline-block overflow-visible">
-              <h2 id="faq" className="inline text-center font-mosk text-2xl font-bold leading-10  md:text-3xl">
+              <h2 className="inline text-center font-mosk text-2xl font-bold leading-10  md:text-3xl">
                 Frequently asked questions
               </h2>
               {/* <div className="absolute right-[-50px] top-[50%] -translate-y-[50%]">

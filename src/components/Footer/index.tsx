@@ -93,7 +93,7 @@ export default component$(() => {
                     </a>
                   </li>
                   <li>
-                    <a href="/#faq" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/faq/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       FAQ
                     </a>
                   </li>
