@@ -367,10 +367,10 @@ export default component$(() => {
       //   }
       // }}
     >
-      <div class="absolute top-0 z-[100] block w-full lg:hidden">
+      {/* <div class="absolute top-0 z-[100] block w-full lg:hidden">
         <Nav2 getUserFn={getUserFn} setThemeCookieFn={setThemeCookieFn} logoutFn={logout} />
-      </div>
-      <div class="absolute top-0 w-full hidden lg:block">
+      </div> */}
+      <div class="absolute top-0 w-full z-[100]">
         <Nav user={user.value} />
       </div>
       <div class="h-full w-full overflow-hidden">

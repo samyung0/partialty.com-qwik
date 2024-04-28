@@ -1,4 +1,4 @@
-import { component$, useComputed$, useSignal } from '@builder.io/qwik';
+import { component$, useComputed$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import DropDownTransition from '~/components/_Creator/Course/DropDownTransition';
 import Footer from '~/components/Footer';
@@ -7,6 +7,7 @@ import { useCategories, useCourseLoader, useTags } from '~/routes/(lang)/(wrappe
 import Masonry from '~/routes/(lang)/(wrapper)/catalog/masonry';
 import { cn } from '~/utils/cn';
 
+import LoadingSVG from '~/components/LoadingSVG';
 import { documentHead } from '~/head';
 
 // const Masonry = _Masonry as any;
@@ -56,6 +57,8 @@ export default component$(() => {
   const courses = useCourseLoader().value;
   const tags = useTags().value;
   const categories = useCategories().value;
+
+  const isLoadingMasonry = useSignal(true);
 
   const urlStateManager = useComputed$<{
     type: null | string;
@@ -139,6 +142,10 @@ export default component$(() => {
       default:
         return display.value;
     }
+  });
+
+  useVisibleTask$(() => {
+    isLoadingMasonry.value = false;
   });
 
   return (
@@ -834,9 +841,15 @@ export default component$(() => {
                       </div>
                     </div>
 
-                    <section class="py-4">
-                      <Masonry client:only course={sortedDisplay.value} tags={tags}>
-                        {/* {sortedDisplay.value.map((course) => {
+                    {isLoadingMasonry.value && (
+                      <section class="py-4 flex items-center justify-center">
+                        <LoadingSVG />
+                      </section>
+                    )}
+                    {!isLoadingMasonry.value && (
+                      <section class="py-4">
+                        <Masonry client:only course={sortedDisplay.value} tags={tags}>
+                          {/* {sortedDisplay.value.map((course) => {
                           return (
                             <Link
                               href={course.link || undefined}
@@ -891,8 +904,9 @@ export default component$(() => {
                             </Link>
                           );
                         })} */}
-                      </Masonry>
-                    </section>
+                        </Masonry>
+                      </section>
+                    )}
                   </div>
                 </div>
               </section>

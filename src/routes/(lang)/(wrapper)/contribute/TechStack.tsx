@@ -19,10 +19,10 @@ export default component$(() => {
               src={QwikIcon}
               alt="Qwik"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">UI Library & Meta-framework</h3>
+            <h3 class="mt-6 text-sm font-medium">UI Library & Meta-framework</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Qwik & Qwik City</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Qwik & Qwik City</dd>
             </dl>
           </div>
         </li>
@@ -33,10 +33,10 @@ export default component$(() => {
               src={TailwindIcon}
               alt="Tailwind"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">CSS Library</h3>
+            <h3 class="mt-6 text-sm font-medium">CSS Library</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Tailwind CSS & Shadcn</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Tailwind CSS & Shadcn</dd>
             </dl>
           </div>
         </li>
@@ -47,10 +47,10 @@ export default component$(() => {
               src={TursoIcon}
               alt="Turso"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">Database</h3>
+            <h3 class="mt-6 text-sm font-medium">Database</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Turso</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Turso</dd>
             </dl>
           </div>
         </li>
@@ -61,10 +61,10 @@ export default component$(() => {
               src={DrizzleIcon}
               alt="Drizzle"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">Database ORM</h3>
+            <h3 class="mt-6 text-sm font-medium">Database ORM</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Drizzle</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Drizzle</dd>
             </dl>
           </div>
         </li>
@@ -75,10 +75,10 @@ export default component$(() => {
               src={VercelIcon}
               alt="Vercel"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">Hosting Platform</h3>
+            <h3 class="mt-6 text-sm font-medium">Hosting Platform</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Vercel Serverless</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Vercel Serverless</dd>
             </dl>
           </div>
         </li>
@@ -89,10 +89,10 @@ export default component$(() => {
               src={MuxIcon}
               alt="Mux"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">Audio Provider</h3>
+            <h3 class="mt-6 text-sm font-medium">Audio Provider</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Mux</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Mux</dd>
             </dl>
           </div>
         </li>
@@ -103,10 +103,10 @@ export default component$(() => {
               src={CloudinaryIcon}
               alt="Cloudinary"
             />
-            <h3 class="mt-6 text-sm font-medium text-gray-900">Image Provider</h3>
+            <h3 class="mt-6 text-sm font-medium">Image Provider</h3>
             <dl class="mt-1 flex flex-grow flex-col justify-between">
             <dt class="sr-only">Name</dt>
-              <dd class="text-sm text-gray-500">Cloudinary</dd>
+              <dd class="text-sm text-gray-500 dark:text-gray-400">Cloudinary</dd>
             </dl>
           </div>
         </li>

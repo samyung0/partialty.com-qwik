@@ -66,7 +66,15 @@ export default component$(() => {
             />
           </div> */}
         </div>
-        {displayCourses.value.length === 0 && <p class="py-4 text-sm lg:text-base">No courses completed Yet! 🥹</p>}
+        {displayCourses.value.length === 0 && (
+          <p class="py-4 text-sm lg:text-base">
+            No courses completed Yet! 🥹 <br /> Head over to{' '}
+            <Link prefetch href="/catalog/" class="underline">
+              Catalog
+            </Link>{' '}
+            to find some courses.
+          </p>
+        )}
         {displayCourses.value.length > 0 && (
           <ul class="flex flex-col gap-2 py-2">
             {displayCourses.value.map((data) => {
