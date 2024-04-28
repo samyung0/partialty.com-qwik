@@ -135,7 +135,7 @@ export default component$(() => {
                     </a>
                   </li>
                   <li>
-                    <a href="/suggestions/" class="text-sm leading-6 text-gray-300 hover:text-white">
+                    <a href="/suggestion/" class="text-sm leading-6 text-gray-300 hover:text-white">
                       Make Suggestions
                     </a>
                   </li>
