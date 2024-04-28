@@ -13,9 +13,6 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import FastifyQwik from './plugins/fastify-qwik';
 
-import Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
-
 declare global {
   interface QwikCityPlatform extends PlatformNode {}
 }
