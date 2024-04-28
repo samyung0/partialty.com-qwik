@@ -3,29 +3,7 @@ import Footer from '~/components/Footer';
 import Nav from '~/components/_Index/NewHero/nav';
 import TechStack from './TechStack';
 
-// import ContactLinks from './ContactLinks';
-
-const getUserFn = $(async () => {
-  return await fetch('/api/courses/chapters/getUser/').then((x) => x.json());
-});
-
-const setThemeCookieFn = $(async (themeValue: any) => {
-  const d = new FormData();
-  d.append('theme', themeValue);
-  return await fetch('/api/courses/chapters/setThemeCookie/', {
-    method: 'POST',
-    body: d,
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // },
-  }).then((x) => x.json());
-});
-
-const logout = $(() => {
-  return fetch('/api/courses/logout/', {
-    method: 'POST',
-  });
-});
+import { documentHead } from '~/head';
 
 export default component$(() => {
   return (
@@ -51,3 +29,5 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head = {...documentHead, title: 'Contribute'};

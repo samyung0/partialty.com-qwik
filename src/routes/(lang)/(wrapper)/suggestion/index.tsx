@@ -3,6 +3,8 @@ import Footer from '~/components/Footer';
 import Nav from '~/components/_Index/NewHero/nav';
 import SuggestionLinks from '~/routes/(lang)/(wrapper)/suggestion/SuggestionLinks';
 
+import { documentHead } from '~/head';
+
 export default component$(() => {
   return (
     <div class="bg-background-light-gray dark:bg-primary-dark-gray dark:text-background-light-gray">
@@ -23,3 +25,5 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head = {...documentHead, title: 'Suggestions'};

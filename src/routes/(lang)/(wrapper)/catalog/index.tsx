@@ -1,5 +1,4 @@
 import { component$, useComputed$, useSignal } from '@builder.io/qwik';
-import type { DocumentHead } from '@builder.io/qwik-city';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import DropDownTransition from '~/components/_Creator/Course/DropDownTransition';
 import Footer from '~/components/Footer';
@@ -7,6 +6,8 @@ import Nav from '~/components/Nav';
 import { useCategories, useCourseLoader, useTags } from '~/routes/(lang)/(wrapper)/catalog/layout';
 import Masonry from '~/routes/(lang)/(wrapper)/catalog/masonry';
 import { cn } from '~/utils/cn';
+
+import { documentHead } from '~/head';
 
 // const Masonry = _Masonry as any;
 
@@ -904,12 +905,4 @@ export default component$(() => {
   );
 });
 
-export const head: DocumentHead = {
-  title: 'Catalog',
-  meta: [
-    {
-      name: 'description',
-      content: 'Browse all the courses and projects available.',
-    },
-  ],
-};
+export const head = { ...documentHead, title: 'Catalog' };

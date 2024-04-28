@@ -1,8 +1,9 @@
 import { component$ } from '@builder.io/qwik';
-import { type DocumentHead } from '@builder.io/qwik-city';
 
 import Dashboard from '~/components/_Dashboard';
 import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+
+import { documentHead } from '~/head';
 
 export default component$(() => {
   const user = useUserLoader();
@@ -14,12 +15,4 @@ export default component$(() => {
   );
 });
 
-export const head: DocumentHead = {
-  title: 'Dashboard',
-  meta: [
-    {
-      name: 'description',
-      content: 'Members dashboard for Partialty.com',
-    },
-  ],
-};
+export const head = { ...documentHead, title: 'Dashboard' };

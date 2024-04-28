@@ -1,10 +1,11 @@
 import { component$, useSignal } from '@builder.io/qwik';
-import type { DocumentHead } from '@builder.io/qwik-city';
 
 import Nav from '~/components/Nav';
 import Profile from '~/components/_Profile/profile';
 import Subscription from '~/components/_Profile/subscription';
 import { useUserLoader } from '~/routes/(lang)/(wrapper)/(authRoutes)/layout';
+
+import { documentHead } from '~/head';
 
 const tabs = [
   { name: 'Profile', component: <Profile /> },
@@ -57,12 +58,4 @@ export default component$(() => {
   );
 });
 
-export const head: DocumentHead = {
-  title: 'Profile',
-  meta: [
-    {
-      name: 'description',
-      content: 'A page to customize your profile.',
-    },
-  ],
-};
+export const head = { ...documentHead, title: 'Profile' };

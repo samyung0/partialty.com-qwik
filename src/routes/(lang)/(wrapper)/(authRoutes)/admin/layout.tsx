@@ -36,3 +36,6 @@ export default component$(() => {
     </section>
   );
 });
+
+import { documentHead } from '~/head';
+export const head = { ...documentHead, title: 'Admin' };
