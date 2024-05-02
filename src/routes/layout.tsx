@@ -19,7 +19,13 @@ export default component$(() => {
   useOnDocument(
     'qinit',
     $(() => {
-      if (window.matchMedia('(prefers-color-scheme: light)').matches && themeStore.value.includes('darkDefault')) {
+      function getCookie(name:string) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+      }
+      // console.log(getCookie("theme"));
+      if (window.matchMedia('(prefers-color-scheme: light)').matches && themeStore.value.includes('darkDefault') && getCookie("theme") !== "dark") {
         themeStore.value = 'light';
       }
     })

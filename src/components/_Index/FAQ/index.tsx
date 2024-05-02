@@ -48,7 +48,7 @@ const Faq = ({ logic, topButton = true }: { logic?: (deltaY: number) => any; top
       <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
         {topButton && (
           <button
-            className="absolute left-[50%] top-[5%] -translate-x-[50%] text-xs text-gray-600 underline dark:text-gray-300 md:top-[7%] md:text-sm"
+            className="absolute left-[50%] top-[40px] -translate-x-[50%] text-xs text-gray-600 underline dark:text-gray-300 md:top-[7%] md:text-sm"
             onClick={() => {
               logic?.(-10);
             }}

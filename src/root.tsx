@@ -52,8 +52,13 @@ export default component$(() => {
 
         <script
           dangerouslySetInnerHTML={`
+          function getCookie(name) {
+            const value = "; " + document.cookie;
+            const parts = value.split("; "+ name + "=");
+            if (parts.length === 2) return parts.pop()?.split(';').shift();
+          }
           const dark = document.getElementById("darkThemeDiv");
-          if (window.matchMedia('(prefers-color-scheme: light)').matches && dark.classList.contains("darkDefault")) {
+         if (getCookie("theme") !== "dark" && window.matchMedia('(prefers-color-scheme: light)').matches && dark.classList.contains("darkDefault")) {
             dark.classList.remove("dark");
             dark.classList.add("light");
           }

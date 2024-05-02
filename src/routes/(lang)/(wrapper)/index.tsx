@@ -19,12 +19,12 @@ import { useContext } from '@builder.io/qwik';
 import type theme from '~/const/theme';
 import { themeContext } from '~/context/themeContext';
 
-const getTheme = $(async () => {
-  return readCookie('theme', document.cookie);
-  // return await fetch('/api/courses/chapters/getThemeCookie/', {
-  //   credentials: 'include',
-  // }).then((x) => x.json());
-});
+// const getTheme = $(async () => {
+//   return readCookie('theme', document.cookie);
+//   // return await fetch('/api/courses/chapters/getThemeCookie/', {
+//   //   credentials: 'include',
+//   // }).then((x) => x.json());
+// });
 
 export default component$(() => {
   const params = useLocation().url.searchParams;
@@ -39,14 +39,14 @@ export default component$(() => {
     if (params.get('errMessage')) alert(params.get('errMessage'));
   });
 
-  useVisibleTask$(async () => {
-    const theme = await getTheme();
-    if (theme === 'light') {
-      themeStore.value = 'light';
-    } else if (theme === 'dark') {
-      themeStore.value = 'dark';
-    }
-  });
+  // useVisibleTask$(async () => {
+  //   const theme = await getTheme();
+  //   if (theme === 'light') {
+  //     themeStore.value = 'light';
+  //   } else if (theme === 'dark') {
+  //     themeStore.value = 'dark';
+  //   }
+  // });
 
   // useVisibleTask$(() => {
   //   bunApp.mirror.post({
