@@ -45,7 +45,7 @@ export default component$(() => {
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <RouterHead />
         <ServiceWorkerRegister />
-        <Insights publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY} />
+        <Insights publicApiKey={import.meta.env.PUBLIC_QWIK_INSIGHTS_KEY!} />
       </head>
       <body>
         <RouterOutlet layout={layoutStore.value} />
